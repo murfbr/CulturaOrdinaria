@@ -3,20 +3,20 @@
 import { usarCentral } from "../../store/central";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { eventosAgenda } from "../../lib/agenda";
-import { projetoArtistaDe } from "../../lib/nomes";
+import { abrirDetalhe } from "../../store/navegacao";
 import { CLASSE_URGENCIA, ROTULO_URGENCIA, urgenciaDe } from "../../lib/prazos";
 import { STATUS_EDITAL } from "../../types";
 import { MESES } from "../../utils";
 
 export function Cronograma() {
   const { painel } = usarCentral();
-  const eventos = eventosAgenda(painel.editais, painel.candidaturas);
+  const eventos = eventosAgenda(painel.editais, painel.projetos);
   const meses = [...new Set(eventos.map((e) => e.iso.slice(0, 7)))].sort();
   const previstosSemData = painel.editais.filter((e) => !e.prazoIso && e.status === "prev");
 
   return (
     <>
-      <CabecalhoSecao titulo="Cronograma" sub="prazos derivados dos editais e das candidaturas" />
+      <CabecalhoSecao titulo="Cronograma" sub="prazos derivados dos editais e dos projetos" />
       {meses.map((chave) => {
         const [ano, mes] = chave.split("-");
         return (
@@ -24,13 +24,13 @@ export function Cronograma() {
             <div className="mh">{MESES[Number(mes) - 1]} {ano}</div>
             {eventos.filter((e) => e.iso.slice(0, 7) === chave).map((e, i) => {
               const st = STATUS_EDITAL[e.status] || STATUS_EDITAL.open;
-              const sub = e.candidaturas.length
-                ? e.candidaturas.map(projetoArtistaDe).join(" · ")
-                : "sem candidatura vinculada";
+              const sub = e.projetos.length
+                ? e.projetos.map((p) => p.nome).join(" · ")
+                : "sem projeto ainda";
               // Urgência só para o que ainda está em jogo (não-encerrado, até 7 dias ou vencido).
               const urgencia = e.status !== "closed" ? urgenciaDe(e.iso) : "futuro";
               return (
-                <div className="ev" key={i}>
+                <div className="ev" key={i} style={{ cursor: "pointer" }} onClick={() => abrirDetalhe("edital", e.editalId)}>
                   <div className="d">
                     <div className="dd">{e.iso.slice(8)}</div>
                     <div className="mm">{MESES[Number(mes) - 1].slice(0, 3)}</div>
@@ -50,7 +50,7 @@ export function Cronograma() {
         <div className="month">
           <div className="mh">Sem data exata (previstos)</div>
           {previstosSemData.map((e) => (
-            <div className="ev" key={e.id}>
+            <div className="ev" key={e.id} style={{ cursor: "pointer" }} onClick={() => abrirDetalhe("edital", e.id)}>
               <div className="d">
                 <div className="dd">—</div>
                 <div className="mm">{(e.prazo.match(/[a-z]{3}/i) || [""])[0]}</div>

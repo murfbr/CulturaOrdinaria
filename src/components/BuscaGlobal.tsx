@@ -49,7 +49,7 @@ export function BuscaGlobal() {
       <div className="paleta" role="dialog" aria-label="Busca global">
         <input
           ref={caixa} type="search" value={termo}
-          placeholder="buscar em tudo — artistas, editais, candidaturas, tarefas, rascunhos…"
+          placeholder="buscar em tudo: artistas, editais, projetos, tarefas, formulários…"
           onChange={(e) => setTermo(e.target.value)} onKeyDown={teclas}
         />
         <div className="paleta-lista">

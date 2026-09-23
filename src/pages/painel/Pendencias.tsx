@@ -1,11 +1,12 @@
-/* Pendências: o que falta em pessoas, artistas, projetos, candidaturas e
-   editais abertos — com atalho "+ tarefa" que já nasce com o título da lacuna. */
+/* Pendências: o que falta em pessoas, artistas, projetos e editais abertos —
+   com atalho "+ tarefa" que já nasce com o título da lacuna. CPF, RG e dados
+   bancários não entram como pendência: pela regra r24, ficam fora da Central. */
 import type { ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe } from "../../store/navegacao";
 import { abrirEdicao, abrirNovo, type ChaveEntidade } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
-import { projetoArtistaDe } from "../../lib/nomes";
+import { STATUS_PROJETO } from "../../types";
 
 interface ItemPendente {
   id: string;
@@ -52,38 +53,34 @@ export function Pendencias() {
 
   const artistas: ItemPendente[] = painel.artistas.map((a) => {
     const lacunas: string[] = [];
+    (a.det?.pendencias || []).filter((x) => x.status !== "resolvida")
+      .forEach((x) => lacunas.push((x.tipo === "perguntar" ? "Perguntar: " : "") + x.texto));
     if (a.det?.docs) a.det.docs.filter((d) => d.status !== "ok").forEach((d) => lacunas.push("Documento: " + d.nome));
     else if (!a.det) lacunas.push("Ficha ainda vazia");
-    if (/confirmar|definir/i.test(a.enq || "")) lacunas.push("Definir enquadramento jurídico");
     return { id: a.id, nome: a.nome, lacunas, abrir: () => abrirDetalhe("artista", a.id) };
   }).filter((x) => x.lacunas.length);
 
-  const projetos: ItemPendente[] = painel.projetos.map((p) => ({
+  const encerrado = new Set(STATUS_PROJETO.filter((s) => s.fim).map((s) => s.id));
+  const projetos: ItemPendente[] = painel.projetos.filter((p) => !p.arquivado && !encerrado.has(p.status)).map((p) => ({
     id: p.id, nome: p.nome,
-    lacunas: (p.producao || []).filter((x) => x.status !== "feito").map((x) => x.texto),
+    lacunas: [
+      ...(p.docs || []).filter((d) => !d.ok).map((d) => "Documento: " + d.nome),
+      ...(p.producao || []).filter((x) => x.status !== "feito").map((x) => x.texto),
+    ],
     abrir: () => abrirDetalhe("projeto", p.id),
   })).filter((x) => x.lacunas.length);
 
-  const candidaturas: ItemPendente[] = painel.candidaturas.map((c) => ({
-    id: c.id, nome: projetoArtistaDe(c),
-    lacunas: (c.docs || []).filter((d) => !d.ok).map((d) => "Documento: " + d.nome),
-    abrir: () => abrirDetalhe("cand", c.id),
-  })).filter((x) => x.lacunas.length);
-
-  const editais: ItemPendente[] = painel.editais.filter((e) => e.status === "open").map((e) => {
+  const editais: ItemPendente[] = painel.editais.filter((e) => e.status === "open" || e.status === "cont").map((e) => {
     const lacunas: string[] = [];
-    if (!e.objeto) lacunas.push("Descrever o que financia");
+    if (!e.objeto && !e.estimula) lacunas.push("Descrever o que financia");
     if (!e.comoInscrever) lacunas.push("Como se inscrever");
     if (!e.linkDrive) lacunas.push("Colar link da pasta no Drive");
     return { id: e.id, nome: e.nome, lacunas, abrir: () => abrirDetalhe("edital", e.id) };
   }).filter((x) => x.lacunas.length);
 
-  const lacunasPessoa = (p: { nomeCompleto?: string; rg?: string; cpf?: string; nascimento?: string; email?: string }, comEmail: boolean) => {
+  const lacunasPessoa = (p: { nomeCompleto?: string; email?: string }, comEmail: boolean) => {
     const lacunas: string[] = [];
     if (!p.nomeCompleto) lacunas.push("Nome completo");
-    if (!p.rg) lacunas.push("RG");
-    if (!p.cpf) lacunas.push("CPF");
-    if (!p.nascimento) lacunas.push("Data de nascimento");
     if (comEmail && !p.email) lacunas.push("E-mail (convites de reunião)");
     return lacunas;
   };
@@ -93,7 +90,7 @@ export function Pendencias() {
     ...painel.elenco.map((p) => ({ id: p.id, nome: p.nome + " · " + (p.funcao || "elenco"), lacunas: lacunasPessoa(p, false), abrir: editar("elenco", p.id) })),
   ].filter((x) => x.lacunas.length);
 
-  const total = [artistas, projetos, candidaturas, editais, pessoas]
+  const total = [artistas, projetos, editais, pessoas]
     .reduce((n, arr) => n + arr.reduce((m, x) => m + x.lacunas.length, 0), 0);
 
   const sub: ReactNode = `atualiza sozinho conforme vocês preenchem: ${total} item(ns) no total. Clique pra abrir; "+ tarefa" cria a tarefa já com o título.`;
@@ -101,11 +98,10 @@ export function Pendencias() {
   return (
     <>
       <CabecalhoSecao titulo="Pendências — o que falta" sub={sub} />
-      <SecaoPendencias titulo="Pessoas" sub="cadastro de cada pessoa: nome completo, RG, CPF, nascimento, e-mail e docs" itens={pessoas} />
-      <SecaoPendencias titulo="Artistas" sub="documentos, ficha e enquadramento" itens={artistas} />
-      <SecaoPendencias titulo="Projetos" sub="itens de produção não concluídos" itens={projetos} />
-      <SecaoPendencias titulo="Candidaturas" sub="documentos que faltam por candidatura" itens={candidaturas} />
+      <SecaoPendencias titulo="Artistas" sub="pendências, perguntas para o artista e documentos do acervo" itens={artistas} />
+      <SecaoPendencias titulo="Projetos" sub="documentos da inscrição e itens de produção (projetos em aberto)" itens={projetos} />
       <SecaoPendencias titulo="Editais abertos" sub="infos e link do Drive faltando" itens={editais} />
+      <SecaoPendencias titulo="Pessoas" sub="nome completo e e-mail (CPF, RG e dados bancários ficam fora da Central, regra r24)" itens={pessoas} />
     </>
   );
 }

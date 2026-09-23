@@ -1910,7 +1910,15 @@
      }
     ]
    }
-  ]
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-12)",
+  "confianca": "alta",
+  "editais": [
+   "ed28"
+  ],
+  "divergencias": "Divergências entre a Central (forms-central/fluxo-continuo.txt, extraído em 12/09/2026) e o espelho oficial: (1) nome da proposta limitado a 50 caracteres na plataforma, sem limite no espelho; (2) a plataforma tem \"Valor solicitado\" e \"Valor total\" separados, o espelho só \"Valor Total Solicitado\"; (3) tipo de proponente com 4 opções na plataforma e 2 mais subtipo de PJ no espelho; (4) a plataforma pede upload de documento de identificação ou do CNPJ e os campos website e cargo, ausentes do espelho; (5) público-alvo é número aproximado no espelho e texto de 190 caracteres na plataforma; (6) tempo de atuação da PJ é número inteiro no espelho e faixas na plataforma; (7) Área de Planejamento é autopreenchida no espelho e texto livre na plataforma; (8) campos de nome com 200 caracteres no espelho e 190 na plataforma; (9) o espelho traz uma lista de bairros sob o título \"Orientações para o Araripe\", sobra interna do documento. Todos os limites dos campos de texto da proposta coincidem (200, 2.500, 1.000, 1.000, 3.000, 500, 1.000, 1.000, 1.500, 2.500, 6 x 1.000, 2.000, 2.000, 3 x 500)."
  },
  "salic-proposta": {
   "id": "salic-proposta",
@@ -2929,6 +2937,13 @@
      }
     ]
    }
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-13)",
+  "confianca": "alta",
+  "editais": [
+   "ed4"
   ]
  },
  "dc-138": {
@@ -3955,6 +3970,13 @@
      }
     ]
    }
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-14)",
+  "confianca": "alta",
+  "editais": [
+   "ed18"
   ]
  },
  "dc-133": {
@@ -4700,6 +4722,13 @@
      }
     ]
    }
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-14)",
+  "confianca": "alta",
+  "editais": [
+   "ed23"
   ]
  },
  "dc-134": {
@@ -5432,6 +5461,13 @@
      }
     ]
    }
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-14)",
+  "confianca": "alta",
+  "editais": [
+   "ed23"
   ]
  },
  "dc-86": {
@@ -6599,6 +6635,5357 @@
        {
         "t": "info",
         "html": "<b>Revisar e enviar:</b> só na plataforma. Use a Transferência para colar tudo, revise lá e envie."
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "origem": "chrome",
+  "fonteTipo": "central",
+  "fonte": "Extraído da plataforma (2026-09-14)",
+  "confianca": "alta",
+  "editais": [
+   "ed34"
+  ]
+ },
+ "doc-ed24": {
+  "id": "doc-ed24",
+  "nome": "Funarte Aberta",
+  "plataforma": "prosas",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Prosas (uma chamada por espaço)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt/Funarte-Aberta-2026__TEATROS-Dulcina-e-Glauce-Rocha_anexo-i-formulario-de-inscricao-teatro-1-1.txt (Anexo I, Centro de Teatro); comparado com os Anexos I do Centro Técnico de Artes e da Livraria",
+  "confianca": "alta",
+  "editais": [
+   "ed24"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Seção 1, Proponente",
+    "blocos": [
+     {
+      "t": "Seção 1, Proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente (tipo PF, PJ com ou sem fins lucrativos, MEI ou EI; CPF ou CNPJ, razão social, data de fundação, endereço, região, contatos, anos de atuação, se acessou fomento público nos últimos 5 anos, representante legal; 10 a 15 campos conforme o tipo)</b>: O proponente é o responsável legal pela inscrição, execução e comprovação.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Seção 2, Concorrente",
+    "blocos": [
+     {
+      "t": "Seção 2, Concorrente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do concorrente (agente artístico individual ou coletivo; individual: CPF, nome, nome artístico ou social, nascimento, contatos, endereço, anos de experiência, acesso a fomento; coletivo: nome, número de integrantes, tabela de integrantes, representante, contatos, sede, anos de atuação, acesso a fomento)</b>: O representante do coletivo deve ser integrante e constar da tabela.",
+        "conceito": "cadastro"
+       },
+       {
+        "t": "info",
+        "html": "<b>Perfil socioeconômico e identitário do concorrente (povos e comunidades tradicionais, gênero, orientação sexual, cor/raça/etnia, deficiência, escolaridade, renda; no coletivo, gênero, raça e deficiência por integrante)</b>: Perguntas de múltipla escolha, com opção de não responder em gênero e orientação sexual.",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Seção 3, Proposta",
+    "blocos": [
+     {
+      "t": "Seção 3, Proposta",
+      "campos": [
+       {
+        "n": "doc__ed24__3",
+        "l": "3.1 Título da proposta",
+        "t": "txt",
+        "conceito": "titulo",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__4",
+        "l": "3.2 Resumo da proposta",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Informações e objetivos gerais: o que se pretende realizar, atividades previstas e resultados esperados. Pode ir em vídeo para PF (item 8.7).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__5",
+        "l": "3.3 Espaço(s) pretendido(s)",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Centro de Teatro: Teatro Dulcina, Teatro Glauce Rocha ou Teatro de Arena Eugênio Kusnet (SP). No formulário do CTA a única opção é Centro Técnico de Artes; no da Livraria, Livraria Mário de Andrade.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__6",
+        "l": "3.4 Linguagem(ns) predominante(s)",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Artes visuais, artes integradas, circo, dança, música, teatro, outras. O CTA acrescenta 'Artes Técnicas'; na Livraria a pergunta é sobre a linguagem do livro objeto da proposta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__7",
+        "l": "3.5 Modalidade(s)",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Centro de Teatro: pesquisa, criação, ensaios, residência; atividades abertas ao público; gravações em audiovisual; ações de formação e intercâmbio. O CTA não tem 'atividades abertas ao público'. A Livraria só tem 'lançamento de livro'.",
+        "req": 1,
+        "opts": [
+         "Centro de Teatro: Teatro Dulcina e Teatro Glauce Rocha (Centro, RJ)",
+         "Centro Técnico de Artes (RJ)",
+         "Livraria Mário de Andrade (RJ)"
+        ]
+       },
+       {
+        "n": "doc__ed24__8",
+        "l": "3.6 Descrição detalhada das atividades e ações por modalidade",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Uma resposta por modalidade assinalada (a, b, c, d), com quantidade de apresentações, oficinas e dias de ensaio, duração de cada atividade e horário pretendido. No CTA são três subitens; na Livraria, um (lançamento de livro). Pode ir em vídeo para PF.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__9",
+        "l": "3.7 Especificações técnicas e elementos cênicos, cenográficos, expográficos e materiais",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Incluir uso de materiais líquidos, cortantes ou inflamáveis e qualquer alteração permanente dos espaços da Funarte."
+       },
+       {
+        "n": "doc__ed24__10",
+        "l": "3.8 Público-alvo predominante",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Pode ir em vídeo para PF.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__11",
+        "l": "3.9 Medidas de democratização do acesso e/ou acessibilidade",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Campo ligado diretamente ao critério A2.3 (ingressos gratuitos, mediação, acessibilidade atitudinal e comunicacional). Pode ir em vídeo para PF.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__12",
+        "l": "3.10 Preço do ingresso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Máximo de R$ 100, com meia-entrada obrigatória."
+       },
+       {
+        "n": "doc__ed24__13",
+        "l": "3.11 Período pretendido de ocupação, flexibilidade de datas (sim ou não) e melhor intervalo de meses",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Três perguntas (3.11, 3.11.1, 3.11.2); pesam na convocação por pauta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__14",
+        "l": "3.12 Cronograma de ações",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Incluir montagem e desmontagem, se houver."
+       },
+       {
+        "n": "doc__ed24__15",
+        "l": "3.13 Ficha técnica",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Tabela com nome, função, CPF, gênero, raça/etnia e deficiência de todos os integrantes, incluindo o proponente."
+       },
+       {
+        "n": "doc__ed24__16",
+        "l": "3.14 Currículo com documentos comprobatórios da trajetória do concorrente e dos principais idealizadores",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Um único PDF anexado (currículo, portfólio, clipping, imprensa, material gráfico, cartazes, programas, fotos).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__17",
+        "l": "3.15 Documentos comprobatórios da trajetória artística",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Um único PDF anexado (portfólio, clipping, material de imprensa, gráfico, folders, cartazes, programas, fotos).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed24__18",
+        "l": "3.16 Estratégias de divulgação",
+        "t": "ta",
+        "conceito": "comunicacao"
+       },
+       {
+        "n": "doc__ed24__19",
+        "l": "3.17 A proposta já foi aprovada em algum edital do segmento? Qual?",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Sim (qual) ou não."
+       },
+       {
+        "n": "doc__ed24__20",
+        "l": "Apresentação oral em vídeo (opcional, só PF)",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Vídeo de até 15 minutos, por link, respondendo na ordem aos itens 3.2, 3.6, 3.8 e 3.9 (regulamento item 8.7 e Anexo II; o espelho não mostra o campo separado)."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Seção 4",
+    "blocos": [
+     {
+      "t": "Seção 4",
+      "campos": [
+       {
+        "n": "doc__ed24__21",
+        "l": "Documentos complementares (link)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Link para fotos, vídeos e outros materiais."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Seção 5",
+    "blocos": [
+     {
+      "t": "Seção 5",
+      "campos": [
+       {
+        "n": "doc__ed24__22",
+        "l": "Declaração de concordância com os termos do edital",
+        "t": "rad",
+        "conceito": "declaracao",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed25": {
+  "id": "doc-ed25",
+  "nome": "Ibermúsicas",
+  "plataforma": "ibermusicas",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Formulário online em ibermusicas.org, um por convocatória, precedido de perfil no Catálogo do Setor Musical",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/Ibermusicas-2026__1-circulacao-de-profissionais.txt, item 9 (Paso 1 e Paso 2)",
+  "confianca": "alta",
+  "editais": [
+   "ed25"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Passo 1",
+    "blocos": [
+     {
+      "t": "Passo 1",
+      "campos": [
+       {
+        "n": "doc__ed25__0",
+        "l": "Perfil no Catálogo do Setor Musical Ibermúsicas",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Um único perfil apresenta a candidatura (grupo, pesquisadora, luthier, técnico, compositor); o júri avalia a trajetória por ele.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cap. 1, responsável",
+    "blocos": [
+     {
+      "t": "Cap. 1, responsável",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do responsável pelo projeto (nome, e-mail, celular com códigos, foto do documento; 4 campos)</b>: Pode ser o artista, um integrante, técnico, pesquisador, representante, empresário ou produtor.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Cap. 2, proposta",
+    "blocos": [
+     {
+      "t": "Cap. 2, proposta",
+      "campos": [
+       {
+        "n": "doc__ed25__2",
+        "l": "Título da proposta",
+        "t": "txt",
+        "conceito": "titulo",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__3",
+        "l": "País pelo qual se apresenta, região e cidade",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "O país deve ser o de nacionalidade ou residência certificada da maioria dos integrantes que viajam.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__4",
+        "l": "País ou países de destino",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Uma única saída do país, podendo ser turnê por várias cidades e países.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__5",
+        "l": "Síntese da proposta",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Máximo de 100 palavras; se selecionada, é publicada no site do Ibermúsicas.",
+        "req": 1,
+        "limiteTexto": "limite: 100 palavras"
+       },
+       {
+        "t": "info",
+        "html": "<b>Perspectivas que o projeto contempla (gênero, etnia, deficiência, infâncias, sustentabilidade ou ecologia)</b>: Opcional; dialoga com os critérios de ação afirmativa.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed25__7",
+        "l": "Mês de início e mês de término da viagem",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Entre 01/01 e 31/12/2027.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__8",
+        "l": "Valor total estimado das passagens (USD)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Em euros para projetos de Espanha e Portugal.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__9",
+        "l": "Valor da ajuda solicitada ao Ibermúsicas (USD)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Até USD 10 mil; pode haver apoio parcial.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Cap. 3, postulante",
+    "blocos": [
+     {
+      "t": "Cap. 3, postulante",
+      "campos": [
+       {
+        "n": "doc__ed25__10",
+        "l": "Tipo de postulante",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Artista, agrupação, técnico, pesquisador, luthier, produtor.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Nome do artista, agrupação ou profissional, e site ou rede social</b>",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed25__12",
+        "l": "EPK (kit de imprensa eletrônico) ou currículo em PDF",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Currículo para luthiers, estudantes, pesquisadores.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Cap. 4, destino",
+    "blocos": [
+     {
+      "t": "Cap. 4, destino",
+      "campos": [
+       {
+        "n": "doc__ed25__13",
+        "l": "Dados do evento ou instituição de destino (nome, link, país, região, cidade; repetir por evento)",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Alimenta o critério de relevância do anfitrião (10%).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Cap. 5, passageiros",
+    "blocos": [
+     {
+      "t": "Cap. 5, passageiros",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados dos passageiros (quantidade; por pessoa: nome, passaporte ou documento, nascimento, país de origem, país e cidade de residência, função no setor musical; documento de identidade e comprovante de residência no país postulante)</b>",
+        "conceito": "cadastro"
+       },
+       {
+        "t": "info",
+        "html": "<b>Autodeclaração de gênero, identidade étnica e deficiência de cada passageiro</b>: Usada nos indicadores do programa.",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7",
+    "nome": "Cap. 6, anexos",
+    "blocos": [
+     {
+      "t": "Cap. 6, anexos",
+      "campos": [
+       {
+        "n": "doc__ed25__16",
+        "l": "Apresentação ampla do projeto (PDF)",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Expor a relevância do projeto e fundamentar as razões do pedido, tendo em conta os critérios de seleção. É o texto principal avaliado; sem limite definido nas bases.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__17",
+        "l": "Cartas de convite da(s) instituição(ões) anfitriã(s) (PDF único)",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Assinadas, com a atividade e a data; condição de elegibilidade.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__18",
+        "l": "Cronograma de trabalho (PDF ou Excel)",
+        "t": "ta",
+        "conceito": "cronograma",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__19",
+        "l": "Estratégia de financiamento do projeto (custos totais e fontes, em USD)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "PDF ou Excel.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__20",
+        "l": "Anexos documentais: cotação das passagens e três fotos de imprensa",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Cotação em USD por agência de turismo ou print de buscador; três fotos com crédito do fotógrafo na imagem ou no nome do arquivo.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed25__21",
+        "l": "Proposta de atividade educativa ou de benefício comunitário no país de origem",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "Opcional, mas pontua dentro do critério de impacto (50%)."
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed3": {
+  "id": "doc-ed3",
+  "nome": "Rouanet Favelas",
+  "plataforma": "salic",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Salic (salic.cultura.gov.br), tipicidade Editais Compartilhados, tipologia Programa Rouanet nas Favelas - 2026",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/MinC-Rouanet-nas-Favelas-2__RouanetFavelas2_MANUAL-com-lista-de-territorios.txt (seções Cadastrando a proposta e Preenchendo sua proposta). É o formulário padrão de proposta do Salic, o mesmo do salic-proposta da Central, mas o Manual dá instruções próprias do edital para cada campo; limites de caracteres tirados do contador do Salic registrado em forms-central/salic-proposta.txt.",
+  "confianca": "alta",
+  "editais": [
+   "ed3"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro no Salic",
+    "blocos": [
+     {
+      "t": "Cadastro no Salic",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Usuário, proponente PJ, dirigente e agência do Banco do Brasil (cadastro puxado da Receita Federal; cerca de 10 campos)</b>: Só o dirigente ou sócio administrador cadastra a PJ; MEI precisa de ao menos um dirigente. Endereço do CNPJ deve estar em território de favela do Anexo I. Agência do BB com 5 dígitos, onde será aberta a conta do projeto (não precisa ter conta no BB).",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed3__1",
+        "l": "Portfólio técnico comprobatório",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Um único portfólio por proponente, analisado pelo MinC antes do envio da proposta. Deve conter ao menos um: folders ou cartazes com o nome do proponente destacado; notas fiscais ou contratos; matérias ou registros em vídeo e foto; posts em redes sociais; atestado de capacidade técnica. Links não são aceitos. Iniciante com projeto de até R$ 200 mil fica dispensado se não anexar nada."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Nova proposta",
+    "blocos": [
+     {
+      "t": "Nova proposta",
+      "campos": [
+       {
+        "n": "doc__ed3__2",
+        "l": "Declaração de responsabilidade",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Aceite obrigatório (\"De acordo\") antes de abrir o formulário.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Identificação da proposta",
+    "blocos": [
+     {
+      "t": "Identificação da proposta",
+      "campos": [
+       {
+        "n": "doc__ed3__3",
+        "l": "Nome da Proposta Cultural",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Título curto, que dê ideia concisa e clara do que se quer realizar e faça referência ao objeto. Exemplo do Manual: Festa Nordestina, Apresentações Musicais, Programa Rouanet Favelas 2. Não pode ser alterado após a seleção.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed3__4",
+        "l": "Tipicidade e tipologia",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Obrigatoriamente tipicidade Editais Compartilhados e tipologia Programa Rouanet nas Favelas - 2026.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed3__10",
+        "l": "Resumo da proposta cultural",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Produtos culturais da proposta em no máximo 5 linhas, sem adjetivos e sem dados que mudam na execução (número de beneficiários, de apresentações, valores, período, justificativa, artistas). Será publicado no Diário Oficial da União. Exemplo: Realizar apresentações de música regional durante 3 dias.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed3__11",
+        "l": "Objetivos",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Separar objetivo geral (principal resultado, para que realizar) e objetivos específicos (transcrever o produto do plano de distribuição e a quantidade oferecida, por exemplo: realizar 20 apresentações do espetáculo X).",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__12",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Motivos da realização e necessidade do incentivo fiscal; transcrever os incisos do art. 1º da Lei 8.313/91 em que a proposta se enquadra e o inciso e alínea do art. 3º que serão alcançados, com a fundamentação.",
+        "req": 1,
+        "max": 8000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Informações complementares",
+    "blocos": [
+     {
+      "t": "Informações complementares",
+      "campos": [
+       {
+        "n": "doc__ed3__5",
+        "l": "Território de favela",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Escolher obrigatoriamente pelo menos um território da lista IBGE (Censo 2022, favelas e comunidades urbanas) onde a proposta será executada; no Salic são 3.102 opções, 813 delas no Rio de Janeiro.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed3__6",
+        "l": "Data fixa",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Marcar Sim só para evento de data comemorativa nacional ou período fixo (exemplos do Manual: ano novo, carnaval, páscoa, festa junina, natal)."
+       },
+       {
+        "n": "doc__ed3__7",
+        "l": "É proposta de audiovisual?",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Sim apenas se o produto principal for do audiovisual."
+       },
+       {
+        "n": "doc__ed3__8",
+        "l": "Plano de execução imediata",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Marcar Projeto aprovado em Editais e anexar o edital como comprovante.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Período de realização",
+    "blocos": [
+     {
+      "t": "Período de realização",
+      "campos": [
+       {
+        "n": "doc__ed3__9",
+        "l": "Data de início, prorrogação automática e data final",
+        "t": "txt",
+        "conceito": "cronograma",
+        "dica": "Início da execução dentro da janela do edital (Manual: 01/01/2027 a 31/12/2028; edital, item 6.3: 01/05/2027 a 31/12/2028). Data final inclui pós-produção. Captação pode durar até 36 meses; sem data fixa, marcar prorrogação automática.",
+        "req": 1,
+        "max": 10
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Responsabilidade social",
+    "blocos": [
+     {
+      "t": "Responsabilidade social",
+      "campos": [
+       {
+        "n": "doc__ed3__13",
+        "l": "Acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Medidas compatíveis com a linguagem do produto, justificadas, nos aspectos arquitetônico (acesso, sanitários, circulação), comunicacional e de conteúdo (pessoas autistas e com deficiência intelectual, física, auditiva, visual, psicossocial ou múltipla: Libras, audiodescrição, legendas, monitoria) e de divulgação acessível.",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__14",
+        "l": "Democratização de acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Informar a medida de ampliação de acesso do art. 42 da IN 29/2026 (doação extra de 10% dos produtos, transporte gratuito, registros na internet com Libras e audiodescrição, TV pública, atividades paralelas gratuitas, ação para crianças e jovens, atividades em prisões ou instituições de longa permanência, formação de agentes, bolsas, ou outra medida).",
+        "req": 1,
+        "max": 8000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7",
+    "nome": "Detalhes técnicos",
+    "blocos": [
+     {
+      "t": "Detalhes técnicos",
+      "campos": [
+       {
+        "n": "doc__ed3__15",
+        "l": "Etapas de trabalho",
+        "t": "ta",
+        "conceito": "metodologia",
+        "dica": "Dividir em pré-produção, produção/execução e pós-produção, com ações e duração em dias, semanas ou meses (sem datas). Pós-produção de no máximo 60 dias.",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__16",
+        "l": "Ficha técnica",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Atividade do proponente no projeto (ele deve conduzir a gestão técnico-financeira; delegar é intermediação e leva ao arquivamento) e, para os principais profissionais, nome, função e minibio. Mencionar se pelo menos 50% da equipe é de grupos minorizados e informar a participação de mestres e mestras da cultura, com sua contribuição.",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__17",
+        "l": "Sinopse da obra",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Resumo do conteúdo de cada produto que precise (espetáculo, seminário, palestra), com classificação indicativa.",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__18",
+        "l": "Especificações técnicas do produto",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Detalhamento técnico do produto (para música: se é 100% instrumental ou 100% regional, conforme Súmula 32 da CNIC; para oficina: projeto pedagógico). O Manual pede aqui também o perfil do público-alvo (vulnerabilidade e segmentos específicos) e como o produto valoriza saberes, celebrações e redes culturais, com mestres na equipe ou certificação de Ponto de Cultura.",
+        "req": 1,
+        "max": 8000
+       },
+       {
+        "n": "doc__ed3__19",
+        "l": "Descrição da atividade do produto",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "Neste edital o campo é usado para a contrapartida social, obrigatória só se houver cobrança de ingresso ou venda (art. 44 da IN): ações formativas gratuitas para ao menos 10% do público (mínimo 20, máximo 500 beneficiários), para alunos e professores de escolas públicas, identificando instituições, nível de ensino e perfil. Projeto totalmente gratuito não cadastra contrapartida.",
+        "req": 1,
+        "max": 8000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e8",
+    "nome": "Outras informações",
+    "blocos": [
+     {
+      "t": "Outras informações",
+      "campos": [
+       {
+        "n": "doc__ed3__20",
+        "l": "Outras informações",
+        "t": "ta",
+        "conceito": "outro",
+        "dica": "Informações complementares: beneficiários das passagens, destinação de bens permanentes, esclarecimentos. Se for Ponto ou Pontão de Cultura, informar certificação, órgão, cadastro, ID e datas, e anexar o certificado.",
+        "max": 8000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e9",
+    "nome": "Local de realização",
+    "blocos": [
+     {
+      "t": "Local de realização",
+      "campos": [
+       {
+        "n": "doc__ed3__21",
+        "l": "Local de realização",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Cadastrar todas as cidades; as ações devem ocorrer exclusivamente nos territórios de favela escolhidos em Informações complementares.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed3__22",
+        "l": "Deslocamentos",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Obrigatório se houver passagens no orçamento: origem, destino e quantidade de trechos.",
+        "max": 2000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e10",
+    "nome": "Plano de distribuição",
+    "blocos": [
+     {
+      "t": "Plano de distribuição",
+      "campos": [
+       {
+        "n": "doc__ed3__23",
+        "l": "Produto principal (área e segmento)",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Um único produto principal, sem produtos secundários, escolhido na lista do edital por área (por exemplo: Desfiles Festivos de Caráter Musical e Cênico, produto Desfile de Carnaval ou Festivos; Apresentação/Gravação de Música Regional, produto Apresentação Musical; Capoeira; Educação Patrimonial; Salvaguarda do patrimônio imaterial). Com cobrança, cadastrar também o produto Contrapartida Social.",
+        "req": 1,
+        "opts": [
+         "Rio de Janeiro (RJ)",
+         "São Paulo (SP)",
+         "Recife (PE)",
+         "Belo Horizonte (MG)",
+         "Belém (PA)",
+         "São Luís (MA)",
+         "Distrito Federal (DF)",
+         "Vitória (ES)"
+        ]
+       },
+       {
+        "n": "doc__ed3__24",
+        "l": "Detalhamento do produto (beneficiários e distribuição)",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Por cidade: distribuição totalmente gratuita (sim ou não) e número total de beneficiários; com cobrança, percentuais de distribuição gratuita social ou educativa, patrocinador, divulgação, preço popular (R$ 50) e venda a critério do proponente (preço médio até R$ 250), conforme art. 41 da IN.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e11",
+    "nome": "Orçamento",
+    "blocos": [
+     {
+      "t": "Orçamento",
+      "campos": [
+       {
+        "n": "doc__ed3__25",
+        "l": "Custos vinculados",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Percentuais de custos de acessibilidade, comunicação e divulgação acessíveis (até 20%) e de administração (até 15%, no máximo 50% disso numa mesma despesa). Remuneração de captação obrigatoriamente 0%.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed3__26",
+        "l": "Custos por produto (planilha de itens)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Itens por produto, cidade e etapa (pré-produção, produção, pós-produção, assessoria contábil e jurídica), com unidade (serviço, mês, semana, verba, unidade, cachê), quantidade, ocorrência, valor unitário, fonte Incentivo Fiscal Federal e justificativa (obrigatória se acima da modal do sistema).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e12",
+    "nome": "Anexar documentos",
+    "blocos": [
+     {
+      "t": "Anexar documentos",
+      "campos": [
+       {
+        "n": "doc__ed3__27",
+        "l": "Documentos anexados (PDF)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Do proponente: comprovante de inscrição e situação no CNPJ; estatuto, contrato social, CCMEI ou requerimento de empresário; ata de eleição ou termo de posse da diretoria; documento de identificação do dirigente com foto, RG e CPF. Da proposta: documentos do Anexo II da IN 29/2026 conforme o produto; certificado de Ponto de Cultura, se houver. Não anexar certidões negativas nem alvarás nesta fase.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed9": {
+  "id": "doc-ed9",
+  "nome": "Sesc Pulsar",
+  "plataforma": "sesc-pulsar",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Edital de Cultura Sesc RJ Pulsar (editaldecultura.sescrio.org.br)",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "Edital_Pulsar_2026-27.pdf, itens 10.1.1, 11, 12.2, 13 e 14; Anexo VII, itens 3.4 e 4.x.5",
+  "confianca": "alta",
+  "editais": [
+   "ed9"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Habilitação jurídica",
+    "blocos": [
+     {
+      "t": "Habilitação jurídica",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Identificação e acesso do proponente (e-mail, tipo de empresa com setor e segmento, razão social, nome fantasia, CNPJ, endereço, telefones, dados do representante legal ou do MEI)</b>: O proponente não pode ser trocado depois; o e-mail será o canal de todas as comunicações.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed9__1",
+        "l": "Declaração de regularidade fiscal",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Disclaimer de que não há mora, inadimplência ou pendência com órgãos públicos federais, estaduais ou municipais.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Dados do projeto",
+    "blocos": [
+     {
+      "t": "Dados do projeto",
+      "campos": [
+       {
+        "n": "doc__ed9__2",
+        "l": "Linguagem e categoria",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Música: Música Adulto, Música Infantil, DJ, Forró, Rodas de Samba e Choro, ou Música e Urbanidades. Erro de enquadramento pode desclassificar sem reenquadramento; o valor unitário define a faixa.",
+        "req": 1,
+        "opts": [
+         "Música: Música Adulto",
+         "Música: Música Infantil",
+         "Música: DJ",
+         "Música: Forró, Rodas de Samba e Choro",
+         "Música: Música e Urbanidades",
+         "Demais linguagens: Artes Visuais, Audiovisual, Circo, Dança, Teatro e Literatura"
+        ]
+       },
+       {
+        "n": "doc__ed9__3",
+        "l": "Nome do projeto",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Na música, somente o nome do artista, banda ou grupo, sem informações adicionais.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__4",
+        "l": "Apresentação do projeto cultural",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Pode ser enviada em vídeo de até 3 min (item 12.2.4.1).",
+        "req": 1,
+        "max": 2000
+       },
+       {
+        "n": "doc__ed9__5",
+        "l": "Objetivo do projeto cultural",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Pode ser enviado em vídeo de até 3 min (item 12.2.4.1).",
+        "req": 1,
+        "max": 1500
+       },
+       {
+        "n": "doc__ed9__6",
+        "l": "Justificativa do projeto cultural",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Pela letra do item 12.2.4.1, só os itens 12.2.1 a 12.2.3 (nome, apresentação e objetivo) podem ir em vídeo; a justificativa fica fora.",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed9__7",
+        "l": "Indicação se o projeto é adulto ou infantil",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__8",
+        "l": "Sinopse",
+        "t": "ta",
+        "conceito": "resumo",
+        "req": 1,
+        "max": 700
+       },
+       {
+        "n": "doc__ed9__9",
+        "l": "Identificação do idealizador",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Artista, grupo, banda ou coletivo que concebe ou dirige o projeto, representado legalmente pelo proponente.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__10",
+        "l": "Classificação etária indicativa",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Seguir o Guia Prático de Classificação Indicativa do Governo Federal; Música e Urbanidades exige classificação livre.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__11",
+        "l": "Público-alvo que o projeto pretende atingir",
+        "t": "ta",
+        "conceito": "publico",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__12",
+        "l": "Declaração de detenção de direitos autorais e patrimoniais (Anexo XV) ou de responsabilidade por autorização de obra de terceiros (Anexo XVI)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Se o projeto se basear em obra de terceiros, anexar no mesmo arquivo a autorização do autor, herdeiros ou instituição.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       },
+       {
+        "n": "doc__ed9__13",
+        "l": "Ficha técnica completa e minibiografia (modelo do Anexo XVIII)",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Modelo obrigatório, sem alterações e com todos os campos preenchidos, sob pena de desclassificação; funções indispensáveis na música: artista principal, artistas convidados e músicos. Deve bater com a planilha orçamentária.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__14",
+        "l": "Declaração de anuência dos integrantes do projeto",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Disclaimer no formulário; a carta de anuência assinada (Anexo XXIV) só é pedida aos selecionados.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       },
+       {
+        "n": "doc__ed9__15",
+        "l": "Clipping resumido do idealizador",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Matérias e críticas de no máximo 10 atividades mais recentes e comprováveis, caso houver."
+       },
+       {
+        "n": "doc__ed9__16",
+        "l": "Currículo resumido da pessoa jurídica proponente",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__17",
+        "l": "Currículo resumido do idealizador (grupo, coletivo, artista individual, realizador)",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__18",
+        "l": "Ações de acessibilidade previstas",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Na música é obrigatório cumprir ao menos uma apresentação com práticas acessíveis no circuito (sugestões: protagonismo de pessoa com deficiência, audiodescrição, Libras). Gratuidade ou desconto não conta como acessibilidade. As ações não podem ser alteradas depois, nem em caso de redução de valor.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__19",
+        "l": "Unidades de preferência para as apresentações",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "De 4 a 10 unidades diferentes (até 15 no infantil), escolhidas na lista da categoria; o Sesc pode redistribuir.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Materiais obrigatórios (Anexo VII)",
+    "blocos": [
+     {
+      "t": "Materiais obrigatórios (Anexo VII)",
+      "campos": [
+       {
+        "n": "doc__ed9__20",
+        "l": "Link para vídeo de registro de apresentação com pelo menos 3 músicas",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Somente YouTube ou Vimeo, desbloqueado (ou com senha informada), direto no vídeo; não aceita videoclipe, vídeos curtos de redes sociais nem pastas de Drive ou Dropbox. DJ: vídeo de apresentação e links de DJ sets.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__21",
+        "l": "Descritivo técnico",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Medida ideal e mínima do espaço, volumes cenográficos, materiais sensíveis ou perigosos, varas cenográficas, riders de som e luz e outras necessidades.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Orçamento e cronograma",
+    "blocos": [
+     {
+      "t": "Orçamento e cronograma",
+      "campos": [
+       {
+        "n": "doc__ed9__22",
+        "l": "Orçamento detalhado (modelo do Anexo XIX)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Sem valor fechado: cada rubrica com quantidade, unidade, valor unitário, total e nome do profissional; funções indispensáveis aparecem mesmo com cachê zero. Valor unitário acima do teto da categoria desclassifica.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed9__23",
+        "l": "Cronograma (modelo do Anexo XX)",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Sem datas específicas: tempo de produção, montagem e desmontagem em meses, semanas ou dias.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed9__24",
+        "l": "Anexos de habilitação e complementares",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Ato constitutivo, estatuto ou contrato social com eleição dos representantes; CCMEI, se MEI; cartão CNPJ com CNAE emitido em 2025 ou 2026; anexos complementares opcionais (por exemplo, vídeos de ensaio). Arquivos legíveis e sem senha.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed22": {
+  "id": "doc-ed22",
+  "nome": "Vale",
+  "plataforma": "vale",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Plataforma de patrocínios da Vale (patrocinio.valeglobalcomm.com), a mesma usada pela Chamada ICV",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/Vale-Instituto-Cultural__Regulamento-Chamada-ICV-2026.txt (itens 4.6, 4.7 e 4.11), txt/Vale-Instituto-Cultural__FAQ-Chamada-ICV-2026.txt (perguntas 14 e 15) e lista de documentos da página https://institutoculturalvale.org/solicitacao-de-patrocinios/",
+  "confianca": "media",
+  "editais": [
+   "ed22"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro",
+    "blocos": [
+     {
+      "t": "Cadastro",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Usuário, senha e dados do CNPJ/proponente (cadastro na plataforma)</b>: Cada e-mail só pode ficar vinculado a um CNPJ; se o CNPJ já estiver cadastrado, basta inscrever novo projeto (FAQ 15).",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Projeto",
+    "blocos": [
+     {
+      "t": "Projeto",
+      "campos": [
+       {
+        "n": "doc__ed22__1",
+        "l": "Fonte de recurso",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Seleção obrigatória; na Chamada era \"Chamada Instituto Cultural Vale 2026\". A opção equivalente da Seleção Direta (Rouanet, Audiovisual ou recurso próprio) não foi vista.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed22__2",
+        "l": "Número de Pronac ou Proposta",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Na Chamada, quem não tinha proposta no Salic respondia \"Não tenho\" (FAQ 14).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed22__3",
+        "l": "Título do projeto",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Deve ser idêntico ao cadastrado no Salic, com a mesma proponência (item 4.6).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed22__4",
+        "l": "Resumo geral / apresentação do projeto",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "O regulamento recomenda texto sucinto e claro, descrevendo objetivamente as principais ações previstas (item 4.7); a descrição deve estar contida na proposta enviada ao MinC.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed22__5",
+        "l": "Plano de trabalho do projeto, com memória de cálculo dos valores solicitados",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Exigido na página da Seleção Direta (arquivo anexado).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Proponente",
+    "blocos": [
+     {
+      "t": "Proponente",
+      "campos": [
+       {
+        "n": "doc__ed22__6",
+        "l": "Missão, visão e valores da organização e site institucional",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Itens pedidos na página da Seleção Direta.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed22__7",
+        "l": "Documentos anexos",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Contrato ou estatuto social (ou CCMEI), ata de eleição dos dirigentes registrada, RG e CPF do representante legal, cartão CNPJ com CNAE, portfólio com links; quando houver: ficha da proposta no Salic (resumo, objetivo, justificativa, etapas, ficha técnica, planilha), publicação no DOU, termo de abertura da conta de captação e Formulário de Cadastro Vale. Aceita Word, PDF, Excel; foto e vídeo até 300 MB (FAQ 24).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed30": {
+  "id": "doc-ed30",
+  "nome": "Mestres",
+  "plataforma": "cultura-rio",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Editais Cultura Rio (www.editaisculturario.com.br)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "https://cultura.prefeitura.rio/wp-content/uploads/sites/38/2026/02/3.-Anexo-3-Espelho-do-Formulario-de-Inscricao.pdf, mais o modelo de Plano de Trabalho https://cultura.prefeitura.rio/wp-content/uploads/sites/38/2026/02/4.-Anexo-4-Plano-de-Trabalho.docx.pdf",
+  "confianca": "alta",
+  "editais": [
+   "ed30"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Seção 1, Cadastro da entidade cultural",
+    "blocos": [
+     {
+      "t": "Seção 1, Cadastro da entidade cultural",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados da entidade (18 campos)</b>: Razão social, CNPJ, data de fundação, nome fantasia, site, responsável, cargo, e-mail, telefones, endereço completo, inscrição municipal, cartão CNPJ e redes sociais.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed30__1",
+        "l": "Sediada em favela das APs 1 ou 2",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Sim ou Não; se sim, escolher a favela em lista.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Perfil socioeconômico e histórico de fomento da entidade</b>: Renda média anual (5 faixas), acesso a recursos públicos nos últimos 5 anos, seleção em edital anterior e qual.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed30__3",
+        "l": "Certificação Cultura Viva e comprovante",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Ponto, Pontão ou solicitação em análise; comprovante em PDF (pode ser apresentado até a habilitação).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Seção 2, Representante legal",
+    "blocos": [
+     {
+      "t": "Seção 2, Representante legal",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do representante legal (10 campos)</b>: Nome, nome social, nome artístico, nascimento, nacionalidade, CPF, e-mail, telefone, WhatsApp, cargo e endereço.",
+        "conceito": "cadastro"
+       },
+       {
+        "t": "info",
+        "html": "<b>Perfil do representante (11 perguntas)</b>: Anos de experiência cultural, cultura como principal fonte de renda, identidade de gênero, sexualidade, cor ou raça, povo ou comunidade tradicional, deficiência, escolaridade, renda individual, moradia em favela das APs 1 ou 2.",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Seção 3, Experiências da entidade cultural",
+    "blocos": [
+     {
+      "t": "Seção 3, Experiências da entidade cultural",
+      "campos": [
+       {
+        "n": "doc__ed30__6",
+        "l": "Tempo de atuação no setor cultural",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "5 faixas, de menos de 3 anos a mais de 15 anos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__7",
+        "l": "A entidade tem espaços e recursos suficientes?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Sim ou Não.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__8",
+        "l": "Principais desafios",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Seleção múltipla (administrativos, estruturais, geográficos, econômicos, políticos, sociais, saúde, parcerias, formação, desinteresse do público, outro).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__9",
+        "l": "Áreas de atuação",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Até 3 opções, de zona urbana central a digital/on-line.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__10",
+        "l": "Ações estruturantes da PNCV",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3 de 15 opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__11",
+        "l": "Ações estruturantes da Secretaria de Cidadania e Diversidade Cultural",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3 de 15 opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__12",
+        "l": "Áreas e temas de conhecimento",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3 de mais de 55 opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__13",
+        "l": "Público direto atendido",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Até 3 de 24 opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__14",
+        "l": "Faixa etária do público",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Até 4 de 5 opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__15",
+        "l": "Quantidade de público atendido por ano",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "6 faixas, de até 50 a mais de 601 pessoas.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__16",
+        "l": "Atividades culturais com acesso público e gratuito",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Relacionar as atividades às ações estruturantes da PNCV. Base do critério I.a.",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed30__17",
+        "l": "Atividades desenvolvidas em rede com Pontos de Cultura e coletivos",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Em prol da diversidade cultural brasileira. Base do critério I.b.",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed30__18",
+        "l": "Estratégias de articulação e mobilização",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Com redes regionais e temáticas. Base do critério I.c.",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed30__19",
+        "l": "Termo de Compromisso Cultural Cultura Viva já firmado",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Municipal, estadual, federal ou não selecionado.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Seção 4, Formulário do projeto",
+    "blocos": [
+     {
+      "t": "Seção 4, Formulário do projeto",
+      "campos": [
+       {
+        "n": "doc__ed30__20",
+        "l": "Nome do projeto",
+        "t": "txt",
+        "conceito": "titulo",
+        "req": 1,
+        "max": 200
+       },
+       {
+        "n": "doc__ed30__21",
+        "l": "Categoria (linguagem)",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Mais de 70 opções.",
+        "req": 1,
+        "opts": [
+         "Pontão de Cultura de âmbito municipal (proponente do chamamento)",
+         "Prêmio a mestres e mestras (executado pelo Pontão selecionado)"
+        ]
+       },
+       {
+        "n": "doc__ed30__22",
+        "l": "Outra área de atuação artístico-cultural",
+        "t": "txt",
+        "conceito": "especifico",
+        "req": 1,
+        "max": 200
+       },
+       {
+        "n": "doc__ed30__23",
+        "l": "Anexos do projeto",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Portfólio (mínimo de 3 anos, com ao menos um material anterior a fevereiro de 2023); Plano de Trabalho (Anexo 4); Plano de Aplicação de Recursos (Anexo 5); declaração de conteúdo e classificação indicativa (Anexo 10, se houver público infantil); quadro de dirigentes e ata de eleição; documentos complementares. PDF até 10 MB cada.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Plano de Trabalho (Anexo 4, arquivo enviado na Seção 4)",
+    "blocos": [
+     {
+      "t": "Plano de Trabalho (Anexo 4, arquivo enviado na Seção 4)",
+      "campos": [
+       {
+        "n": "doc__ed30__24",
+        "l": "1.1 Objeto do Termo de Compromisso Cultural",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Conciso, sem quantidades excessivas.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__25",
+        "l": "1.2 Público-alvo beneficiado",
+        "t": "ta",
+        "conceito": "publico",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__26",
+        "l": "1.3 Resultados esperados",
+        "t": "ta",
+        "conceito": "metas",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__27",
+        "l": "2.1 Objetivo geral e objetivos específicos",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "No máximo 10 objetivos específicos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__28",
+        "l": "3. Atividades do projeto",
+        "t": "ta",
+        "conceito": "metodologia",
+        "dica": "Obrigatórias a Atividade 1 (Mapeamento) e a Atividade 2 (Ação de Reconhecimento, premiação dos mestres).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__29",
+        "l": "4. Metas 1 a 4 (formação, articulação de redes, registro e divulgação, Bolsa Agente Cultura Viva)",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "Para cada meta: plano de ação ou de formação em tabela, ações de acessibilidade cultural, resultados esperados e produtos gerados.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__30",
+        "l": "5. Equipe",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Tabela por meta: nome, função, CPF/CNPJ e se é pessoa negra, indígena ou com deficiência.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__31",
+        "l": "6. Cronograma de execução",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Tabela: meta, atividade, etapa, descrição, início e fim.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__32",
+        "l": "7. Plano de comunicação",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Tabela: peça, formato, quantidade ou período, veículo e estratégia de divulgação.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__33",
+        "l": "8. Comitê Gestor",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Composição, papel no projeto e organização da atuação (frequência, metodologias).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__34",
+        "l": "9. Capacidade técnica e operacional",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Projetos anteriores similares (3 anos de experiência) e estrutura organizacional, equipamentos e infraestrutura.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed30__35",
+        "l": "10. Informações complementares",
+        "t": "ta",
+        "conceito": "outro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Seção 5, Disposições finais",
+    "blocos": [
+     {
+      "t": "Seção 5, Disposições finais",
+      "campos": [
+       {
+        "n": "doc__ed30__36",
+        "l": "Autorizações e declarações (3 itens)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Autoriza comunicados por e-mail e WhatsApp; ciência de acompanhar as comunicações oficiais; compreensão dos termos do edital.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed2": {
+  "id": "doc-ed2",
+  "nome": "Ações Locais",
+  "plataforma": "cultura-rio",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Editais Cultura Rio (editaisculturario.com.br), link publicado em cultura.prefeitura.rio",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt/SMC-Premio-Acoes-Locais-2026__3.-ASCOM.-3-Espelho-do-Formulario-de-Inscricao-PREMIO-ACOES-LOCAIS.txt",
+  "confianca": "alta",
+  "editais": [
+   "ed2"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Descrição",
+    "blocos": [
+     {
+      "t": "Descrição",
+      "campos": [
+       {
+        "n": "doc__ed2__0",
+        "l": "Aceite dos termos e condições de participação",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Sim ou Não.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cadastro do coletivo cultural",
+    "blocos": [
+     {
+      "t": "Cadastro do coletivo cultural",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do coletivo cultural (6 campos)</b>: Nome do coletivo (até 200 caracteres, será o nome oficial), data de formação, e-mail, telefone, celular, página da internet e redes sociais (até 200 caracteres).",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed2__2",
+        "l": "Integrantes do coletivo cultural",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Insira os nomes de todos os integrantes.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed2__3",
+        "l": "Em qual(is) Área(s) de Planejamento o coletivo atua?",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "AP 1 a AP 5, mais de uma opção permitida.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__4",
+        "l": "O coletivo atua em favelas da AP 1 ou AP 2?",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Sim ou Não.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__5",
+        "l": "Certificação como Ponto ou Pontão de Cultura",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Sim como Ponto, Sim como Pontão, ou Não (pretende ser certificado como Ponto por este edital). Se certificado, upload do certificado (PDF até 10 MB) e link do comprovante (até 200 caracteres).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Cadastro do representante",
+    "blocos": [
+     {
+      "t": "Cadastro do representante",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do representante do coletivo (cerca de 18 campos)</b>: Nome (identidade ou nome social), apelido ou nome artístico, cargo/função, nacionalidade (país e RNM se estrangeiro), endereço completo pelo CEP, telefone, WhatsApp, data de nascimento, RG e órgão expedidor, CPF, e-mail oficial.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed2__7",
+        "l": "AP de residência do representante e residência em favela da AP 1 ou 2 (2 campos)",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "AP preenchida pelo CEP; se residente em favela, lista suspensa de favelas.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Perfil sociocultural do representante (10 campos)</b>: Identidade de gênero, orientação sexual, cor/raça/etnia, povo ou comunidade tradicional, deficiência e tipo, se a principal renda vem da cultura, principal ocupação na cultura, tempo de trabalho no setor, escolaridade, renda média. Campos \"Outro\" com 200 caracteres.",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Experiências do coletivo cultural",
+    "blocos": [
+     {
+      "t": "Experiências do coletivo cultural",
+      "campos": [
+       {
+        "n": "doc__ed2__9",
+        "l": "Há quanto tempo o coletivo atua no setor cultural?",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Menos de 3, 3 a 5, 6 a 10, 10 a 15 ou mais de 15 anos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__10",
+        "l": "Espaços, ambientes e recursos são suficientes para manter as atividades?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Sim ou Não.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__11",
+        "l": "Principais desafios ou dificuldades para manter as atividades",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Administrativos, estruturais, geográficos, econômicos, políticos, sociais, saúde, parcerias, formação, desinteresse do público, outro (200 caracteres).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__12",
+        "l": "Em quais áreas acontecem as atividades?",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Até 3: zona urbana central ou periférica, área de vulnerabilidade social, baixo IDH, alto índice de violência, unidades habitacionais, territórios indígenas, quilombolas ou de povos tradicionais etc.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__13",
+        "l": "Ações estruturantes da PNCV (art. 5º da Lei nº 13.018/2014)",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3: intercâmbio e residências, livro e leitura, cultura e mídia livre, cultura e educação, memória e patrimônio, meio ambiente, saúde, juventude, conhecimentos tradicionais, cultura digital, infância e adolescência, agente cultura viva, direitos humanos, economia criativa e solidária, cultura circense.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__14",
+        "l": "Outras ações estruturantes da SCDC/MinC",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3: culturas indígenas, matriz africana, culturas populares, mestres e mestras, cultura e mulheres, hip hop, linguagens artísticas, culturas tradicionais, acessibilidade e equidade, cultura alimentar, gênero e diversidade, territórios rurais, cultura urbana e direito à cidade, outra (200 caracteres).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__15",
+        "l": "Áreas e temas de conhecimento que podem ser compartilhados",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Até 3, de uma lista de cerca de 50 áreas (Cultura Popular, Música, Cultura Negra, Patrimônio Imaterial etc.), outro (200 caracteres).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__16",
+        "l": "Com qual público a candidatura atua diretamente?",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Até 3, de uma lista (afro-brasileiros, mestres e brincantes, juventude, mulheres, população de baixa renda, áreas de vulnerabilidade, povos de terreiro etc.), outro (200 caracteres).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__17",
+        "l": "Faixa etária do público atendido diretamente",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Até 4 faixas, da primeira infância a idosos."
+       },
+       {
+        "n": "doc__ed2__18",
+        "l": "Quantidade aproximada de público atendida diretamente por ano",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Faixas de até 50 a mais de 601 pessoas.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__19",
+        "l": "Descreva as atividades desenvolvidas pelo coletivo cultural",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Descrição geral das atividades do coletivo.",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__20",
+        "l": "Quais estratégias o coletivo adota para promover a criação e a produção artística e cultural?",
+        "t": "ta",
+        "conceito": "metodologia",
+        "dica": "Espelha o critério a) do Bloco 1 (10 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__21",
+        "l": "O coletivo estimula a exploração de espaços públicos e privados para a ação cultural? Se sim, como?",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Espelha o critério d) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "t": "info",
+        "html": "<b>O coletivo promove a diversidade cultural brasileira, garantindo diálogos interculturais? Se sim, como?</b>: Espelha o critério f) (5 pontos).",
+        "conceito": "diversidade"
+       },
+       {
+        "t": "info",
+        "html": "<b>O coletivo promove a inclusão cultural da população idosa, de mulheres, jovens, pessoas negras, com deficiência, LGBTQIAP+ e/ou de baixa renda, combatendo desigualdades? Se sim, como?</b>: Espelha o critério h) (10 pontos).",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed2__24",
+        "l": "O coletivo contribui para o fortalecimento da autonomia social das comunidades? Se sim, como?",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Espelha o critério i) (10 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__25",
+        "l": "O coletivo promove o intercâmbio entre diferentes segmentos da comunidade? Se sim, como?",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Espelha o critério j) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__26",
+        "l": "O coletivo estimula a articulação das redes sociais e culturais e dessas com a educação? Se sim, como?",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Espelha o critério k) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__27",
+        "l": "O coletivo adota princípios de gestão compartilhada entre atores culturais não governamentais e o Estado? Se sim, como?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Espelha o critério l) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__28",
+        "l": "O coletivo fomenta as economias solidária e criativa? Se sim, como?",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Espelha o critério m) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__29",
+        "l": "O coletivo protege o patrimônio cultural material, imaterial e/ou promove as memórias comunitárias? Se sim, como?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Espelha o critério n) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__30",
+        "l": "O coletivo apoia e incentiva manifestações culturais tradicionais e populares? Se sim, como?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Espelha o critério o) (5 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__31",
+        "l": "O coletivo realiza atividades culturais gratuitas e abertas com regularidade na comunidade? Se sim, como?",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Espelha o critério p) (10 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__32",
+        "l": "As ações do coletivo estão relacionadas aos eixos estruturantes da PNCV, por meio de ações de formação, produção e/ou difusão sociocultural de maneira continuada?",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Espelha o critério q) (10 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__33",
+        "l": "O coletivo possui articulação com outras organizações, compondo Frentes, Redes, Conselhos, Comissões e outros espaços de participação e incidência política sinérgicos à PNCV? Se sim, quais?",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Espelha o critério r) (10 pontos).",
+        "req": 1,
+        "max": 800
+       },
+       {
+        "n": "doc__ed2__34",
+        "l": "O coletivo celebrou algum Termo de Premiação Cultural nos últimos 12 meses?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Sim municipal, estadual, federal, ou Não. Serve para a vedação de acumular dois Prêmios Cultura Viva em 12 meses.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__35",
+        "l": "O coletivo acessou recursos públicos de fomento nos últimos 5 anos e por quais meios",
+        "t": "txt",
+        "conceito": "trajetoria",
+        "dica": "Sim ou Não; se Sim, indicar os meios.",
+        "req": 1,
+        "max": 200
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Concorrência às vagas reservadas",
+    "blocos": [
+     {
+      "t": "Concorrência às vagas reservadas",
+      "campos": [
+       {
+        "n": "doc__ed2__36",
+        "l": "Opção por vaga reservada e comprovação",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Pessoas negras, indígenas ou com deficiência (coletivo com maioria dos integrantes do grupo), não deseja ou não se aplica. Upload em arquivo único das autodeclarações de cada integrante ou dos documentos de deficiência (PDF até 10 MB).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__37",
+        "l": "Trajetória comprovadamente ligada às culturas tradicionais e populares",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Sim ou Não, para a reserva de no mínimo 30% dos prêmios; a Comissão confere pelas comprovações enviadas.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Inscrição do coletivo cultural",
+    "blocos": [
+     {
+      "t": "Inscrição do coletivo cultural",
+      "campos": [
+       {
+        "n": "doc__ed2__38",
+        "l": "Principal área de atuação do coletivo",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Lista com cerca de 70 áreas (inclui Carnaval, Cultura Popular, Culturas Populares, Música Popular, Festas Populares, Cultura Afro-brasileira); \"Outros\" abre campo de 200 caracteres.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__39",
+        "l": "Outra área de atuação no campo artístico-cultural",
+        "t": "txt",
+        "conceito": "enquadramento",
+        "dica": "Caixa editável.",
+        "req": 1,
+        "max": 200
+       },
+       {
+        "n": "doc__ed2__40",
+        "l": "Portfólio do coletivo",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "PDF até 10 MB, com pelo menos 1 comprovação anterior a 2 anos da publicação do edital e materiais recentes dos últimos 2 anos (cartazes, fotos, vídeos em link aberto, matérias, depoimentos, cartas de reconhecimento), de preferência com nome, data e local de cada atividade.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed2__41",
+        "l": "Link do perfil no Mapa do Cadastro Nacional de Pontos e Pontões de Cultura",
+        "t": "txt",
+        "conceito": "trajetoria",
+        "dica": "Opcional, para quem já é Ponto de Cultura.",
+        "max": 200
+       },
+       {
+        "n": "doc__ed2__42",
+        "l": "Anexos da inscrição",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Declaração de Representação do Grupo/Coletivo Cultural (Anexo 4, assinada por todos os membros, obrigatória); Declaração de Não Constituição Jurídica do Coletivo Informal (Anexo 5, obrigatória no espelho); documentos complementares (opcional). PDF até 10 MB cada.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7",
+    "nome": "Declarações",
+    "blocos": [
+     {
+      "t": "Declarações",
+      "campos": [
+       {
+        "n": "doc__ed2__43",
+        "l": "Declarações",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Autoriza comunicados por e-mail e WhatsApp; ciente de acompanhar o Diário Oficial; leu e compreendeu o edital; declaração geral (ciência de regras, veracidade, não enquadramento nas vedações, ausência de plágio, autorização de uso e divulgação dos conteúdos).",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed12": {
+  "id": "doc-ed12",
+  "nome": "Fluxos Fluminenses",
+  "plataforma": "desenvolve-cultura",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Desenvolve Cultura (cadastro do proponente e cadastro da proposta)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt/00_Editais__Inscricoes_2026_-_Fluxos_SESC_SESEC__ANEXO_04_-_PROPOSTA.txt",
+  "confianca": "alta",
+  "editais": [
+   "ed12"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro do proponente",
+    "blocos": [
+     {
+      "t": "Cadastro do proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente (PJ ou MEI) e do responsável pela execução</b>: Preenchidos na plataforma; número de campos não descrito no espelho.",
+        "conceito": "cadastro"
+       },
+       {
+        "t": "info",
+        "html": "<b>Autodeclaração para cotas (pessoas negras, indígenas, pessoas com deficiência)</b>: Feita no ato da inscrição, com os Anexos 14 (étnico-racial) e 15 (PcD); vale para representantes legais do CNPJ que exerçam função na proposta.",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cadastro da proposta",
+    "blocos": [
+     {
+      "t": "Cadastro da proposta",
+      "campos": [
+       {
+        "n": "doc__ed12__1",
+        "l": "Categoria (A Dança, B Teatro, C Música, D Artes Visuais, E Museus e Patrimônio) e grupo regional",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "É responsabilidade do proponente escolher a categoria em que a proposta se enquadra; a proposta deve ser realizada majoritariamente na região do CNPJ, com ao menos 1 ação no município do CNPJ.",
+        "req": 1,
+        "opts": [
+         "Categoria A, Dança",
+         "Categoria B, Teatro",
+         "Categoria C, Música",
+         "Categoria D, Artes Visuais",
+         "Categoria E, Museus e Patrimônio Cultural"
+        ]
+       },
+       {
+        "n": "doc__ed12__3",
+        "l": "Apresentação da proposta cultural",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Apresente a proposta e informe processo criativo, etapas de produção, profissionais envolvidos, público-alvo e outras informações.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__4",
+        "l": "Objetivos (geral e específicos)",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Descreva para que está sendo apresentada a proposta, referindo-se à meta de cada etapa de realização.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__5",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Razão e importância da proposta, sua relevância na cena cultural e por que é importante realizá-la.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__6",
+        "l": "Datas e locais de realização",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Liste o local de cada apresentação (nome do espaço e endereço) e a data.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__7",
+        "l": "Medidas de democratização do acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Ações que permitirão o acesso de grupos vulnerabilizados (mulheres, pessoas negras, indígenas, comunidades tradicionais, quilombolas, LGBTQIAP+, pessoas idosas etc.) e a participação desses grupos no desenvolvimento e na execução.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__8",
+        "l": "Medidas de sustentabilidade",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Indique quais Objetivos de Desenvolvimento Sustentável (ODS) da ONU a proposta contempla e descreva as ações para alcançá-los.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed12__9",
+        "l": "Medidas de acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Liste e descreva as ações de acessibilidade, incluindo a medida obrigatória: comunicacional (Libras, Braille, audiodescrição, legendas para pessoas com deficiência auditiva, linguagem simples), atitudinal (capacitação de equipes, contratação de profissionais com deficiência) e arquitetônica (rotas acessíveis, rampas, piso tátil, banheiros adaptados).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Uploads",
+    "blocos": [
+     {
+      "t": "Uploads",
+      "campos": [
+       {
+        "n": "doc__ed12__10",
+        "l": "Anexos",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Proponente: cartão CNPJ (até 30 dias), contrato ou estatuto (exceto MEI), ata ou última alteração, RG e CPF do representante, declaração de nome social, declaração de anuência da equipe (Anexo 09), autodeclarações (Anexos 14 e 15). Proposta: portfólio (Anexo 06), planilha orçamentária (Anexo 07), cronograma de execução (Anexo 08).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed31": {
+  "id": "doc-ed31",
+  "nome": "Petrobras",
+  "plataforma": "petrobras",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Plataforma digital em www.petrobras.com.br/cultura, pelo link \"Seleção Petrobras Cultural 2026\" (não pelo link \"Escolha Direta\"); botões Salvar e sair e Validar e enviar",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "Regulamento, itens 5.2, 6.2, 6.3, 6.4, 6.5 e 7.1, e Perguntas Frequentes (Síntese, Descrição, Detalhamento dos Eventos, Plano de Comunicação, Contrapartidas, valores, Expertise); requisitos por modalidade do checklist oficial",
+  "confianca": "alta",
+  "editais": [
+   "ed31"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro",
+    "blocos": [
+     {
+      "t": "Cadastro",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados da instituição proponente, do representante e contatos (e-mails e telefones)</b>: Dados da PJ que assinará o contrato; toda a comunicação sai pelo e-mail cadastrado (itens 7.1 e 16). O mesmo usuário pode cadastrar CNPJs diferentes (FAQ).",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Proposta",
+    "blocos": [
+     {
+      "t": "Proposta",
+      "campos": [
+       {
+        "n": "doc__ed31__1",
+        "l": "Modalidade de patrocínio",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma das 11 modalidades, a que melhor descreve o escopo principal (item 7.1 e FAQ).",
+        "req": 1,
+        "opts": [
+         "Eixo Ícones da Cultura Brasileira: Espaços e Instituições Artístico-Culturais e de Memória",
+         "Eixo Ícones da Cultura Brasileira: Grupos e Coletivos Artístico-Culturais",
+         "Eixo Cinema e Cultura Digital: Produção e Distribuição de Longas Metragens",
+         "Eixo Cinema e Cultura Digital: Distribuição de Longas Metragens em Cinema",
+         "Eixo Cinema e Cultura Digital: Projetos de Cultura Digital",
+         "Eixo Cinema e Cultura Digital: Produção de Games",
+         "Eixo Produção e Circulação: Circuitos de Espetáculos Artísticos",
+         "Eixo Produção e Circulação: Circuitos de Exposições de Arte",
+         "Eixo Produção e Circulação: Incubação e Desenvolvimento Cultural",
+         "Eixo Festivais e Festas Populares: Festivais e Mostras",
+         "Eixo Festivais e Festas Populares: Festas Populares"
+        ]
+       },
+       {
+        "n": "doc__ed31__2",
+        "l": "Título da proposta",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Sem naming right (\"Petrobras\" ou outra empresa); idêntico ao cadastrado no MinC ou na Ancine; recorte de plano anual leva o nome do projeto registrado entre parênteses (itens 6.2 f e 7.3).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__3",
+        "l": "Síntese do Projeto",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Resumo da proposta em uma única frase capaz de identificar do que se trata (FAQ).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__4",
+        "l": "Descrição do Projeto",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Objetiva e baseada em entregas: o que é, a quem se destina, relevância cultural, estrutura, local, temática, programação, conteúdos para o público, porte, organizador e parceiros (FAQ; item 6.2 a).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__5",
+        "l": "Informações sobre o projeto / Expertise para o projeto",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Experiência e reconhecimento da instituição e da equipe, com comprovações (certificados, matérias, cartas de apoio, vídeos, fotos); nas modalidades que exigem tempo de atuação ou edições anteriores, é aqui que se comprova (FAQ e checklist).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__6",
+        "l": "Detalhamento dos Eventos (tabela)",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "Só ações voltadas ao público, com quantitativos mínimos: nome do evento, previsão de início, término, CEP, UF, espaço previsto com a cidade entre parênteses (sem naming right de empresa de energia) e quantidade de apresentações no mesmo espaço (item 6.2 a e FAQ).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__7",
+        "l": "Data de início da execução",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Deve estar entre 01/05/2027 e 30/04/2028 (item 6.2 b); escopo em até 12 meses, salvo longas, games e incubação (FAQ).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__10",
+        "l": "Ações de Economia Criativa",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Campo próprio (item 6.5): mobilização de redes de realizadores, empreendedorismo cultural, capacitação local, ações de sustentabilidade (reciclagem, compensação de carbono, campanhas ambientais). Obrigatórias, sem pontuação específica.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__11",
+        "l": "Contrapartidas",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "Pelo menos 1 contrapartida nova, fora do Anexo II, com custo incluído no valor pedido (item 6.4 b e c); nas modalidades Espaços, Festivais e Festas Populares, indicar aqui o recorte \"Sala/Palco Petrobras\" (checklist).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Diversidade",
+    "blocos": [
+     {
+      "t": "Diversidade",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Autodeclaração do perfil do quadro societário ou diretivo</b>: Especificar o perfil dos integrantes da composição societária ou diretiva da PJ (item 5.2); base da reserva de 25%.",
+        "conceito": "diversidade"
+       },
+       {
+        "t": "info",
+        "html": "<b>Ações da proposta voltadas a grupos com menor representatividade</b>: Descrever quais ações estarão voltadas a mulheres, pessoas negras, indígenas, comunidades tradicionais, LGBTQIAPN+, mestras e mestres, pessoas com deficiência e outros grupos (item 5.2).",
+        "conceito": "diversidade"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Comunicação",
+    "blocos": [
+     {
+      "t": "Comunicação",
+      "campos": [
+       {
+        "n": "doc__ed31__12",
+        "l": "Plano de Comunicação: Mídia Paga",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Recomenda-se 1 linha com informação geral e valor total (anúncios, impulsionamento, rádio, TV, jornal, carro de som); dimensões, tiragem e quantidade podem ficar em branco na inscrição (item 6.3 f e FAQ).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__13",
+        "l": "Plano de Comunicação: Outras Ações",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "1 linha com informação geral e valor total (assessoria de imprensa, redes sociais, relações públicas, produção de vídeos, fotos, cartazes, comunicação acessível) (item 6.3 f e FAQ).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Orçamento",
+    "blocos": [
+     {
+      "t": "Orçamento",
+      "campos": [
+       {
+        "n": "doc__ed31__14",
+        "l": "Outros patrocinadores",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Nomes e valores previstos de cada investidor já confirmado ou em negociação (item 6.2 h); vedados concorrentes do setor de energia.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__15",
+        "l": "Valor total do projeto",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Valor global conforme o orçamento total (FAQ). Não há planilha orçamentária na inscrição (item 7.3).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__16",
+        "l": "Valor proposto à Petrobras",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Somente o valor pedido à Petrobras, dentro do teto da modalidade e compatível com o porte e o histórico (itens 6.2 c e i; FAQ). Deve prever escopo, comunicação e acessibilidade (15% a 20% na Rouanet), assessoria de imprensa independente, gestão e direitos autorais.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed31__17",
+        "l": "Valor captado",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Montante já captado com outros patrocinadores, quando houver (FAQ).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed31__18",
+        "l": "Anexos obrigatórios e complementares",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Apresentação de atividades ou projetos similares realizados pela instituição (1 PDF até 10 MB ou link); apresentação ilustrativa do projeto proposto (1 PDF até 10 MB ou link); links não podem exigir autorização de acesso (item 6.2 e). Games: GDD. Modalidades com exigência de trajetória: anexo de expertise (checklist).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed1": {
+  "id": "doc-ed1",
+  "nome": "Mosaico",
+  "plataforma": "firjan",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Plataforma de editais culturais Firjan (www.firjan.com.br/editaisculturais; editaisculturais.firjan.com.br)",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/Firjan-Mosaico-Rio-2027__ANEXO-II-MUSICA-VIDEOCLIPE.txt, item 3.2 (limites de caracteres conforme dossiês do coletivo no Project: claude/mosaico-firjan-*.md)",
+  "confianca": "alta",
+  "editais": [
+   "ed1"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro do proponente",
+    "blocos": [
+     {
+      "t": "Cadastro do proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente (7 campos: e-mail, tipo de empresa, razão social, nome fantasia, CNPJ com PDF, endereço completo, telefones)</b>: Contatos informados serão usados em todas as comunicações do edital.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Dados do projeto",
+    "blocos": [
+     {
+      "t": "Dados do projeto",
+      "campos": [
+       {
+        "n": "doc__ed1__1",
+        "l": "Categoria e linha",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Inéditos, Música: Produção de Videoclipe. O proponente só pode se inscrever em uma linha de uma categoria (item 5.2 do edital).",
+        "req": 1,
+        "opts": [
+         "Inéditos, Artes Cênicas: Teatro Adulto",
+         "Inéditos, Artes Cênicas: Teatro Juvenil",
+         "Inéditos, Artes Cênicas: Circo",
+         "Inéditos, Artes Cênicas: Dança",
+         "Inéditos, Música: Produção de Videoclipe",
+         "Inéditos, Artes Visuais: Fotografia",
+         "Inéditos, Artes Visuais: Obra de Arte Bidimensional",
+         "Inéditos, Artes Visuais: Obra de Arte Tridimensional",
+         "Inéditos, Multilinguagem",
+         "Não Inéditos, Literatura",
+         "Não Inéditos, Circuito de Teatro para Crianças",
+         "Não Inéditos, Circuito de Teatro Adulto"
+        ]
+       },
+       {
+        "n": "doc__ed1__2",
+        "l": "Título da música de trabalho proposta e nome do artista ou banda",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Música original, com letra em português.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__3",
+        "l": "Áudio da música de trabalho proposta",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Arquivo ou link do fonograma; se selecionado, pode ser regravado e deve caber em até 5 minutos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__4",
+        "l": "Letra da música de trabalho proposta",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Sem plágio, adaptação ou citação poética e musical de outro autor.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__5",
+        "l": "Argumento/sinopse da proposta de videoclipe",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Descrição da ideia do clipe; é a base dos critérios de criatividade, coerência com a música e viabilidade. Limite não confirmado.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__6",
+        "l": "Medidas de acessibilidade, caso previstas na proposta",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Vale 1 ponto extra: acessibilidade no processo criativo, comunicacional (audiodescrição, Libras, legendagem descritiva) ou atitudinal. Limite de 1.500 caracteres segundo os dossiês do coletivo.",
+        "max": 1500
+       },
+       {
+        "n": "doc__ed1__7",
+        "l": "Ficha técnica completa de produção do fonograma",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Com breves descrições dos participantes (autor, cantor, músicos, direção musical etc.). Os dossiês do coletivo registram descrições de até 250 caracteres por participante.",
+        "req": 1,
+        "max": 250
+       },
+       {
+        "n": "doc__ed1__8",
+        "l": "Ficha técnica completa de produção do videoclipe",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Com breves descrições dos participantes (cantor, músicos, direção criativa, roteirista, editor, produtor etc.). Limite por participante não confirmado; provavelmente o mesmo da ficha do fonograma.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__9",
+        "l": "Defesa e justificativa do projeto",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Pontuada pela Comissão Interna (até 10 pontos): relevância e viabilidade da proposta. Limite de 3.000 caracteres segundo os dossiês do coletivo.",
+        "req": 1,
+        "max": 3000
+       },
+       {
+        "n": "doc__ed1__10",
+        "l": "Histórico da banda ou artista independente",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Pontuado pela Comissão Interna (atuação nos últimos 2 anos, até 10 pontos). Limite de 1.500 caracteres segundo os dossiês do coletivo.",
+        "req": 1,
+        "max": 1500
+       },
+       {
+        "n": "doc__ed1__11",
+        "l": "Link de materiais gráficos que comprovem trabalhos anteriores (pelo menos nos últimos 2 anos)",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Links bloqueados ou indisponíveis eliminam a inscrição (item 5.11).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__12",
+        "l": "Link de clipping de imprensa e mídias digitais",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Da banda ou artista independente.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__13",
+        "l": "Link de videoclipes e/ou shows realizados",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Da banda ou artista independente.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed1__14",
+        "l": "Link de vídeo de defesa do projeto",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Não obrigatório."
+       },
+       {
+        "t": "info",
+        "html": "<b>Autodeclaração de diversidade e/ou representatividade (Anexo XIII)</b>: Necessária para o ponto extra de diversidade; indicar a pessoa e a função de protagonismo.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed1__16",
+        "l": "Anexos: registro de propriedade intelectual da música e/ou declaração de detenção dos direitos autorais (Anexo XV)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Segundo a revisão, o Ofício CC 951/2026 esclarece que o Anexo XV se refere ao videoclipe (titularidade e uso da obra audiovisual), não à música.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed11": {
+  "id": "doc-ed11",
+  "nome": "FEC",
+  "plataforma": "desenvolve-cultura",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Desenvolve Cultura (cadastro do proponente e cadastro da proposta)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt2/SECEC-Cultura-Sustentavel-Ecologia-2026__Anexo-04-ESPECIFICAÇÕES-DA-PROPOSTA-2.txt (Anexo 04, 'modelo para consulta' do que se preenche na plataforma)",
+  "confianca": "alta",
+  "editais": [
+   "ed11"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro do proponente",
+    "blocos": [
+     {
+      "t": "Cadastro do proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente (PJ ou MEI) e do responsável pela execução</b>: Todos os campos do cadastro da PJ ou do MEI e do responsável pela execução, na plataforma; número de campos não descrito.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed11__1",
+        "l": "Aceite do Termo de Compromisso de Adimplência (Anexo 02)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Aceite eletrônico obrigatório para submeter a inscrição (item 8.1.1).",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cadastro da proposta",
+    "blocos": [
+     {
+      "t": "Cadastro da proposta",
+      "campos": [
+       {
+        "n": "doc__ed11__2",
+        "l": "Categoria e linha (A.1 manutenção de espaço, A.2 adequação de espaço, B produção artístico-cultural) e grupo regional",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma proposta por proponente; a categoria não pode ser trocada depois de submetida (8.5.1.1); o grupo regional segue a sede do CNPJ.",
+        "req": 1,
+        "opts": [
+         "Cultura e Ecologia, Categoria A, Linha A.1: manutenção de espaços culturais",
+         "Cultura e Ecologia, Categoria A, Linha A.2: adequação de espaços culturais",
+         "Cultura e Ecologia, Categoria B: produções artístico-culturais (artes cênicas, audiovisual, música)",
+         "Artesanato Sustentável, Categoria A (peças e exposição)",
+         "Artesanato Sustentável, Categoria B",
+         "Moda Sustentável",
+         "Feiras de Artesanato",
+         "Gastronomia Cultural, Categoria A (feiras)",
+         "Gastronomia Cultural, Categoria B (mapeamento)"
+        ]
+       },
+       {
+        "n": "doc__ed11__3",
+        "l": "Apresentação e descrição da proposta cultural",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Categoria A: breve relato do histórico do espaço cultural, do início das atividades até hoje, e descrição de todas as ações de reparo, manutenção, adequação e aquisição de materiais previstas. Categoria B: breve relato objetivo do histórico do grupo, associação, coletivo etc., principalmente no que toca às temáticas socioambientais.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__4",
+        "l": "Descrição da proposta e objetivos",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Descreva detalhadamente a proposta, quais ações serão executadas com o aporte, os objetivos e para que está sendo apresentada, referindo-se à meta que se quer atingir em cada etapa de realização.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__5",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Descreva de forma clara e convincente os motivos pelos quais a proposta é relevante, necessária e benéfica.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__6",
+        "l": "Data e local de realização",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Informe a data e o local previstos para a realização da proposta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__7",
+        "l": "Medidas de democratização do acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Ações que permitirão o acesso de grupos vulnerabilizados socialmente (mulheres, pessoas negras, pessoas indígenas, comunidades tradicionais, quilombolas, pessoas LGBTQIAP+, pessoas idosas e outros) e a participação desses grupos no desenvolvimento e na execução da proposta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__8",
+        "l": "Medidas de acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Ações viáveis e ligadas ao objetivo da proposta, com ao menos 1 medida obrigatória (item 8.7, sob pena de desclassificação): comunicacional (Libras, Braille, comunicação tátil, audiodescrição, legendas para pessoas com deficiência auditiva, linguagem simples, textos para leitor de tela), atitudinal (capacitação de equipes, contratação de profissionais com deficiência e especializados, sensibilização) e arquitetônica (rotas acessíveis, piso tátil, rampas, banheiros adaptados, assentos para pessoas obesas, iluminação adequada).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed11__9",
+        "l": "Medidas de sustentabilidade",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Indique quais Objetivos de Desenvolvimento Sustentável da ONU a proposta contempla (no mínimo 2 dos 17, sob pena de desclassificação, item 8.6) e descreva as ações para alcançá-los.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Uploads",
+    "blocos": [
+     {
+      "t": "Uploads",
+      "campos": [
+       {
+        "n": "doc__ed11__10",
+        "l": "Anexos",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Proponente: cartão CNPJ emitido até 30 dias antes (CCMEI não vale), contrato ou estatuto e ata ou última alteração (exceto MEI), identidade e CPF do responsável pela execução, declaração de nome social (Anexo 13, se for o caso), declaração de anuência da equipe (Anexo 09). Proposta: portfólio de atuação artística e cultural (Anexo 06), planilha orçamentária no valor exato do aporte (Anexo 07), cronograma de execução (Anexo 08). Não se aceita documento além do pedido.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed17": {
+  "id": "doc-ed17",
+  "nome": "Brasilidades",
+  "plataforma": "futuros",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: brasilidadesefuturos.futuros.org.br",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/00_Editais__Inscricoes_2026_-_Fluxos_SESC_SESEC__REGULAMENTO_BRASILIDADESEFUTUROS_.txt (itens 5, 7 e 10.5); o \"Anexo, Formulário de Inscrição\" citado no item 5.9 não foi obtido",
+  "confianca": "media",
+  "editais": [
+   "ed17"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Inscrição",
+    "blocos": [
+     {
+      "t": "Inscrição",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente e do representante legal (incluindo e-mail e telefone para contato)</b>: Inscrição feita pelo representante legal ou pessoa autorizada; a confirmação chega por e-mail.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed17__1",
+        "l": "Linha de seleção",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Artes Visuais, Artes Cênicas ou Música.",
+        "req": 1,
+        "opts": [
+         "Artes Visuais: Galeria 2",
+         "Artes Visuais: Galeria 3",
+         "Artes Cênicas (teatro adulto e infantil)",
+         "Música"
+        ]
+       },
+       {
+        "n": "doc__ed17__2",
+        "l": "Espaço(s) do centro cultural que pretende ocupar",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Teatro multiuso, Galerias 2 e 3, térreo (área interna e externa); plantas e riders no Anexo, Plantas e Riders.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed17__3",
+        "l": "Valor da proposta",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Não pode ultrapassar o teto da linha; valor bruto com todos os custos, incluindo equipe técnica, transporte, hospedagem e rider complementar.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed17__4",
+        "l": "Outros patrocinadores já negociados, com os valores correspondentes",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Campo específico do formulário; vedados patrocinadores de energia e de apostas (bets)."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Arquivos",
+    "blocos": [
+     {
+      "t": "Arquivos",
+      "campos": [
+       {
+        "n": "doc__ed17__5",
+        "l": "Cartas de anuência dos principais membros do projeto",
+        "t": "ta",
+        "conceito": "parcerias",
+        "req": 1
+       },
+       {
+        "n": "doc__ed17__6",
+        "l": "Questionário de análise de risco (compliance)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Arquivo obrigatório no sistema; pode desclassificar quem ofereça risco de compliance, ética ou governança ao Instituto Futuros ou à Petrobras.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       },
+       {
+        "n": "doc__ed17__7",
+        "l": "Arquivos obrigatórios em PDF",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Até 10 MB por arquivo; a lista consta do Anexo, Formulário de Inscrição (não obtido). Em Artes Visuais, incluir autorizações dos artistas para uso das obras.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed29": {
+  "id": "doc-ed29",
+  "nome": "Linguagens",
+  "plataforma": "cultura-rio",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Editais Cultura Rio (editaisculturario.com.br), link publicado em cultura.prefeitura.rio",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt/SMC-Linguagens-PNAB-2026__Espelho-do-Formulario-de-Inscricao-Linguagens-2026.txt",
+  "confianca": "alta",
+  "editais": [
+   "ed29"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Seus dados",
+    "blocos": [
+     {
+      "t": "Seus dados",
+      "campos": [
+       {
+        "n": "doc__ed29__0",
+        "l": "Aceite dos termos e condições de participação",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Sim ou Não.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Tipo de proponente e dados cadastrais (PF: 14 campos; PJ: 20 campos)</b>: Tipo: PF (o espelho diz \"somente no caso da modalidade Pesquisa\"), PJ com fins lucrativos, PJ sem fins lucrativos ou MEI. PF: nome, CPF, e-mail, RG e órgão expedidor, telefone, WhatsApp, endereço, upload de comprovante de endereço dos últimos 3 meses ou Declaração de Residência (Anexo 04), representação por procurador. PJ: razão social, nome fantasia, CNPJ, inscrição municipal, quadro societário (todos os integrantes), dados e contatos do responsável legal, endereço do CNPJ, upload do cartão CNPJ, procurador.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed29__2",
+        "l": "Área de Planejamento (AP 1 a 5)",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Preenchida pelo CEP. O espelho rotula como \"Área de Planejamento do CNPJ\" também para PF.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__3",
+        "l": "Sediado ou residente em favela da AP 1 ou 2, na Ilha de Paquetá ou na Pequena África (Gamboa, Saúde e Santo Cristo)?",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Sim ou Não. Define a política de territorialização de 30%.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Ação afirmativa",
+    "blocos": [
+     {
+      "t": "Ação afirmativa",
+      "campos": [
+       {
+        "n": "doc__ed29__4",
+        "l": "Opção por vaga reservada e comprovação",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Pessoas negras, pessoas indígenas, pessoas com deficiência, não deseja ou não se aplica. Se optar, abre upload obrigatório (PDF até 10 MB) da Autodeclaração Étnico-racial (Anexo 06) ou de laudo, atestado, relatório de saúde ou identidade diferenciada do DETRAN/RJ.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Dados socioculturais",
+    "blocos": [
+     {
+      "t": "Dados socioculturais",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Perfil sociocultural do agente cultural (14 campos)</b>: Raça, cor ou etnia; gênero; renda (em salários mínimos); faturamento anual; faixa etária; escolaridade; pessoa com deficiência; pessoa transgênero; principal área de atuação (lista com Carnaval, Cultura Popular, Música Popular, Festas Populares etc.); principal função (lista com Carnavalesco(a), Mestre da Cultura Popular, Brincante etc.); se já acessou fomento público; tempo de atuação (menos de 1, 1 a 4, 5 a 10, mais de 10 anos). Para PJ vale a maioria do corpo diretivo; para grupos e coletivos, a maioria dos integrantes.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed29__6",
+        "l": "Se já acessou recursos públicos de fomento, quais foram",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Caixa editável, sem limite indicado no espelho."
+       },
+       {
+        "n": "doc__ed29__7",
+        "l": "Bairro de residência",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Lista suspensa de bairros do município.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Cadastro da proposta",
+    "blocos": [
+     {
+      "t": "Cadastro da proposta",
+      "campos": [
+       {
+        "n": "doc__ed29__8",
+        "l": "Categoria e modalidade",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "PF: Pesquisa (R$ 50.000) em qualquer das 8 categorias ou Produção e/ou Circulação III em Cultura Hip-Hop (R$ 50.000). PJ: Produção e/ou Circulação I (R$ 200.000) ou II (R$ 100.000) em qualquer categoria, ou III em Cultura Hip-Hop.",
+        "req": 1,
+        "opts": [
+         "Artes Visuais, Produção e/ou Circulação I",
+         "Artes Visuais, Produção e/ou Circulação II",
+         "Artes Visuais, Pesquisa",
+         "Teatro, Produção e/ou Circulação I",
+         "Teatro, Produção e/ou Circulação II",
+         "Teatro, Pesquisa",
+         "Dança, Produção e/ou Circulação I",
+         "Dança, Produção e/ou Circulação II",
+         "Dança, Pesquisa",
+         "Circo, Produção e/ou Circulação I",
+         "Circo, Produção e/ou Circulação II",
+         "Circo, Pesquisa",
+         "Música, Produção e/ou Circulação I",
+         "Música, Produção e/ou Circulação II",
+         "Música, Pesquisa",
+         "Cultura Popular e Patrimônio Imaterial, Produção e/ou Circulação I",
+         "Cultura Popular e Patrimônio Imaterial, Produção e/ou Circulação II",
+         "Cultura Popular e Patrimônio Imaterial, Pesquisa",
+         "Arte Pública e Cultura Urbana, Produção e/ou Circulação I",
+         "Arte Pública e Cultura Urbana, Produção e/ou Circulação II",
+         "Arte Pública e Cultura Urbana, Pesquisa",
+         "Cultura Hip-Hop, Produção e/ou Circulação I",
+         "Cultura Hip-Hop, Produção e/ou Circulação II",
+         "Cultura Hip-Hop, Produção e/ou Circulação III",
+         "Cultura Hip-Hop, Pesquisa"
+        ]
+       },
+       {
+        "n": "doc__ed29__9",
+        "l": "Nome da proposta",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Caixa editável, sem limite indicado no espelho.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__10",
+        "l": "A proposta é inédita ou não inédita?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Inédita ou Não inédita.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__11",
+        "l": "Principais locais em que o projeto já circulou",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Aparece só para proposta não inédita.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__12",
+        "l": "Sinopse",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Descreva de forma resumida o que é o projeto cultural.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__13",
+        "l": "Apresentação",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Descreva de forma clara e objetiva a proposta: tipo de atividade, atividades previstas, quantas serão, como e em que formato acontecerão, onde será realizado e o período de execução. Atenção: limite de só 500 caracteres, igual ao da sinopse.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__14",
+        "l": "Objetivos do projeto",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Objetivo geral e objetivos específicos, cada um a partir de um verbo no infinitivo (promover, realizar, apresentar etc.).",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed29__15",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Relevância e motivos da realização: demanda existente, abrangência e alcance, pesquisa de linguagem, continuidade de trajetória, caráter temático ou comemorativo, diversidade cultural, social e territorial, preservação da memória etc.",
+        "req": 1,
+        "max": 3000
+       },
+       {
+        "n": "doc__ed29__16",
+        "l": "Concepção artística e referências",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Concepção artística do projeto, principais referências estéticas, artísticas, culturais ou conceituais e como se traduzem em linguagem, estilo e forma. Para não inéditas, como a concepção já se manifesta na obra; para inéditas, o caminho artístico e as referências. Como os elementos (visuais, sonoros, corporais, narrativos, espaciais) se articulam e a relação com o espaço de realização.",
+        "req": 1,
+        "max": 3000
+       },
+       {
+        "n": "doc__ed29__17",
+        "l": "Quantas ações/atividades serão realizadas",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "Quantidade de ações com formato e número de realizações combinados. Exemplos: \"1 temporada (12 sessões)\", \"1 show (3 apresentações)\", \"1 seminário (4 dias)\", \"1 exposição (30 dias)\".",
+        "req": 1,
+        "max": 3000
+       },
+       {
+        "n": "doc__ed29__18",
+        "l": "Locais de realização",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Detalhe os espaços onde ocorrerão as atividades.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed29__19",
+        "l": "Público-alvo",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Características do público: quantidade de pessoas atingidas, perfil social, faixa etária, gênero, raça etc., considerando requisitos da categoria.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed29__20",
+        "l": "Estratégia de comunicação e mobilização",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Como fará divulgação e mobilização considerando o território: meios físicos e virtuais, profissionais contratados. Lembrete: o orçamento deve prever no mínimo 10% e no máximo 20% para divulgação.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed29__21",
+        "l": "Aproximadamente quantos profissionais farão parte do projeto",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Campo numérico.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__22",
+        "l": "Ficha técnica dos membros da equipe",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Composição integral da equipe com nome e função, explicitando os critérios de escolha, a relação entre trajetórias e funções e a coerência da ficha técnica com objetivos e atividades, defendendo a consistência da equipe.",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed29__23",
+        "l": "Currículo dos principais profissionais",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Upload em PDF até 10 MB (1 obrigatório e 3 opcionais) com currículos dos responsáveis pelas decisões e atividades, com experiências ligadas ao projeto; para grupos e coletivos, mostrar a trajetória e a relação de trabalho ao longo do tempo.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__24",
+        "l": "Acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Medidas de acessibilidade com plano compatível com a proposta, conforme a Lei nº 13.146/2015 e o art. 9º, § 5º, do Decreto nº 11.740/2023, incluindo ações de protagonismo de agentes culturais com deficiência, quando aplicável.",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed29__25",
+        "l": "Estratégias de democratização de acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Barreiras simbólicas, econômicas ou geográficas e soluções: mediação cultural, identificação do público com o conteúdo, gratuidade ou preços populares, formação de público, articulação com grupos e instituições.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed29__26",
+        "l": "Início, término e mês de estreia do projeto",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Três seleções de mês.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__27",
+        "l": "Pré-produção / preparação: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Meses e descrição das atividades da fase.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__28",
+        "l": "Produção / execução: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Meses e descrição das atividades da fase.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__29",
+        "l": "Pós-produção / finalização: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Meses e descrição das atividades da fase.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__30",
+        "l": "Planilha orçamentária (Anexo 05)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Upload em PDF até 10 MB, preenchida conforme o item 11 (10% a 20% em divulgação; pelo menos 50% com prestadores residentes ou sediados no Rio; sem concentração de rubricas).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__31",
+        "l": "Classificação indicativa da proposta",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Campo de texto, sem limite indicado.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__32",
+        "l": "A proposta é voltada para o público infantil?",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Sim ou Não; se Sim, upload da Declaração de Responsabilidade sobre Conteúdo e Classificação Indicativa (Anexo 07)."
+       },
+       {
+        "n": "doc__ed29__33",
+        "l": "Portfólio e materiais complementares (texto)",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Informações e materiais adicionais: comprovações de execução prévia, itens de divulgação, rascunhos, croquis, portfólio da equipe ou do grupo, documentos de direitos autorais.",
+        "max": 500
+       },
+       {
+        "n": "doc__ed29__34",
+        "l": "Portfólio",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Upload obrigatório em PDF até 10 MB.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed29__35",
+        "l": "Anexos complementares",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Materiais de referência da concepção artística (PDF até 10 MB, opcional); links de vídeos de referência (caixa editável, opcional); Complemento 1 e Complemento 2 do portfólio (PDF até 10 MB cada)."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Declarações",
+    "blocos": [
+     {
+      "t": "Declarações",
+      "campos": [
+       {
+        "n": "doc__ed29__36",
+        "l": "Declarações e aceite",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Não ocorrência das vedações do item 9 (inclui \"não tenham o campo cultural como atuação principal\") e do item 7, detenção dos direitos patrimoniais da proposta, veracidade das informações; aceite \"De acordo\".",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed8": {
+  "id": "doc-ed8",
+  "nome": "ISS Produtor",
+  "plataforma": "siipc",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: SIIPC, Sistema de Inscrição da Lei do ISS (leideincentivo.rio.rj.gov.br/produtores)",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "Cartilha do Produtor Cultural 2026 (documento oficial da CCPC/SMC que descreve as telas do formulário), telas 7 a 19, texto integral em txt2/ISS-Produtor-03-2026__ISS_Rio_-_Cartilha_do_Produtor_Cultural_2026.txt; o mesmo PDF está em https://drive.google.com/file/d/1k_c7h_n0katakbRcLwB8su7k3-wERG18/view",
+  "confianca": "media",
+  "editais": [
+   "ed8"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Identificação do projeto cultural",
+    "blocos": [
+     {
+      "t": "Identificação do projeto cultural",
+      "campos": [
+       {
+        "n": "doc__ed8__0",
+        "l": "Declaração de ciência",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Declarar estar ciente das regras.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       },
+       {
+        "n": "doc__ed8__1",
+        "l": "Título do projeto",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Digitado ao criar o projeto no menu Meus Projetos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__2",
+        "l": "Linha de incentivo",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma das 5 linhas.",
+        "req": 1,
+        "opts": [
+         "Linha 1: Plano anual de atividades em instituições culturais cariocas",
+         "Linha 2: Festivais e formação de calendário de eventos culturais da cidade",
+         "Linha 3: Produção Cultural na Rede Municipal de Cultura (item 3.1.3)",
+         "Linha 4: Difusão do livro, da leitura e da mediação literária",
+         "Linha 5: Fomento artístico-cultural"
+        ]
+       },
+       {
+        "n": "doc__ed8__3",
+        "l": "Justificativa de enquadramento na linha de incentivo",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Texto que liga o projeto à linha escolhida; atende ao critério de pertinência à linha.",
+        "req": 1,
+        "opts": [
+         "Linha 1: Plano anual de atividades em instituições culturais cariocas",
+         "Linha 2: Festivais e formação de calendário de eventos culturais da cidade",
+         "Linha 3: Produção Cultural na Rede Municipal de Cultura (item 3.1.3)",
+         "Linha 4: Difusão do livro, da leitura e da mediação literária",
+         "Linha 5: Fomento artístico-cultural"
+        ]
+       },
+       {
+        "n": "doc__ed8__4",
+        "l": "Área cultural",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Uma das áreas da Lei do ISS (artes visuais, música, folclore, teatro, multiplataforma etc.).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__5",
+        "l": "Formato",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Formato previsto no edital para a linha.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__6",
+        "l": "Direitos autorais e conexos",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Informação sobre direitos envolvidos no projeto (conteúdo exato do campo não descrito).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Dados do produtor cultural",
+    "blocos": [
+     {
+      "t": "Dados do produtor cultural",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados da empresa e do representante legal (12 campos)</b>: Natureza jurídica, razão social, nome fantasia, inscrição municipal, CNPJ, endereço, telefones, representante legal, RG e CPF, função, telefones e e-mail.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Descrição das atividades",
+    "blocos": [
+     {
+      "t": "Descrição das atividades",
+      "campos": [
+       {
+        "n": "doc__ed8__8",
+        "l": "Áreas de atuação e principais projetos realizados pela empresa",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Histórico de realizações na área artístico-cultural, em ordem cronológica e com pequeno resumo de cada.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Detalhamento do projeto",
+    "blocos": [
+     {
+      "t": "Detalhamento do projeto",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Contato do responsável artístico</b>: Nome, RG, CPF, função na empresa, telefone e e-mail.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed8__10",
+        "l": "Ficha técnica",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Nomes, funções e minibiografia de cada profissional do projeto.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__11",
+        "l": "Resumo do projeto",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "Descrição curta e objetiva: propósito, resultados esperados, o que será feito, por que e para quem.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__12",
+        "l": "Objetivos do projeto (geral e específicos)",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Apresentar um produto cultural bem definido, que aumente o acesso à cultura, valorize a identidade local e gere impacto social. Geral: o que vamos fazer, resultado esperado, para quem, onde e impacto sociocultural de longo prazo. Específicos: ações necessárias, com metas claras, concretas e mensuráveis.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__13",
+        "l": "Justificativa do projeto",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Por que é relevante: necessidade local, público-alvo, benefícios, originalidade e contribuição de longo prazo para a comunidade.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__14",
+        "l": "Produto cultural principal",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Resultado central do projeto, criado e apresentado ao público.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__15",
+        "l": "Produto cultural derivado",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Ações secundárias que ampliam o alcance e documentam o produto principal.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__16",
+        "l": "Especificação técnica dos produtos (principal e derivado)",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Formato ou tipo, duração ou tiragem, infraestrutura e equipamentos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__17",
+        "l": "Link para informações",
+        "t": "ta",
+        "conceito": "outro",
+        "dica": "URL de conteúdos complementares."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Abrangência e público",
+    "blocos": [
+     {
+      "t": "Abrangência e público",
+      "campos": [
+       {
+        "n": "doc__ed8__18",
+        "l": "Tipo de entrega",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Produto (livro, CD etc.), Atividades (apresentações, oficinas, shows) ou Produto e Atividade.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__19",
+        "l": "Bairros do Rio onde o projeto será realizado",
+        "t": "ta",
+        "conceito": "territorio",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__20",
+        "l": "Espaços previstos para a realização",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Locais ou equipamentos culturais (teatros, centros culturais, casas de show, praças etc.).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__21",
+        "l": "Quem o projeto pretende alcançar",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Público-alvo detalhado (faixa etária, gênero, localidade, perfil sociocultural, interesses), coerente com os objetivos; como as atividades ampliam o acesso, democratizam a participação e formam público; inclusão de diferentes classes sociais e de pessoas com deficiência. Base para divulgação, lotação e projeção de público.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__22",
+        "l": "O projeto prevê receita com a distribuição do produto cultural?",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Se sim, fontes, valores estimados e formas de cobrança (ingressos, vendas, licenciamento, inscrições, patrocínios comerciais, streaming).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "Divulgação",
+    "blocos": [
+     {
+      "t": "Divulgação",
+      "campos": [
+       {
+        "n": "doc__ed8__23",
+        "l": "Estratégias de comunicação",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Canais e ações para alcançar o público; valorizar a marca do contribuinte incentivador.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7",
+    "nome": "Contrapartidas socioculturais (marcar ao menos uma opção em cada)",
+    "blocos": [
+     {
+      "t": "Contrapartidas socioculturais (marcar ao menos uma opção em cada)",
+      "campos": [
+       {
+        "n": "doc__ed8__24",
+        "l": "Contrapartidas de democratização do acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Seleção de opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__25",
+        "l": "Contrapartidas de acessibilidade para pessoas com deficiência",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Seleção de opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__26",
+        "l": "Contrapartidas de inclusão profissional",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "Oportunidades de trabalho para grupos sub-representados; seleção de opções.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed8__27",
+        "l": "Destinação de resíduos e contrapartidas de sustentabilidade",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Seleção de opções.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e8",
+    "nome": "Cronograma",
+    "blocos": [
+     {
+      "t": "Cronograma",
+      "campos": [
+       {
+        "n": "doc__ed8__28",
+        "l": "Etapas: pré-produção, produção, lançamento ou estreia e pós-produção",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Mês e ano de início e quantidade de meses de cada etapa (item 4.9 A do edital); recomenda-se início a partir de maio do ano seguinte.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e9",
+    "nome": "Orçamento",
+    "blocos": [
+     {
+      "t": "Orçamento",
+      "campos": [
+       {
+        "n": "doc__ed8__29",
+        "l": "Planilha orçamentária por etapa (pré-produção, produção, pós-produção, comunicação)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Para cada rubrica: descrição, número, unidade (hora, dia, mês, serviço, cachê, verba), quantidade, valor unitário e total, em Serviços de Terceiros ou Material; até 3 rubricas novas por etapa; preços de mercado e equilíbrio entre área meio (administrativa) e área fim.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e10",
+    "nome": "Resumo financeiro",
+    "blocos": [
+     {
+      "t": "Resumo financeiro",
+      "campos": [
+       {
+        "n": "doc__ed8__30",
+        "l": "Outras fontes de financiamento",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "O sistema calcula A (orçamento geral), B (orçamento ISS) e C (30% de B, captação mínima); o proponente informa outras fontes já garantidas.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e11",
+    "nome": "Finalizar projeto",
+    "blocos": [
+     {
+      "t": "Finalizar projeto",
+      "campos": [
+       {
+        "n": "doc__ed8__31",
+        "l": "Ciência da legislação e finalização",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Antes, a tela Imprimir projeto permite revisar e gerar o PDF. Ao clicar em Finalizar Projeto não é mais possível alterar; gera código de inscrição enviado ao e-mail do representante legal.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e12",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed8__32",
+        "l": "Anexos da inscrição (3 itens na Cartilha, mais 1 na Linha 3)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Pela Cartilha: Relatório de Comprovação de Atividades Culturais do Produtor (Anexo 05), com legenda por comprovação e ao menos uma por ano em 2 anos (folders, programas, notas fiscais, contratos com o nome ou a marca da produtora); cartão CNPJ para conferência do CNAE cultural; Declaração de conteúdo adequado à classificação indicativa (Anexo 10), se o projeto for infantil. Pelo aviso de 21/05/2026: carta de anuência do equipamento (Anexo 14) na Linha 3.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed16": {
+  "id": "doc-ed16",
+  "nome": "MICSUL",
+  "plataforma": "mapas",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Mapas da Cultura (mapa.cultura.gov.br/oportunidade/9881)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt/MinC-MICSUL-2026__edital-n8-2026.txt, Anexo I (Formulário de Inscrição, versão para simples consulta publicada no próprio edital)",
+  "confianca": "alta",
+  "editais": [
+   "ed16"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Inscrição",
+    "blocos": [
+     {
+      "t": "Inscrição",
+      "campos": [
+       {
+        "n": "doc__ed16__0",
+        "l": "Segmento de inscrição",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Um entre: arte indígena; artes cênicas (circo, dança e teatro); artes visuais e design; artesanato; audiovisual; design de moda; editorial; jogos eletrônicos; música.",
+        "req": 1,
+        "opts": [
+         "Arte indígena",
+         "Artes cênicas (circo, dança e teatro)",
+         "Artes visuais e design",
+         "Artesanato",
+         "Audiovisual",
+         "Design de moda",
+         "Editorial",
+         "Jogos eletrônicos",
+         "Música"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "1. Compromissos",
+    "blocos": [
+     {
+      "t": "1. Compromissos",
+      "campos": [
+       {
+        "n": "doc__ed16__1",
+        "l": "Compromissos do item 9.4 e regularização de pendências (1.1 e 1.2)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Concordar com as obrigações (participar de todas as atividades, usar a bolsa para ida e permanência em Assunção, relatório em 30 dias, idiomas sem tradução, documentos para entrar no Paraguai) e com regularizar débitos com a União. Sem a marcação a inscrição não é enviada.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "2. Perfil de participação",
+    "blocos": [
+     {
+      "t": "2. Perfil de participação",
+      "campos": [
+       {
+        "n": "doc__ed16__2",
+        "l": "Perfil nas rodadas de negócios",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Comprador(a)/demandante ou vendedor(a)/ofertante; a comissão pode alterar o perfil.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "3. Dados do(a) proponente",
+    "blocos": [
+     {
+      "t": "3. Dados do(a) proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados pessoais e bancários do proponente (3.1 a 3.14, cerca de 20 campos)</b>: Nome e nome social, RG, CPF, endereço, UF, município, região, telefones, nascimento, nacionalidade, e-mails, banco, agência e conta de titularidade própria (não aceita conta PJ, conjunta ou de benefício). A região define o valor da bolsa e a distribuição regional.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "4. Dados do empreendimento",
+    "blocos": [
+     {
+      "t": "4. Dados do empreendimento",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do empreendimento (4.1 a 4.8.1, 9 campos)</b>: Nome do empreendimento ou instituição representada, CNPJ (não obrigatório), ano de fundação, endereço comercial, município, e-mail comercial, site e redes sociais principal e secundária (os links alimentam o indicador 15).",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e6",
+    "nome": "5. Aderência ao Mercado",
+    "blocos": [
+     {
+      "t": "5. Aderência ao Mercado",
+      "campos": [
+       {
+        "n": "doc__ed16__5",
+        "l": "5.1 Alinhamento à proposta do MICSUL 2026 e relevância da participação",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Descreva como o empreendimento se alinha ao MICSUL 2026 e justifique por que sua participação é relevante para os objetivos do mercado.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__6",
+        "l": "5.2 Produtos ou serviços a negociar e de que forma",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Que produtos ou serviços pretende negociar e como.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__7",
+        "l": "5.3 Resultados concretos pretendidos no MICSUL 2026",
+        "t": "ta",
+        "conceito": "metas",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__8",
+        "l": "5.4 Sustentabilidade econômica",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Medidas para se manter economicamente: crédito ou financiamento privado, parcerias duradouras, cobrança de ingresso, venda direta.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__9",
+        "l": "5.5 Sustentabilidade ambiental",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Ações de sustentabilidade ambiental na cadeia de produção e seus impactos.",
+        "req": 1,
+        "max": 500
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7",
+    "nome": "6. Inclusão e inovação",
+    "blocos": [
+     {
+      "t": "6. Inclusão e inovação",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>6.1 Autodeclaração de segmentos demográficos do proponente</b>: Jovens, idosos, mulheres, LGBTQIAP+, pessoas com deficiência, pessoas negras, povos e comunidades tradicionais, pessoas em situação migratória, ou nenhum.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed16__11",
+        "l": "6.2 Público-alvo específico do bem ou serviço",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Mesmos segmentos, mais crianças e adolescentes; comprovar por portfólio, rede social ou site.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>6.3 Diversidade, representatividade e inclusão no empreendimento</b>: Se não houver ações, justificar.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed16__13",
+        "l": "6.4 Relação com a cultura do território, região ou estado e impactos",
+        "t": "ta",
+        "conceito": "territorio",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__14",
+        "l": "6.5 Meios e práticas inovadores",
+        "t": "ta",
+        "conceito": "especifico",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__15",
+        "l": "6.6 Conteúdo inédito ou autoral a negociar",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Quais conteúdos inéditos ou autorais pretende negociar.",
+        "req": 1,
+        "max": 500
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e8",
+    "nome": "7. Maturidade e internacionalização",
+    "blocos": [
+     {
+      "t": "7. Maturidade e internacionalização",
+      "campos": [
+       {
+        "n": "doc__ed16__16",
+        "l": "7.1 Negócios com outros segmentos do Mercado",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Quais segmentos e como se dará a inter-relação com os produtos a negociar.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__17",
+        "l": "7.2 Projetos culturais e artísticos realizados e alcance",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Destacar o alcance dos impactos (local, regional, nacional ou internacional).",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__18",
+        "l": "7.3 Experiência em internacionalização nos últimos 3 anos",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Seleção: nenhuma; uma ou duas; três ou mais.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed16__19",
+        "l": "7.3.1 Descrição das experiências de internacionalização",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Em caso positivo.",
+        "max": 500
+       },
+       {
+        "n": "doc__ed16__20",
+        "l": "7.4 Link da plataforma de promoção, comercialização ou acervo",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Informar a principal."
+       },
+       {
+        "n": "doc__ed16__21",
+        "l": "7.5 Link de site, portfólio ou material em língua estrangeira",
+        "t": "ta",
+        "conceito": "comunicacao"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e9",
+    "nome": "8. Assistência especial",
+    "blocos": [
+     {
+      "t": "8. Assistência especial",
+      "campos": [
+       {
+        "n": "doc__ed16__22",
+        "l": "Necessidade de assistência especial (8.1 e 8.2)",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Sim ou não e descrição da assistência necessária para acessibilidade física e intelectual nas atividades.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e10",
+    "nome": "9 e 10. Declarações",
+    "blocos": [
+     {
+      "t": "9 e 10. Declarações",
+      "campos": [
+       {
+        "n": "doc__ed16__23",
+        "l": "Declarações finais (9.1 e 10.1 a 10.5)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Não incorrer em vedação; veracidade; cessão de direitos de imagem e voz ao MinC; autorização de uso de marcas e redes; compromisso de enviar material para catálogo; ciência do edital.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e11",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed16__24",
+        "l": "Anexos da inscrição",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Portfólio do empreendimento (7.2.1, obrigatório: projetos realizados e carteira de produtos, bens ou serviços a negociar; em português, inglês ou espanhol) e comprovação de internacionalização (7.3.2, se marcada: contratos, notas fiscais, certificados, clipping, declarações).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed5": {
+  "id": "doc-ed5",
+  "nome": "Riotur cadastro",
+  "plataforma": "riotur-blocos",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Gestão de Blocos de Carnaval (jeap.rio.rj.gov.br/BLO), pelo card Inscrição Blocos de Rua Carnaval 2027 em riotur.prefeitura.rio",
+  "origem": "documento",
+  "fonteTipo": "web",
+  "fonte": "Campos do formulário Cadastro de Desfile observados no sistema, no registro do ciclo 2026, e descritos no dossiê do Project claude/cadastro-riotur-blocos-2027.md (24/08/2026)",
+  "confianca": "media",
+  "editais": [
+   "ed5"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Pedido de cadastro",
+    "blocos": [
+     {
+      "t": "Pedido de cadastro",
+      "campos": [
+       {
+        "n": "doc__ed5__0",
+        "l": "Tipo de pedido",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Atualizar desfile com base no carnaval passado, criar novo desfile para bloco existente ou criar novo bloco.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cadastro de Desfile",
+    "blocos": [
+     {
+      "t": "Cadastro de Desfile",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do bloco e do representante</b>: Nome do bloco atualmente, nome da liga ou associação, CNPJ do bloco (se tiver), código de inscrição e dados cadastrais do representante (menu Dados Cadastrais).",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed5__2",
+        "l": "Categoria",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Exemplo observado: Tradicional.",
+        "req": 1,
+        "opts": [
+         "Incentivo financeiro, faixa 1 (regra do Carnaval 2026)",
+         "Incentivo financeiro, faixa 2 (regra do Carnaval 2026)",
+         "Incentivo financeiro, faixa 3 (regra do Carnaval 2026)"
+        ]
+       },
+       {
+        "n": "doc__ed5__3",
+        "l": "Nome do bloco durante o desfile",
+        "t": "txt",
+        "conceito": "titulo"
+       },
+       {
+        "n": "doc__ed5__4",
+        "l": "Região e bairro",
+        "t": "ta",
+        "conceito": "territorio",
+        "req": 1
+       },
+       {
+        "n": "doc__ed5__5",
+        "l": "Data do desfile e horários de concentração, início e término",
+        "t": "ta",
+        "conceito": "cronograma",
+        "req": 1
+       },
+       {
+        "n": "doc__ed5__6",
+        "l": "Público estimado",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Número livre no registro de 2026. Para 2027 há relato, não confirmado, de que o campo passe a usar as faixas de público do CBMERJ (NT 5-05), que definem a estrutura médica exigida.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed5__7",
+        "l": "Patrocinador próprio: nome, se haverá exposição da marca e local de exposição",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Campos que declaram o patrocínio próprio do bloco para aprovação prévia da Riotur."
+       },
+       {
+        "n": "doc__ed5__8",
+        "l": "Estrutura fixa ou móvel",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Nenhuma, trio ou palco.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed5__9",
+        "l": "Percurso",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Mapa com concentração, trajeto e dispersão.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Documentos complementares",
+    "blocos": [
+     {
+      "t": "Documentos complementares",
+      "campos": [
+       {
+        "n": "doc__ed5__10",
+        "l": "Envio das autorizações estaduais e documentos",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Autorizações e documentos obtidos junto a PMERJ, PCERJ e CBMERJ, enviados de 12 a 14/01/2027. A ficha da Central cita ainda documento de identidade e foto do representante (não conferido).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed19": {
+  "id": "doc-ed19",
+  "nome": "Ambev Brasilidades",
+  "plataforma": "prosas",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Prosas (ambevbrasilidades2026.prosas.com.br); dá para salvar e continuar, mas depois de enviada a inscrição não pode ser alterada (item 6.3.1)",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "Regulamento Ambev Brasilidades 2026 (texto integral em txt2), itens 1.2, 2.1.4, 2.1.5, 2.1.6, 3.2 a 3.4, 5.1.2, 6.2, 6.3 e 8.2. O Anexo I (formulário de referência) é citado no item 6.3.1, mas não faz parte do PDF (conferido no texto integral).",
+  "confianca": "alta",
+  "editais": [
+   "ed19"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro",
+    "blocos": [
+     {
+      "t": "Cadastro",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados da instituição proponente, do representante legal e contatos</b>: PJ idêntica à aprovada ou inscrita na lei estadual (item 3.4); representantes e diretores com CPF ativo (item 3.2); e-mail e telefone usados em toda a comunicação (item 7.2.1).",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Proposta",
+    "blocos": [
+     {
+      "t": "Proposta",
+      "campos": [
+       {
+        "n": "doc__ed19__1",
+        "l": "Categoria do edital",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma das 10 categorias de interesse (audiovisual, artes, gastronomia, lifestyle, esporte, ar livre, festivais regionais, literatura, originalidade brasileira, Copa do Mundo 2026); em projeto híbrido, escolher a categoria prioritária; a correspondência com o segmento da lei é responsabilidade do proponente (página de categorias do regulamento). O regulamento não diz se é seleção obrigatória.",
+        "opts": [
+         "Circuitos de gastronomia",
+         "Lifestyle: produção e difusão de conteúdo",
+         "Festivais e eventos esportivos",
+         "Experiências ao ar livre e contemplação da natureza",
+         "Eventos e projetos ligados à originalidade brasileira e suas paixões",
+         "Projetos audiovisuais",
+         "Artes (dança, cultura urbana e música)",
+         "Festivais e eventos culturais e regionais",
+         "Literatura",
+         "Copa do Mundo 2026"
+        ]
+       },
+       {
+        "t": "info",
+        "html": "<b>Identificação como Proposta Cultura Preta</b>: Para concorrer à reserva de 20%, com documentação declaratória (item 5.1.2).",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed19__6",
+        "l": "Distribuição de bebidas prontas (RTD) e refrigerantes de marcas concorrentes no evento",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Deve ser informada no momento da inscrição; o patrocínio é avaliado caso a caso (item 8.2)."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Orçamento",
+    "blocos": [
+     {
+      "t": "Orçamento",
+      "campos": [
+       {
+        "n": "doc__ed19__3",
+        "l": "Valor do aporte solicitado",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Não pode passar do saldo a captar no projeto aprovado (item 1.2); não há mínimo nem máximo, e a Ambev pode oferecer menos (item 2.1.5).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed19__4",
+        "l": "Exigência de aporte complementar em recursos próprios",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Quando a lei estadual exigir contrapartida da empresa em recursos próprios, informar na inscrição (item 2.1.4)."
+       },
+       {
+        "n": "doc__ed19__5",
+        "l": "Demais fontes de recursos, investimentos já realizados e entrega mínima só com o aporte Ambev",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Obrigatório quando o aporte pedido não cobre o projeto; fontes complementares não podem ser concorrentes diretos ou indiretos da Ambev (item 2.1.6)."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed19__7",
+        "l": "Documentos anexos (item 6.2)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Autorização de captação (diário oficial do estado, certificado ou equivalente) ou Modelo de Documento de Intenção de Patrocínio, só se a lei o exigir antes da aprovação; descritivo do projeto protocolado na lei; planilha orçamentária protocolada; portfólio do proponente; demais documentos enviados ao órgão (cronograma, plano de distribuição, plano de divulgação, currículos) e versão aprovada do projeto; comprovantes de captação, se houver; documentação declaratória da Proposta Cultura Preta, se for o caso.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed20": {
+  "id": "doc-ed20",
+  "nome": "Embratur",
+  "plataforma": "embratur",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: patrocinio.embratur.com.br (a Embratur anunciou novo sistema de gestão de patrocínios, com 30 dias de migração)",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "txt/Embratur-Patrocinio-2026__EDITAL-Selecao-de-Patrocinios-2026.txt (itens 4, 4.1 e 5.6) e Regulamento de Patrocínios, Resolução CDE 12/2020, item 2.4 (conteúdo mínimo da proposta: apresentação, histórico e resultados, contrapartidas e valor, orçamento com quantitativos e custos unitários, estimativa e perfil de público, patrocinadores envolvidos, dados bancários e representantes)",
+  "confianca": "alta",
+  "editais": [
+   "ed20"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Proposta",
+    "blocos": [
+     {
+      "t": "Proposta",
+      "campos": [
+       {
+        "n": "doc__ed20__0",
+        "l": "Título do projeto ou evento",
+        "t": "txt",
+        "conceito": "titulo",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__1",
+        "l": "Descrição detalhada do projeto",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Com objetivos, metas, cronograma e estratégias de promoção; o plano de execução deve trazer também resultados esperados (item 4.1 III A).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__2",
+        "l": "Data(s) de realização",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Mínimo de 60 dias entre a inscrição e o início do evento.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__3",
+        "l": "Local de realização (cidade, estado e país)",
+        "t": "ta",
+        "conceito": "territorio",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__4",
+        "l": "Valor total do projeto",
+        "t": "ta",
+        "conceito": "orcamento",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__5",
+        "l": "Valor solicitado à Embratur (patrocínio pretendido)",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Até 60% do custo integral, salvo valor inferior a R$ 200 mil.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__6",
+        "l": "Público-alvo (perfil e estimativa de público)",
+        "t": "ta",
+        "conceito": "publico",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__7",
+        "l": "Histórico do evento ou projeto",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Edições anteriores, resultados, impactos, métricas de alcance, mídia espontânea, público atingido.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__8",
+        "l": "Segmentos alcançados pelo projeto",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Relacionar às 14 áreas de atuação e aos segmentos prioritários.",
+        "req": 1,
+        "opts": [
+         "2.1 Cultura e Economia Criativa",
+         "2.2 Gastronomia",
+         "2.3 Aventura e Natureza",
+         "2.4 Turismo Regenerativo",
+         "2.5 Diversidade e Inclusão",
+         "2.6 Negócios e MICE",
+         "2.7 Inovação e Tecnologia no Turismo",
+         "2.8 Patrimônio Histórico e Cultural",
+         "2.9 Turismo Rural",
+         "2.10 Turismo Científico",
+         "2.11 Turismo Esportivo e de Saúde",
+         "2.12 Audiovisual",
+         "2.13 ESG",
+         "2.14 Institucional"
+        ]
+       },
+       {
+        "n": "doc__ed20__9",
+        "l": "Orçamento detalhado",
+        "t": "ta",
+        "conceito": "orcamento",
+        "dica": "Viabilidade financeira com orçamento bem estruturado (item 4.1 III B).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__10",
+        "l": "Plano de divulgação",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "Que alcance público amplo e diversificado (item 4.1 III C).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__11",
+        "l": "Contrapartidas oferecidas",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "Parte da apresentação do projeto (item 5.6 A). Detalhar cada material promocional; em redes sociais, informar perfil ou URL e idiomas das postagens; exemplos de alto valor nos itens 8.3 a 8.5.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__12",
+        "l": "Patrocinadores envolvidos",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Informação mínima exigida pelo Regulamento de Patrocínios (item 2.4 f); não aparece como item próprio no edital 2026.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Documentos",
+    "blocos": [
+     {
+      "t": "Documentos",
+      "campos": [
+       {
+        "n": "doc__ed20__13",
+        "l": "Documentos do proponente",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "RG e CPF do representante legal, comprovante de CNPJ, contrato ou estatuto social com alterações, ata de eleição ou ato de designação, certidão de tributos federais e dívida ativa, certidão de regularidade do FGTS.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed20__14",
+        "l": "Declarações (Anexos I a IV)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Habilitação e ausência de pendências (Anexo I); vínculo com o evento, por declaração de realização por outro representante (Anexo II) ou de realização própria (Anexo III); não utilização para fins eleitorais (Anexo IV).",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed6": {
+  "id": "doc-ed6",
+  "nome": "Folia RJ",
+  "plataforma": "desenvolve-cultura",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Desenvolve Cultura (cadastro do proponente e cadastro da proposta cultural)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "txt2/SECEC-Bloco-nas-Ruas-2026__ANEXO-4-BLOCO-NAS-RUAS-RJ2026-2.txt (Anexo 04, 'modelo para consulta' do que se preenche na plataforma, edição 2026); campo de contrapartida social incluído pela retificação dos Anexos 03 e 04 (DOERJ 05/11/2025)",
+  "confianca": "baixa",
+  "editais": [
+   "ed6"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Cadastro do proponente",
+    "blocos": [
+     {
+      "t": "Cadastro do proponente",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente (PJ ou MEI) e do responsável pela execução</b>: Todos os campos do cadastro da PJ ou do MEI e do responsável pela execução, na plataforma (item 8.4.1); número de campos não descrito.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed6__1",
+        "l": "Aceite do Termo de Compromisso de Adimplência (Anexo 02)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Aceite eletrônico obrigatório para submeter a inscrição (item 8.1.1).",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Cadastro da proposta",
+    "blocos": [
+     {
+      "t": "Cadastro da proposta",
+      "campos": [
+       {
+        "n": "doc__ed6__2",
+        "l": "Categoria (A Blocos Individuais, B Afoxé e Blocos Afro, C Associações, Federações ou Ligas)",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma proposta por proponente; a categoria não pode ser trocada depois de submetida (8.5.1.1); o grupo regional segue a sede do proponente.",
+        "req": 1,
+        "opts": [
+         "Categoria A, Blocos Individuais",
+         "Categoria B, Afoxé e Blocos Afro",
+         "Categoria C, Associações, Federações ou Ligas"
+        ]
+       },
+       {
+        "n": "doc__ed6__3",
+        "l": "Apresentação do grupo",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Apresente o histórico do(s) bloco(s) de carnaval ou da associação, federação ou liga, seus membros, e informe as ações recorrentes do grupo.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__4",
+        "l": "Histórico do grupo",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Relato breve e objetivo do histórico do bloco ou da associação, federação ou liga, do início das atividades até hoje, incluindo o ano de fundação.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__5",
+        "l": "Descrição da proposta e objetivos",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Descreva detalhadamente a proposta, informando o formato (desfile ou apresentação), quais ações serão executadas com o aporte e para que ela está sendo apresentada, referindo-se à meta que se quer atingir em cada etapa de realização. O item 8.5.1 pede ainda detalhamento dos profissionais envolvidos, do local e do público-alvo.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__6",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "Descreva de forma clara e convincente os motivos pelos quais a proposta é relevante, necessária e benéfica.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__7",
+        "l": "Data e local de realização",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Informe a data e o local previstos para a realização da proposta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__8",
+        "l": "Ações afirmativas, democratização e difusão do acesso previstas",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "Cite as ações que permitem o acesso de grupos vulnerabilizados socialmente (mulheres, pessoas negras, pessoas indígenas, comunidades tradicionais, inclusive de terreiro e quilombolas, populações nômades e povos ciganos, pessoas LGBTQIAP+, pessoas idosas, pessoas em situação de rua e outros) e a participação desses grupos no desenvolvimento e na execução da proposta.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__9",
+        "l": "Plano de acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Liste e descreva as ações e estratégias de acessibilidade: comunicacional (Libras, Braille, comunicação tátil, audiodescrição, legendas para pessoas com deficiência auditiva, linguagem simples, textos para leitor de tela), atitudinal (capacitação de equipes, contratação de profissionais com deficiência e especializados, sensibilização contra o capacitismo) e arquitetônica (rotas acessíveis inclusive em palcos, piso tátil, rampas, banheiros adaptados, vagas, assentos para pessoas obesas, iluminação). O anexo remete a um 'subitem 9.5.4 do Edital' que não existe no edital de 2026.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__10",
+        "l": "Medidas de sustentabilidade",
+        "t": "ta",
+        "conceito": "impacto",
+        "dica": "Indique quais Objetivos de Desenvolvimento Sustentável da ONU a proposta contempla (no mínimo 2 dos 17) e descreva as ações para alcançá-los.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed6__11",
+        "l": "Descrição da contrapartida social",
+        "t": "ta",
+        "conceito": "contrapartida",
+        "dica": "\"Descreva detalhadamente a CONTRAPARTIDA SOCIAL, informando seu tema, assim como o local e datas de realização previstas.\" Campo acrescentado ao Anexo 04 pela retificação publicada no DOERJ de 05/11/2025 (o PDF do Anexo 04 no site não foi atualizado). A contrapartida é facultativa: 1 ação no Estado do RJ com temática ligada ao contexto e aos saberes do bloco."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Uploads",
+    "blocos": [
+     {
+      "t": "Uploads",
+      "campos": [
+       {
+        "n": "doc__ed6__12",
+        "l": "Anexos",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Proponente: cartão CNPJ emitido até 30 dias antes, com CNAE cultural; contrato ou estatuto e ata ou última alteração (exceto MEI); identidade e CPF do responsável pela execução; declaração de nome social (Anexo 13, se for o caso); Documento de Representação dos Blocos de Carnaval (Anexo 09: pelo menos 10 integrantes nas Categorias A e B, 5 membros da diretoria na C). Proposta: portfólio de atuação artística e cultural (Anexo 06), planilha orçamentária no valor exato da categoria (Anexo 07), cronograma de execução (Anexo 08). Não se aceita documento além do pedido.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed36": {
+  "id": "doc-ed36",
+  "nome": "Laços CPLP",
+  "plataforma": "oei",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Formulário eletrônico da OEI (oei.int), em português ou espanhol",
+  "origem": "documento",
+  "fonteTipo": "web",
+  "fonte": "https://hipermedula.org/2026/08/programa-de-movilidad-laczos-artisticos/ e notícias da DGARTES e do Instituto Camões",
+  "confianca": "baixa",
+  "editais": [
+   "ed36"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Candidatura",
+    "blocos": [
+     {
+      "t": "Candidatura",
+      "campos": [
+       {
+        "n": "doc__ed36__0",
+        "l": "Projeto artístico estruturado",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "Projeto com intenção confirmada de entidade acolhedora; campos e limites do formulário não descritos nas fontes lidas.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed36__1",
+        "l": "Carta de acolhimento da entidade anfitriã",
+        "t": "ta",
+        "conceito": "parcerias",
+        "dica": "Deve conter identificação da entidade, declaração de compromisso explícito e assinatura.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed36__2",
+        "l": "Declarações juradas assinadas (PDF)",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Conforme modelos do regulamento.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed15": {
+  "id": "doc-ed15",
+  "nome": "Rodas de Samba",
+  "plataforma": "google-forms",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Formulário eletrônico (Google Forms) linkado em cultura.prefeitura.rio",
+  "origem": "documento",
+  "fonteTipo": "regulamento",
+  "fonte": "Edital SMC 02/2024, itens 4.9, 6.1 e 6.2 (txt2/SMC-Credenciamento-Rodas-de-Samba-2024__Edital-Rodas-de-Samba.docx-1.txt)",
+  "confianca": "alta",
+  "editais": [
+   "ed15"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "1. Cadastro do candidato",
+    "blocos": [
+     {
+      "t": "1. Cadastro do candidato",
+      "campos": [
+       {
+        "t": "info",
+        "html": "<b>Dados do representante responsável pela roda de samba</b>: O edital pede os dados do representante sem listar os campos.",
+        "conceito": "cadastro"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "2. Cadastro da comprovação da atividade cultural",
+    "blocos": [
+     {
+      "t": "2. Cadastro da comprovação da atividade cultural",
+      "campos": [
+       {
+        "n": "doc__ed15__1",
+        "l": "Endereço completo do ponto solicitado para a realização da roda",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Local onde a roda acontece; se o endereço for de área privada, informar também o endereço da área pública alcançada pelo evento (item 6.1.1); respeitar as vedações de local do item 10.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed15__2",
+        "l": "Características do evento",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "O edital pede \"as características do evento\" sem detalhar. Dia e local passam a constar do calendário publicado pela SMC; a roda não pode ocorrer mais de uma vez por semana.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed15__3",
+        "l": "Portfólio da roda de samba",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Arquivo único em PDF, até 10 MB, com materiais datados (imagens, vídeos, material de divulgação, certificados, licenças) que comprovem no mínimo 2 anos de realização. Base das notas de vínculo com o território e de impacto.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed15__4",
+        "l": "Portfólio do representante",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Comprovação da experiência cultural do representante em ações relacionadas ao samba. Base do critério de experiência (10 pontos).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Anexos",
+    "blocos": [
+     {
+      "t": "Anexos",
+      "campos": [
+       {
+        "n": "doc__ed15__5",
+        "l": "Documentos do representante e declaração (4 itens)",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Documento oficial de identificação com foto e assinatura (18 anos até o fim das inscrições); comprovante de regularidade do CPF; comprovante de residência em nome do inscrito emitido nos últimos 3 meses (conta de luz, água, telefone, impostos), ou declaração de terceiros que atestem moradia junto ao representante ou da associação de moradores; Declaração de Veracidade (Anexo II).",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "doc-ed10": {
+  "id": "doc-ed10",
+  "nome": "Pró-Carioca",
+  "plataforma": "cultura-rio",
+  "nav": "lista",
+  "extraido": "22/09/2026",
+  "obs": "Plataforma: Sistema online de inscrição da SMC (link em cultura.prefeitura.rio)",
+  "origem": "documento",
+  "fonteTipo": "espelho_oficial",
+  "fonte": "https://cultura.prefeitura.rio/wp-content/uploads/sites/38/2024/09/MATERIAL-DE-CONSULTA-Espelho-do-formulario-de-inscricao-de-PESSOA-JURIDICA.pdf (o espelho de PF tem os mesmos campos de projeto e limites)",
+  "confianca": "alta",
+  "editais": [
+   "ed10"
+  ],
+  "etapas": [
+   {
+    "id": "e1",
+    "nome": "Etapa 1, Seus dados",
+    "blocos": [
+     {
+      "t": "Etapa 1, Seus dados",
+      "campos": [
+       {
+        "n": "doc__ed10__0",
+        "l": "Tipo de proponente",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "PJ com fins lucrativos, PJ sem fins lucrativos ou MEI (no formulário de PF, pessoa física).",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Dados do proponente, contato, endereço e representante legal (cerca de 25 campos)</b>: Razão social, CNPJ, nome fantasia, site, responsável, cargo, e-mail, telefones, endereço completo, inscrição municipal, natureza jurídica, CPF e RG do representante, WhatsApp e redes sociais.",
+        "conceito": "cadastro"
+       },
+       {
+        "n": "doc__ed10__2",
+        "l": "Localização do proponente",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "Área de Planejamento (automática pelo bairro), sede na Pequena África (Gamboa, Santo Cristo, Saúde) e sede em favela das APs 1 ou 2, com documento comprobatório opcional. Alimenta o critério específico f.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__3",
+        "l": "Opção por vagas de ação afirmativa",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Pessoas negras, indígenas, pessoas com deficiência, não desejo ou não me aplico.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Autodeclarações e perfil (8 perguntas)</b>: Deficiência e qual; étnico-racial; gênero; faixa etária; tempo de atuação no setor cultural; escolaridade; composição da renda.",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed10__5",
+        "l": "Anexos do proponente",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Identificação e CPF do representante legal, cartão CNPJ; se houver procurador, identificação, CPF e procuração com firma reconhecida (PDF até 10 MB cada). No formulário de PF, comprovante de residência ou Anexo 07.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__6",
+        "l": "Declaração de não ocorrência de vedações",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Aceite obrigatório.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e2",
+    "nome": "Etapa 2, Seu projeto",
+    "blocos": [
+     {
+      "t": "Etapa 2, Seu projeto",
+      "campos": [
+       {
+        "n": "doc__ed10__7",
+        "l": "Nome da proposta ou projeto",
+        "t": "txt",
+        "conceito": "titulo",
+        "dica": "Sem limite informado.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__8",
+        "l": "Categoria e formato",
+        "t": "sel",
+        "conceito": "enquadramento",
+        "dica": "Uma das 20 combinações de categoria e formato (Formação e/ou Pesquisa ou Produção e/ou Circulação; Mostras por número de edições). PF só vê formação/pesquisa e Literatura.",
+        "req": 1,
+        "opts": [
+         "Cultura Urbana e Arte Pública",
+         "Artes Visuais",
+         "Cultura e Infância",
+         "Cultura Popular e Patrimônio Imaterial",
+         "Dança",
+         "Circo",
+         "Literatura e Publicações Cariocas",
+         "Música",
+         "Teatro",
+         "Mostras, Festivais e Multilinguagens"
+        ]
+       },
+       {
+        "n": "doc__ed10__9",
+        "l": "Tipos de produtos culturais originados do projeto",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Seleção múltipla.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__10",
+        "l": "Valor do projeto",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Conforme a faixa da categoria e formato.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__11",
+        "l": "Projeto inédito ou não inédito e ano da última estreia ou reestreia",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Se não inédito, informar o ano (só números).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__12",
+        "l": "Principais locais de circulação (se não inédito)",
+        "t": "ta",
+        "conceito": "trajetoria",
+        "dica": "Onde o projeto já circulou.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed10__13",
+        "l": "Sinopse",
+        "t": "ta",
+        "conceito": "resumo",
+        "dica": "\"Descreva de forma resumida o que é\".",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed10__14",
+        "l": "Classificação indicativa",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Livre, 10, 12, 14, 16 ou 18 anos.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__15",
+        "l": "Descrição do tema ou assunto conforme a classificação",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Justificar a classificação indicativa escolhida.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed10__16",
+        "l": "Destinado ao público infantil?",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Se sim, anexar autodeclaração de conteúdo (Anexo 14), roteiro detalhado e, se não inédito, link do vídeo.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__17",
+        "l": "Apresentação",
+        "t": "ta",
+        "conceito": "apresentacao",
+        "dica": "\"Descreva de maneira objetiva qual é a proposta\".",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed10__18",
+        "l": "Objetivos do projeto",
+        "t": "ta",
+        "conceito": "objetivos",
+        "dica": "Objetivo geral e objetivos específicos.",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed10__19",
+        "l": "Justificativa",
+        "t": "ta",
+        "conceito": "justificativa",
+        "dica": "\"Descreva a relevância do seu projeto\".",
+        "req": 1,
+        "max": 3000
+       },
+       {
+        "n": "doc__ed10__20",
+        "l": "Formato do público-alvo",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "Seleção de faixa etária (infantil 0 a 5 até idosos 60+).",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__21",
+        "l": "Público-alvo",
+        "t": "ta",
+        "conceito": "publico",
+        "dica": "\"Detalhe as características do público\".",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__22",
+        "l": "Previsão de alcance de público",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "Somente números.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__23",
+        "l": "Áreas de Planejamento de realização",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "AP 1 a AP 5, seleção múltipla.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__24",
+        "l": "Locais de realização",
+        "t": "ta",
+        "conceito": "territorio",
+        "dica": "\"Detalhe espaços\".",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__25",
+        "l": "Quantidade de ações ou atividades",
+        "t": "ta",
+        "conceito": "metas",
+        "dica": "Somente números.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__26",
+        "l": "Estratégia de comunicação e mobilização",
+        "t": "ta",
+        "conceito": "comunicacao",
+        "dica": "\"Detalhe de que modo pretende realizar divulgação\".",
+        "req": 1,
+        "max": 2500
+       },
+       {
+        "n": "doc__ed10__27",
+        "l": "Ações de acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Seleção múltipla: ação com temática inclusiva, ação cultural inclusiva, implementação de recursos de acessibilidade, audiodescrição/pictograma/Braille, Libras, contratação de colaboradores capacitados, outra.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__28",
+        "l": "Plano de acessibilidade",
+        "t": "ta",
+        "conceito": "acessibilidade",
+        "dica": "Conforme o item 9.2 do regulamento.",
+        "req": 1,
+        "max": 500
+       },
+       {
+        "n": "doc__ed10__29",
+        "l": "Estratégias de democratização de acesso",
+        "t": "ta",
+        "conceito": "democratizacao",
+        "dica": "O que e como pretende fazer.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__30",
+        "l": "Especificações técnicas",
+        "t": "ta",
+        "conceito": "produto",
+        "dica": "Se o produto tiver especificações técnicas (opcional).",
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__35",
+        "l": "Anexos do projeto",
+        "t": "anexo",
+        "conceito": "anexo",
+        "dica": "Planilha orçamentária (Anexo 03, PDF); portfólio com registros de imagem, material de divulgação e comprovação de histórico, tudo datado e identificado; portfólio do grupo ou coletivo, se representar um.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__36",
+        "l": "Representa grupo ou coletivo?",
+        "t": "ta",
+        "conceito": "enquadramento",
+        "dica": "Sim ou Não; se sim, portfólio do grupo obrigatório.",
+        "req": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e3",
+    "nome": "Etapa 2, Cronograma de execução",
+    "blocos": [
+     {
+      "t": "Etapa 2, Cronograma de execução",
+      "campos": [
+       {
+        "n": "doc__ed10__31",
+        "l": "Início e término do projeto",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Prazo máximo de 15 meses de execução.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__32",
+        "l": "Pré-produção ou preparação: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Descrição da etapa.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__33",
+        "l": "Produção ou execução: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Descrição da etapa.",
+        "req": 1,
+        "max": 1000
+       },
+       {
+        "n": "doc__ed10__34",
+        "l": "Pós-produção ou finalização: início, término e descrição",
+        "t": "ta",
+        "conceito": "cronograma",
+        "dica": "Descrição da etapa.",
+        "req": 1,
+        "max": 1000
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e4",
+    "nome": "Etapa 2, Pontuação específica e ficha técnica",
+    "blocos": [
+     {
+      "t": "Etapa 2, Pontuação específica e ficha técnica",
+      "campos": [
+       {
+        "n": "doc__ed10__37",
+        "l": "Quantidade aproximada de profissionais",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Somente números.",
+        "req": 1
+       },
+       {
+        "t": "info",
+        "html": "<b>Pontuação específica a) a d): composição da equipe</b>: Sim ou Não para comunidades tradicionais; pessoas negras ou indígenas; mulheres ou LGBTQIAPN+; pessoas com deficiência ou idosas (com comprovação).",
+        "conceito": "diversidade"
+       },
+       {
+        "n": "doc__ed10__39",
+        "l": "Ficha técnica dos membros da equipe",
+        "t": "ta",
+        "conceito": "equipe",
+        "dica": "Nome, função, resumo da trajetória e qual pontuação específica se aplica a cada um.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__40",
+        "l": "Pontuação específica e): certificação como Ponto, Pontão de Cultura ou Ação Local",
+        "t": "ta",
+        "conceito": "especifico",
+        "dica": "Sim ou Não, com cópia do certificado.",
+        "req": 1
+       },
+       {
+        "n": "doc__ed10__41",
+        "l": "Compromisso de apresentar a documentação de habilitação",
+        "t": "rad",
+        "conceito": "declaracao",
+        "dica": "Aceite.",
+        "req": 1,
+        "opts": [
+         "Sim",
+         "Não"
+        ],
+        "inline": 1
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e5",
+    "nome": "Etapa 2, Materiais complementares",
+    "blocos": [
+     {
+      "t": "Etapa 2, Materiais complementares",
+      "campos": [
+       {
+        "n": "doc__ed10__42",
+        "l": "Informações complementares e até 3 PDFs complementares",
+        "t": "ta",
+        "conceito": "outro",
+        "dica": "Opcional.",
+        "max": 500
        }
       ]
      }

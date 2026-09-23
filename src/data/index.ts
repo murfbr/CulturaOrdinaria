@@ -1,7 +1,7 @@
 /* Catálogos estáticos (Salic, plataformas, perfis) e os acessores dos
-   formulários replicados. As DEFINIÇÕES de formulário vivem no banco (coleção
-   `formularios`): formulário novo entra pelo "Importar formulário" da aba
-   Plataformas, sem precisar de deploy. Aqui ficam os catálogos que mudam com o
+   formulários. As DEFINIÇÕES de formulário vivem no banco (coleção
+   `formularios`): formulário novo entra pelo "Importar formulário" de
+   Cadastros → Formulários, sem precisar de deploy. Aqui ficam os catálogos que mudam com o
    código e o registro combinado (estático ∪ banco). As sementes de src/data
    são carregadas por import() dinâmico só na primeira abertura com banco vazio. */
 import salicJson from "./salic-dados.json";
@@ -37,7 +37,7 @@ function registroDoBanco(f: Formulario, estatico?: RegistroFormulario): Registro
     etapas: f.etapas.length,
     campos: f.etapas.reduce((n, e) => n + e.blocos.reduce((m, b) => m + b.campos.filter((c) => c.n).length, 0), 0),
     extraido: f.extraido || estatico?.extraido || "—",
-    mapeamento: estatico?.mapeamento || "atual",
+    mapeamento: estatico?.mapeamento || (f.origem === "documento" ? "documento" : "atual"),
     migrado: true,
   };
 }

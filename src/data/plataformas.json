@@ -1,118 +1,301 @@
 {
- "plataformas": [
-  {
-   "id": "cultura-rio",
-   "nome": "Editais Cultura Rio",
-   "orgao": "Secretaria Municipal de Cultura do Rio · editaisculturario.com.br",
-   "arq": "formulário dentro de iframe (I1)",
-   "porta": "URL direta por edital (e=36)",
-   "codigos": "estáveis, numerados por etapa/bloco/ordem",
-   "limites": "no HTML (maxlength)",
-   "anexos": "só na plataforma",
-   "armadilhas": "rádios agrupados em tabela; sem contador de caracteres; sessão cai sem aviso."
-  },
-  {
-   "id": "desenvolve-cultura",
-   "nome": "Desenvolve Cultura",
-   "orgao": "Secretaria de Estado de Cultura e Economia Criativa · desenvolvecultura.rj.gov.br",
-   "arq": "formulário direto na página, uma URL por etapa",
-   "porta": "cadastro inicial cria a proposta; o formulário só existe depois",
-   "codigos": "campo[571389], específicos do edital",
-   "limites": "variam por edital (ICMS sem limite; Mobilidade 5000; 86 usa 800)",
-   "anexos": "só na plataforma",
-   "armadilhas": "Cloudflare derruba a sessão com pedidos rápidos; rótulo de rádio sem os colchetes do name; bug de rótulo no endereço."
-  },
-  {
-   "id": "salic",
-   "nome": "Salic",
-   "orgao": "Ministério da Cultura · salic.cultura.gov.br",
-   "arq": "menu lateral, 8 telas, planilha orçamentária própria",
-   "porta": "cadastro de proposta; listas em cascata via ajax",
-   "codigos": "nomes de campo; tipologias por id",
-   "limites": "só no contador JavaScript (resumo 1000, demais 8000)",
-   "anexos": "só na plataforma; PDF gerado lá",
-   "armadilhas": "sessão expira em minutos e recarrega a aba; respostas em ISO-8859-1; catálogos de itens dependem de produto × etapa."
-  }
- ],
- "registro": [
-  {
-   "id": "fluxo-continuo",
-   "nome": "Fluxo Contínuo",
-   "plataforma": "cultura-rio",
-   "etapas": 3,
-   "campos": 140,
-   "extraido": "12/09/2026",
-   "mapeamento": "atual",
-   "especiais": "cronograma por mês em 3 fases",
-   "migrado": true
-  },
-  {
-   "id": "dc-138",
-   "nome": "138 · Lei de Incentivo ICMS 2026",
-   "plataforma": "desenvolve-cultura",
-   "etapas": 12,
-   "campos": 96,
-   "extraido": "14/09/2026",
-   "mapeamento": "atual",
-   "especiais": "abrangência (92 municípios em regiões), sócios e equipe repetíveis, checklist de anexos",
-   "migrado": true,
-   "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
-  },
-  {
-   "id": "dc-133",
-   "nome": "133 · Mobilidade 2026, Módulo I, Apresentações",
-   "plataforma": "desenvolve-cultura",
-   "etapas": 8,
-   "campos": 61,
-   "extraido": "14/09/2026",
-   "mapeamento": "atual",
-   "especiais": "socioeconômicas (78 áreas), equipe repetível",
-   "migrado": true,
-   "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
-  },
-  {
-   "id": "dc-134",
-   "nome": "134 · Mobilidade 2026, Módulo II, Residências",
-   "plataforma": "desenvolve-cultura",
-   "etapas": 8,
-   "campos": 59,
-   "extraido": "14/09/2026",
-   "mapeamento": "atual",
-   "especiais": "socioeconômicas (78 áreas), equipe repetível",
-   "migrado": true,
-   "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
-  },
-  {
-   "id": "dc-86",
-   "nome": "86 · Mapeamento Cultura Viva RJ",
-   "plataforma": "desenvolve-cultura",
-   "etapas": 10,
-   "campos": 77,
-   "extraido": "14/09/2026",
-   "mapeamento": "atual",
-   "especiais": "mídias, contratação por membro, listas longas com filtro",
-   "migrado": true,
-   "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
-  },
-  {
-   "id": "salic-proposta",
-   "nome": "Proposta cultural · Lei Rouanet",
-   "plataforma": "salic",
-   "etapas": 8,
-   "extraido": "13/09/2026",
-   "mapeamento": "parcial",
-   "especiais": "planilha orçamentária (soma automática, catálogo de itens, coluna Bloco, custos vinculados), cascata tipicidade → tipologia",
-   "migrado": true,
-   "campos": 57,
-   "antigo": "https://claude.ai/code/artifact/b8c9bf0a-11b5-4b61-8eaa-a282ec9c2289"
-  }
- ],
- "perfisJuridicos": [
-  "",
-  "PF",
-  "MEI",
-  "PJ com fins lucrativos",
-  "PJ sem fins lucrativos",
-  "Coletivo informal representado por PF"
- ]
+  "plataformas": [
+    {
+      "id": "cultura-rio",
+      "nome": "Editais Cultura Rio",
+      "orgao": "Secretaria Municipal de Cultura do Rio · editaisculturario.com.br",
+      "arq": "formulário dentro de iframe (I1)",
+      "porta": "URL direta por edital (e=36)",
+      "codigos": "estáveis, numerados por etapa/bloco/ordem",
+      "limites": "no HTML (maxlength)",
+      "anexos": "só na plataforma",
+      "armadilhas": "rádios agrupados em tabela; sem contador de caracteres; sessão cai sem aviso.",
+      "url": "https://www.editaisculturario.com.br"
+    },
+    {
+      "id": "desenvolve-cultura",
+      "nome": "Desenvolve Cultura",
+      "orgao": "Secretaria de Estado de Cultura e Economia Criativa · desenvolvecultura.rj.gov.br",
+      "arq": "formulário direto na página, uma URL por etapa",
+      "porta": "cadastro inicial cria a proposta; o formulário só existe depois",
+      "codigos": "campo[571389], específicos do edital",
+      "limites": "variam por edital (ICMS sem limite; Mobilidade 5000; 86 usa 800)",
+      "anexos": "só na plataforma",
+      "armadilhas": "Cloudflare derruba a sessão com pedidos rápidos; rótulo de rádio sem os colchetes do name; bug de rótulo no endereço.",
+      "url": ""
+    },
+    {
+      "id": "salic",
+      "nome": "Salic",
+      "orgao": "Ministério da Cultura · salic.cultura.gov.br",
+      "arq": "menu lateral, 8 telas, planilha orçamentária própria",
+      "porta": "cadastro de proposta; listas em cascata via ajax",
+      "codigos": "nomes de campo; tipologias por id",
+      "limites": "só no contador JavaScript (resumo 1000, demais 8000)",
+      "anexos": "só na plataforma; PDF gerado lá",
+      "armadilhas": "sessão expira em minutos e recarrega a aba; respostas em ISO-8859-1; catálogos de itens dependem de produto × etapa.",
+      "url": "https://salic.cultura.gov.br"
+    },
+    {
+      "id": "prosas",
+      "nome": "Prosas",
+      "orgao": "Plataforma privada de editais e patrocínios (Renner, Ambev, Claro, Funarte Aberta)",
+      "url": "https://prosas.com.br",
+      "arq": "",
+      "porta": "Cada empresa abre a sua chamada; cadastro do proponente e do projeto na própria Prosas.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "Ambev Brasilidades: dá para salvar e continuar, mas depois de enviada a inscrição não pode ser alterada (item 6.3.1)."
+    },
+    {
+      "id": "firjan",
+      "nome": "Editais culturais Firjan",
+      "orgao": "Firjan SESI (Mosaico Rio)",
+      "url": "https://www.firjan.com.br/editaisculturais",
+      "arq": "",
+      "porta": "Plataforma própria de editais culturais da Firjan.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "Dúvidas só até dois dias úteis antes do fim das inscrições; em inscrição repetida vale a última."
+    },
+    {
+      "id": "siipc",
+      "nome": "SIIPC (Lei do ISS)",
+      "orgao": "Prefeitura do Rio, Lei de Incentivo à Cultura (ISS)",
+      "url": "https://leideincentivo.rio.rj.gov.br",
+      "arq": "",
+      "porta": "Sistema de Inscrição da Lei do ISS: produtor em leideincentivo.rio.rj.gov.br/produtores; contribuinte em /incentiva, com o login da Nota Carioca.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "Formulário finalizado não pode mais ser alterado. O teto é por CNPJ, não por projeto."
+    },
+    {
+      "id": "mapas",
+      "nome": "Mapas da Cultura",
+      "orgao": "Ministério da Cultura",
+      "url": "https://mapa.cultura.gov.br",
+      "arq": "",
+      "porta": "Cada edital é uma oportunidade no Mapas (ex.: MICSUL em /oportunidade/9881).",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "sesc-pulsar",
+      "nome": "Edital de Cultura Sesc RJ",
+      "orgao": "Sesc RJ (Pulsar)",
+      "url": "https://editaldecultura.sescrio.org.br",
+      "arq": "",
+      "porta": "Plataforma própria do edital.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "O resultado final saiu só por número de inscrição: guardar o número de cada inscrição."
+    },
+    {
+      "id": "vale",
+      "nome": "Patrocínios Vale",
+      "orgao": "Instituto Cultural Vale",
+      "url": "https://patrocinio.valeglobalcomm.com",
+      "arq": "",
+      "porta": "Mesma plataforma da Chamada ICV.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "embratur",
+      "nome": "Patrocínio Embratur",
+      "orgao": "Embratur",
+      "url": "https://patrocinio.embratur.com.br",
+      "arq": "",
+      "porta": "A Embratur anunciou novo sistema de gestão de patrocínios, com 30 dias de migração.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "Carnaval só entra como produto turístico, e sem dinheiro adiantado."
+    },
+    {
+      "id": "ibermusicas",
+      "nome": "Ibermúsicas",
+      "orgao": "Programa Ibermúsicas",
+      "url": "https://www.ibermusicas.org",
+      "arq": "",
+      "porta": "Formulário online por convocatória, precedido de perfil no Catálogo do Setor Musical.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "oei",
+      "nome": "Formulário OEI",
+      "orgao": "Organização de Estados Ibero-americanos (Laços CPLP)",
+      "url": "https://oei.int",
+      "arq": "",
+      "porta": "Formulário eletrônico em português ou espanhol.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "riotur-blocos",
+      "nome": "Gestão de Blocos de Carnaval",
+      "orgao": "Riotur",
+      "url": "https://jeap.rio.rj.gov.br/BLO",
+      "arq": "",
+      "porta": "Card Inscrição Blocos de Rua em riotur.prefeitura.rio; só com o login do representante.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": "A faixa de público declarada define o valor do incentivo (se a regra se repetir) e as exigências do Corpo de Bombeiros."
+    },
+    {
+      "id": "google-forms",
+      "nome": "Google Forms",
+      "orgao": "Formulário eletrônico linkado pelo órgão",
+      "url": "",
+      "arq": "",
+      "porta": "Usado no credenciamento de Rodas de Samba (SMC).",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "futuros",
+      "nome": "Brasilidades e Futuros",
+      "orgao": "Futuros (Petrobras)",
+      "url": "https://brasilidadesefuturos.futuros.org.br",
+      "arq": "",
+      "porta": "Plataforma própria do edital.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "petrobras",
+      "nome": "Seleção Petrobras Cultural",
+      "orgao": "Petrobras",
+      "url": "https://www.petrobras.com.br/cultura",
+      "arq": "",
+      "porta": "Pelo link Seleção Petrobras Cultural (não pelo Escolha Direta); botões Salvar e sair e Validar.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "softr",
+      "nome": "Formulário Softr (Baluarte)",
+      "orgao": "Baluarte, para o patrocínio Shell",
+      "url": "https://maisbaluarte.com.br",
+      "arq": "",
+      "porta": "Formulário Softr da Baluarte.",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    },
+    {
+      "id": "email",
+      "nome": "E-mail",
+      "orgao": "Envio de proposta por e-mail (Santander)",
+      "url": "",
+      "arq": "",
+      "porta": "patrocinios@santander.com.br",
+      "codigos": "",
+      "limites": "",
+      "anexos": "",
+      "armadilhas": ""
+    }
+  ],
+  "registro": [
+    {
+      "id": "fluxo-continuo",
+      "nome": "Fluxo Contínuo",
+      "plataforma": "cultura-rio",
+      "etapas": 3,
+      "campos": 140,
+      "extraido": "12/09/2026",
+      "mapeamento": "atual",
+      "especiais": "cronograma por mês em 3 fases",
+      "migrado": true
+    },
+    {
+      "id": "dc-138",
+      "nome": "138 · Lei de Incentivo ICMS 2026",
+      "plataforma": "desenvolve-cultura",
+      "etapas": 12,
+      "campos": 96,
+      "extraido": "14/09/2026",
+      "mapeamento": "atual",
+      "especiais": "abrangência (92 municípios em regiões), sócios e equipe repetíveis, checklist de anexos",
+      "migrado": true,
+      "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
+    },
+    {
+      "id": "dc-133",
+      "nome": "133 · Mobilidade 2026, Módulo I, Apresentações",
+      "plataforma": "desenvolve-cultura",
+      "etapas": 8,
+      "campos": 61,
+      "extraido": "14/09/2026",
+      "mapeamento": "atual",
+      "especiais": "socioeconômicas (78 áreas), equipe repetível",
+      "migrado": true,
+      "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
+    },
+    {
+      "id": "dc-134",
+      "nome": "134 · Mobilidade 2026, Módulo II, Residências",
+      "plataforma": "desenvolve-cultura",
+      "etapas": 8,
+      "campos": 59,
+      "extraido": "14/09/2026",
+      "mapeamento": "atual",
+      "especiais": "socioeconômicas (78 áreas), equipe repetível",
+      "migrado": true,
+      "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
+    },
+    {
+      "id": "dc-86",
+      "nome": "86 · Mapeamento Cultura Viva RJ",
+      "plataforma": "desenvolve-cultura",
+      "etapas": 10,
+      "campos": 77,
+      "extraido": "14/09/2026",
+      "mapeamento": "atual",
+      "especiais": "mídias, contratação por membro, listas longas com filtro",
+      "migrado": true,
+      "antigo": "https://claude.ai/code/artifact/788bcbae-a879-4f11-acd0-5016fb3f2771"
+    },
+    {
+      "id": "salic-proposta",
+      "nome": "Proposta cultural · Lei Rouanet",
+      "plataforma": "salic",
+      "etapas": 8,
+      "extraido": "13/09/2026",
+      "mapeamento": "parcial",
+      "especiais": "planilha orçamentária (soma automática, catálogo de itens, coluna Bloco, custos vinculados), cascata tipicidade → tipologia",
+      "migrado": true,
+      "campos": 57,
+      "antigo": "https://claude.ai/code/artifact/b8c9bf0a-11b5-4b61-8eaa-a282ec9c2289"
+    }
+  ],
+  "perfisJuridicos": [
+    "",
+    "PF",
+    "MEI",
+    "PJ com fins lucrativos",
+    "PJ sem fins lucrativos",
+    "Coletivo informal representado por PF"
+  ]
 }

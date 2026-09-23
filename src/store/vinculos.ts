@@ -1,12 +1,12 @@
 /* Impacto de excluir um registro do Painel: o que está ligado a ele e a
    exclusão em duas formas — LEVANDO os vínculos junto (apaga o que depende
    dele) ou DESVINCULANDO (mantém os registros, só limpando a ligação).
-   Rascunhos do Simulador nunca são apagados daqui, só desvinculados; os docs
-   do Contexto apontam pelo mesmo id e ficam sempre como estão (viram nota). */
+   O rascunho de um projeto vai sempre junto com ele (é o formulário do
+   projeto); os docs do Contexto apontam pelo mesmo id e ficam como estão. */
 import { obterEstado } from "./central";
-import { excluirRegistro, salvarRascunho, salvarRegistro } from "./mutacoes";
+import { excluirRegistro, salvarRegistro } from "./mutacoes";
 import { ENTIDADES, type ChaveEntidade } from "../forms/especificacoes";
-import type { Candidatura, Tarefa } from "../types";
+import type { Projeto, Tarefa } from "../types";
 
 export type DestinoVinculos = "junto" | "desvincular";
 
@@ -25,8 +25,6 @@ const n = (qtd: number, singular: string, plural: string) =>
 const tarefasDe = (origem: string): Tarefa[] =>
   obterEstado().painel.tarefas.filter((t) => t.origem === origem);
 
-const rascunhosDe = (candidaturaId: string) =>
-  Object.values(obterEstado().rascunhos).filter((r) => r.ref === candidaturaId);
 
 const desvincularTarefas = (origem: string) =>
   tarefasDe(origem).forEach((t) => salvarRegistro("tarefas", { ...t, origem: "" }));
@@ -34,16 +32,10 @@ const desvincularTarefas = (origem: string) =>
 const excluirTarefas = (origem: string) =>
   tarefasDe(origem).forEach((t) => excluirRegistro("tarefas", t.id));
 
-/** Limpa a referência dos rascunhos ligados a uma candidatura (nunca os apaga). */
-const desvincularRascunhos = (candidaturaId: string) =>
-  rascunhosDe(candidaturaId).forEach((r) => salvarRascunho({ ...r, ref: "" }, true));
-
-/** Exclui uma candidatura tratando tarefas e rascunhos conforme o destino. */
-function excluirCandidatura(c: Candidatura, destino: DestinoVinculos) {
-  if (destino === "desvincular") desvincularTarefas("cand:" + c.id);
-  desvincularRascunhos(c.id);
-  // A cascata interna do excluirRegistro apaga as tarefas "cand:" que sobraram.
-  excluirRegistro("candidaturas", c.id);
+/** Exclui um projeto; as tarefas ligadas vão junto ou ficam soltas. */
+function excluirProjeto(p: Projeto, destino: DestinoVinculos) {
+  if (destino === "desvincular") desvincularTarefas("proj:" + p.id);
+  excluirRegistro("projetos", p.id); // leva as tarefas "proj:" que sobraram e o rascunho
 }
 
 /** Nota sobre docs do Contexto que apontam os ids (ficam como estão). */
@@ -61,41 +53,29 @@ function notaContexto(ids: string[]): string[] {
     : [];
 }
 
-function notaRascunhos(candidaturaIds: string[]): string[] {
-  const qtd = candidaturaIds.reduce((soma, id) => soma + rascunhosDe(id).length, 0);
-  return qtd
-    ? [n(qtd, "rascunho do Simulador fica desvinculado", "rascunhos do Simulador ficam desvinculados") + " (rascunho nunca é apagado daqui)."]
-    : [];
-}
-
 /** Calcula o impacto de excluir um registro e devolve as formas de executar. */
 export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclusao {
   const { painel } = obterEstado();
 
   if (chave === "artista") {
-    const projetos = painel.projetos.filter((p) => p.artistaId === id);
-    const idsProjeto = new Set(projetos.map((p) => p.id));
-    const candidaturas = painel.candidaturas.filter((c) => idsProjeto.has(c.projetoId));
-    const idsCand = new Set(candidaturas.map((c) => c.id));
-    const tarefas = painel.tarefas.filter((t) => {
-      const dois = t.origem.indexOf(":");
-      const tipo = t.origem.slice(0, dois), ref = t.origem.slice(dois + 1);
-      return (tipo === "proj" && idsProjeto.has(ref)) || (tipo === "cand" && idsCand.has(ref));
-    });
+    const projetos = painel.projetos.filter((p) => (p.artistaIds || []).includes(id));
+    // Levar junto só apaga projeto em que este é o único artista.
+    const soDele = projetos.filter((p) => p.artistaIds.length === 1);
+    const tarefas = soDele.flatMap((p) => tarefasDe("proj:" + p.id));
     const vinculos = [
-      ...(projetos.length ? [n(projetos.length, "projeto", "projetos")] : []),
-      ...(candidaturas.length ? [n(candidaturas.length, "candidatura no pipeline", "candidaturas no pipeline")] : []),
+      ...(soDele.length ? [n(soDele.length, "projeto só dele", "projetos só dele")] : []),
       ...(tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : []),
     ];
+    const notas = projetos.length > soDele.length
+      ? [n(projetos.length - soDele.length, "projeto com outros artistas só perde", "projetos com outros artistas só perdem") + " este nome da lista."]
+      : [];
     return {
       vinculos,
-      notas: [...notaRascunhos([...idsCand]), ...notaContexto([id, ...idsProjeto, ...idsCand])],
+      notas: [...notas, ...notaContexto([id, ...projetos.map((p) => p.id)])],
       excluir(destino) {
-        if (destino === "junto") {
-          candidaturas.forEach((c) => excluirCandidatura(c, "junto"));
-          projetos.forEach((p) => { excluirTarefas("proj:" + p.id); excluirRegistro("projetos", p.id); });
-        } else {
-          projetos.forEach((p) => salvarRegistro("projetos", { ...p, artistaId: "" }));
+        for (const p of projetos) {
+          if (destino === "junto" && p.artistaIds.length === 1) excluirProjeto(p, "junto");
+          else salvarRegistro("projetos", { ...p, artistaIds: p.artistaIds.filter((x) => x !== id) });
         }
         excluirRegistro("artistas", id);
       },
@@ -103,56 +83,38 @@ export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclus
   }
 
   if (chave === "projeto") {
-    const candidaturas = painel.candidaturas.filter((c) => c.projetoId === id);
-    const idsCand = candidaturas.map((c) => c.id);
-    const tarefas = [...tarefasDe("proj:" + id), ...idsCand.flatMap((cid) => tarefasDe("cand:" + cid))];
-    const vinculos = [
-      ...(candidaturas.length ? [n(candidaturas.length, "candidatura no pipeline", "candidaturas no pipeline")] : []),
-      ...(tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : []),
-    ];
+    const p = painel.projetos.find((x) => x.id === id);
+    const tarefas = tarefasDe("proj:" + id);
+    const temRascunho = Boolean(p?.rascunhoId && obterEstado().rascunhos[p.rascunhoId]);
     return {
-      vinculos,
-      notas: [...notaRascunhos(idsCand), ...notaContexto([id, ...idsCand])],
-      excluir(destino) {
-        if (destino === "junto") {
-          candidaturas.forEach((c) => excluirCandidatura(c, "junto"));
-          excluirTarefas("proj:" + id);
-        } else {
-          candidaturas.forEach((c) => salvarRegistro("candidaturas", { ...c, projetoId: "" }));
-          desvincularTarefas("proj:" + id);
-        }
-        excluirRegistro("projetos", id);
-      },
+      vinculos: tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : [],
+      notas: [
+        ...(temRascunho ? ["As respostas do formulário vão junto para a lixeira (dá para restaurar em 30 dias)."] : []),
+        ...notaContexto([id]),
+      ],
+      excluir(destino) { if (p) excluirProjeto(p, destino); },
     };
   }
 
   if (chave === "edital") {
-    const candidaturas = painel.candidaturas.filter((c) => c.editalId === id);
-    const idsCand = candidaturas.map((c) => c.id);
-    const tarefas = idsCand.flatMap((cid) => tarefasDe("cand:" + cid));
+    const projetos = painel.projetos.filter((p) => p.editalId === id);
+    const tarefas = [...tarefasDe("edital:" + id), ...projetos.flatMap((p) => tarefasDe("proj:" + p.id))];
     const vinculos = [
-      ...(candidaturas.length ? [n(candidaturas.length, "candidatura no pipeline", "candidaturas no pipeline")] : []),
+      ...(projetos.length ? [n(projetos.length, "projeto neste edital", "projetos neste edital")] : []),
       ...(tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : []),
     ];
     return {
       vinculos,
-      notas: [...notaRascunhos(idsCand), ...notaContexto([id, ...idsCand])],
+      notas: notaContexto([id]),
       excluir(destino) {
-        if (destino === "junto") candidaturas.forEach((c) => excluirCandidatura(c, "junto"));
-        else candidaturas.forEach((c) => salvarRegistro("candidaturas", { ...c, editalId: "" }));
+        if (destino === "junto") {
+          projetos.forEach((p) => excluirProjeto(p, "junto"));
+          excluirTarefas("edital:" + id);
+        } else {
+          projetos.forEach((p) => salvarRegistro("projetos", { ...p, editalId: "" }));
+          desvincularTarefas("edital:" + id);
+        }
         excluirRegistro("editais", id);
-      },
-    };
-  }
-
-  if (chave === "candidatura") {
-    const tarefas = tarefasDe("cand:" + id);
-    const c = painel.candidaturas.find((x) => x.id === id);
-    return {
-      vinculos: tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : [],
-      notas: [...notaRascunhos([id]), ...notaContexto([id])],
-      excluir(destino) {
-        if (c) excluirCandidatura(c, destino);
       },
     };
   }
@@ -172,18 +134,20 @@ export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclus
 
   if (chave === "equipe") {
     const tarefas = painel.tarefas.filter((t) => t.respId === id);
-    const candidaturas = painel.candidaturas.filter((c) => c.respId === id);
+    const projetos = painel.projetos.filter((p) => p.respId === id || (p.equipeIds || []).includes(id));
     const reunioes = painel.reunioes.filter((r) => (r.participanteIds || []).includes(id));
     const notas: string[] = [];
     if (tarefas.length) notas.push(n(tarefas.length, "tarefa fica", "tarefas ficam") + " sem responsável.");
-    if (candidaturas.length) notas.push(n(candidaturas.length, "candidatura fica", "candidaturas ficam") + " sem responsável.");
+    if (projetos.length) notas.push("Sai de " + n(projetos.length, "projeto", "projetos") + " (responsável ou equipe).");
     if (reunioes.length) notas.push("Sai de " + n(reunioes.length, "reunião", "reuniões") + ".");
     return {
       vinculos: [],
       notas,
       excluir() {
         tarefas.forEach((t) => salvarRegistro("tarefas", { ...t, respId: "" }));
-        candidaturas.forEach((c) => salvarRegistro("candidaturas", { ...c, respId: "" }));
+        projetos.forEach((p) => salvarRegistro("projetos", {
+          ...p, respId: p.respId === id ? "" : p.respId, equipeIds: (p.equipeIds || []).filter((x) => x !== id),
+        }));
         reunioes.forEach((r) => salvarRegistro("reunioes", {
           ...r, participanteIds: (r.participanteIds || []).filter((p) => p !== id),
         }));

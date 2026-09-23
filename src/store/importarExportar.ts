@@ -2,17 +2,18 @@
    A importação acontece em dois tempos: `analisarPacote` reconhece o formato e
    conta o que há no arquivo (sem gravar nada), e o `aplicar` devolvido executa
    de fato — mesclando ou substituindo o Painel, conforme o modo escolhido.
-   Formatos aceitos: o pacote deste site (v2, completo ou de uma coleção só),
-   o do artefato original (v1, com tuplas — convertidas aqui), o export antigo
-   só do Painel, backups do Simulador e os backups das réplicas antigas
-   (Fluxo Contínuo, Mesa Desenvolve Cultura, Rascunho Salic). */
+   Formatos aceitos: o pacote deste site (v3; v2 e o do artefato original v1
+   são convertidos na hora: candidaturas viram projetos), o export antigo só
+   do Painel, backups do Simulador e das réplicas antigas (Fluxo Contínuo,
+   Mesa Desenvolve Cultura, Rascunho Salic) — rascunho solto vira projeto. */
 import { Banco } from "../services/banco";
 import { baixarArquivo, clonar, uid } from "../utils";
 import { obterEstado } from "./central";
 import {
   salvarFicha, salvarJulgamento, salvarRascunho, salvarRegistro, salvarRegra,
 } from "./mutacoes";
-import { COLECOES_PAINEL, type ColecaoPainel, type DadosPainel, type Ficha, type Julgamento, type Rascunho, type Regra } from "../types";
+import { COLECOES_PAINEL, type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type Julgamento, type Rascunho, type Regra } from "../types";
+import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
 import { formularioDe, SALIC_DADOS, registroDe } from "../data";
 import { campos as camposDe, normalizarRascunho, novoRascunho } from "../lib/simulador/motor";
 import { linhaVazia } from "../lib/simulador/orcamento";
@@ -28,7 +29,8 @@ export function limparInternos<T>(x: T): T {
   return x;
 }
 
-/** Gera e baixa o pacote .json completo (Painel + rascunhos + contexto). */
+/** Gera e baixa o pacote .json completo (Painel + respostas dos formulários +
+    definições dos formulários + contexto). */
 export function exportarTudo() {
   const estado = obterEstado();
   const painel = clonar(estado.painel) as unknown as Record<string, unknown[]>;
@@ -39,9 +41,10 @@ export function exportarTudo() {
   Object.values(contexto).forEach((mapa) => Object.values(mapa).forEach(limparInternos));
   const rascunhos = clonar(estado.rascunhos);
   Object.values(rascunhos).forEach(limparInternos);
+  const formularios = clonar(estado.formularios);
   const pacote = {
-    central: "coletivo", versao: 2, exportado: new Date().toISOString(),
-    painel, rascunhos, contexto,
+    central: "coletivo", versao: 3, exportado: new Date().toISOString(),
+    painel, rascunhos, formularios, contexto,
   };
   baixarArquivo("central-coletivo-" + new Date().toISOString().slice(0, 10) + ".json", JSON.stringify(pacote, null, 1));
 }
@@ -52,7 +55,7 @@ const tupla = <T,>(v: unknown, nomes: string[]): T =>
   Array.isArray(v) ? (Object.fromEntries(nomes.map((n, i) => [n, (v as unknown[])[i] ?? ""])) as T) : (v as T);
 
 function converterPainelImportado(p: Record<string, unknown>): DadosPainel {
-  const d = clonar(p) as unknown as DadosPainel;
+  const d = clonar(p) as unknown as DadosPainel & { candidaturas?: unknown[] };
   (d.artistas || []).forEach((a) => {
     const det = a.det as unknown as Record<string, unknown[]> | undefined;
     if (!det) return;
@@ -63,8 +66,13 @@ function converterPainelImportado(p: Record<string, unknown>): DadosPainel {
   (d.projetos || []).forEach((pr) => {
     if (pr.producao) pr.producao = (pr.producao as unknown as unknown[]).map((t) => tupla(t, ["texto", "status"]));
   });
-  return d;
+  return d as DadosPainel;
 }
+
+/** O painel do arquivo está no formato antigo (candidaturas, projeto de um artista só)? */
+const painelEhV2 = (p?: Record<string, unknown>) =>
+  Boolean(p && ((Array.isArray(p.candidaturas) && p.candidaturas.length)
+    || (Array.isArray(p.projetos) && (p.projetos as Record<string, unknown>[]).some(projetoEhV2))));
 
 function converterContextoImportado(c: Record<string, unknown>) {
   const d = clonar(c) as { fichas?: Record<string, Ficha>; regras?: Record<string, Regra>; julg?: Record<string, Julgamento> };
@@ -120,13 +128,45 @@ function substituirPainel(novo: DadosPainel): string {
 const aplicarPainel = (novo: DadosPainel, modo: ModoPainel): string =>
   modo === "substituir" ? substituirPainel(novo) : mesclarPainel(novo);
 
-/** Junta um rascunho importado (id novo se já existir um igual). */
+/** Rascunho avulso importado vira um projeto novo (id novo se já existir um igual). */
 function adicionarRascunhoImportado(r: Rascunho): boolean {
   r = normalizarRascunho(r);
   if (!formularioDe(r.form)) return false;
   if (!r.id || obterEstado().rascunhos[r.id]) r.id = novoRascunho(r.form).id;
+  const idProjeto = uid("p");
+  const edital = obterEstado().painel.editais.find((e) => e.formId === r.form || (e.formIds || []).includes(r.form));
+  const i = r.interno;
+  const projeto = normalizarProjeto({
+    id: idProjeto, nome: r.nome || "Importado", formId: r.form, rascunhoId: r.id, editalId: edital?.id || "",
+    arquivado: r.arquivado, proponente: i?.prop, interno: { anot: i?.anot || "", agentes: i?.agentes || [], crono: i?.crono || [] },
+    docs: i?.docs || [], historico: [{ data: new Date().toISOString().slice(0, 10), de: "", para: "prospeccao" }],
+  });
+  r.ref = idProjeto;
   salvarRascunho(r, true);
+  salvarRegistro("projetos", projeto);
   return true;
+}
+
+/** Aplica um pacote já no v3 (ou convertido): painel, respostas, formulários e contexto. */
+function aplicarV3(painel: DadosPainel | null, rascunhos: Record<string, Rascunho>, formularios: Record<string, Formulario>,
+  contexto: { fichas?: Record<string, Ficha>; regras?: Record<string, Regra>; julg?: Record<string, Julgamento> } | null,
+  modo: ModoPainel): string {
+  const partes: string[] = [];
+  if (painel) partes.push(aplicarPainel(painel, modo));
+  // Respostas entram com o mesmo id: é o que liga cada uma ao seu projeto.
+  const rs = Object.values(rascunhos || {});
+  rs.forEach((r) => salvarRascunho(normalizarRascunho(clonar(r)), true));
+  if (rs.length) partes.push(rs.length + " resposta(s) de formulário");
+  const fs = Object.values(formularios || {});
+  fs.forEach((f) => Banco.gravar("formularios", f.id, { ...(clonar(f) as unknown as Documento), atualizado: new Date().toISOString() }, true));
+  if (fs.length) partes.push(fs.length + " formulário(s)");
+  if (contexto) {
+    Object.values(contexto.fichas || {}).forEach(salvarFicha);
+    Object.values(contexto.regras || {}).forEach(salvarRegra);
+    Object.values(contexto.julg || {}).forEach(salvarJulgamento);
+    partes.push("contexto");
+  }
+  return "Importado: " + partes.join(", ");
 }
 
 /* ── análise: reconhece o formato, conta e devolve o `aplicar` ── */
@@ -137,7 +177,10 @@ export interface ResumoPacote {
   formato: string;
   /** Contagem por coleção do Painel presente no arquivo (ausente = sem Painel). */
   painel?: Partial<Record<ColecaoPainel, number>>;
+  /** Candidaturas do formato antigo (viram projetos). */
+  candidaturasV2?: number;
   rascunhos?: number;
+  formularios?: number;
   contexto?: { fichas: number; regras: number; julgamentos: number };
   /** Executa a importação e devolve a mensagem de resultado. */
   aplicar: (modo: ModoPainel) => string;
@@ -148,36 +191,36 @@ export interface ResumoPacote {
  * Lança erro se não reconhecer.
  */
 export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
-  // Pacote da Central (artefato v1 ou site v2, completo ou parcial).
+  // Pacote da Central (artefato v1, site v2 ou v3, completo ou parcial).
   if (j.central === "coletivo") {
     const painelBruto = j.painel as Record<string, unknown> | undefined;
     const colecoes = COLECOES_PAINEL.filter((c) => Array.isArray(painelBruto?.[c]));
+    const antigo = painelEhV2(painelBruto);
     const resumo: ResumoPacote = {
-      formato: "Pacote da Central (v" + (j.versao || 1) + ")",
+      formato: "Pacote da Central (v" + (j.versao || 1) + ")" + (antigo ? " · será convertido para o v3 (candidaturas viram projetos)" : ""),
       aplicar: (modo) => {
-        const partes: string[] = [];
-        if (colecoes.length && painelBruto) {
-          partes.push(aplicarPainel(converterPainelImportado(painelBruto), modo));
+        const ctxBruto = j.contexto ? converterContextoImportado(j.contexto as Record<string, unknown>) : null;
+        const rascunhos = (j.rascunhos || {}) as Record<string, Rascunho>;
+        const formularios = (j.formularios || {}) as Record<string, Formulario>;
+        if (antigo && painelBruto) {
+          const convertido = converterV2(
+            converterPainelImportado(painelBruto) as unknown as PainelV2, clonar(rascunhos),
+            { fichas: ctxBruto?.fichas || {}, regras: ctxBruto?.regras || {}, julg: ctxBruto?.julg || {} },
+          );
+          const { dados } = convertido;
+          return aplicarV3(dados.painel, dados.rascunhos, formularios, ctxBruto ? dados.contexto : null, modo);
         }
-        if (j.rascunhos) {
-          let n = 0;
-          Object.values(j.rascunhos as Record<string, Rascunho>).forEach((r) => { if (adicionarRascunhoImportado(clonar(r))) n++; });
-          partes.push(n + " rascunho(s)");
-        }
-        if (j.contexto) {
-          const ctx = converterContextoImportado(j.contexto as Record<string, unknown>);
-          Object.values(ctx.fichas || {}).forEach(salvarFicha);
-          Object.values(ctx.regras || {}).forEach(salvarRegra);
-          Object.values(ctx.julg || {}).forEach(salvarJulgamento);
-          partes.push("contexto");
-        }
-        return "Importado: " + partes.join(", ");
+        const painel = colecoes.length && painelBruto ? converterPainelImportado(painelBruto) : null;
+        if (painel) painel.projetos = (painel.projetos || []).map((p) => normalizarProjeto(p));
+        return aplicarV3(painel, rascunhos, formularios, ctxBruto, modo);
       },
     };
     if (colecoes.length && painelBruto) {
       resumo.painel = Object.fromEntries(colecoes.map((c) => [c, (painelBruto[c] as unknown[]).length]));
+      if (Array.isArray(painelBruto.candidaturas)) resumo.candidaturasV2 = (painelBruto.candidaturas as unknown[]).length;
     }
     if (j.rascunhos) resumo.rascunhos = Object.keys(j.rascunhos as object).length;
+    if (j.formularios) resumo.formularios = Object.keys(j.formularios as object).length;
     if (j.contexto) {
       const ctx = j.contexto as Record<string, object | undefined>;
       resumo.contexto = {
@@ -189,14 +232,18 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
     return resumo;
   }
 
-  // Export antigo só do Painel.
+  // Export antigo só do Painel (sempre v2: converte candidaturas em projetos).
   if (j.artistas && j.candidaturas) {
     return {
-      formato: "Export antigo do Painel",
+      formato: "Export antigo do Painel · será convertido para o v3",
       painel: Object.fromEntries(COLECOES_PAINEL
         .filter((c) => Array.isArray(j[c]))
         .map((c) => [c, (j[c] as unknown[]).length])),
-      aplicar: (modo) => aplicarPainel(converterPainelImportado(j), modo),
+      candidaturasV2: (j.candidaturas as unknown[]).length,
+      aplicar: (modo) => {
+        const { dados } = converterV2(converterPainelImportado(j) as unknown as PainelV2, {}, {});
+        return aplicarV3(dados.painel, dados.rascunhos, {}, null, modo);
+      },
     };
   }
 

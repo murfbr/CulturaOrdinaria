@@ -10,7 +10,7 @@ export function CampoTextoLongo({ r, c, alterar }: PropsCampo) {
         onChange={(e) => alterar((copia) => { copia.valores[c.n] = e.target.value; })} />
       <div className="campo-f">
         <Contador atual={texto.length} max={c.max} />
-        {c.max && <span>limite real da plataforma</span>}
+        {c.max && <span>{c.n.startsWith("doc__") ? "limite do edital" : "limite real da plataforma"}</span>}
       </div>
     </>
   );

@@ -1,12 +1,16 @@
-/* Lista de artistas do portfólio: um card por artista, com atalho de edição,
-   busca, filtro por tipo e ordenação. */
+/* Lista de artistas (Cadastros): um card por artista, com atalho de edição,
+   busca, filtro por tipo, ordenação e o que ainda está em aberto. */
 import { useState } from "react";
-import { usarCentral } from "../../store/central";
-import { abrirDetalhe } from "../../store/navegacao";
-import { abrirEdicao, abrirNovo } from "../../store/edicao";
-import { CabecalhoSecao } from "../../components/CabecalhoSecao";
-import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../components/Filtros";
-import { comparar } from "../../utils";
+import { usarCentral } from "../../../store/central";
+import { abrirDetalhe } from "../../../store/navegacao";
+import { abrirEdicao, abrirNovo } from "../../../store/edicao";
+import { CabecalhoSecao } from "../../../components/CabecalhoSecao";
+import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../../components/Filtros";
+import { comparar } from "../../../utils";
+import type { Artista } from "../../../types";
+
+/** Pendências e perguntas ainda abertas na ficha do artista. */
+const abertas = (a: Artista) => (a.det?.pendencias || []).filter((x) => x.status !== "resolvida").length;
 
 export function ListaArtistas() {
   const { painel } = usarCentral();
@@ -17,7 +21,7 @@ export function ListaArtistas() {
   const tipos = [...new Set(painel.artistas.map((a) => a.tipo).filter(Boolean))].sort(comparar);
   const artistas = painel.artistas.filter((a) =>
     (!filtroTipo || a.tipo === filtroTipo) &&
-    (!busca || [a.nome, a.tipo, a.mun, a.bio, ...(a.tags || [])].join(" ").toLowerCase().includes(busca.toLowerCase())));
+    (!busca || [a.nome, a.tipo, a.mun, a.bio, a.liga || "", ...(a.tags || [])].join(" ").toLowerCase().includes(busca.toLowerCase())));
   if (ordem === "nome") artistas.sort((a, b) => comparar(a.nome, b.nome));
   if (ordem === "recentes") artistas.sort((a, b) => (b.atualizado || "").localeCompare(a.atualizado || ""));
 
@@ -41,11 +45,12 @@ export function ListaArtistas() {
             <span className="badge b-type">{a.tipo}</span>
             <h3 style={{ marginTop: 9 }}>{a.nome}</h3>
             <p className="role">{a.bio}</p>
-            <div className="kv"><span>Enquadramento:</span> <b>{a.enq}</b></div>
-            <div className="kv"><span>CNPJ:</span> <b>{a.cnpj}</b></div>
+            <div className="kv"><span>Formalização:</span> <b>{a.formalizacao || a.enq || "—"}</b></div>
+            {a.liga && <div className="kv"><span>Liga:</span> <b>{a.liga}</b></div>}
             <div className="kv"><span>Sede:</span> <b>{a.mun}</b></div>
             <div className="foot">
-              {painel.projetos.filter((p) => p.artistaId === a.id).length} projeto(s)
+              {painel.projetos.filter((p) => p.artistaIds.includes(a.id) && !p.arquivado).length} projeto(s)
+              {abertas(a) > 0 && <span className="badge st-prev" title="pendências e perguntas em aberto">{abertas(a)} em aberto</span>}
               <span className="arrow">abrir ficha →</span>
             </div>
           </div>

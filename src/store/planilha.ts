@@ -9,7 +9,7 @@ import { ENTIDADES } from "../forms/especificacoes";
 import { gerarCsv } from "../lib/csv";
 import { baixarArquivo, clonar, uid } from "../utils";
 import {
-  COLECOES_PAINEL, ETAPAS_PIPELINE, ROTULO_COLECAO, ROTULO_TAREFA,
+  COLECOES_PAINEL, ROTULO_COLECAO, ROTULO_STATUS_PROJETO, ROTULO_TAREFA,
   type ColecaoPainel, type DadosPainel,
 } from "../types";
 
@@ -28,41 +28,54 @@ export interface ColunaCsv {
   numero?: boolean;
   /** Campo de id: exporta o nome do registro apontado e importa achando-o pelo nome. */
   ref?: ColecaoPainel;
+  /** Lista de ids (ex. artistas do projeto): exporta os nomes com " | ". */
+  refLista?: ColecaoPainel;
   /** Data: a importação converte dd/mm/aaaa → aaaa-mm-dd. */
   data?: boolean;
 }
-
-const rotuloEtapas = Object.fromEntries(ETAPAS_PIPELINE.map((e, i) => [String(i), e]));
 
 /** As colunas de cada coleção (a ordem é a da planilha exportada). */
 export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
   artistas: [
     { campo: "nome", rotulo: "Nome" },
     { campo: "tipo", rotulo: "Tipo" },
-    { campo: "enq", rotulo: "Enquadramento" },
+    { campo: "formalizacao", rotulo: "Formalização" },
     { campo: "cnpj", rotulo: "CNPJ" },
+    { campo: "liga", rotulo: "Liga" },
     { campo: "mun", rotulo: "Sede" },
     { campo: "bio", rotulo: "Bio" },
     { campo: "tags", rotulo: "Tags", lista: true },
   ],
   projetos: [
     { campo: "nome", rotulo: "Nome" },
-    { campo: "artistaId", rotulo: "Artista", ref: "artistas" },
+    { campo: "artistaIds", rotulo: "Artistas", refLista: "artistas" },
+    { campo: "editalId", rotulo: "Edital", ref: "editais" },
+    { campo: "status", rotulo: "Status", valores: ROTULO_STATUS_PROJETO },
+    { campo: "respId", rotulo: "Responsável", ref: "equipe" },
     { campo: "tipo", rotulo: "Tipo" },
-    { campo: "meta", rotulo: "Meta de captação" },
     { campo: "ano", rotulo: "Janela" },
+    { campo: "grupo", rotulo: "Faz parte de" },
+    { campo: "valorPedido", rotulo: "Valor pedido" },
+    { campo: "valorAprovado", rotulo: "Valor aprovado" },
+    { campo: "valorCaptado", rotulo: "Valor captado" },
+    { campo: "inscricao", rotulo: "Nº de inscrição" },
+    { campo: "resultado", rotulo: "Resultado" },
+    { campo: "linkDrive", rotulo: "Pasta no Drive" },
   ],
   editais: [
     { campo: "nome", rotulo: "Nome" },
     { campo: "orgao", rotulo: "Órgão" },
-    { campo: "esfera", rotulo: "Esfera", valores: { fed: "Federal", est: "Estadual", mun: "Municipal", priv: "Privado" } },
+    { campo: "curto", rotulo: "Nome curto" },
+    { campo: "categoria", rotulo: "Categoria", valores: { edital: "Edital", lei: "Lei de incentivo", canal: "Canal de patrocínio", cadastro: "Cadastro", norma: "Norma", prospeccao: "Prospecção" } },
+    { campo: "esfera", rotulo: "Esfera", valores: { fed: "Federal", est: "Estadual", mun: "Municipal", priv: "Privado", para: "Paraestatal" } },
     { campo: "mec", rotulo: "Mecanismo" },
     { campo: "area", rotulo: "Área" },
     { campo: "eleg", rotulo: "Elegibilidade", lista: true },
     { campo: "teto", rotulo: "Teto" },
     { campo: "prazo", rotulo: "Prazo" },
     { campo: "prazoIso", rotulo: "Prazo (data)", data: true },
-    { campo: "status", rotulo: "Status", valores: { open: "Aberto", prev: "Previsto", closed: "Encerrado" } },
+    { campo: "status", rotulo: "Status", valores: { open: "Aberto", cont: "Fluxo contínuo", prev: "Previsto", closed: "Encerrado", norma: "Norma vigente" } },
+    { campo: "estimula", rotulo: "O que quer incentivar" },
     { campo: "objeto", rotulo: "Objeto" },
     { campo: "publico", rotulo: "Público" },
     { campo: "comoInscrever", rotulo: "Como se inscrever" },
@@ -71,15 +84,6 @@ export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
     { campo: "linkEdital", rotulo: "Link do edital" },
     { campo: "linkDrive", rotulo: "Pasta no Drive" },
     { campo: "obs", rotulo: "Observações" },
-  ],
-  candidaturas: [
-    { campo: "projetoId", rotulo: "Projeto", ref: "projetos" },
-    { campo: "editalId", rotulo: "Edital", ref: "editais" },
-    { campo: "respId", rotulo: "Responsável", ref: "equipe" },
-    { campo: "valor", rotulo: "Valor pleiteado" },
-    { campo: "etapa", rotulo: "Etapa", numero: true, valores: rotuloEtapas },
-    { campo: "result", rotulo: "Resultado", valores: { ok: "aprovado", no: "reprovado" } },
-    { campo: "linkDrive", rotulo: "Pasta no Drive" },
   ],
   tarefas: [
     { campo: "titulo", rotulo: "Título" },
@@ -92,9 +96,6 @@ export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
     { campo: "nome", rotulo: "Nome" },
     { campo: "nomeCompleto", rotulo: "Nome completo" },
     { campo: "email", rotulo: "E-mail" },
-    { campo: "rg", rotulo: "RG" },
-    { campo: "cpf", rotulo: "CPF" },
-    { campo: "nascimento", rotulo: "Nascimento", data: true },
     { campo: "funcoes", rotulo: "Funções", lista: true },
   ],
   elenco: [
@@ -102,9 +103,6 @@ export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
     { campo: "nomeCompleto", rotulo: "Nome completo" },
     { campo: "funcao", rotulo: "Função" },
     { campo: "email", rotulo: "E-mail" },
-    { campo: "rg", rotulo: "RG" },
-    { campo: "cpf", rotulo: "CPF" },
-    { campo: "nascimento", rotulo: "Nascimento", data: true },
     { campo: "bio", rotulo: "Minibiografia" },
     { campo: "docsStatus", rotulo: "Documentos", valores: { ok: "ok", pend: "pendente" } },
   ],
@@ -139,6 +137,10 @@ function paraDataIso(t: string): string {
 
 function celulaExportada(r: Registro, c: ColunaCsv): string {
   const v = r[c.campo];
+  if (c.refLista) {
+    return (Array.isArray(v) ? (v as string[]) : [])
+      .map((id) => (porId(c.refLista!, id) as { nome?: string } | undefined)?.nome || "").filter(Boolean).join(" | ");
+  }
   if (c.ref) {
     const alvo = v ? (porId(c.ref, String(v)) as { nome?: string } | undefined) : undefined;
     return alvo?.nome || "";
@@ -164,7 +166,7 @@ export function exportarColecaoJson(colecao: ColecaoPainel) {
   const registros = clonar(obterEstado().painel[colecao]) as unknown as Registro[];
   registros.forEach(limparInternos);
   const pacote = {
-    central: "coletivo", versao: 2, exportado: new Date().toISOString(),
+    central: "coletivo", versao: 3, exportado: new Date().toISOString(),
     painel: { [colecao]: registros },
   };
   baixarArquivo(colecao + "-" + hoje() + ".json", JSON.stringify(pacote, null, 1));
@@ -200,6 +202,15 @@ export interface ResultadoCsv { criados: number; atualizados: number; avisos: st
 
 function valorImportado(texto: string, c: ColunaCsv, avisos: string[], numLinha: number): unknown {
   const t = texto.trim();
+  if (c.refLista) {
+    const nomes = t.split(t.includes("|") ? "|" : ",").map((x) => x.trim()).filter(Boolean);
+    return nomes.map((nome) => {
+      const alvo = (obterEstado().painel[c.refLista!] as unknown as { id: string; nome?: string }[])
+        .find((r) => normalizar(String(r.nome || "")) === normalizar(nome));
+      if (!alvo) avisos.push(`linha ${numLinha}: "${nome}" não encontrado em ${ROTULO_COLECAO[c.refLista!]}`);
+      return alvo?.id || "";
+    }).filter(Boolean);
+  }
   if (c.lista) return t.split(t.includes("|") ? "|" : ",").map((x) => x.trim()).filter(Boolean);
   if (c.ref) {
     const alvo = (obterEstado().painel[c.ref] as unknown as { id: string; nome?: string }[])
@@ -247,13 +258,9 @@ export function importarCsv(
     let base: Registro | undefined;
     if (modo === "mesclar") {
       base = (id && existentes.find((r) => r.id === id))
-        || (colecao === "candidaturas"
-          ? (valores.projetoId && valores.editalId
-            ? existentes.find((r) => r.projetoId === valores.projetoId && r.editalId === valores.editalId)
-            : undefined)
-          : (valores[chaveNome]
-            ? existentes.find((r) => normalizar(String(r[chaveNome] || "")) === normalizar(String(valores[chaveNome])))
-            : undefined))
+        || (valores[chaveNome]
+          ? existentes.find((r) => normalizar(String(r[chaveNome] || "")) === normalizar(String(valores[chaveNome])))
+          : undefined)
         || undefined;
     }
 

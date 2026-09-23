@@ -17,7 +17,7 @@ export function Geral({ aoAbrirRegra }: { aoAbrirRegra: (p: PedidoModalRegra) =>
       <div className="shead">
         <div>
           <h2>Contexto e regras</h2>
-          <p className="sub">O que sabemos sobre cada artista, projeto e edital, e o que o texto pode ou não ter. Nada de cadastro: isso é do Painel, apontado pelo mesmo id.</p>
+          <p className="sub">O que sabemos sobre cada artista, projeto e edital, e o que o texto pode ou não ter. Nada de cadastro: isso é de Cadastros e Projetos, apontado pelo mesmo id. As mesmas fichas aparecem na aba Contexto de cada artista, edital e projeto.</p>
         </div>
       </div>
 

@@ -14,7 +14,7 @@ function mesesDoCalendario(eventos: { iso: string }[]): string[] {
 
 export function Calendario() {
   const { painel } = usarCentral();
-  const eventos = eventosAgenda(painel.editais, painel.candidaturas);
+  const eventos = eventosAgenda(painel.editais, painel.projetos);
   const meses = mesesDoCalendario(eventos);
   const mesAtual = new Date().toISOString().slice(0, 7);
   const [indice, setIndice] = useState(() => Math.max(0, meses.indexOf(mesAtual)));

@@ -38,21 +38,18 @@ function ModalDeRegistro() {
       if (base[c.chave] != null && base[c.chave] !== "") continue;
       if (c.tipo === "select") base[c.chave] = (c.fonte as string[])[0];
       else if (c.tipo === "opts") base[c.chave] = (c.fonte as [string, string][])[0]?.[0] ?? "";
-      else if (c.tipo === "ref") base[c.chave] = (obterEstado().painel[c.fonte as ColecaoPainel][0] as { id?: string } | undefined)?.id ?? "";
+      else if (c.tipo === "ref" && c.vazio == null) base[c.chave] = (obterEstado().painel[c.fonte as ColecaoPainel][0] as { id?: string } | undefined)?.id ?? "";
     }
     return base;
   });
 
   // Opções do campo "origem" (vínculo polimórfico da tarefa).
-  const opcoesOrigem = useMemo(() => {
-    const nomeEdital = (c: { editalId: string }) => porId("editais", c.editalId)?.nome || "?";
-    return [
-      ["", "— sem vínculo"] as [string, string],
-      ...painel.projetos.map((p) => ["proj:" + p.id, "Projeto · " + p.nome] as [string, string]),
-      ...painel.reunioes.map((r) => ["reuniao:" + r.id, "Reunião · " + (r.titulo || r.data || r.id)] as [string, string]),
-      ...painel.candidaturas.map((c) => ["cand:" + c.id, "Candidatura · " + nomeEdital(c)] as [string, string]),
-    ];
-  }, [painel]);
+  const opcoesOrigem = useMemo(() => [
+    ["", "— sem vínculo"] as [string, string],
+    ...painel.projetos.map((p) => ["proj:" + p.id, "Projeto · " + p.nome + (p.arquivado ? " (arquivado)" : "")] as [string, string]),
+    ...painel.editais.map((e) => ["edital:" + e.id, "Edital · " + (e.curto || e.nome)] as [string, string]),
+    ...painel.reunioes.map((r) => ["reuniao:" + r.id, "Reunião · " + (r.titulo || r.data || r.id)] as [string, string]),
+  ], [painel]);
 
   // Exclusão em duas etapas: primeiro o impacto nos vínculos, depois o destino.
   const [impacto, setImpacto] = useState<ImpactoExclusao | null>(null);

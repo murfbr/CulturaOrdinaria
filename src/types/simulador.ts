@@ -52,13 +52,13 @@ export interface InternoRascunho {
   docs: ItemChecklist[];
 }
 
-/** Rascunho de proposta num formulário do Simulador. */
+/** Respostas de um projeto no formulário dele (v3: um rascunho por projeto). */
 export interface Rascunho {
   id: string;
   /** Id do formulário (ex. "dc-138", "salic-proposta"). */
   form: string;
   nome: string;
-  /** Candidatura do Painel a que se refere (ou ""). */
+  /** Projeto dono deste rascunho (v2: candidatura). */
   ref: string;
   arquivado: boolean;
   criado: string;
@@ -115,6 +115,10 @@ export interface CampoFormulario {
   inline?: number | boolean;
   /** HTML fixo, para tipo "info". */
   html?: string;
+  /** Conceito do campo (resumo, justificativa, objetivos...), base dos textos-mestres. */
+  conceito?: string;
+  /** Limite em outra unidade que não caracteres (ex. "300 palavras", "2 páginas"). */
+  limiteTexto?: string;
 }
 
 export interface BlocoFormulario {
@@ -136,6 +140,9 @@ export interface EtapaFormulario {
   blocos: BlocoFormulario[];
 }
 
+/** De onde veio o mapeamento do formulário. */
+export type OrigemFormulario = "chrome" | "documento";
+
 export interface Formulario {
   id: string;
   nome: string;
@@ -145,6 +152,19 @@ export interface Formulario {
   extraido?: string;
   obs?: string;
   etapas: EtapaFormulario[];
+  /** chrome = extraído da plataforma real (campo a campo, com os códigos);
+      documento = reconstruído do espelho oficial, do regulamento ou da página. */
+  origem?: OrigemFormulario;
+  /** Tipo de documento-fonte: central | espelho_oficial | regulamento | web. */
+  fonteTipo?: string;
+  /** Arquivo ou URL de onde os campos saíram. */
+  fonte?: string;
+  /** alta | media | baixa. */
+  confianca?: string;
+  /** Editais que usam este formulário. */
+  editais?: string[];
+  /** Diferenças conhecidas entre esta réplica e outras fontes (espelho x plataforma). */
+  divergencias?: string;
   /** Carimbo ISO da gravação no banco (mantido pelo armazenamento). */
   atualizado?: string;
 }
@@ -174,6 +194,8 @@ export interface Plataforma {
   limites: string;
   anexos: string;
   armadilhas: string;
+  /** Endereço de entrada. */
+  url?: string;
 }
 
 /** Dados de apoio do Salic (catálogos da planilha orçamentária). */

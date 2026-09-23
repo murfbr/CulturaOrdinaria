@@ -1,6 +1,6 @@
 /* Navegação do site: ambiente ativo, aba ativa e a ficha de detalhe aberta.
    É um mini-estado global (como o Shell do artefato) para que qualquer bloco possa
-   navegar — ex.: a ficha da candidatura abre um rascunho no Simulador.
+   navegar — ex.: a ficha do edital abre um projeto em Projetos.
    Ambiente e aba ficam gravados no localStorage para reabrir onde parou.
 
    Cada tela tem endereço na URL (#/ambiente/aba/tipo/id): o hash espelha o
@@ -14,23 +14,30 @@ export interface Ambiente {
   abas: [id: string, rotulo: string][];
 }
 
-/** Os oito ambientes do site, com suas abas (iguais ao artefato). */
+/** Os sete ambientes do site, com suas abas. */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"]] },
-  { id: "portfolio", rotulo: "Portfólio", abas: [["artistas", "Artistas"], ["projetos", "Projetos"]] },
-  { id: "captacao", rotulo: "Captação", abas: [["pipeline", "Pipeline"], ["editais", "Editais"]] },
+  { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["editais", "Editais"], ["formularios", "Formulários"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["cronograma", "Cronograma"], ["calendario", "Calendário"]] },
   { id: "pessoas", rotulo: "Pessoas", abas: [["elenco", "Elenco / Colaboradores"], ["equipe", "Equipe"], ["contatos", "Contatos externos"]] },
-  { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"]] },
-  { id: "simulador", rotulo: "Simulador", abas: [["mesa", "Mesa"], ["plataformas", "Plataformas"], ["formulario", "Formulário"], ["transferencia", "Transferência"]] },
+  { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
+  { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
 ];
 
-/** Ficha de detalhe aberta no Painel (artista, projeto, candidatura...). */
+/** Endereços da versão anterior (v2) → onde a mesma coisa mora agora. */
+const ENDERECO_ANTIGO: Record<string, [string, string]> = {
+  "portfolio/artistas": ["cadastros", "artistas"], "portfolio/projetos": ["projetos", "visao"],
+  "captacao/pipeline": ["projetos", "pipeline"], "captacao/editais": ["cadastros", "editais"],
+  "simulador/mesa": ["projetos", "visao"], "simulador/formulario": ["projetos", "visao"],
+  "simulador/transferencia": ["projetos", "visao"], "simulador/plataformas": ["cadastros", "formularios"],
+};
+
+/** Ficha de detalhe aberta (artista, edital, formulário, projeto, reunião). */
 export interface Detalhe {
-  tipo: "artista" | "projeto" | "cand" | "edital" | "reuniao";
+  tipo: "artista" | "projeto" | "edital" | "formulario" | "reuniao";
   id: string;
-  /** Sub-aba dentro da ficha ("geral", "docs"...). */
+  /** Sub-aba dentro da ficha ("geral", "formulario"...). */
   sub?: string;
 }
 
@@ -38,19 +45,17 @@ interface EstadoNavegacao {
   amb: string;
   aba: string;
   detalhe: Detalhe | null;
-  /** Rascunho aberto no Simulador (persiste entre visitas). */
-  rascunhoAberto: string | null;
   /** Ficha selecionada na aba Fichas do Contexto. */
   fichaAberta: string | null;
   /** Julgamento selecionado no Contexto. */
   julgamentoAberto: string | null;
 }
 
-const CHAVE = "central-nav-v1";
+const CHAVE = "central-nav-v3";
 
 /* ══════════ endereço na URL ══════════ */
 
-const TIPOS_DETALHE = ["artista", "projeto", "cand", "edital", "reuniao"] as const;
+const TIPOS_DETALHE = ["artista", "projeto", "edital", "formulario", "reuniao"] as const;
 
 /** Estado de navegação → hash ("#/captacao/editais/edital/ed-3"). */
 function paraHash(n: EstadoNavegacao): string {
@@ -58,8 +63,6 @@ function paraHash(n: EstadoNavegacao): string {
   if (n.detalhe) {
     partes.push(n.detalhe.tipo, n.detalhe.id);
     if (n.detalhe.sub && n.detalhe.sub !== "geral") partes.push(n.detalhe.sub);
-  } else if (n.amb === "simulador" && n.aba === "formulario" && n.rascunhoAberto) {
-    partes.push(n.rascunhoAberto);
   } else if (n.amb === "contexto" && n.aba === "fichas" && n.fichaAberta) {
     partes.push(n.fichaAberta);
   } else if (n.amb === "contexto" && n.aba === "julgamentos" && n.julgamentoAberto) {
@@ -71,14 +74,20 @@ function paraHash(n: EstadoNavegacao): string {
 /** Hash → pedaço de estado de navegação; null quando não reconhece nada. */
 function deHash(hash: string): Partial<EstadoNavegacao> | null {
   const partes = hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
+  // Link da versão anterior: troca ambiente/aba pelos novos e segue.
+  const antigo = ENDERECO_ANTIGO[partes[0] + "/" + (partes[1] || "")];
+  if (antigo) {
+    partes.splice(0, 2, ...antigo);
+    if (partes[2] === "cand") partes[2] = "projeto";
+    if (partes[0] === "projetos" && partes[2] && partes[2] !== "projeto") partes.splice(2);
+  }
   const amb = AMBIENTES.find((a) => a.id === partes[0]);
   if (!amb) return null;
   const aba = (amb.abas.find(([id]) => id === partes[1]) || amb.abas[0])[0];
   const lido: Partial<EstadoNavegacao> = { amb: amb.id, aba, detalhe: null };
   const [alvo, id, sub] = partes.slice(2);
   if (!alvo) return lido;
-  if (amb.id === "simulador" && aba === "formulario") lido.rascunhoAberto = alvo;
-  else if (amb.id === "contexto" && aba === "fichas") lido.fichaAberta = alvo;
+  if (amb.id === "contexto" && aba === "fichas") lido.fichaAberta = alvo;
   else if (amb.id === "contexto" && aba === "julgamentos") lido.julgamentoAberto = alvo;
   else if ((TIPOS_DETALHE as readonly string[]).includes(alvo) && id) {
     lido.detalhe = { tipo: alvo as Detalhe["tipo"], id, sub: sub || "geral" };
@@ -87,11 +96,12 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
 }
 
 function carregar(): EstadoNavegacao {
-  const padrao: EstadoNavegacao = { amb: "painel", aba: "resumo", detalhe: null, rascunhoAberto: null, fichaAberta: null, julgamentoAberto: null };
+  const padrao: EstadoNavegacao = { amb: "painel", aba: "resumo", detalhe: null, fichaAberta: null, julgamentoAberto: null };
   let base = padrao;
   try {
     const salvo = JSON.parse(localStorage.getItem(CHAVE) || "{}");
     base = { ...padrao, ...salvo, detalhe: null };
+    if (!AMBIENTES.some((a) => a.id === base.amb)) base = padrao;
   } catch { /* fica o padrão */ }
   const daUrl = deHash(window.location.hash);
   return daUrl ? { ...base, ...daUrl } : base;
@@ -132,7 +142,7 @@ try { history.replaceState(null, "", paraHash(nav)); } catch { /* ambiente sem h
 function publicar() {
   nav = { ...nav };
   try {
-    localStorage.setItem(CHAVE, JSON.stringify({ amb: nav.amb, aba: nav.aba, rascunhoAberto: nav.rascunhoAberto }));
+    localStorage.setItem(CHAVE, JSON.stringify({ amb: nav.amb, aba: nav.aba }));
   } catch { /* sem localStorage: só não lembra a aba */ }
   sincronizarHash();
   assinantes.forEach((f) => f());
@@ -164,22 +174,30 @@ export function irParaAba(aba: string) {
   publicar();
 }
 
-/** Ambiente/aba "casa" de cada tipo de ficha, para quando o detalhe é aberto
-    de fora da família do Painel (busca global no Simulador ou no Contexto). */
+/** Ambiente/aba "casa" de cada tipo de ficha. */
 const CASA_DO_DETALHE: Record<Detalhe["tipo"], [string, string]> = {
-  artista: ["portfolio", "artistas"], projeto: ["portfolio", "projetos"],
-  cand: ["captacao", "pipeline"], edital: ["captacao", "editais"], reuniao: ["gestao", "reunioes"],
+  artista: ["cadastros", "artistas"], edital: ["cadastros", "editais"], formulario: ["cadastros", "formularios"],
+  projeto: ["projetos", "visao"], reuniao: ["gestao", "reunioes"],
 };
 
-/** Abre a ficha de detalhe de um registro do Painel. */
+/** Ambientes cujo roteador sabe desenhar fichas do Painel (artista, edital...). */
+const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "pessoas", "gestao"];
+
+/** Abre a ficha de detalhe de um registro. Projeto abre sempre em Projetos;
+    as outras fichas abrem onde estiver, se o ambiente souber desenhá-las. */
 export function abrirDetalhe(tipo: Detalhe["tipo"], id: string, sub?: string) {
-  if (nav.amb === "simulador" || nav.amb === "contexto") {
+  if (tipo === "projeto") {
+    if (nav.amb !== "projetos") [nav.amb, nav.aba] = CASA_DO_DETALHE.projeto;
+  } else if (!FAMILIA_PAINEL.includes(nav.amb)) {
     [nav.amb, nav.aba] = CASA_DO_DETALHE[tipo];
   }
   nav.detalhe = { tipo, id, sub: sub || "geral" };
   publicar();
   window.scrollTo({ top: 0 });
 }
+
+/** Abre um projeto direto numa sub-aba (geral, formulario, transferencia, contexto). */
+export const abrirProjeto = (id: string, sub?: string) => abrirDetalhe("projeto", id, sub);
 
 export function mudarSubAba(sub: string) {
   if (nav.detalhe) {
@@ -191,22 +209,6 @@ export function mudarSubAba(sub: string) {
 
 export function fecharDetalhe() {
   nav.detalhe = null;
-  publicar();
-}
-
-/** Abre um rascunho no Simulador (vindo de qualquer lugar do site). */
-export function abrirRascunho(id: string) {
-  nav.rascunhoAberto = id;
-  nav.amb = "simulador";
-  nav.aba = "formulario";
-  nav.detalhe = null;
-  publicar();
-  window.scrollTo({ top: 0 });
-}
-
-/** Marca o rascunho aberto sem trocar de tela (uso interno do Simulador). */
-export function definirRascunhoAberto(id: string | null) {
-  nav.rascunhoAberto = id;
   publicar();
 }
 

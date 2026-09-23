@@ -24,8 +24,35 @@ export interface DetalheArtista {
   fotos?: number;
   /** Links externos (Instagram, pasta no Drive...). */
   links?: { rotulo: string; url: string }[];
-  /** Manual de marca resumido. */
-  marca?: { cores: string[]; logo: string; fonte: string; obs: string };
+  /** Manual de marca resumido (+ link do manual completo e da pasta de fotos). */
+  marca?: { cores: string[]; logo: string; fonte: string; obs: string; manual?: string; pastaFotos?: string };
+  /** Pendências e perguntas em aberto sobre o artista (aba Geral). */
+  pendencias?: PendenciaArtista[];
+  /** Correções que a pesquisa propôs e ainda precisam de confirmação. */
+  propostas?: PropostaCorrecao[];
+}
+
+/** Uma pendência (algo a resolver) ou pergunta (algo a perguntar ao artista). */
+export interface PendenciaArtista {
+  texto: string;
+  /** "pendencia" = a resolver pelo coletivo; "perguntar" = só o artista responde. */
+  tipo: "pendencia" | "perguntar";
+  /** "aberta" | "resolvida". */
+  status: string;
+  /** Resposta ou como foi resolvida. */
+  resposta?: string;
+  /** De onde veio (ex. "Fila da Revisão 1.6"). */
+  fonte?: string;
+}
+
+/** Correção proposta para um campo da ficha (ainda não aplicada). */
+export interface PropostaCorrecao {
+  campo: string;
+  de: string;
+  para: string;
+  motivo: string;
+  /** "aberta" | "aplicada" | "descartada". */
+  status: string;
 }
 
 /** Artista ou coletivo do portfólio (bloco, roda de samba, grupo...). */
@@ -34,10 +61,15 @@ export interface Artista {
   nome: string;
   /** Tipo livre: "Bloco de carnaval", "Grupo musical"... */
   tipo: string;
-  /** Enquadramento jurídico: PF, MEI, PJ, "Coletivo sem CNPJ"... */
+  /** Enquadramento antigo (v2). Substituído por `formalizacao` + `liga`; fica
+      guardado para consulta e para o importador de pacotes antigos. */
   enq: string;
-  /** Situação do CNPJ (texto livre). */
+  /** Formalização própria: "Sem CNPJ nem MEI", "MEI", "CNPJ próprio"... */
+  formalizacao?: string;
+  /** Número do CNPJ/MEI quando houver (texto livre). */
   cnpj: string;
+  /** Liga ou associação de carnaval a que o bloco pertence. */
+  liga?: string;
   /** Sede (município). */
   mun: string;
   bio: string;
@@ -49,31 +81,138 @@ export interface Artista {
   atualizado?: string;
 }
 
-/** Projeto de um artista: reúne candidaturas, produção e equipe. */
+/** Status do projeto: as etapas do antigo pipeline de captação, agora no próprio projeto. */
+export type StatusProjeto =
+  | "prospeccao" | "preparacao" | "inscrito" | "aguardando" | "aprovado"
+  | "captando" | "execucao" | "prestacao" | "concluido" | "nao_aprovado" | "desistencia";
+
+/** Seção interna do projeto (nada disso vai para a plataforma). */
+export interface InternoProjeto {
+  /** Anotações gerais (até 3000 caracteres). */
+  anot: string;
+  agentes: { nome: string; tipo: string; vinc: string; papel: string }[];
+  /** Cronograma interno de marcos. */
+  crono: { data: string; m: string; ok: boolean }[];
+}
+
+/** Projeto = uma candidatura (v3). Nasce ligado a um edital e ao formulário
+    dele, ou "Livre". Os artistas são uma lista; o status é o antigo pipeline. */
 export interface Projeto {
+  id: string;
+  nome: string;
+  /** Artistas envolvidos (lista; o primeiro é o principal). */
+  artistaIds: string[];
+  /** Edital ao qual concorre ("" = sem edital). */
+  editalId: string;
+  /** Formulário do projeto: id em `formularios` ou "livre". */
+  formId: string;
+  /** Rascunho com as respostas do formulário (coleção `rascunhos`). */
+  rascunhoId?: string;
+  status: StatusProjeto;
+  arquivado: boolean;
+  /** Responsável (id de pessoa da equipe). */
+  respId: string;
+  /** Pessoas da equipe alocadas. */
+  equipeIds: string[];
+  tipo: string;
+  /** Janela / ano de realização. */
+  ano: string;
+  /** Iniciativa maior de que faz parte (ex. "Carnaval 2027 · Bloco Brasil"). */
+  grupo: string;
+  valorPedido: string;
+  valorAprovado: string;
+  valorCaptado: string;
+  /** Quem assina a inscrição. */
+  proponente: { nome: string; perfil: string; obs: string };
+  /** Número de inscrição / protocolo na plataforma. */
+  inscricao: string;
+  /** Resultado: classificação, nota, o que o parecer disse. */
+  resultado: string;
+  /** Pasta da inscrição no Google Drive. */
+  linkDrive: string;
+  /** Checklist de documentos da inscrição. */
+  docs: ItemChecklist[];
+  /** Checklist de produção. Status: "fazer" | "and" | "feito". */
+  producao: { texto: string; status: string }[];
+  interno: InternoProjeto;
+  /** Mudanças de status (data ISO, de, para). */
+  historico: { data: string; de: string; para: string }[];
+  obs: string;
+  /** De onde veio na migração v2 → v3 (projeto e candidatura antigos). */
+  origem?: { projeto?: string; candidatura?: string; rascunho?: string };
+  _ord?: number;
+  atualizado?: string;
+}
+
+/** Projeto no formato antigo (v2): iniciativa de um artista, sem edital. */
+export interface ProjetoV2 {
   id: string;
   nome: string;
   artistaId: string;
   tipo: string;
-  /** Meta de captação (texto livre, ex. "R$ 80 mil"). */
   meta: string;
-  /** Janela / ano de realização. */
   ano: string;
-  /** Checklist de produção, independente de edital. Status: "fazer" | "and" | "feito". */
   producao: { texto: string; status: string }[];
-  /** Pessoas da equipe alocadas no projeto. */
   equipeIds: string[];
   _ord?: number;
   atualizado?: string;
 }
 
-export type EsferaEdital = "fed" | "est" | "mun" | "priv";
-export type StatusEdital = "open" | "prev" | "closed";
+export type EsferaEdital = "fed" | "est" | "mun" | "priv" | "para";
+/** Aberto, fluxo contínuo, previsto, encerrado, norma vigente. */
+export type StatusEdital = "open" | "cont" | "prev" | "closed" | "norma";
+/** Natureza da fonte: edital, lei de incentivo, canal de patrocínio, cadastro, norma, prospecção. */
+export type CategoriaEdital = "edital" | "lei" | "canal" | "cadastro" | "norma" | "prospeccao";
 
-/** Edital ou fonte de captação (lei de incentivo, patrocínio, credenciamento...). */
+/** Critério de avaliação do edital (Mapa dos Editais). */
+export interface CriterioEdital {
+  criterio: string;
+  descricao: string;
+  pontos: number | null;
+  /** Conceito padronizado (merito, coerencia, trajetoria...). */
+  conceito: string;
+}
+
+/** Alerta com data que muda decisão (vem do "O que muda decisão" do Mapa). */
+export interface AlertaEdital {
+  quando: string;
+  titulo: string;
+  texto: string;
+  fazer: string;
+  fonte: string;
+  /** Outros editais citados no mesmo alerta. */
+  ids?: string[];
+}
+
+/** Campo de formulário como o Mapa dos Editais registrou. */
+export interface CampoMapa {
+  etapa: string;
+  campo: string;
+  instrucao: string;
+  limite: number | null;
+  unidade: string | null;
+  obrigatorio: boolean | null;
+  conceito: string;
+}
+
+/** Lacuna de informação do edital e quem resolve. */
+export interface LacunaEdital {
+  lacuna: string;
+  achado: string;
+  por_que: string;
+  /** aberta | parcial | fechada. */
+  status: string;
+  /** Quem resolve: voce | orgao | login | chrome | proxima | nao_existe | fechada. */
+  cat: string;
+}
+
+/** Edital ou fonte de captação (lei de incentivo, patrocínio, credenciamento...).
+    Os campos a partir de `categoria` vêm do Mapa dos Editais (v3). */
 export interface Edital {
   id: string;
   nome: string;
+  /** Nome curto para cards e listas (ex. "Mosaico"). */
+  curto?: string;
   /** Órgão ou promotor (SMC-Rio, SECEC, MinC, empresa...). */
   orgao?: string;
   esfera: EsferaEdital;
@@ -83,14 +222,16 @@ export interface Edital {
   area: string;
   /** Elegibilidade em chips (ex. ["PJ", "2 anos de atuação"]). */
   eleg: string[];
-  /** Teto de valor (texto livre). */
+  /** Teto / valores (texto livre). */
   teto: string;
   /** Prazo em texto (ex. "13/10/2026" ou "previsto p/ nov"). */
   prazo: string;
   /** Prazo em data ISO (yyyy-mm-dd) — alimenta Agenda e Calendário. */
   prazoIso?: string;
-  /** Formulário correspondente no Simulador (id do registro, ex. "dc-138"). */
+  /** Formulário principal (id em `formularios`, ex. "dc-138"). */
   formId?: string;
+  /** Todos os formulários do edital, quando há mais de um (ex. Mobilidades). */
+  formIds?: string[];
   status: StatusEdital;
   /** O que financia. */
   objeto?: string;
@@ -106,11 +247,49 @@ export interface Edital {
   obs?: string;
   /** Data em que as infos foram verificadas. */
   verif?: string;
+
+  categoria?: CategoriaEdital;
+  /** anual | bienal | contínuo | único | incerto. */
+  ciclo?: string;
+  /** Links oficiais (página, regulamento, anexos, plataforma). */
+  links?: { rotulo: string; url: string }[];
+  /** O que o edital quer incentivar, em linguagem simples. */
+  estimula?: string;
+  /** Linhas / categorias com valor e vagas. */
+  linhas?: { nome: string; valor: string; vagas: string; obs: string }[];
+  aceitaPf?: boolean | null;
+  aceitaMei?: boolean | null;
+  aceitaColetivo?: boolean | null;
+  criterios?: CriterioEdital[];
+  criteriosTotal?: number | null;
+  notaMinima?: string;
+  desempate?: string;
+  bonus?: string;
+  criteriosFonte?: string;
+  /** Obrigações relevantes (acessibilidade mínima, gratuidade, marca...). */
+  exigencias?: string;
+  /** O que foi lido para montar a ficha. */
+  fontes?: string[];
+  /** alta | media | baixa. */
+  confianca?: string;
+  /** O que não foi possível apurar (texto). */
+  lacunasTexto?: string;
+  lacunas?: LacunaEdital[];
+  alertas?: AlertaEdital[];
+  /** Arquivos do edital no acervo do Drive. */
+  arquivos?: { nome: string; onde: string; tipo: string; kb: number }[];
+  /** Origem do formulário no Mapa (central, espelho_oficial, regulamento, web, nao_descrito). */
+  formOrigem?: string;
+  /** Campos do formulário como o Mapa leu (por conceito), inclusive dos editais sem réplica. */
+  formCampos?: CampoMapa[];
+  /** Plataforma de inscrição (texto do Mapa). */
+  plataforma?: string;
   _ord?: number;
   atualizado?: string;
 }
 
-/** Candidatura = projeto × edital. É o cartão do pipeline. */
+/** Candidatura = projeto × edital (formato v2, só para migração e pacotes
+    antigos: no v3 cada projeto já é uma candidatura). */
 export interface Candidatura {
   id: string;
   projetoId: string;
@@ -138,7 +317,8 @@ export interface Tarefa {
   id: string;
   titulo: string;
   respId: string;
-  /** Vínculo: "proj:p1" | "cand:c2" | "reuniao:r1" | "" (sem vínculo). */
+  /** Vínculo: "proj:c2" | "edital:ed7" | "reuniao:r1" | "" (sem vínculo).
+      "cand:" é do formato v2 e a migração converte em "proj:". */
   origem: string;
   /** Prazo ISO (yyyy-mm-dd). */
   prazo: string;
@@ -228,12 +408,11 @@ export interface ItemLixeira {
   [campo: string]: unknown;
 }
 
-/** As nove coleções do Painel, na ordem de exibição. */
+/** As oito coleções do Painel, na ordem de exibição (v3: sem candidaturas). */
 export interface DadosPainel {
   artistas: Artista[];
   projetos: Projeto[];
   editais: Edital[];
-  candidaturas: Candidatura[];
   tarefas: Tarefa[];
   equipe: PessoaEquipe[];
   elenco: Colaborador[];

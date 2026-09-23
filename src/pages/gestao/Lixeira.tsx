@@ -12,8 +12,8 @@ import { relativo } from "../../utils";
 
 const ROTULO_ORIGEM: Record<string, string> = {
   ...ROTULO_COLECAO,
-  rascunhos: "Rascunho do Simulador", regras: "Regra do Contexto",
-  julgamentos: "Julgamento", formularios: "Formulário do Simulador",
+  rascunhos: "Respostas de formulário", regras: "Regra do Contexto",
+  julgamentos: "Julgamento", formularios: "Formulário", candidaturas: "Candidatura (v2)",
 };
 
 /** Nome de exibição de um item, seja de que coleção for. */
