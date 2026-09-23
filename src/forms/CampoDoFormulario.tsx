@@ -9,7 +9,7 @@ interface Props {
   campo: CampoSpec;
   valor: unknown;
   definir: (valor: unknown) => void;
-  /** Opções do vínculo polimórfico (tarefa → projeto/reunião/candidatura). */
+  /** Opções do vínculo polimórfico (tarefa → projeto/edital/reunião). */
   opcoesOrigem: [valor: string, rotulo: string][];
 }
 
@@ -47,7 +47,7 @@ export function CampoDoFormulario({ campo: c, valor: v, definir, opcoesOrigem }:
       const lista = listaDe(c.fonte as ColecaoPainel);
       return (
         <select id={id} value={String(v ?? "")} onChange={(e) => definir(e.target.value)}>
-          {(v == null || v === "") && <option value="">—</option>}
+          {c.vazio != null ? <option value="">{c.vazio}</option> : (v == null || v === "") && <option value="">—</option>}
           {lista.map((o) => <option key={o.id} value={o.id}>{o.nome || o.titulo || o.id}</option>)}
         </select>
       );
@@ -90,7 +90,7 @@ export function CampoDoFormulario({ campo: c, valor: v, definir, opcoesOrigem }:
               {o.nome}
             </label>
           ))}
-          {!lista.length && <span className="muted" style={{ fontSize: 12 }}>ninguém na equipe ainda</span>}
+          {!lista.length && <span className="muted" style={{ fontSize: 12 }}>nada cadastrado ainda</span>}
         </div>
       );
     }

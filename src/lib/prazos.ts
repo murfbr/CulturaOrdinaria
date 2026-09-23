@@ -11,7 +11,7 @@ export interface ItemPrazo {
   tipo: "edital" | "tarefa" | "reuniao";
   id: string;
   titulo: string;
-  /** Complemento: candidaturas ligadas, responsável, hora... */
+  /** Complemento: projetos ligados, responsável, hora... */
   detalhe: string;
   urgencia: Urgencia;
 }
@@ -52,11 +52,11 @@ export function itensDePrazo(painel: DadosPainel, hoje = hojeIso()): ItemPrazo[]
   const itens: ItemPrazo[] = [];
 
   for (const e of painel.editais) {
-    if (!e.prazoIso || e.status === "closed") continue;
-    const n = painel.candidaturas.filter((c) => c.editalId === e.id).length;
+    if (!e.prazoIso || e.status === "closed" || e.status === "norma") continue;
+    const n = painel.projetos.filter((p) => p.editalId === e.id && !p.arquivado).length;
     itens.push({
       iso: e.prazoIso, tipo: "edital", id: e.id, titulo: e.nome,
-      detalhe: n ? n + " candidatura(s)" : "sem candidatura vinculada",
+      detalhe: n ? n + " projeto(s)" : "sem projeto ainda",
       urgencia: urgenciaDe(e.prazoIso, hoje),
     });
   }

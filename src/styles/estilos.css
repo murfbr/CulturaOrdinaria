@@ -643,3 +643,106 @@ th.th-ord.on{color:var(--accent)} th.th-ord.on .seta{opacity:1}
 .mini.pz:hover{background:#FBF8F3}
 .mini.pz .pz-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mini.pz .pz-d{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}
+
+/* ===== v3: status dos projetos ===== */
+.badge.sp-prospeccao{background:#EEE8DF;color:#6E5B44}
+.badge.sp-preparacao{background:var(--warnS);color:#8A5A12}
+.badge.sp-inscrito{background:#DCEBF6;color:#1F5F8C}
+.badge.sp-aguardando{background:#E5E6F4;color:#4A4E8C}
+.badge.sp-aprovado{background:var(--okS);color:#1E6E3E}
+.badge.sp-captando{background:#D6F0E8;color:#146B55}
+.badge.sp-execucao{background:#E2EEDF;color:#3F6B36}
+.badge.sp-prestacao{background:#F3E3EA;color:#7B2D4E}
+.badge.sp-concluido{background:#ECE7E0;color:#5A5049}
+.badge.sp-nao{background:var(--noS);color:#992217}
+
+/* pílulas de vista (Editais, Formulários, Contexto do projeto) */
+.pilulas{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+.pilulas button{background:#fff;border:1px solid var(--line);border-radius:999px;font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);padding:6px 12px;cursor:pointer}
+.pilulas button:hover{border-color:var(--accent);color:var(--ink)}
+.pilulas button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.pilulas .btn{border-radius:8px}
+
+/* abas com contador */
+.aba-n{display:inline-block;background:var(--accent);color:#fff;border-radius:999px;font-size:9.5px;font-weight:700;padding:1px 6px;margin-left:5px;vertical-align:1px}
+.aba-n.cinza{background:#DDD3C6;color:#6E655D}
+
+/* Cadastros · artistas: pendências e perguntas */
+.pend{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.pend:first-of-type{border-top:0}
+.pend .ck{margin-top:1px}
+.pend.feita .pend-t > div:first-child{color:var(--faint);text-decoration:line-through}
+.pend-t{flex:1;min-width:0}
+.pend-r{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font:inherit;font-size:12.5px;background:#FBF8F3;color:var(--ink);outline:none}
+.pend-r:focus{border-color:var(--accent)}
+.pend-f{font-size:11px;color:var(--faint);margin-top:3px}
+.lnk-mini{border:0;background:none;color:var(--accent);font:inherit;font-size:11.5px;font-weight:600;cursor:pointer;padding:0;margin-top:3px}
+.chk-mini{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);white-space:nowrap;cursor:pointer}
+.chk-mini input{accent-color:var(--accent)}
+
+/* Cadastros · editais */
+.grupo-edital{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:6px 0 10px}
+.chip-sim{background:var(--okS)!important;color:#1E6E3E!important}
+.chip-nao{background:var(--noS)!important;color:#992217!important}
+.conf{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px}
+.conf-alta{background:var(--okS);color:#1E6E3E} .conf-media{background:var(--warnS);color:#8A5A12} .conf-baixa{background:var(--noS);color:#992217}
+.kv b.corta{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:bottom}
+.matriz{overflow-x:auto} .matriz table{min-width:760px} .matriz th{white-space:normal;font-size:10px;min-width:70px}
+.matriz td.num,.matriz td:first-child{white-space:nowrap} .matriz td:first-child{position:sticky;left:0;background:#fff}
+td.num{font-variant-numeric:tabular-nums;text-align:right}
+.lac{padding:9px 0;border-top:1px solid var(--line);font-size:13px} .lac:first-of-type{border-top:0}
+.lac-t{color:var(--ink);margin-top:3px} .lac-p{color:var(--muted);font-size:12px;margin-top:2px}
+.citacao{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--line);color:var(--muted);font-size:12.5px;font-style:italic}
+.fontes{margin:0;padding-left:18px;font-size:12px;color:var(--muted)} .fontes li{margin:2px 0;word-break:break-all}
+.alerta-panel{border-color:#F2C7B5;background:#FFFBF9}
+.alerta{padding:8px 0;border-top:1px solid var(--line);font-size:13px} .alerta:first-of-type{border-top:0}
+.alerta-t{margin-top:3px} .alerta-f{margin-top:3px;color:#A64726}
+.arm-painel{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.mono-mini{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#4A5A8A;background:#EEF1F8;padding:1px 5px;border-radius:4px;margin-left:8px;text-transform:none;letter-spacing:0}
+.sub-bloco{font-size:11.5px;font-weight:700;color:var(--muted);margin:6px 0 4px}
+.lnk{cursor:pointer}
+
+/* Contexto embutido (artista, edital, projeto) */
+.ctx-embutido#ctx,.ctx-embutido #ctx{padding:0;max-width:none}
+.ficha-h-mini{align-items:center}
+.ficha-h-mini .painel{font-size:12.5px}
+
+/* ===== Projetos (dentro de #sim) ===== */
+#sim .filtros-sim{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+#sim .filtros-sim input,#sim .filtros-sim select{width:auto;max-width:230px;font-size:12.5px;padding:6px 9px;border-radius:7px;background:var(--panel)}
+#sim .filtros-sim input[type=search]{min-width:220px}
+#sim .filtros-sim .n{margin-left:auto;font-size:12px;color:var(--ink3)}
+#sim .filtros-sim .chk{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink2);cursor:pointer}
+#sim .filtros-sim .chk input{width:auto;accent-color:var(--acc)}
+#sim .proj-tags{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+#sim .voltar{background:none;border:0;color:var(--acc-ink);font-weight:600;padding:0;margin:0 0 10px}
+#sim .proj-h{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px}
+#sim .proj-h-l{flex:1 1 360px;min-width:0}
+#sim .proj-h input.nome{font-weight:600;font-size:17px;background:transparent;border:1px solid transparent;padding:3px 6px;margin-left:-6px}
+#sim .proj-h input.nome:hover,#sim .proj-h input.nome:focus{border-color:var(--line2);background:var(--bg)}
+#sim .proj-sub{font-size:12.5px;color:var(--ink2);margin-top:2px}
+#sim .proj-sub a{color:var(--acc-ink);text-decoration:none;font-weight:600}
+#sim .proj-sub .muted{color:var(--ink3)}
+#sim .proj-status{display:flex;gap:4px;align-items:center}
+#sim .sel-status{width:auto;font-weight:700;font-size:12.5px;border-radius:999px;padding:5px 10px}
+#sim .proj-h .acts{display:flex;gap:6px;flex-wrap:wrap}
+#sim .geral-proj{max-width:980px}
+#sim .g-lin{display:flex;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:13.5px;align-items:baseline}
+#sim .g-lin:first-of-type{border-top:0}
+#sim .g-rot{flex:0 0 150px;color:var(--ink3);font-size:12.5px}
+#sim .g-val{flex:1;min-width:0}
+#sim .g-val a{color:var(--acc-ink);font-weight:600;text-decoration:none}
+#sim .g-form select{width:auto;max-width:100%;padding:4px 8px;font-size:13px}
+#sim .alerta-bloco{border-color:var(--acc-soft);background:#FFFBF9}
+#sim .docs-artista{margin-top:12px;padding-top:8px;border-top:1px dashed var(--line2)}
+#sim .docs-artista-l{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+#sim .docs-artista-l:first-of-type{border-top:0}
+#sim .x-mini{background:none;border:0;color:var(--ink3);font-size:16px;padding:0 4px}
+#sim .x-mini:hover{color:var(--crit)}
+#sim .add-linha input{background:var(--panel)}
+#sim .muted{color:var(--ink3)}
+#sim .ctx-embutido .pilulas button{border-radius:999px}
+.multi-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px 12px;max-height:180px;overflow:auto;padding:4px 0}
+.multi-grade label{display:flex!important;align-items:center;gap:6px;font-weight:500!important;font-size:12.5px!important;color:var(--ink)!important;margin:0!important}
+.multi-grade input{width:auto!important;accent-color:var(--accent)}
+.panel h4 .act.hint{text-transform:none;letter-spacing:0;font-weight:500}

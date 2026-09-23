@@ -9,20 +9,22 @@ export const TIPOS_FICHA: Record<TipoFicha, string> = {
   artista: "Artistas e coletivos", projeto: "Projetos", edital: "Editais e leis",
 };
 
-/** Entidade "fichável": artista, projeto ou edital do Painel. */
+/** Entidade "fichável": artista, projeto ou edital. */
 export interface EntidadeContexto {
   id: string;
   tipo: TipoFicha;
   nome: string;
-  /** Para projetos: o id do artista (para ligar julgamentos ao artista). */
+  /** Para projetos: o artista principal (para ligar julgamentos ao artista). */
   artista?: string;
+  /** Para projetos: todos os artistas. */
+  artistas?: string[];
 }
 
 /** Entidades de um tipo, direto do Painel. */
 export function entidades(tipo: TipoFicha): EntidadeContexto[] {
   const { painel } = obterEstado();
   if (tipo === "artista") return painel.artistas.map((a) => ({ id: a.id, tipo, nome: a.nome }));
-  if (tipo === "projeto") return painel.projetos.map((p) => ({ id: p.id, tipo, nome: p.nome, artista: p.artistaId }));
+  if (tipo === "projeto") return painel.projetos.map((p) => ({ id: p.id, tipo, nome: p.nome, artista: p.artistaIds[0], artistas: p.artistaIds }));
   return painel.editais.map((e) => ({ id: e.id, tipo, nome: e.nome }));
 }
 

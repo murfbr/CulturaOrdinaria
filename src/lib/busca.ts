@@ -1,17 +1,16 @@
 /* Busca global (Ctrl+K): monta um índice leve com tudo o que o site conhece —
-   as nove coleções do Painel, rascunhos do Simulador e docs do Contexto — e
+   as coleções do Painel, formulários e docs do Contexto — e
    filtra por texto sem acento. Cada resultado sabe se abrir (ficha, modal de
    edição ou tela). O índice é montado na hora: com centenas de registros já
    em memória, não precisa de índice persistente. */
 import type { EstadoCentral } from "../store/central";
 import {
-  abrirDetalhe, abrirFichaContexto, abrirJulgamento, abrirRascunho, irParaAmbiente,
+  abrirDetalhe, abrirFichaContexto, abrirJulgamento, irParaAmbiente,
 } from "../store/navegacao";
 import { abrirEdicao } from "../store/edicao";
-import { nomeCandidatura } from "../store/mutacoes";
-import { nomeArtistaDe, nomeEquipe } from "./nomes";
+import { nomeEditalDoProjeto, nomeEquipe, nomesArtistas } from "./nomes";
 import { nomeDaEntidade } from "./contexto/consultas";
-import { ETAPAS_PIPELINE, ROTULO_RESULTADO, ROTULO_TIPO_REGRA } from "../types";
+import { ROTULO_RESULTADO, ROTULO_STATUS_PROJETO, ROTULO_TIPO_REGRA } from "../types";
 import { formatarData } from "../utils";
 
 export interface ResultadoBusca {
@@ -44,11 +43,12 @@ export function montarIndice(estado: EstadoCentral): ResultadoBusca[] {
   painel.artistas.forEach((a) =>
     item("Artista", a.nome, junta(a.tipo, a.mun), [a.tags, a.bio, a.enq], () => abrirDetalhe("artista", a.id)));
   painel.projetos.forEach((p) =>
-    item("Projeto", p.nome, junta(nomeArtistaDe(p), p.ano), [p.tipo, p.meta], () => abrirDetalhe("projeto", p.id)));
+    item("Projeto", p.nome, junta(ROTULO_STATUS_PROJETO[p.status], nomeEditalDoProjeto(p), p.arquivado ? "arquivado" : ""),
+      [nomesArtistas(p), p.tipo, p.grupo, p.inscricao, p.valorPedido], () => abrirDetalhe("projeto", p.id)));
   painel.editais.forEach((e) =>
-    item("Edital", e.nome, junta(e.orgao, e.prazo && "prazo " + e.prazo), [e.mec, e.area, e.objeto], () => abrirDetalhe("edital", e.id)));
-  painel.candidaturas.forEach((c) =>
-    item("Candidatura", nomeCandidatura(c), junta(ETAPAS_PIPELINE[c.etapa], c.valor), [], () => abrirDetalhe("cand", c.id)));
+    item("Edital", e.nome, junta(e.orgao, e.prazo && "prazo " + e.prazo), [e.curto, e.mec, e.area, e.objeto, e.estimula], () => abrirDetalhe("edital", e.id)));
+  Object.values(estado.formularios).forEach((f) =>
+    item("Formulário", f.nome, f.origem === "chrome" ? "mapeado na plataforma" : "mapeado dos documentos", [f.plataforma], () => abrirDetalhe("formulario", f.id)));
   painel.tarefas.forEach((t) =>
     item("Tarefa", t.titulo, junta(nomeEquipe(t.respId), t.prazo && formatarData(t.prazo)), [t.obs], () => abrirEdicao("tarefa", t.id)));
   painel.reunioes.forEach((x) =>
@@ -60,8 +60,6 @@ export function montarIndice(estado: EstadoCentral): ResultadoBusca[] {
   painel.contatos.forEach((c) =>
     item("Contato", c.nome, junta(c.tipo, c.ref), [c.contato], () => abrirEdicao("contato", c.id)));
 
-  Object.values(estado.rascunhos).forEach((x) =>
-    item("Rascunho", x.nome, x.arquivado ? "Simulador · arquivado" : "Simulador", [], () => abrirRascunho(x.id)));
   Object.values(estado.fichas).forEach((f) =>
     item("Ficha de escrita", nomeDaEntidade(f.id), { artista: "artista", projeto: "projeto", edital: "edital" }[f.tipo] || "",
       [f.posicionamento, f.argumentos, f.julgador], () => abrirFichaContexto(f.id)));

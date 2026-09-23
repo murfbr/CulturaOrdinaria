@@ -113,7 +113,9 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
             {resumo.painel && Object.entries(resumo.painel).map(([c, n]) => (
               <li key={c}><b>{n}</b> · {ROTULO_COLECAO[c as ColecaoPainel]}</li>
             ))}
-            {resumo.rascunhos != null && <li><b>{resumo.rascunhos}</b> · rascunho(s) do Simulador (sempre entram como cópia)</li>}
+            {resumo.candidaturasV2 != null && <li><b>{resumo.candidaturasV2}</b> · candidatura(s) do formato antigo (cada uma vira um projeto)</li>}
+            {resumo.rascunhos != null && <li><b>{resumo.rascunhos}</b> · resposta(s) de formulário</li>}
+            {resumo.formularios != null && <li><b>{resumo.formularios}</b> · formulário(s)</li>}
             {resumo.contexto && (
               <li>
                 <b>{resumo.contexto.fichas + resumo.contexto.regras + resumo.contexto.julgamentos}</b>

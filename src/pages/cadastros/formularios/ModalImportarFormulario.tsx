@@ -2,11 +2,11 @@
    escrita com o Claude), o validador confere a estrutura e a definição vai
    para o banco — formulário novo entra para todo mundo, sem deploy. */
 import { useState } from "react";
-import { Modal, RodapeModal } from "../../components/Modal";
-import { toast } from "../../components/Toast";
-import { salvarFormulario } from "../../store/mutacoes";
-import { formularioDe, nomePlataforma } from "../../data";
-import { validarFormulario, type ValidacaoFormulario } from "../../lib/simulador/validarFormulario";
+import { Modal, RodapeModal } from "../../../components/Modal";
+import { toast } from "../../../components/Toast";
+import { salvarFormulario } from "../../../store/mutacoes";
+import { formularioDe, nomePlataforma } from "../../../data";
+import { validarFormulario, type ValidacaoFormulario } from "../../../lib/simulador/validarFormulario";
 
 export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) {
   const [texto, setTexto] = useState("");
@@ -26,8 +26,9 @@ export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) 
     <Modal titulo="Importar formulário" aoFechar={aoFechar} largo>
       <p className="hint" style={{ marginTop: 0 }}>
         Cole a definição JSON de um formulário (etapas → blocos → campos). O site confere a
-        estrutura antes de gravar; importado, ele aparece para todo mundo na hora — sem precisar
+        estrutura antes de gravar; importado, ele aparece para todo mundo na hora, sem precisar
         de nova versão do site. Para reimportar um formulário existente, use o mesmo <span className="mono">id</span>.
+        Diga a origem em <span className="mono">"origem"</span>: "chrome" (extraído da plataforma) ou "documento".
       </p>
       <textarea
         className="bloco-edt" rows={10} value={texto}
@@ -47,7 +48,7 @@ export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) 
           {pronto && existente && (
             <p className="hint">
               <b>Atenção:</b> já existe um formulário com esse id ("{existente.nome}") — importar vai
-              sobrescrevê-lo, e os rascunhos dele passam a usar a nova definição.
+              sobrescrevê-lo, e os projetos que o usam passam a usar a nova definição.
             </p>
           )}
           {resultado.erros.length > 0 && (

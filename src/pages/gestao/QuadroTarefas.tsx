@@ -112,7 +112,7 @@ export function QuadroTarefas() {
 
   return (
     <>
-      <CabecalhoSecao titulo="Tarefas" sub="designadas à equipe; nascem em projetos, candidaturas e reuniões — arraste os cartões entre as colunas">
+      <CabecalhoSecao titulo="Tarefas" sub="designadas à equipe; nascem em projetos, editais e reuniões — arraste os cartões entre as colunas">
         <button className="btn ghost sm" onClick={() => setVisao(visao === "pessoa" ? "status" : "pessoa")}>
           Ver por: <b>{visao}</b> ⇄
         </button>

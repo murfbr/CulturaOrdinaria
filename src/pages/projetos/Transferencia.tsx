@@ -3,20 +3,20 @@
    e seguir para o próximo. */
 import { useState, type ReactNode } from "react";
 import { salvarRascunho } from "../../store/mutacoes";
-import { irParaAba } from "../../store/navegacao";
+import { mudarSubAba } from "../../store/navegacao";
 import { formularioDe } from "../../data";
 import {
   campos, statusEfetivo, temValor, textoDe, visivel, type CampoAchatado,
 } from "../../lib/simulador/motor";
 import { copiarComAviso } from "../../components/Toast";
 import { clonar } from "../../utils";
-import { ROTULO_STATUS_CAMPO, type Rascunho } from "../../types";
+import { ROTULO_STATUS_CAMPO, type Projeto, type Rascunho } from "../../types";
 
 /** Campos preenchidos e visíveis, na ordem do formulário. */
 const listaTransferivel = (r: Rascunho): CampoAchatado[] =>
   campos(r.form).filter((c) => c.t !== "orcresumo" && visivel(c, r.valores) && temValor(r.valores[c.n]));
 
-export function Transferencia({ rascunho: r }: { rascunho: Rascunho }) {
+export function Transferencia({ projeto, rascunho: r }: { projeto: Projeto; rascunho: Rascunho }) {
   const f = formularioDe(r.form);
   const lista = listaTransferivel(r);
   const [indice, setIndice] = useState(0);
@@ -41,11 +41,12 @@ export function Transferencia({ rascunho: r }: { rascunho: Rascunho }) {
     <div className="shead">
       <div>
         <h2>Transferência</h2>
-        <p className="sub">Para a hora de colar na plataforma oficial. Só os campos com conteúdo, na ordem do site, um de cada vez.</p>
+        <p className="sub">Para a hora de colar na plataforma oficial. Só os campos com conteúdo, na ordem do site, um de cada vez.
+          {f.origem === "documento" && " Este formulário foi mapeado dos documentos do edital: a ordem e os nomes podem variar na plataforma."}</p>
       </div>
       <div className="acts">
-        <span className="eyebrow" style={{ alignSelf: "center" }}>{r.nome} · {f.nome}</span>
-        <button className="btn sm" onClick={() => irParaAba("formulario")}>← Formulário</button>
+        <span className="eyebrow" style={{ alignSelf: "center" }}>{projeto.nome} · {f.nome}</span>
+        <button className="btn sm" onClick={() => mudarSubAba("formulario")}>← Formulário</button>
       </div>
     </div>
   );
@@ -92,7 +93,11 @@ export function Transferencia({ rascunho: r }: { rascunho: Rascunho }) {
         <div className="tr-atual">
           <div className="eyebrow">{atual.etapa.nome} · {atual.bloco.t} · campo {i + 1} de {lista.length}</div>
           <h3>{atual.l}</h3>
-          <div className="onde">Na plataforma, procure o campo <span className="mono">{atual.cod || atual.n}</span>{instrucaoTipo}</div>
+          <div className="onde">
+            {atual.n.startsWith("doc__")
+              ? <>Na plataforma, procure o campo "{atual.l}"{instrucaoTipo}</>
+              : <>Na plataforma, procure o campo <span className="mono">{atual.cod || atual.n}</span>{instrucaoTipo}</>}
+          </div>
           <div className="tr-texto">{valorTexto}</div>
           {r.notas[atual.n] && (
             <div className="nota" style={{ maxWidth: "72ch" }}><b>Nota:</b><span>{r.notas[atual.n]}</span></div>

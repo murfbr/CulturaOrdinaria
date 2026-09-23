@@ -10,7 +10,7 @@ export type TipoCampoRegistro =
   | "select"     // opções fixas (o valor É o rótulo)
   | "opts"       // pares [valor, rótulo]
   | "ref"        // aponta um registro de outra coleção
-  | "origem"     // vínculo polimórfico da tarefa (projeto/reunião/candidatura)
+  | "origem"     // vínculo polimórfico da tarefa (projeto/edital/reunião)
   | "csv"        // lista separada por vírgula
   | "lines"      // lista um-por-linha
   | "multi";     // vários registros de outra coleção (checkboxes)
@@ -22,6 +22,9 @@ export interface CampoSpec {
   /** select: opções; opts: pares [valor, rótulo] — ou função que os produz na
       hora (para listas que vêm do banco); ref/multi: nome da coleção. */
   fonte?: string[] | [string, string][] | ColecaoPainel | (() => [string, string][]);
+  /** ref: rótulo da opção vazia. Com ele, o campo pode ficar sem registro
+      (e não é preenchido sozinho com o primeiro da lista). */
+  vazio?: string;
 }
 
 export interface EntidadeSpec {
@@ -31,6 +34,6 @@ export interface EntidadeSpec {
   prefixoId: string;
   padrao?: Record<string, unknown>;
   campos: CampoSpec[];
-  /** Ajustes depois de salvar os campos (ex. candidatura ganha checklist de docs). */
+  /** Ajustes depois de salvar os campos. */
   depois?: (registro: Record<string, unknown>) => void;
 }

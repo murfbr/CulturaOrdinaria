@@ -1,11 +1,11 @@
-/* Gaveta "Regras e fichas" dentro do Formulário do Simulador: as regras gerais
-   e o essencial das fichas (posicionamento, argumentos/julgador, cuidados,
-   regras) dos ids ligados ao rascunho — edital, projeto e artista. */
+/* "Regras e fichas" do projeto (gaveta do Formulário e resumo da aba
+   Contexto): as regras gerais e o essencial das fichas (posicionamento,
+   argumentos/julgador, cuidados, regras) do edital, do projeto e dos artistas. */
 import { usarCentral } from "../../store/central";
 import { entidadePorId, fichaDe, regrasDe } from "../../lib/contexto/consultas";
 import { ROTULO_TIPO_REGRA, type Regra } from "../../types";
 
-export function RegrasParaRascunho({ ids, aoFechar }: { ids: string[]; aoFechar: () => void }) {
+export function RegrasParaRascunho({ ids, aoFechar }: { ids: string[]; aoFechar?: () => void }) {
   usarCentral();
   const gerais = regrasDe("geral");
 
@@ -19,8 +19,8 @@ export function RegrasParaRascunho({ ids, aoFechar }: { ids: string[]; aoFechar:
   return (
     <>
       <div className="drawer-h">
-        <b>Regras e fichas para este rascunho</b>
-        <button className="btn sm quiet" onClick={aoFechar}>fechar</button>
+        <b>Regras e fichas para este projeto</b>
+        {aoFechar && <button className="btn sm quiet" onClick={aoFechar}>fechar</button>}
       </div>
 
       {gerais.length > 0 && (
@@ -57,7 +57,7 @@ export function RegrasParaRascunho({ ids, aoFechar }: { ids: string[]; aoFechar:
 
       {!ids.length && (
         <p className="vazio" style={{ padding: "8px 0" }}>
-          Ligue o rascunho a uma candidatura (no topo) para ver as fichas do edital, do projeto e do artista.
+          Ligue o projeto a um edital e a artistas (Editar dados) para ver as fichas deles aqui.
         </p>
       )}
     </>

@@ -1,5 +1,5 @@
 /* Mutações e consultas do estado central: criar/atualizar/excluir registros do
-   Painel, rascunhos do Simulador e docs do Contexto — sempre via camada Banco,
+   Painel, projetos (com o rascunho do formulário) e docs do Contexto — sempre via camada Banco,
    que espelha na hora e grava com debounce. Excluir nunca apaga de vez: o
    registro vai para a coleção `lixeira` (30 dias) e o toast oferece Desfazer. */
 import { Banco } from "../services/banco";
@@ -7,10 +7,11 @@ import { emailSessao } from "../services/sessao";
 import { toast } from "../components/Toast";
 import { clonar, uid } from "../utils";
 import { obterEstado } from "./central";
+import { normalizarProjeto, rascunhoVazio } from "../lib/migracao/v3";
 import {
-  ETAPA_RESULTADO, ETAPAS_PIPELINE, STATUS_TAREFA,
-  type Candidatura, type ColecaoPainel, type DadosPainel, type Ficha, type Formulario,
-  type Julgamento, type Rascunho, type Regra, type StatusTarefa, type Tarefa,
+  STATUS_PROJETO, STATUS_TAREFA,
+  type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist,
+  type Julgamento, type Projeto, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
 } from "../types";
 
 type RegistroPainel = DadosPainel[ColecaoPainel][number];
@@ -118,14 +119,17 @@ export function salvarRegistro(colecao: ColecaoPainel, registro: RegistroPainel,
 const maiorOrd = (colecao: ColecaoPainel) =>
   obterEstado().painel[colecao].reduce((m, x) => Math.max(m, x._ord || 0), -1);
 
-/** Exclui um registro (para a lixeira). Excluir candidatura leva junto as tarefas ligadas. */
+/** Exclui um registro (para a lixeira). Excluir projeto leva junto as tarefas
+    ligadas e o rascunho do formulário dele. */
 export function excluirRegistro(colecao: ColecaoPainel, id: string) {
   emLoteDeExclusao(() => {
+    const projeto = colecao === "projetos" ? porId("projetos", id) : undefined;
     moverParaLixeira(colecao, id);
-    if (colecao === "candidaturas") {
+    if (colecao === "projetos") {
       obterEstado().painel.tarefas
-        .filter((t) => t.origem === "cand:" + id)
+        .filter((t) => t.origem === "proj:" + id)
         .forEach((t) => moverParaLixeira("tarefas", t.id));
+      if (projeto?.rascunhoId && Banco.ler("rascunhos")[projeto.rascunhoId]) moverParaLixeira("rascunhos", projeto.rascunhoId);
     }
   });
 }
@@ -135,21 +139,135 @@ export function porId<C extends ColecaoPainel>(colecao: C, id: string): DadosPai
   return (obterEstado().painel[colecao] as DadosPainel[C]).find((x) => x.id === id);
 }
 
-/** Move a candidatura no pipeline; VOLTAR para antes de "Aprovado / Reprovado"
-    limpa o resultado (seguir adiante mantém — está em execução porque foi aprovada). */
-export function moverCandidatura(c: Candidatura, direcao: -1 | 1) {
-  const copia = clonar(c);
-  copia.etapa = Math.max(0, Math.min(ETAPAS_PIPELINE.length - 1, copia.etapa + direcao));
-  if (copia.etapa < ETAPA_RESULTADO) delete copia.result;
-  salvarRegistro("candidaturas", copia);
+/* ══════════ Projetos ══════════ */
+
+const hojeIsoCurto = () => new Date().toISOString().slice(0, 10);
+
+/** Troca o status do projeto e registra no histórico. */
+export function definirStatusProjeto(p: Projeto, status: StatusProjeto) {
+  if (p.status === status) return;
+  const copia = clonar(p);
+  copia.historico = [...(copia.historico || []), { data: hojeIsoCurto(), de: p.status, para: status }];
+  copia.status = status;
+  salvarRegistro("projetos", copia);
 }
 
-/** Marca (ou desmarca) o resultado da candidatura na etapa "Aprovado / Reprovado". */
-export function definirResultado(c: Candidatura, resultado?: "ok" | "no") {
-  const copia = clonar(c);
-  if (resultado) copia.result = resultado; else delete copia.result;
-  salvarRegistro("candidaturas", copia);
+/** ◀▶ no status (só entre os status do caminho principal, até Concluído). */
+export function moverProjeto(p: Projeto, direcao: -1 | 1) {
+  const caminho = STATUS_PROJETO.filter((s) => !s.fim || s.id === "concluido").map((s) => s.id);
+  const i = caminho.indexOf(p.status);
+  const alvo = caminho[Math.max(0, Math.min(caminho.length - 1, (i < 0 ? 0 : i) + direcao))];
+  definirStatusProjeto(p, alvo);
 }
+
+/** Enquadramento/formalização do artista → perfil jurídico do proponente. */
+function perfilDoArtista(texto: string): string {
+  const t = (texto || "").toLowerCase();
+  if (t.includes("mei") && !t.includes("sem cnpj nem mei")) return "MEI";
+  if (t.includes("sem fins")) return "PJ sem fins lucrativos";
+  if (t.includes("cnpj") && !t.includes("sem cnpj")) return "PJ com fins lucrativos";
+  if (t.includes("sem cnpj") || t.includes("coletivo")) return "Coletivo informal representado por PF";
+  if (t.trim() === "pf") return "PF";
+  return "";
+}
+
+export interface DadosNovoProjeto {
+  nome: string;
+  artistaIds: string[];
+  editalId: string;
+  /** Formulário escolhido, ou "livre". */
+  formId: string;
+  respId?: string;
+  status?: StatusProjeto;
+  grupo?: string;
+}
+
+/** Cria um projeto (e o rascunho do formulário, quando não é Livre). Devolve o id. */
+export function criarProjeto(d: DadosNovoProjeto): string {
+  const id = uid("p");
+  const edital = d.editalId ? porId("editais", d.editalId) : undefined;
+  const artista = d.artistaIds[0] ? porId("artistas", d.artistaIds[0]) : undefined;
+  const docs: ItemChecklist[] = (edital?.docsExig || []).map((nome) => ({ nome, ok: false }));
+  const status = d.status || "prospeccao";
+  const p = normalizarProjeto({
+    id, nome: d.nome.trim() || "Projeto sem nome", artistaIds: d.artistaIds, editalId: d.editalId,
+    formId: d.formId || "livre", status, respId: d.respId || "", grupo: d.grupo || "", docs,
+    proponente: { nome: "", perfil: artista ? perfilDoArtista(artista.formalizacao || artista.enq) : "", obs: "" },
+    historico: [{ data: hojeIsoCurto(), de: "", para: status }],
+  });
+  if (p.formId !== "livre") {
+    const r = rascunhoVazio("r-" + id, p.formId, p.nome, id, new Date().toISOString());
+    p.rascunhoId = r.id;
+    salvarRascunho(r, true);
+  }
+  salvarRegistro("projetos", p);
+  return id;
+}
+
+/** Duplica o projeto (e as respostas do formulário). Devolve o id da cópia. */
+export function duplicarProjeto(p: Projeto): string {
+  const id = uid("p");
+  const copia = clonar(p);
+  copia.id = id;
+  copia.nome = p.nome + " · cópia";
+  copia.arquivado = false;
+  copia.status = "prospeccao";
+  copia.inscricao = "";
+  copia.resultado = "";
+  copia.valorAprovado = "";
+  copia.valorCaptado = "";
+  copia.historico = [{ data: hojeIsoCurto(), de: "", para: "prospeccao" }];
+  copia.origem = { projeto: p.id };
+  delete copia._ord;
+  const r = p.rascunhoId ? obterEstado().rascunhos[p.rascunhoId] : undefined;
+  if (r) {
+    const rc = clonar(r);
+    rc.id = "r-" + id;
+    rc.ref = id;
+    rc.nome = copia.nome;
+    rc.status = {};
+    rc.criado = new Date().toISOString();
+    copia.rascunhoId = rc.id;
+    salvarRascunho(rc, true);
+  } else if (copia.formId !== "livre") {
+    const rv = rascunhoVazio("r-" + id, copia.formId, copia.nome, id, new Date().toISOString());
+    copia.rascunhoId = rv.id;
+    salvarRascunho(rv, true);
+  } else delete copia.rascunhoId;
+  salvarRegistro("projetos", copia);
+  return id;
+}
+
+export function arquivarProjeto(p: Projeto, arquivado: boolean) {
+  salvarRegistro("projetos", { ...clonar(p), arquivado });
+}
+
+/** Troca o formulário de um projeto (a tela só oferece com o rascunho vazio). */
+export function trocarFormulario(p: Projeto, formId: string) {
+  const copia = clonar(p);
+  const antigo = p.rascunhoId ? obterEstado().rascunhos[p.rascunhoId] : undefined;
+  copia.formId = formId || "livre";
+  if (copia.formId === "livre") {
+    delete copia.rascunhoId;
+  } else if (antigo) {
+    salvarRascunho({ ...clonar(antigo), form: copia.formId, valores: {}, status: {}, anexos: {}, notas: {} }, true);
+  } else {
+    const r = rascunhoVazio("r-" + p.id, copia.formId, p.nome, p.id, new Date().toISOString());
+    copia.rascunhoId = r.id;
+    salvarRascunho(r, true);
+  }
+  salvarRegistro("projetos", copia);
+}
+
+/** Ids (edital, projeto, artistas) ligados a um projeto — para regras e fichas. */
+export function idsDoProjeto(p?: Projeto): string[] {
+  if (!p) return [];
+  return [p.editalId, p.id, ...(p.artistaIds || [])].filter(Boolean);
+}
+
+/** Rascunho (respostas do formulário) de um projeto. */
+export const rascunhoDoProjeto = (p?: Projeto): Rascunho | undefined =>
+  p?.rascunhoId ? obterEstado().rascunhos[p.rascunhoId] : undefined;
 
 /**
  * Solta um cartão arrastado num quadro: aplica `mudar` (nova etapa, status ou
@@ -182,11 +300,13 @@ export function soltarCartao<C extends ColecaoPainel>(
   });
 }
 
-/** Solta uma candidatura numa etapa do pipeline (arrastar e soltar). */
-export function soltarCandidatura(id: string, etapa: number, antesDeId?: string) {
-  soltarCartao("candidaturas", id, (c) => {
-    c.etapa = Math.max(0, Math.min(ETAPAS_PIPELINE.length - 1, etapa));
-    if (c.etapa < ETAPA_RESULTADO) delete c.result;
+/** Solta um projeto numa coluna do pipeline (arrastar e soltar). */
+export function soltarProjeto(id: string, status: string, antesDeId?: string) {
+  soltarCartao("projetos", id, (p) => {
+    if (p.status !== status) {
+      p.historico = [...(p.historico || []), { data: hojeIsoCurto(), de: p.status, para: status }];
+      p.status = status as StatusProjeto;
+    }
   }, antesDeId);
 }
 
@@ -215,7 +335,7 @@ export function girarStatusTarefa(t: Tarefa, direcao: -1 | 1) {
   salvarRegistro("tarefas", copia);
 }
 
-/* ══════════ Simulador ══════════ */
+/* ══════════ Formulários e rascunhos ══════════ */
 
 export function salvarRascunho(r: Rascunho, rapido = false) {
   const copia = clonar(r);
@@ -223,60 +343,14 @@ export function salvarRascunho(r: Rascunho, rapido = false) {
   Banco.gravar("rascunhos", copia.id, copia as unknown as Documento, rapido);
 }
 
-export function excluirRascunho(id: string) {
-  emLoteDeExclusao(() => moverParaLixeira("rascunhos", id));
-}
-
-/** Grava uma definição de formulário (importada na aba Plataformas). */
+/** Grava uma definição de formulário (importada na aba Formulários). */
 export function salvarFormulario(f: Formulario) {
   Banco.gravar("formularios", f.id, { ...clonar(f), atualizado: new Date().toISOString() }, true);
 }
 
-/** Exclui uma definição de formulário (a UI só oferece quando não há rascunho nela). */
+/** Exclui uma definição de formulário (a tela só oferece quando nenhum projeto usa). */
 export function excluirFormulario(id: string) {
   emLoteDeExclusao(() => moverParaLixeira("formularios", id));
-}
-
-/** Rascunhos ativos ligados a uma candidatura. */
-export const rascunhosDaCandidatura = (candidaturaId: string): Rascunho[] =>
-  Object.values(obterEstado().rascunhos).filter((r) => r.ref === candidaturaId && !r.arquivado);
-
-/** Nome composto de uma candidatura: "Projeto · Artista → Edital". */
-export function nomeCandidatura(c: Candidatura | undefined): string {
-  if (!c) return "";
-  const p = porId("projetos", c.projetoId);
-  const e = porId("editais", c.editalId);
-  const a = p && porId("artistas", p.artistaId);
-  return (p ? p.nome : "?") + (a ? " · " + a.nome : "") + " → " + (e ? e.nome : "?");
-}
-
-/** Enquadramento do Painel → perfil jurídico do Simulador. */
-const PERFIL_POR_ENQUADRAMENTO: Record<string, string> = {
-  "PF": "PF", "MEI": "MEI", "PJ · Associação": "PJ sem fins lucrativos",
-  "PJ": "PJ com fins lucrativos", "Coletivo sem CNPJ": "Coletivo informal representado por PF",
-};
-
-/** Preenche proponente e perfil do rascunho a partir da candidatura ligada. */
-export function ligarCandidatura(r: Rascunho, candidaturaId: string) {
-  const c = porId("candidaturas", candidaturaId);
-  if (!c) return;
-  const p = porId("projetos", c.projetoId);
-  const a = p && porId("artistas", p.artistaId);
-  if (a && !(r.interno.prop.nome || "").trim()) {
-    r.interno.prop.nome = a.nome;
-    const chave = Object.keys(PERFIL_POR_ENQUADRAMENTO)
-      .sort((x, y) => y.length - x.length)
-      .find((k) => String(a.enq || "").startsWith(k));
-    r.interno.prop.perfil = chave ? PERFIL_POR_ENQUADRAMENTO[chave] : "";
-  }
-}
-
-/** Ids (edital, projeto, artista) ligados a uma candidatura — para regras e fichas. */
-export function idsDaCandidatura(candidaturaId: string): string[] {
-  const c = porId("candidaturas", candidaturaId);
-  if (!c) return [];
-  const p = porId("projetos", c.projetoId);
-  return [c.editalId, c.projetoId, p?.artistaId].filter(Boolean) as string[];
 }
 
 /* ══════════ Contexto ══════════ */

@@ -58,7 +58,8 @@ export function Campo({ r, c, alterar }: PropsCampo) {
       <div className="campo-h">
         <label htmlFor={"f-" + c.n}>{c.l}</label>
         {c.req ? <span className="req">obrigatório</span> : null}
-        <span className="mono">{c.cod || c.n}</span>
+        {c.n.startsWith("doc__") ? null : <span className="mono">{c.cod || c.n}</span>}
+        {c.limiteTexto && <span className="chip">{c.limiteTexto}</span>}
         <span className="tools">
           <button type="button" className="st" data-v={st} title="clique para mudar o status" onClick={girarStatus}>
             {ROTULO_STATUS_CAMPO[st]}

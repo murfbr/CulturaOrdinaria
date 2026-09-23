@@ -1,24 +1,26 @@
 /* Agenda derivada: os prazos vêm dos editais com data, e cada reunião sabe
    gerar seu link de convite do Google Agenda. */
 import { porId } from "../store/mutacoes";
-import type { Candidatura, Edital, Reuniao } from "../types";
+import type { Edital, Projeto, Reuniao } from "../types";
 
 /** Evento de prazo derivado dos editais com data. */
 export interface EventoAgenda {
   iso: string;
   titulo: string;
-  candidaturas: Candidatura[];
+  editalId: string;
+  projetos: Projeto[];
   status: Edital["status"];
 }
 
 /** Prazos com data, ordenados — a Agenda inteira deriva daqui. */
-export function eventosAgenda(editais: Edital[], candidaturas: Candidatura[]): EventoAgenda[] {
+export function eventosAgenda(editais: Edital[], projetos: Projeto[]): EventoAgenda[] {
   return editais
     .filter((e) => e.prazoIso)
     .map((e) => ({
       iso: e.prazoIso!,
       titulo: e.nome,
-      candidaturas: candidaturas.filter((c) => c.editalId === e.id),
+      editalId: e.id,
+      projetos: projetos.filter((p) => p.editalId === e.id && !p.arquivado),
       status: e.status,
     }))
     .sort((a, b) => (a.iso < b.iso ? -1 : 1));

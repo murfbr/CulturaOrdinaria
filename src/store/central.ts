@@ -1,18 +1,23 @@
-/* Estado central do site: as nove coleções do Painel, os rascunhos e os
-   FORMULÁRIOS do Simulador e as três coleções do Contexto, sempre em dia com o
-   banco (ou o localStorage). Os componentes leem tudo pelo hook `usarCentral()`;
+/* Estado central do site: as oito coleções do Painel, os rascunhos (respostas
+   dos projetos nos formulários), os FORMULÁRIOS e as três coleções do Contexto,
+   sempre em dia com o banco (ou o localStorage). Os componentes leem tudo pelo hook `usarCentral()`;
    as mudanças passam pelas funções de ./mutacoes — nunca no Firestore direto.
 
    Semeadura: na primeira abertura com o banco vazio, entra o conteúdo de
-   src/data/*.json (o estado real do artefato em setembro/2026) — carregado por
-   import() dinâmico, para as sementes não pesarem no bundle de quem já tem banco. */
+   src/data/*.json (o estado do artefato em setembro/2026, no formato v2,
+   convertido para o v3 na hora) — carregado por import() dinâmico, para as
+   sementes não pesarem no bundle de quem já tem banco.
+
+   Legado: a coleção `candidaturas` (v2) segue assinada, fora do `pronto`, só
+   para a tela de Migração saber se ainda há o que converter. */
 import { useSyncExternalStore } from "react";
 import { Banco } from "../services/banco";
 import { clonar } from "../utils";
 import {
-  COLECOES_PAINEL, type DadosPainel, type Ficha, type Formulario,
-  type ItemLixeira, type Julgamento, type Rascunho, type Regra,
+  COLECOES_PAINEL, type Candidatura, type DadosPainel, type Ficha, type Formulario,
+  type ItemLixeira, type Julgamento, type Projeto, type Rascunho, type Regra,
 } from "../types";
+import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
 
 /** Tudo o que o site mostra, num objeto só. */
 export interface EstadoCentral {
@@ -30,12 +35,19 @@ export interface EstadoCentral {
   fichas: Record<string, Ficha>;
   regras: Record<string, Regra>;
   julgamentos: Record<string, Julgamento>;
+  /** Dados do formato v2 ainda no banco (só leitura, para a migração). */
+  legado: {
+    candidaturas: Candidatura[];
+    /** Projetos que ainda estão no formato v2 (sem status/lista de artistas). */
+    projetosV2: number;
+  };
 }
 
 let estado: EstadoCentral = {
   pronto: false,
-  painel: { artistas: [], projetos: [], editais: [], candidaturas: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [] },
+  painel: { artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [] },
   rascunhos: {}, formularios: {}, lixeira: {}, fichas: {}, regras: {}, julgamentos: {},
+  legado: { candidaturas: [], projetosV2: 0 },
 };
 
 const assinantes = new Set<() => void>();
@@ -83,11 +95,22 @@ export function iniciarDados() {
 
   for (const colecao of COLECOES_PAINEL) {
     assinaturas.push(Banco.assinar(colecao, (mapa, confirmado) => {
-      estado.painel = { ...estado.painel, [colecao]: ordenado(mapa) } as DadosPainel;
+      let lista = ordenado<Record<string, unknown>>(mapa);
+      if (colecao === "projetos") {
+        // Projeto ainda no formato v2 aparece já completado (sem gravar nada).
+        estado.legado = { ...estado.legado, projetosV2: lista.filter(projetoEhV2).length };
+        lista = lista.map((p) => normalizarProjeto(p as Partial<Projeto>) as unknown as Record<string, unknown>);
+      }
+      estado.painel = { ...estado.painel, [colecao]: lista } as unknown as DadosPainel;
       aoResponder(colecao, confirmado);
       publicar();
     }));
   }
+  // Legado v2: candidaturas que ainda não viraram projeto (fora do `pronto`).
+  assinaturas.push(Banco.assinar("candidaturas", (mapa) => {
+    estado.legado = { ...estado.legado, candidaturas: ordenado<Candidatura>(mapa) };
+    publicar();
+  }));
   assinaturas.push(Banco.assinar("rascunhos", (mapa, confirmado) => {
     estado.rascunhos = mapa as unknown as Record<string, Rascunho>;
     aoResponder("rascunhos", confirmado);
@@ -149,21 +172,35 @@ function aoResponder(colecao: string, confirmado: boolean) {
 
   if (!confirmado) return;
 
-  // Painel vazio nas 9 coleções confirmadas → primeira abertura: semeia.
-  // (import dinâmico: a semente só é baixada nesse momento, não no bundle.)
+  // Painel vazio nas 8 coleções confirmadas → primeira abertura: semeia.
+  // A semente está no formato v2 (projetos + candidaturas) e é convertida para o
+  // v3 aqui, junto com a semente do Contexto (fichas de projeto mudam de id).
   if (!semeouPainel && COLECOES_PAINEL.every((c) => confirmadas.has(c))
     && COLECOES_PAINEL.every((c) => estado.painel[c].length === 0)) {
     semeouPainel = true;
-    void import("../data/semente-painel.json").then(({ default: sementePainel }) => {
-      const semente = clonar(sementePainel) as unknown as DadosPainel;
-      for (const c of COLECOES_PAINEL) {
-        (semente[c] || []).forEach((registro, i) => {
-          registro._ord = i;
-          registro.atualizado = new Date().toISOString();
-          Banco.gravar(c, registro.id, registro as unknown as Record<string, unknown> & { id: string }, true);
-        });
-      }
-    });
+    semeouContexto = true;
+    void Promise.all([import("../data/semente-painel.json"), import("../data/semente-contexto.json")])
+      .then(([{ default: sementePainel }, { default: sementeContexto }]) => {
+        const ctx = clonar(sementeContexto) as unknown as { fichas: Record<string, Ficha>; regras: Record<string, Regra>; julg: Record<string, Julgamento> };
+        const { dados } = converterV2(clonar(sementePainel) as unknown as PainelV2, {}, ctx);
+        const agora = new Date().toISOString();
+        for (const c of COLECOES_PAINEL) {
+          (dados.painel[c] || []).forEach((registro, i) => {
+            registro._ord = i;
+            registro.atualizado = agora;
+            Banco.gravar(c, registro.id, registro as unknown as Record<string, unknown> & { id: string }, true);
+          });
+        }
+        Object.values(dados.rascunhos).forEach((r) => Banco.gravar("rascunhos", r.id, r as unknown as Record<string, unknown> & { id: string }, true));
+        // Contexto só entra onde não há nada (não pisa em ficha já escrita).
+        const grava = (colecao: string, mapa: Record<string, { id: string }>) =>
+          Object.values(mapa).forEach((d) => {
+            if (!Banco.ler(colecao)[d.id]) Banco.gravar(colecao, d.id, d as unknown as Record<string, unknown> & { id: string }, true);
+          });
+        grava("fichas", dados.contexto.fichas);
+        grava("regras", dados.contexto.regras);
+        grava("julgamentos", dados.contexto.julg);
+      });
   }
 
   // Contexto vazio nas 3 coleções → semeia fichas, regras e julgamentos.

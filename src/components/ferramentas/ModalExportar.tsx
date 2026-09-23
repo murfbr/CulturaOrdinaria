@@ -18,7 +18,7 @@ export function ModalExportar({ aoFechar }: { aoFechar: () => void }) {
         <div>
           <b>Backup completo (.json)</b>
           <p className="hint" style={{ margin: "2px 0 0" }}>
-            Painel inteiro + {Object.keys(rascunhos).length} rascunho(s) do Simulador
+            Painel inteiro + {Object.keys(rascunhos).length} resposta(s) de formulário dos projetos + os formulários
             + {docsContexto} doc(s) do Contexto. É o arquivo que restaura tudo pelo Importar.
           </p>
         </div>
