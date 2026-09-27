@@ -1,7 +1,11 @@
 /* Um campo da plataforma no editor: cabeçalho com rótulo, obrigatório, código,
    status (rascunho → revisado → colado), copiar e nota — e o corpo delegado ao
    componente do tipo (campos/*). */
+import { useState } from "react";
 import { statusEfetivo, textoDe } from "../../../lib/simulador/motor";
+import { conceitoDoCampo, indiceMemo, sugestoesPara } from "../../../lib/textos";
+import { usarCentral } from "../../../store/central";
+import { ModalReaproveitar } from "./ModalReaproveitar";
 import { copiarComAviso, toast } from "../../../components/Toast";
 import { ROTULO_STATUS_CAMPO, type StatusCampo } from "../../../types";
 import type { PropsCampo } from "./tipos";
@@ -36,6 +40,13 @@ function CorpoDoCampo(props: PropsCampo) {
 
 export function Campo({ r, c, alterar }: PropsCampo) {
   const st = statusEfetivo(r, c);
+  const { painel, rascunhos, formularios } = usarCentral();
+  const [reaproveitar, setReaproveitar] = useState(false);
+  // Textos-mestres: o que já foi escrito com o mesmo conceito em outros projetos.
+  const conceito = conceitoDoCampo(c);
+  const projeto = painel.projetos.find((p) => p.rascunhoId === r.id || p.id === r.ref);
+  const artistaIds = projeto?.artistaIds || [];
+  const sugestoes = conceito ? sugestoesPara(indiceMemo(painel, rascunhos, formularios), conceito, r.id, c.n, artistaIds) : [];
 
   function girarStatus() {
     if (st === "vazio") { toast("Campo vazio: o status aparece quando houver conteúdo"); return; }
@@ -67,10 +78,18 @@ export function Campo({ r, c, alterar }: PropsCampo) {
           <button type="button" className="btn sm quiet"
             onClick={() => void copiarComAviso(textoDe(c, r.valores[c.n], r), "Campo copiado")}>Copiar</button>
           <button type="button" className="btn sm quiet" onClick={alternarNota}>Nota</button>
+          {sugestoes.length > 0 && (
+            <button type="button" className="btn sm quiet reap-btn" title="textos já escritos com o mesmo conceito em outros projetos"
+              onClick={() => setReaproveitar(true)}>Reaproveitar ({sugestoes.length})</button>
+          )}
         </span>
       </div>
       {c.dica && <p className="instr">{c.dica}</p>}
       <CorpoDoCampo r={r} c={c} alterar={alterar} />
+      {reaproveitar && (
+        <ModalReaproveitar c={c} r={r} conceito={conceito} sugestoes={sugestoes} artistaIds={artistaIds}
+          alterar={alterar} aoFechar={() => setReaproveitar(false)} />
+      )}
       {r.notas[c.n] != null && (
         <div className="nota">
           <b>Nota:</b>
