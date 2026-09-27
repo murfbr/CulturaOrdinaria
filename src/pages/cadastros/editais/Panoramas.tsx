@@ -3,6 +3,7 @@
    alertas que mudam decisão. Tudo derivado dos registros de edital. */
 import { abrirDetalhe } from "../../../store/navegacao";
 import { nomeCurto } from "../../../lib/nomes";
+import { alertaVencido, dataDoAlerta } from "../../../lib/prazos";
 import {
   CONCEITOS_CAMPO, CONCEITOS_CRITERIO, QUEM_RESOLVE, type AlertaEdital, type Edital,
 } from "../../../types";
@@ -124,11 +125,12 @@ export function ListaAlertas({ editais }: { editais: Edital[] }) {
     }
   }
   if (!alertas.length) return <p className="muted">Nenhum alerta nesses filtros.</p>;
-  return (
-    <>
-      <p className="hint" style={{ marginTop: 0 }}>Do "O que muda decisão" do Mapa dos Editais (levantamento de 23/09/2026). Confira a data antes de agir.</p>
-      {alertas.map((a) => (
-        <div className="panel alerta-panel" key={a.titulo}>
+  const passou = (a: AlertaEdital & { donos: Edital[] }) => alertaVencido(a, a.donos[0]);
+  const vigentes = alertas.filter((a) => !passou(a))
+    .sort((x, y) => (dataDoAlerta(x, x.donos[0]) || "9999").localeCompare(dataDoAlerta(y, y.donos[0]) || "9999"));
+  const antigos = alertas.filter(passou);
+  const cartao = (a: AlertaEdital & { donos: Edital[] }) => (
+        <div className={"panel alerta-panel" + (passou(a) ? " alerta-passou" : "")} key={a.titulo}>
           <h4 style={{ textTransform: "none", letterSpacing: 0, fontSize: 14, color: "var(--ink)" }}>
             {a.titulo}
             <span className="act">{a.quando && <span className="badge ur-d7">{a.quando}</span>}</span>
@@ -140,7 +142,18 @@ export function ListaAlertas({ editais }: { editais: Edital[] }) {
             {a.fonte && <> · fonte: {a.fonte}</>}
           </div>
         </div>
-      ))}
+  );
+  return (
+    <>
+      <p className="hint" style={{ marginTop: 0 }}>Do "O que muda decisão" do Mapa dos Editais, do mais próximo ao mais distante. Confira a data antes de agir.</p>
+      {vigentes.map(cartao)}
+      {!vigentes.length && <p className="muted">Nenhum alerta com data ainda valendo.</p>}
+      {antigos.length > 0 && (
+        <details className="alertas-antigos">
+          <summary>{antigos.length} alerta(s) com data que já passou</summary>
+          {antigos.map(cartao)}
+        </details>
+      )}
     </>
   );
 }

@@ -123,16 +123,20 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
               </li>
             )}
           </ul>
-          {resumo.painel && (
+          {(resumo.painel || resumo.rascunhos || resumo.contexto) && (
             <div className="field">
-              <label>Como aplicar as coleções do Painel</label>
+              <label>Como aplicar</label>
               <label className="radio">
                 <input type="radio" checked={modo === "mesclar"} onChange={() => setModo("mesclar")} />
-                <span><b>Mesclar</b> — atualiza os registros de mesmo id, adiciona os novos e não apaga nada.</span>
+                <span><b>Mesclar</b>: cada registro de mesmo id é trocado pelo do arquivo, os novos entram e nada é apagado.</span>
+              </label>
+              <label className="radio">
+                <input type="radio" checked={modo === "campos"} onChange={() => setModo("campos")} />
+                <span><b>Atualizar só os campos do arquivo</b>: nos registros que já existem, muda apenas o que veio no arquivo (nas respostas de formulário, resposta por resposta); o resto fica como está.</span>
               </label>
               <label className="radio">
                 <input type="radio" checked={modo === "substituir"} onChange={() => setModo("substituir")} />
-                <span><b>Substituir</b> — as coleções presentes no arquivo ficam exatamente como nele; o que não estiver lá é apagado.</span>
+                <span><b>Substituir</b>: as coleções do Painel presentes no arquivo ficam exatamente como nele; o que não estiver lá é apagado.</span>
               </label>
             </div>
           )}

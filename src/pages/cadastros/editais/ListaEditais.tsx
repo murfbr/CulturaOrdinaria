@@ -14,6 +14,7 @@ import {
   type CategoriaEdital, type Edital, type EsferaEdital, type StatusEdital,
 } from "../../../types";
 import { comparar } from "../../../utils";
+import { alertasVigentes, prazoEncerrado, statusEfetivo } from "../../../lib/prazos";
 import { MatrizCriterios, MatrizCampos, QuemResolve, ListaAlertas } from "./Panoramas";
 
 const VISTAS: [string, string][] = [
@@ -28,7 +29,8 @@ const flag = (v: boolean | null | undefined, rotulo: string) =>
 export function CartaoEdital({ e }: { e: Edital }) {
   const { painel } = usarCentral();
   const esf = ESFERAS[e.esfera as EsferaEdital] || { rotulo: "—", classe: "" };
-  const st = STATUS_EDITAL[e.status as StatusEdital] || STATUS_EDITAL.open;
+  const st = STATUS_EDITAL[statusEfetivo(e)] || STATUS_EDITAL.open;
+  const vigentes = alertasVigentes(e).length;
   const cat = CATEGORIAS_EDITAL[(e.categoria || "edital") as CategoriaEdital];
   const n = painel.projetos.filter((p) => p.editalId === e.id && !p.arquivado).length;
   const formularios = [...new Set([...(e.formIds || []), ...(e.formId ? [e.formId] : [])])];
@@ -37,9 +39,10 @@ export function CartaoEdital({ e }: { e: Edital }) {
       <button className="edit" onClick={(ev) => { ev.stopPropagation(); abrirEdicao("edital", e.id); }}>editar</button>
       <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
         <span className={"badge " + st.classe}>{st.rotulo}</span>
+        {prazoEncerrado(e) && <span className="badge ur-vencido" title="Marcado como Aberto, mas o prazo passou: atualize o status">prazo passou</span>}
         <span className={"badge esfera " + esf.classe}>{esf.rotulo}</span>
         {cat && e.categoria && e.categoria !== "edital" && <span className="badge b-type">{cat.rotulo}</span>}
-        {(e.alertas || []).length > 0 && <span className="badge ur-d7" title="alertas que mudam decisão">⚑ {(e.alertas || []).length}</span>}
+        {vigentes > 0 && <span className="badge ur-d7" title="alertas que mudam decisão (com data ainda valendo)">⚑ {vigentes}</span>}
       </div>
       <h3>{nomeCurto(e)}</h3>
       <p className="role">{e.nome}</p>
@@ -72,7 +75,7 @@ export function ListaEditais() {
   const termo = busca.toLowerCase();
   const editais = painel.editais.filter((e) =>
     (!esfera || e.esfera === esfera) &&
-    (!status || e.status === status) &&
+    (!status || statusEfetivo(e) === status) &&
     (!categoria || (e.categoria || "edital") === categoria) &&
     (!aceita || (aceita === "pf" ? e.aceitaPf : aceita === "mei" ? e.aceitaMei : e.aceitaColetivo)) &&
     (!termo || [e.nome, e.curto || "", e.orgao || "", e.mec, e.area, e.teto, e.estimula || ""].join(" ").toLowerCase().includes(termo)));
@@ -89,7 +92,7 @@ export function ListaEditais() {
   else if (vista === "alertas") corpo = <ListaAlertas editais={editais} />;
   else if (ordem === "status") {
     corpo = (Object.keys(STATUS_EDITAL) as StatusEdital[]).map((s) => {
-      const doGrupo = editais.filter((e) => e.status === s).sort(porPrazo);
+      const doGrupo = editais.filter((e) => statusEfetivo(e) === s).sort(porPrazo);
       if (!doGrupo.length) return null;
       return (
         <div key={s} style={{ marginBottom: 18 }}>

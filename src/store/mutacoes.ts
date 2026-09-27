@@ -327,6 +327,18 @@ export function alternarTarefaConcluida(t: Tarefa) {
   salvarRegistro("tarefas", copia);
 }
 
+/** Adia o prazo da tarefa em `dias`, contando de hoje se ela já estava vencida. */
+export function adiarTarefa(t: Tarefa, dias = 7) {
+  const copia = clonar(t);
+  const d = new Date();
+  const hoje = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const base = copia.prazo && copia.prazo > hoje ? copia.prazo : hoje;
+  const nova = new Date(base + "T12:00:00");
+  nova.setDate(nova.getDate() + dias);
+  copia.prazo = nova.getFullYear() + "-" + String(nova.getMonth() + 1).padStart(2, "0") + "-" + String(nova.getDate()).padStart(2, "0");
+  salvarRegistro("tarefas", copia);
+}
+
 /** Avança ou volta o status da tarefa (a fazer ⇄ em andamento ⇄ concluído). */
 export function girarStatusTarefa(t: Tarefa, direcao: -1 | 1) {
   const copia = clonar(t);

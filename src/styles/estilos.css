@@ -746,3 +746,13 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .multi-grade label{display:flex!important;align-items:center;gap:6px;font-weight:500!important;font-size:12.5px!important;color:var(--ink)!important;margin:0!important}
 .multi-grade input{width:auto!important;accent-color:var(--accent)}
 .panel h4 .act.hint{text-transform:none;letter-spacing:0;font-weight:500}
+
+/* ── refinamentos 27/09: prazos e alertas que envelhecem, ações rápidas ── */
+.alerta-passou{opacity:.55}
+.alertas-antigos{margin:10px 0}
+.alertas-antigos>summary{cursor:pointer;color:var(--muted);font-size:13px;margin-bottom:8px}
+.tarefa-rapida{display:flex;align-items:center;gap:8px}
+.tarefa-rapida .pz{flex:1;min-width:0;cursor:pointer}
+.acoes-rapidas{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.acoes-rapidas .btn.sm{padding:1px 7px;font-size:11.5px;line-height:18px}
+.aviso-duplicado{border:1px solid #e0b24a;background:#fff8e6;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:13px;display:flex;flex-direction:column;gap:4px}

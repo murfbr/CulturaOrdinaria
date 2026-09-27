@@ -182,6 +182,8 @@ export interface AlertaEdital {
   fonte: string;
   /** Outros editais citados no mesmo alerta. */
   ids?: string[];
+  /** Até quando o alerta vale (AAAA-MM-DD). Sem ela, vale a última data escrita em `quando`. */
+  ate?: string;
 }
 
 /** Campo de formulário como o Mapa dos Editais registrou. */

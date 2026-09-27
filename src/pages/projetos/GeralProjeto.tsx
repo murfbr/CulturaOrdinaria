@@ -12,6 +12,7 @@ import { temValor } from "../../lib/simulador/motor";
 import { PERFIS_JURIDICOS } from "../../data";
 import { ROTULO_STATUS_PROJETO, STATUS_EDITAL, type Projeto, type StatusProjeto } from "../../types";
 import { clonar, formatarData, url } from "../../utils";
+import { alertaVencido } from "../../lib/prazos";
 
 export function GeralProjeto({ p }: { p: Projeto }) {
   const { painel, rascunhos, formularios } = usarCentral();
@@ -90,8 +91,8 @@ export function GeralProjeto({ p }: { p: Projeto }) {
         <div className="bloco alerta-bloco">
           <div className="bloco-h"><h4>Alertas do edital</h4><span className="cont">do Mapa dos Editais</span></div>
           {edital.alertas.map((a, i) => (
-            <div className="alerta" key={i}>
-              <div><b>{a.titulo}</b>{a.quando && <span className="muted"> · {a.quando}</span>}</div>
+            <div className={"alerta" + (alertaVencido(a, edital) ? " alerta-passou" : "")} key={i}>
+              <div><b>{a.titulo}</b>{a.quando && <span className="muted"> · {a.quando}</span>}{alertaVencido(a, edital) && <span className="muted"> · data já passou</span>}</div>
               <div className="alerta-t">{a.texto}</div>
               {a.fazer && <div className="alerta-f"><b>Fazer:</b> {a.fazer}</div>}
             </div>
