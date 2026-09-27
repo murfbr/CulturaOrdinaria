@@ -6,7 +6,7 @@
    As gravações são adiadas (debounce) por documento, como no artefato original,
    para digitação fluida sem uma gravação por tecla. */
 import {
-  collection, deleteDoc, doc, onSnapshot, setDoc,
+  Timestamp, collection, deleteDoc, doc, onSnapshot, setDoc,
 } from "firebase/firestore";
 import { db, firebaseAtivo } from "./firebase";
 import { clonar, hora } from "../utils";
@@ -26,6 +26,54 @@ const SEM_ESPELHO_NA_NUVEM = new Set(["formularios", "lixeira", "backup_v2"]);
 
 /** Texto e cor do indicador "salvo às..." no topo do site. */
 export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" };
+
+/* ══════════ Autoria e log de alterações ══════════
+   Todo documento gravado recebe `atualizadoPor` (e-mail de quem está logado; a
+   sessão informa via `Banco.definirAutor`). Além disso, cada gravação que chega
+   ao Firestore deixa uma linha na coleção `log_alteracoes`: coleção, id, ação
+   (novo, edicao, exclusao), quem, quando e quais campos mudaram. É esse log que
+   permite saber, depois, quem mexeu no quê — o `atualizadoPor` sozinho só guarda
+   o último. Coleções de controle (lixeira, backup_v2, o próprio log) não entram.
+   O log só existe no modo nuvem. Para não crescer sem limite, cada linha leva
+   `expiraEm` (90 dias): basta ligar uma política de TTL nesse campo no console
+   do Firestore (Firestore Database → TTL) e o próprio banco apaga as antigas. */
+const COLECAO_LOG = "log_alteracoes";
+const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2"]);
+const CAMPOS_IGNORADOS_NO_DIFF = new Set(["_novo", "atualizado", "atualizadoPor"]);
+const DIAS_DE_LOG = 90;
+let autorAtual = "";
+/** Versão do documento antes da primeira gravação de cada janela de debounce. */
+const anteriores: Record<string, Documento | undefined> = {};
+
+function camposAlterados(antes: Documento | undefined, depois: Documento): string[] {
+  if (!antes) return [];
+  const chaves = new Set([...Object.keys(antes), ...Object.keys(depois)]);
+  const mudaram: string[] = [];
+  for (const k of chaves) {
+    if (CAMPOS_IGNORADOS_NO_DIFF.has(k)) continue;
+    if (JSON.stringify(antes[k]) !== JSON.stringify(depois[k])) mudaram.push(k);
+  }
+  return mudaram.sort();
+}
+
+/** Grava uma linha de log. Nunca lança: falha no log não pode travar a gravação real. */
+function registrarAlteracao(colecao: string, id: string, acao: "novo" | "edicao" | "exclusao", antes: Documento | undefined, depois: Documento | undefined) {
+  if (!firebaseAtivo || !db || SEM_LOG.has(colecao)) return;
+  const campos = acao === "edicao" ? camposAlterados(antes, depois as Documento) : [];
+  if (acao === "edicao" && campos.length === 0) return; // regravação sem mudança real
+  const agora = new Date();
+  const ref = depois || antes;
+  const rotulo = ref ? String(ref.titulo || ref.nome || ref.id || id) : id;
+  const linha = {
+    colecao, docId: id, acao, campos,
+    quem: autorAtual || "",
+    quando: agora.toISOString(),
+    rotulo,
+    expiraEm: Timestamp.fromMillis(agora.getTime() + DIAS_DE_LOG * 86400000),
+  };
+  const idLog = agora.toISOString().replace(/[:.]/g, "-") + "_" + colecao + "_" + id;
+  setDoc(doc(db, COLECAO_LOG, idLog), linha).catch(() => { /* log é melhor esforço */ });
+}
 
 const espelho: Record<string, Mapa> = carregarEspelho();
 const observadores: Record<string, Set<Observador>> = {};
@@ -78,6 +126,12 @@ export const Banco = {
   modo: (firebaseAtivo ? "nuvem" : "local") as "nuvem" | "local",
 
   statusAtual: () => statusAtual,
+
+  /** E-mail de quem está logado, para carimbar `atualizadoPor` e o log. A sessão chama ao entrar e ao sair. */
+  definirAutor(email: string) {
+    autorAtual = email || "";
+  },
+
   aoMudarStatus(cb: (s: StatusSalvamento) => void) {
     aoStatus.add(cb);
     return () => { aoStatus.delete(cb); };
@@ -179,10 +233,18 @@ export const Banco = {
     // Sem Firebase, tudo nasce _novo: se este navegador um dia entrar no modo
     // nuvem, a reconciliação do onSnapshot sobe esses documentos sozinha.
     if (!firebaseAtivo) copia._novo = true;
+    // Autoria: quem está logado assina o documento (coleções de controle ficam de fora).
+    if (autorAtual && !SEM_LOG.has(colecao)) copia.atualizadoPor = autorAtual;
+    const chave = colecao + "/" + id;
+    // Guarda a versão anterior na primeira gravação da janela de debounce, para o
+    // log saber quais campos mudaram quando o documento subir de fato.
+    if (!timers[chave] && !(chave in anteriores)) {
+      const antes = (espelho[colecao] || {})[id];
+      anteriores[chave] = antes ? clonar(antes) : undefined;
+    }
     (espelho[colecao] = espelho[colecao] || {})[id] = copia;
     salvarEspelho();
     avisar(colecao);
-    const chave = colecao + "/" + id;
     clearTimeout(timers[chave]);
     mudarStatus({ texto: "salvando…", classe: "sv" });
     timers[chave] = setTimeout(() => this.descarregar(colecao, id), rapido ? 50 : 800);
@@ -206,6 +268,11 @@ export const Banco = {
       const atual = (espelho[colecao] || {})[id];
       if (atual && atual._novo) { delete atual._novo; salvarEspelho(); }
       mudarStatus({ texto: "salvo " + hora(), classe: "ok" });
+      // Log: só depois de o servidor confirmar, uma linha por janela de debounce.
+      const tinhaAnterior = chave in anteriores;
+      const antes = anteriores[chave];
+      delete anteriores[chave];
+      registrarAlteracao(colecao, id, tinhaAnterior && !antes ? "novo" : "edicao", antes, paraEnviar);
     } catch {
       // Não subiu (sem permissão, por exemplo): marca _novo para sobreviver a
       // recarregamentos e tentar de novo na próxima reconciliação.
@@ -240,11 +307,16 @@ export const Banco = {
     const chave = colecao + "/" + id;
     clearTimeout(timers[chave]);
     delete timers[chave];
+    delete anteriores[chave];
+    const antes = (espelho[colecao] || {})[id];
     if (espelho[colecao]) delete espelho[colecao][id];
     salvarEspelho();
     avisar(colecao);
     if (firebaseAtivo && db) {
-      try { await deleteDoc(doc(db, colecao, id)); } catch { /* offline: o cache do Firestore enfileira */ }
+      try {
+        await deleteDoc(doc(db, colecao, id));
+        registrarAlteracao(colecao, id, "exclusao", antes, undefined);
+      } catch { /* offline: o cache do Firestore enfileira */ }
     }
   },
 

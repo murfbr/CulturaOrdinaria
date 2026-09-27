@@ -22,6 +22,7 @@ const assinantes = new Set<() => void>();
 if (firebaseAtivo && auth) {
   onAuthStateChanged(auth, (usuario) => {
     sessao = { carregando: false, usuario };
+    Banco.definirAutor(usuario?.email || "");
     assinantes.forEach((f) => f());
   });
 }
