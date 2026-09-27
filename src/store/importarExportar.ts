@@ -144,6 +144,8 @@ function juntarRascunho(r: Rascunho): Rascunho {
     ...clonar(atual), ...clonar(r),
     valores: { ...(atual.valores || {}), ...(r.valores || {}) },
     status: { ...(atual.status || {}), ...(r.status || {}) },
+    notas: { ...(atual.notas || {}), ...(r.notas || {}) },
+    anexos: { ...(atual.anexos || {}), ...(r.anexos || {}) },
   } as Rascunho;
 }
 function juntar<T extends { id: string }>(atual: Record<string, T>, novo: T): T {
