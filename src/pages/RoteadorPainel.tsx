@@ -12,6 +12,8 @@ import { FichaArtista } from "./cadastros/artistas/FichaArtista";
 import { ListaEditais } from "./cadastros/editais/ListaEditais";
 import { FichaEdital } from "./cadastros/editais/FichaEdital";
 import { ListaFormularios } from "./cadastros/formularios/ListaFormularios";
+import { ListaProponentes } from "./cadastros/proponentes/ListaProponentes";
+import { RevisaoArtistas } from "./painel/RevisaoArtistas";
 import { FichaFormulario } from "./cadastros/formularios/FichaFormulario";
 import { Cronograma } from "./agenda/Cronograma";
 import { Calendario } from "./agenda/Calendario";
@@ -61,6 +63,8 @@ export function RoteadorPainel() {
     case "artistas": return <ListaArtistas />;
     case "editais": return <ListaEditais />;
     case "formularios": return <ListaFormularios />;
+    case "proponentes": return <ListaProponentes />;
+    case "revisao": return <RevisaoArtistas />;
     case "cronograma": return <Cronograma />;
     case "calendario": return <Calendario />;
     case "elenco": return <Elenco />;

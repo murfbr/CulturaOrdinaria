@@ -55,7 +55,7 @@ export function aplicarMigracao(dados: DadosV3, relatorio: RelatorioMigracao): n
 
   // 2. Painel: grava tudo o que a conversão devolveu; em projetos, sai o que não existe mais.
   for (const c of COLECOES_PAINEL) {
-    const lista = dados.painel[c] as unknown as Documento[];
+    const lista = (dados.painel[c] || []) as unknown as Documento[];
     lista.forEach((registro, i) => gravar(c, { ...clonar(registro), _ord: i, atualizado: agora }));
     if (c === "projetos") {
       const ficam = new Set(lista.map((x) => x.id));

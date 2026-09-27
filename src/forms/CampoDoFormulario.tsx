@@ -26,6 +26,12 @@ export function CampoDoFormulario({ campo: c, valor: v, definir, opcoesOrigem }:
     case "date":
       return <input id={id} type="date" value={String(v ?? "")} onChange={(e) => definir(e.target.value)} />;
 
+    case "numero":
+      return (
+        <input id={id} type="number" min={0} value={v === "" || v == null ? "" : String(v)}
+          onChange={(e) => definir(e.target.value === "" ? "" : Number(e.target.value))} />
+      );
+
     case "select":
       return (
         <select id={id} value={String(v ?? "")} onChange={(e) => definir(e.target.value)}>

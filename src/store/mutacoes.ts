@@ -11,8 +11,9 @@ import { normalizarProjeto, rascunhoVazio } from "../lib/migracao/v3";
 import {
   STATUS_PROJETO, STATUS_TAREFA,
   type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist,
-  type Julgamento, type Projeto, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
+  type Julgamento, type Projeto, type Proponente, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
 } from "../types";
+import type { PlanoProponentes } from "../lib/proponentes";
 
 type RegistroPainel = DadosPainel[ColecaoPainel][number];
 type Documento = Record<string, unknown> & { id: string };
@@ -345,6 +346,30 @@ export function girarStatusTarefa(t: Tarefa, direcao: -1 | 1) {
   const i = Math.max(0, Math.min(2, STATUS_TAREFA.indexOf(copia.status) + direcao));
   copia.status = STATUS_TAREFA[i];
   salvarRegistro("tarefas", copia);
+}
+
+/* ══════════ Proponentes ══════════ */
+
+/** Liga o projeto a um proponente do cadastro e espelha nome e perfil no texto do projeto. */
+export function escolherProponente(p: Projeto, pr: Proponente | undefined) {
+  const copia = clonar(p);
+  copia.proponenteId = pr ? pr.id : "";
+  if (pr) {
+    copia.proponente = { ...copia.proponente, nome: pr.nome, perfil: pr.perfil || copia.proponente.perfil };
+  }
+  salvarRegistro("projetos", copia);
+}
+
+/** Grava o plano de "criar a partir dos projetos": cadastros novos e vínculos. */
+export function aplicarPlanoProponentes(plano: PlanoProponentes): number {
+  const agora = new Date().toISOString();
+  plano.novos.forEach((pr) => salvarRegistro("proponentes", { ...pr, atualizado: agora }));
+  const { painel } = obterEstado();
+  for (const v of plano.vinculos) {
+    const p = painel.projetos.find((x) => x.id === v.projetoId);
+    if (p) salvarRegistro("projetos", { ...clonar(p), proponenteId: v.proponenteId });
+  }
+  return plano.novos.length;
 }
 
 /* ══════════ Formulários e rascunhos ══════════ */

@@ -405,6 +405,7 @@ export function converterV2(
       painel: {
         artistas, projetos: novos, editais, tarefas,
         equipe: P.equipe || [], elenco: P.elenco || [], contatos: P.contatos || [], reunioes: P.reunioes || [],
+        proponentes: (P as { proponentes?: DadosPainel["proponentes"] }).proponentes || [],
       },
       rascunhos: R,
       contexto: C,

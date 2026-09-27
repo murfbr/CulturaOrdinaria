@@ -122,6 +122,18 @@ export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
     { campo: "ata", rotulo: "Ata" },
     { campo: "status", rotulo: "Status", valores: { agendada: "agendada", realizada: "realizada" } },
   ],
+  proponentes: [
+    { campo: "nome", rotulo: "Nome" },
+    { campo: "perfil", rotulo: "Perfil jurídico" },
+    { campo: "situacao", rotulo: "Situação", valores: { a_confirmar: "a confirmar", confirmado: "confirmado" } },
+    { campo: "cnpj", rotulo: "CNPJ" },
+    { campo: "abertura", rotulo: "Abertura do CNPJ", data: true },
+    { campo: "cnae", rotulo: "CNAE" },
+    { campo: "municipio", rotulo: "Município" },
+    { campo: "representante", rotulo: "Representante" },
+    { campo: "contato", rotulo: "Contato" },
+    { campo: "obs", rotulo: "Observações" },
+  ],
 };
 
 const normalizar = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();

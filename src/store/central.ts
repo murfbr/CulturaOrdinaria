@@ -45,7 +45,7 @@ export interface EstadoCentral {
 
 let estado: EstadoCentral = {
   pronto: false,
-  painel: { artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [] },
+  painel: { artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [], proponentes: [] },
   rascunhos: {}, formularios: {}, lixeira: {}, fichas: {}, regras: {}, julgamentos: {},
   legado: { candidaturas: [], projetosV2: 0 },
 };

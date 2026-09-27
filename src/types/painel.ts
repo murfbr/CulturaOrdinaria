@@ -122,8 +122,10 @@ export interface Projeto {
   valorPedido: string;
   valorAprovado: string;
   valorCaptado: string;
-  /** Quem assina a inscrição. */
+  /** Quem assina a inscrição (texto; quando há cadastro, espelha o proponente escolhido). */
   proponente: { nome: string; perfil: string; obs: string };
+  /** Proponente do cadastro (coleção `proponentes`), quando escolhido. */
+  proponenteId?: string;
   /** Número de inscrição / protocolo na plataforma. */
   inscricao: string;
   /** Resultado: classificação, nota, o que o parecer disse. */
@@ -278,6 +280,10 @@ export interface Edital {
   lacunasTexto?: string;
   lacunas?: LacunaEdital[];
   alertas?: AlertaEdital[];
+  /** Tempo mínimo de CNPJ do proponente, em anos ("" = não exige). */
+  cnpjMinAnos?: number | "";
+  /** Máximo de propostas por proponente neste edital ("" = sem limite). */
+  limitePorProponente?: number | "";
   /** Arquivos do edital no acervo do Drive. */
   arquivos?: { nome: string; onde: string; tipo: string; kb: number }[];
   /** Origem do formulário no Mapa (central, espelho_oficial, regulamento, web, nao_descrito). */
@@ -411,6 +417,30 @@ export interface ItemLixeira {
 }
 
 /** As oito coleções do Painel, na ordem de exibição (v3: sem candidaturas). */
+/** Quem assina inscrições: empresa, MEI, pessoa física ou coletivo representado.
+    Sem CPF, RG nem dados bancários (regra r24): esses ficam no Drive. */
+export interface Proponente {
+  id: string;
+  nome: string;
+  /** Um dos perfis jurídicos (PF, MEI, PJ com/sem fins, coletivo representado por PF). */
+  perfil: string;
+  /** Situação do cadastro: confirmado com a pessoa ou empresa, ou ainda a confirmar. */
+  situacao: "confirmado" | "a_confirmar";
+  /** Só de empresa ou MEI. */
+  cnpj: string;
+  /** Data de abertura do CNPJ (AAAA-MM-DD): vários editais exigem tempo mínimo. */
+  abertura: string;
+  cnae: string;
+  municipio: string;
+  /** Quem assina pela empresa ou representa o coletivo. */
+  representante: string;
+  /** E-mail ou telefone de contato para a inscrição. */
+  contato: string;
+  obs: string;
+  _ord?: number;
+  atualizado?: string;
+}
+
 export interface DadosPainel {
   artistas: Artista[];
   projetos: Projeto[];
@@ -420,6 +450,7 @@ export interface DadosPainel {
   elenco: Colaborador[];
   contatos: Contato[];
   reunioes: Reuniao[];
+  proponentes: Proponente[];
 }
 
 export type ColecaoPainel = keyof DadosPainel;

@@ -8,11 +8,12 @@ import { reuniao } from "./reuniao";
 import { equipe } from "./equipe";
 import { elenco } from "./elenco";
 import { contato } from "./contato";
+import { proponente } from "./proponente";
 
 export type ChaveEntidade =
   | "artista" | "projeto" | "edital" | "tarefa"
-  | "reuniao" | "equipe" | "elenco" | "contato";
+  | "reuniao" | "equipe" | "elenco" | "contato" | "proponente";
 
 export const ENTIDADES: Record<ChaveEntidade, EntidadeSpec> = {
-  artista, projeto, edital, tarefa, reuniao, equipe, elenco, contato,
+  artista, projeto, edital, tarefa, reuniao, equipe, elenco, contato, proponente,
 };
