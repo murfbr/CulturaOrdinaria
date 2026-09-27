@@ -103,8 +103,13 @@ function lerNome(bruto: string): { nome: string; aConfirmar: boolean; chaves: st
 
 export interface PlanoProponentes {
   novos: Proponente[];
-  vinculos: { projetoId: string; proponenteId: string }[];
+  /** `aConfirmar`: o nome no projeto dizia "(a confirmar)": a dúvida é deste projeto, não do cadastro. */
+  vinculos: { projetoId: string; proponenteId: string; aConfirmar?: boolean }[];
 }
+
+/** Entre duas grafias do mesmo proponente, fica a mais completa (razão social com nome fantasia). */
+const maisCompleto = (a: string, b: string) =>
+  (b.includes("(") && !a.includes("(")) || (b.includes("(") === a.includes("(") && b.length > a.length) ? b : a;
 
 /**
  * Lê o proponente escrito em cada projeto (sem vínculo com o cadastro) e
@@ -120,21 +125,29 @@ export function planoDosProjetos(painel: DadosPainel, novoId: () => string): Pla
     const bruto = (p.proponente?.nome || "").trim();
     if (!bruto || p.proponenteId) continue;
     const { nome, aConfirmar, chaves } = lerNome(bruto);
+    const obs = p.proponente?.obs || "";
+    const cnpj = (obs.match(CNPJ) || [""])[0];
     let alvo = chaves.map((k) => porChave.get(k)).find(Boolean);
+    const ehNovo = alvo ? plano.novos.includes(alvo) : true;
     if (!alvo) {
-      const obs = p.proponente?.obs || "";
       alvo = {
         id: novoId(), nome, perfil: p.proponente?.perfil || "",
+        // Só fica "a confirmar" se em nenhum projeto o nome apareceu sem a ressalva.
         situacao: aConfirmar ? "a_confirmar" : "confirmado",
-        cnpj: (obs.match(CNPJ) || [""])[0], abertura: "", cnae: "", municipio: "",
+        cnpj, abertura: "", cnae: "", municipio: "",
         representante: "", contato: "", obs,
       };
       plano.novos.push(alvo);
-      for (const k of chaves) porChave.set(k, alvo);
-    } else if (!alvo.perfil && p.proponente?.perfil) {
-      alvo.perfil = p.proponente.perfil;
+    } else if (ehNovo) {
+      // Mesmo proponente escrito de outro jeito: completa o que faltava.
+      alvo.nome = maisCompleto(alvo.nome, nome);
+      if (!alvo.perfil && p.proponente?.perfil) alvo.perfil = p.proponente.perfil;
+      if (!alvo.cnpj && cnpj) alvo.cnpj = cnpj;
+      if (!alvo.obs && obs) alvo.obs = obs;
+      if (!aConfirmar) alvo.situacao = "confirmado";
     }
-    plano.vinculos.push({ projetoId: p.id, proponenteId: alvo.id });
+    for (const k of chaves) porChave.set(k, alvo);
+    plano.vinculos.push({ projetoId: p.id, proponenteId: alvo.id, aConfirmar });
   }
   return plano;
 }

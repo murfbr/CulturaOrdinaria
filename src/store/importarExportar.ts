@@ -226,7 +226,8 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
         const ctxBruto = j.contexto ? converterContextoImportado(j.contexto as Record<string, unknown>) : null;
         const rascunhos = (j.rascunhos || {}) as Record<string, Rascunho>;
         const formularios = (j.formularios || {}) as Record<string, Formulario>;
-        if (antigo && painelBruto) {
+        // No modo "campos" o pacote é parcial por definição: projeto sem status não é v2.
+        if (antigo && painelBruto && modo !== "campos") {
           const convertido = converterV2(
             converterPainelImportado(painelBruto) as unknown as PainelV2, clonar(rascunhos),
             { fichas: ctxBruto?.fichas || {}, regras: ctxBruto?.regras || {}, julg: ctxBruto?.julg || {} },

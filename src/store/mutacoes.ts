@@ -367,7 +367,16 @@ export function aplicarPlanoProponentes(plano: PlanoProponentes): number {
   const { painel } = obterEstado();
   for (const v of plano.vinculos) {
     const p = painel.projetos.find((x) => x.id === v.projetoId);
-    if (p) salvarRegistro("projetos", { ...clonar(p), proponenteId: v.proponenteId });
+    if (!p) continue;
+    const copia = clonar(p);
+    copia.proponenteId = v.proponenteId;
+    // A ressalva "(a confirmar)" era deste projeto: vai para a observação do proponente no projeto.
+    if (v.aConfirmar && !/a confirmar/i.test(copia.proponente.obs || "")) {
+      copia.proponente = { ...copia.proponente, obs: ["proponente a confirmar", copia.proponente.obs].filter(Boolean).join(" · ") };
+    }
+    const pr = plano.novos.find((x) => x.id === v.proponenteId);
+    if (pr) copia.proponente = { ...copia.proponente, nome: pr.nome, perfil: pr.perfil || copia.proponente.perfil };
+    salvarRegistro("projetos", copia);
   }
   return plano.novos.length;
 }
