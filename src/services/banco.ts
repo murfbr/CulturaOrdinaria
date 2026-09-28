@@ -111,6 +111,13 @@ const observadores: Record<string, Set<Observador>> = {};
 /** Observadores de documento, pela chave colecao/id. */
 const observadoresDoc: Record<string, Set<ObservadorDoc>> = {};
 const timers: Record<string, ReturnType<typeof setTimeout>> = {};
+/** Documentos com envio em andamento (setDoc chamado, servidor ainda não respondeu).
+    A reconciliação não mexe neles: sem isso, um snapshot que chegava entre o fim
+    do debounce e o registro local da gravação via o servidor "mais velho" e
+    mandava o mesmo documento de novo (numa importação, 3 a 4 vezes cada). */
+const enviando = new Set<string>();
+/** Editados de novo enquanto o envio anterior não voltou: sobem assim que ele voltar. */
+const reenviar = new Set<string>();
 const aoStatus: Set<(s: StatusSalvamento) => void> = new Set();
 let statusAtual: StatusSalvamento = { texto: "carregando…", classe: "" };
 /** Coleções cuja última resposta ainda veio só do cache local (sem confirmação do servidor). */
@@ -250,7 +257,7 @@ export const Banco = {
           const mapa: Mapa = { ...remoto };
           const subir: string[] = [];
           for (const [id, docLocal] of Object.entries(local)) {
-            if (timers[colecao + "/" + id]) { mapa[id] = docLocal; continue; }
+            if (timers[colecao + "/" + id] || enviando.has(colecao + "/" + id)) { mapa[id] = docLocal; continue; }
             const docRemoto = remoto[id];
             const nuncaSubiu = Boolean(docLocal._novo);
             if (!docRemoto) {
@@ -416,6 +423,8 @@ export const Banco = {
     // A marca _novo é controle interno do espelho — não vai para o Firestore.
     const paraEnviar = clonar(documento);
     delete paraEnviar._novo;
+    if (enviando.has(chave)) { reenviar.add(chave); return; } // sobe a versão nova quando a anterior voltar
+    enviando.add(chave);
     try {
       await setDoc(doc(db, colecao, id), paraEnviar);
       const atual = (espelho[colecao] || {})[id];
@@ -449,6 +458,9 @@ export const Banco = {
       } else {
         mudarStatus({ texto: "sem conexão — salvo na fila local", classe: "er" });
       }
+    } finally {
+      enviando.delete(chave);
+      if (reenviar.delete(chave)) void this.descarregar(colecao, id);
     }
   },
 

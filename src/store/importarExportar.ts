@@ -217,7 +217,7 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
     const colecoes = COLECOES_PAINEL.filter((c) => Array.isArray(painelBruto?.[c]));
     const antigo = painelEhV2(painelBruto);
     const resumo: ResumoPacote = {
-      formato: "Pacote da Central (v" + (j.versao || 1) + ")" + (antigo ? " · será convertido para o v3 (candidaturas viram projetos)" : ""),
+      formato: "Pacote da Central (v" + (j.versao || 1) + ")" + (antigo ? " · parece formato antigo: Mesclar e Substituir convertem para o v3 (candidaturas viram projetos); Atualizar só os campos não converte" : ""),
       aplicar: (modo) => {
         const ctxBruto = j.contexto ? converterContextoImportado(j.contexto as Record<string, unknown>) : null;
         const rascunhos = (j.rascunhos || {}) as Record<string, Rascunho>;
