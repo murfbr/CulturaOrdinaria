@@ -33,7 +33,7 @@ Regras:
 
 ## Retenção
 
-Para o log não crescer sem limite, ligue uma política de TTL no console do Firestore: Firestore Database → TTL → coleção `log_alteracoes`, campo `expiraEm`. O banco apaga as linhas vencidas sozinho. Sem a política, as linhas ficam (e o campo `expiraEm` continua servindo de filtro para quem exportar).
+Cada linha leva `expiraEm` (90 dias). A política de TTL do Firestore (console do Google Cloud → Firestore → Time to live) apagaria as vencidas sozinha, mas **exige faturamento ativo no projeto**: no plano gratuito o console responde "403: billing disabled" (testado em 28/09/2026). Por isso o próprio site faz a faxina: `Banco.limparLogVencido()` roda uma vez por dia por navegador, 20 s depois do login, e apaga até 200 linhas com `expiraEm` no passado (consulta por intervalo num campo só, que usa o índice automático). Se um dia o projeto ativar faturamento, basta criar a política (`log_alteracoes`, campo `expiraEm`, adiamento 0) e a faxina do site continua inofensiva.
 
 ## Regras de segurança
 
@@ -41,4 +41,4 @@ As regras atuais (`firestore.rules`) liberam leitura e escrita em qualquer cole�
 
 ## Para que serve
 
-Exportações e ferramentas externas (por exemplo, o segundo cérebro do Antonio) passam a conseguir separar o que cada pessoa alterou, em vez de ver só o estado final. Na interface da Central nada muda por enquanto; uma aba de histórico por registro pode vir depois lendo esta coleção.
+Exportações e ferramentas externas (por exemplo, o segundo cérebro do Antonio) passam a conseguir separar o que cada pessoa alterou, em vez de ver só o estado final. Na interface, projetos, artistas e editais têm a aba **Histórico** (componente `Historico`), que lê esta coleção por `docId` (o projeto e as respostas do formulário dele; o artista e a ficha de contexto, que têm o mesmo id) e mostra quem, quando e quais campos. O nome aparece quando o e-mail do login está na Equipe; senão, aparece o e-mail.

@@ -2,7 +2,7 @@
    botão sair, busca global e a navegação entre os sete ambientes — o botão
    Agenda mostra quantos prazos pedem atenção (vencidos ou em até 7 dias).
    No celular a navegação desce para uma linha própria, abaixo da marca. */
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair } from "../../services/sessao";
 import { usarCentral } from "../../store/central";
@@ -10,6 +10,7 @@ import { AMBIENTES, irParaAmbiente, usarNavegacao } from "../../store/navegacao"
 import { abrirBusca } from "../BuscaGlobal";
 import { contarUrgentes } from "../../lib/prazos";
 import { cx } from "../../utils/classes";
+import { ModalGravacoes } from "./ModalGravacoes";
 
 /** Indicador de salvamento, sincronizado com a camada de armazenamento. */
 function usarStatusBanco(): StatusSalvamento {
@@ -35,6 +36,9 @@ export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
   const { painel, legado } = usarCentral();
   const urgentes = contarUrgentes(painel);
   const migrar = legado.candidaturas.length > 0 || legado.projetosV2 > 0;
+  const [verGravacoes, setVerGravacoes] = useState(false);
+  // Aviso vermelho (sem conexão, erro ao gravar) vira link para ver o que está pendente.
+  const problema = status.classe === "er";
 
   return (
     <header className="bg-brand text-white">
@@ -43,7 +47,16 @@ export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
           <h1 className="m-0 text-xl font-bold tracking-[-.2px]">Central do Coletivo</h1>
           <p className="m-0 mt-0.5 text-xs text-brand-soft">
             <span className={cx("mr-1.5 inline-block h-[7px] w-[7px] rounded-full align-middle", COR_STATUS[status.classe])} />
-            <span>{status.texto}</span> · captação, escrita e contexto dos projetos culturais
+            {problema
+              ? (
+                <button
+                  className="cursor-pointer border-0 bg-transparent p-0 text-xs text-[#FFB9A3] underline hover:text-white"
+                  onClick={() => setVerGravacoes(true)} title="ver o que ainda não chegou ao banco"
+                >
+                  {status.texto} · ver
+                </button>
+              )
+              : <span>{status.texto}</span>} · captação, escrita e contexto dos projetos culturais
             {emailUsuario && (
               <button className="ml-2 cursor-pointer border-0 bg-transparent p-0 text-2xs text-brand-soft underline hover:text-white" onClick={() => void sair()}>
                 sair ({emailUsuario})
@@ -74,6 +87,7 @@ export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
           ))}
         </div>
       </div>
+      {verGravacoes && <ModalGravacoes aoFechar={() => setVerGravacoes(false)} />}
     </header>
   );
 }

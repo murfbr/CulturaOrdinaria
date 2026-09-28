@@ -14,10 +14,11 @@ import { ModalNovoProjeto } from "../../projetos/ModalNovoProjeto";
 import { nomeEditalDoProjeto } from "../../../lib/nomes";
 import { ROTULO_STATUS_PROJETO, type DetalheArtista, type PendenciaArtista } from "../../../types";
 import { clonar, url } from "../../../utils";
+import { Historico } from "../../../components/Historico";
 
 const SUB_ABAS: [string, string][] = [
   ["geral", "Geral"], ["portfolio", "Portfólio cultural"], ["docs", "Documentos"],
-  ["marca", "Marca"], ["contexto", "Contexto"], ["projetos", "Projetos"],
+  ["marca", "Marca"], ["contexto", "Contexto"], ["projetos", "Projetos"], ["historico", "Histórico"],
 ];
 
 /** Quebra "a | b | c" nos pedaços, sem perder os do meio vazios. */
@@ -310,6 +311,8 @@ export function FichaArtista({ id, sub }: { id: string; sub: string }) {
         {!projetos.length && <p className="muted" style={{ margin: 0 }}>Nenhum projeto com este artista ainda.</p>}
       </div>
     );
+  } else if (aba === "historico") {
+    corpo = <Historico ids={[a.id]} />;
   }
 
   const nAbertas = (d.pendencias || []).filter((x) => x.status !== "resolvida").length;

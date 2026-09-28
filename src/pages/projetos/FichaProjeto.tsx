@@ -1,7 +1,8 @@
 /* Ficha do projeto, em página: cabeçalho com status, artistas, edital e
    formulário; abas Geral (dados, proponente, anotações, documentos, produção,
    tarefas), Formulário (as respostas no formulário do edital), Transferência
-   (copiar para a plataforma oficial) e Contexto (fichas e regras ligadas). */
+   (copiar para a plataforma oficial), Contexto (fichas e regras ligadas) e
+   Histórico (quem mudou o quê, do log de alterações). */
 import { useState, type ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { arquivarProjeto, duplicarProjeto, moverProjeto, definirStatusProjeto, salvarRegistro } from "../../store/mutacoes";
@@ -17,6 +18,7 @@ import { FormularioRascunho } from "./formulario/Formulario";
 import { Transferencia } from "./Transferencia";
 import { ContextoProjeto } from "./ContextoProjeto";
 import { usarExclusaoProjeto } from "./exclusao";
+import { Historico } from "../../components/Historico";
 
 const CHAVE_ETAPA = "central-proj-etapa-v1";
 const lerEtapas = (): Record<string, number> => {
@@ -50,6 +52,8 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
     }
   } else if (aba === "contexto") {
     corpo = <ContextoProjeto p={p} />;
+  } else if (aba === "historico") {
+    corpo = <Historico ids={[p.id, p.rascunhoId || ""]} />;
   } else {
     corpo = <GeralProjeto p={p} />;
   }
@@ -59,6 +63,7 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
     ["formulario", "Formulário", temFormulario],
     ["transferencia", "Transferência", temFormulario],
     ["contexto", "Contexto", true],
+    ["historico", "Histórico", true],
   ];
 
   return (

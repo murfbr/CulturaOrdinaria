@@ -17,6 +17,7 @@ import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../l
 import { formularioDe, SALIC_DADOS, registroDe } from "../data";
 import { campos as camposDe, normalizarRascunho, novoRascunho } from "../lib/simulador/motor";
 import { linhaVazia } from "../lib/simulador/orcamento";
+import { normalizarFicha, normalizarJulgamento, tupla } from "../lib/contexto/normalizar";
 
 type RegistroPainel = DadosPainel[keyof DadosPainel][number];
 type Documento = Record<string, unknown> & { id: string };
@@ -51,8 +52,6 @@ export function exportarTudo() {
 
 /* ── conversão de tuplas (formato v1 do artefato) → objetos nomeados ── */
 
-const tupla = <T,>(v: unknown, nomes: string[]): T =>
-  Array.isArray(v) ? (Object.fromEntries(nomes.map((n, i) => [n, (v as unknown[])[i] ?? ""])) as T) : (v as T);
 
 function converterPainelImportado(p: Record<string, unknown>): DadosPainel {
   const d = clonar(p) as unknown as DadosPainel & { candidaturas?: unknown[] };
@@ -76,13 +75,8 @@ const painelEhV2 = (p?: Record<string, unknown>) =>
 
 function converterContextoImportado(c: Record<string, unknown>) {
   const d = clonar(c) as { fichas?: Record<string, Ficha>; regras?: Record<string, Regra>; julg?: Record<string, Julgamento> };
-  Object.values(d.fichas || {}).forEach((f) => {
-    if (f.vocabulario) f.vocabulario = (f.vocabulario as unknown as unknown[]).map((t) => tupla(t, ["usar", "evitar"]));
-    if (f.usados) f.usados = (f.usados as unknown as unknown[]).map((t) => tupla(t, ["texto", "onde", "quando"]));
-  });
-  Object.values(d.julg || {}).forEach((j) => {
-    if (j.licoes) j.licoes = (j.licoes as unknown as unknown[]).map((t) => tupla(t, ["texto", "regra"]));
-  });
+  for (const [id, f] of Object.entries(d.fichas || {})) d.fichas![id] = normalizarFicha(f);
+  for (const [id, j] of Object.entries(d.julg || {})) d.julg![id] = normalizarJulgamento(j);
   return d;
 }
 

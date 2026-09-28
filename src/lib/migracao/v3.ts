@@ -17,6 +17,7 @@ import type {
   Artista, Candidatura, Colaborador, Contato, DadosPainel, DetalheArtista, Edital,
   Ficha, Formulario, Julgamento, Projeto, ProjetoV2, Rascunho, Regra, StatusProjeto, Tarefa,
 } from "../../types";
+import { normalizarFicha } from "../contexto/normalizar";
 
 type Solto = Record<string, unknown>;
 
@@ -560,7 +561,9 @@ export function aplicarEnriquecimento(
   for (const [id, f] of Object.entries(enr.fichas || {})) {
     if (dados.contexto.fichas[id] && !f.substituir) continue;
     const { substituir: _s, ...ficha } = f;
-    dados.contexto.fichas[id] = ficha as Ficha;
+    // Pacote no formato antigo traz vocabulário e "já foi dito" como listas
+    // dentro de listas, que o Firestore recusa: converte antes de gravar.
+    dados.contexto.fichas[id] = normalizarFicha(ficha) as Ficha;
     fx++;
   }
   if (fx) rel.feito.push(`Fichas de contexto: ${fx} nova(s) ou revisada(s).`);

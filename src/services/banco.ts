@@ -6,7 +6,7 @@
    As gravações são adiadas (debounce) por documento, como no artefato original,
    para digitação fluida sem uma gravação por tecla. */
 import {
-  Timestamp, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc,
+  Timestamp, collection, deleteDoc, doc, getDoc, getDocs, limit, onSnapshot, query, setDoc, where,
 } from "firebase/firestore";
 import { db, firebaseAtivo } from "./firebase";
 import { clonar, hora } from "../utils";
@@ -37,8 +37,9 @@ export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" 
    permite saber, depois, quem mexeu no quê — o `atualizadoPor` sozinho só guarda
    o último. Coleções de controle (lixeira, backup_v2, o próprio log) não entram.
    O log só existe no modo nuvem. Para não crescer sem limite, cada linha leva
-   `expiraEm` (90 dias): basta ligar uma política de TTL nesse campo no console
-   do Firestore (Firestore Database → TTL) e o próprio banco apaga as antigas. */
+   `expiraEm` (90 dias). A política de TTL do Firestore apagaria as vencidas
+   sozinha, mas exige faturamento ativo no projeto; enquanto isso, o próprio
+   site apaga as vencidas uma vez por dia (`Banco.limparLogVencido`). */
 const COLECAO_LOG = "log_alteracoes";
 const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2"]);
 const CAMPOS_IGNORADOS_NO_DIFF = new Set(["_novo", "atualizado", "atualizadoPor"]);
@@ -77,6 +78,33 @@ function registrarAlteracao(colecao: string, id: string, acao: "novo" | "edicao"
   const idLog = agora.toISOString().replace(/[:.]/g, "-") + "_" + colecao.replace(/\//g, ".") + "_" + id;
   setDoc(doc(db, COLECAO_LOG, idLog), linha).catch(() => { /* log é melhor esforço */ });
 }
+
+/* ══════════ Gravações recusadas ══════════
+   "Sem conexão" e "o banco recusou o dado" são coisas diferentes. Quando o
+   Firestore recusa o documento na hora (lista dentro de lista, valor
+   indefinido, documento grande demais), repetir não adianta: o registro fica
+   só neste navegador até alguém corrigir. Essas recusas ficam listadas aqui e
+   aparecem no topo do site ("erro ao gravar"), com o que foi recusado. */
+export interface FalhaGravacao { colecao: string; id: string; rotulo: string; motivo: string; quando: string }
+const falhas: Record<string, FalhaGravacao> = {};
+const aoFalhas: Set<() => void> = new Set();
+let versaoFalhas = 0;
+const avisarFalhas = () => { versaoFalhas++; aoFalhas.forEach((cb) => cb()); };
+
+/** O erro é de dado inválido (não adianta tentar de novo) e não de rede/permissão? */
+function erroDeDado(e: unknown): boolean {
+  const codigo = (e as { code?: string })?.code || "";
+  const msg = String((e as Error)?.message || e || "");
+  return codigo === "invalid-argument" || /invalid data|unsupported field value|nested arrays|exceeds the maximum/i.test(msg);
+}
+
+/** Linha do log de alterações, como lida para o histórico de um registro. */
+export interface LinhaLog {
+  id: string; colecao: string; docId: string; acao: "novo" | "edicao" | "exclusao";
+  campos: string[]; quem: string; quando: string; rotulo: string;
+}
+
+const CHAVE_LIMPEZA_LOG = "central-log-limpeza-v1";
 
 const espelho: Record<string, Mapa> = carregarEspelho();
 const observadores: Record<string, Set<Observador>> = {};
@@ -124,7 +152,7 @@ function mudarStatus(s: StatusSalvamento) {
     gravação ("salvando…", "salvo HH:MM", "sem conexão"): esses já dizem mais. */
 function statusDaSincronizacao() {
   const t = statusAtual.texto;
-  const deGravacao = t.startsWith("salv") || t.startsWith("sem conexão");
+  const deGravacao = t.startsWith("salv") || t.startsWith("sem conexão") || t.startsWith("erro ao gravar");
   if (deGravacao) return;
   mudarStatus(emCache.size
     ? { texto: "sincronizando…", classe: "sv" }
@@ -392,18 +420,35 @@ export const Banco = {
       await setDoc(doc(db, colecao, id), paraEnviar);
       const atual = (espelho[colecao] || {})[id];
       if (atual && atual._novo) { delete atual._novo; salvarEspelho(); }
-      mudarStatus({ texto: "salvo " + hora(), classe: "ok" });
+      if (falhas[chave]) { delete falhas[chave]; avisarFalhas(); }
+      const restam = Object.keys(falhas).length;
+      mudarStatus(restam
+        ? { texto: `erro ao gravar ${restam} registro(s)`, classe: "er" }
+        : { texto: "salvo " + hora(), classe: "ok" });
       // Log: só depois de o servidor confirmar, uma linha por janela de debounce.
       const tinhaAnterior = chave in anteriores;
       const antes = anteriores[chave];
       delete anteriores[chave];
       registrarAlteracao(colecao, id, tinhaAnterior && !antes ? "novo" : "edicao", antes, paraEnviar);
-    } catch {
-      // Não subiu (sem permissão, por exemplo): marca _novo para sobreviver a
-      // recarregamentos e tentar de novo na próxima reconciliação.
+    } catch (e) {
+      // Não subiu: marca _novo para sobreviver a recarregamentos e tentar de
+      // novo na próxima reconciliação (o dado nunca se perde deste navegador).
       const atual = (espelho[colecao] || {})[id];
       if (atual) { atual._novo = true; salvarEspelho(); }
-      mudarStatus({ texto: "sem conexão — salvo na fila local", classe: "er" });
+      if (erroDeDado(e)) {
+        // Recusa do banco: repetir não resolve. Fica listada e visível no topo.
+        const motivo = String((e as Error)?.message || e).replace(/^Function \w+\(\) called with /, "");
+        falhas[chave] = {
+          colecao, id, motivo,
+          rotulo: String(documento.titulo || documento.nome || id),
+          quando: new Date().toISOString(),
+        };
+        avisarFalhas();
+        console.error("[Central] o banco recusou " + chave + ":", e);
+        mudarStatus({ texto: `erro ao gravar ${Object.keys(falhas).length} registro(s)`, classe: "er" });
+      } else {
+        mudarStatus({ texto: "sem conexão — salvo na fila local", classe: "er" });
+      }
     }
   },
 
@@ -448,6 +493,75 @@ export const Banco = {
   /** Há gravações na fila? (usado no aviso de sair da página) */
   pendente(): boolean {
     return Object.keys(timers).length > 0;
+  },
+
+  /** Gravações que o banco recusou (dado inválido), da mais recente para a mais antiga. */
+  falhas(): FalhaGravacao[] {
+    return Object.values(falhas).sort((a, b) => b.quando.localeCompare(a.quando));
+  },
+  versaoFalhas: () => versaoFalhas,
+  aoMudarFalhas(cb: () => void) {
+    aoFalhas.add(cb);
+    return () => { aoFalhas.delete(cb); };
+  },
+
+  /** Registros que existem só neste navegador (ainda não confirmados pelo servidor). */
+  pendentesLocais(): { colecao: string; id: string; rotulo: string }[] {
+    if (!firebaseAtivo) return [];
+    const lista: { colecao: string; id: string; rotulo: string }[] = [];
+    for (const [colecao, mapa] of Object.entries(espelho)) {
+      for (const [id, d] of Object.entries(mapa || {})) {
+        if (d && d._novo) lista.push({ colecao, id, rotulo: String(d.titulo || d.nome || id) });
+      }
+    }
+    return lista;
+  },
+
+  /** Tenta subir de novo tudo o que está só neste navegador. */
+  async tentarDeNovo() {
+    const lista = this.pendentesLocais();
+    await Promise.all(lista.map(({ colecao, id }) => this.descarregar(colecao, id)));
+    return lista.length;
+  },
+
+  /**
+   * Histórico de alterações de um ou mais registros (ids de qualquer coleção),
+   * lido do log. Mais recente primeiro. Vazio no modo local.
+   * Usa só filtro por `docId` (índice automático) e ordena aqui.
+   */
+  async historico(ids: string[]): Promise<LinhaLog[]> {
+    if (!firebaseAtivo || !db) return [];
+    const unicos = [...new Set(ids.filter(Boolean))];
+    const linhas: LinhaLog[] = [];
+    for (let i = 0; i < unicos.length; i += 30) {
+      const snap = await getDocs(query(collection(db, COLECAO_LOG), where("docId", "in", unicos.slice(i, i + 30))));
+      snap.forEach((d) => {
+        const x = d.data() as Record<string, unknown>;
+        linhas.push({
+          id: d.id, colecao: String(x.colecao || ""), docId: String(x.docId || ""),
+          acao: (x.acao as LinhaLog["acao"]) || "edicao", campos: (x.campos as string[]) || [],
+          quem: String(x.quem || ""), quando: String(x.quando || ""), rotulo: String(x.rotulo || ""),
+        });
+      });
+    }
+    return linhas.sort((a, b) => b.quando.localeCompare(a.quando));
+  },
+
+  /**
+   * Apaga do log as linhas já vencidas (`expiraEm` no passado). Faz o papel
+   * da política de TTL do Firestore, que exige faturamento ativo no projeto.
+   * Roda no máximo uma vez por dia por navegador e apaga até 200 por vez.
+   */
+  async limparLogVencido() {
+    if (!firebaseAtivo || !db) return 0;
+    const hoje = new Date().toISOString().slice(0, 10);
+    try { if (localStorage.getItem(CHAVE_LIMPEZA_LOG) === hoje) return 0; } catch { /* segue */ }
+    try {
+      const snap = await getDocs(query(collection(db, COLECAO_LOG), where("expiraEm", "<", Timestamp.now()), limit(200)));
+      await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
+      try { localStorage.setItem(CHAVE_LIMPEZA_LOG, hoje); } catch { /* sem localStorage */ }
+      return snap.size;
+    } catch { return 0; /* sem rede ou sem permissão: tenta outro dia */ }
   },
 };
 
