@@ -8,7 +8,7 @@ import { usarCentral } from "../../store/central";
 import { criarProjeto } from "../../store/mutacoes";
 import { abrirProjeto } from "../../store/navegacao";
 import { nomeCurto } from "../../lib/nomes";
-import { STATUS_EDITAL, STATUS_PROJETO, type Edital, type StatusProjeto } from "../../types";
+import { ROTULO_STATUS_PROJETO, STATUS_EDITAL, STATUS_PROJETO, type Edital, type StatusProjeto } from "../../types";
 import { comparar } from "../../utils";
 
 interface OpcaoFormulario {
@@ -66,6 +66,10 @@ export function ModalNovoProjeto({ aoFechar, editalId, artistaId }: Props) {
   const editalFinal = livre ? editalLivre : editalDaOpcao;
   const grupos = [...new Set(opcoes.map((o) => o.grupo))];
   const pronto = Boolean(escolha) && nome.trim().length > 0;
+  // Já existe projeto em aberto com um destes artistas no mesmo edital? (evita o duplicado criado à mão)
+  const parecidos = editalFinal
+    ? painel.projetos.filter((p) => !p.arquivado && p.editalId === editalFinal && p.artistaIds.some((a) => artistas.includes(a)))
+    : [];
 
   function alternarArtista(id: string) {
     setArtistas((a) => (a.includes(id) ? a.filter((x) => x !== id) : [...a, id]));
@@ -147,10 +151,23 @@ export function ModalNovoProjeto({ aoFechar, editalId, artistaId }: Props) {
         </div>
       </div>
 
+      {parecidos.length > 0 && (
+        <div className="aviso-duplicado">
+          <b>Já existe projeto deste artista neste edital:</b>
+          {parecidos.map((p) => (
+            <div key={p.id}>
+              <a className="lnk" onClick={() => { aoFechar(); abrirProjeto(p.id); }}>{p.nome}</a>
+              <span className="muted"> · {ROTULO_STATUS_PROJETO[p.status] || p.status}</span>
+            </div>
+          ))}
+          <span className="muted">Se for a mesma inscrição, abra o existente. Crie outro só se for uma proposta diferente.</span>
+        </div>
+      )}
+
       <RodapeModal>
         <span className="sp">
           <button className="btn ghost" onClick={aoFechar}>Cancelar</button>
-          <button className="btn" disabled={!pronto} onClick={criar}>Criar projeto</button>
+          <button className="btn" disabled={!pronto} onClick={criar}>{parecidos.length ? "Criar mesmo assim" : "Criar projeto"}</button>
         </span>
       </RodapeModal>
     </Modal>

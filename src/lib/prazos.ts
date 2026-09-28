@@ -2,7 +2,7 @@
    agendadas numa lista única classificada (vencido, hoje, ≤3 dias, ≤7 dias).
    Funções puras sobre DadosPainel — a mesma classificação vai servir ao
    resumo por e-mail quando o backend existir. */
-import type { DadosPainel } from "../types";
+import type { AlertaEdital, DadosPainel, Edital, StatusEdital } from "../types";
 
 export type Urgencia = "vencido" | "hoje" | "d3" | "d7" | "futuro";
 
@@ -35,6 +35,44 @@ export function urgenciaDe(iso: string, hoje = hojeIso()): Urgencia {
   return "futuro";
 }
 
+/* ══════════ Prazos e alertas que envelhecem ══════════
+   O status do edital é um dado que alguém precisa lembrar de mudar. Enquanto
+   ninguém muda, a tela deduz: edital "Aberto" com prazo passado aparece como
+   encerrado, e alerta com data passada sai das listas (continua na ficha). */
+
+/** Edital marcado "Aberto" cujo prazo já passou. */
+export const prazoEncerrado = (e: Edital, hoje = hojeIso()): boolean =>
+  e.status === "open" && Boolean(e.prazoIso) && (e.prazoIso as string) < hoje;
+
+/** Status para exibir e agrupar: "Aberto" com prazo passado conta como encerrado. */
+export const statusEfetivo = (e: Edital, hoje = hojeIso()): StatusEdital =>
+  prazoEncerrado(e, hoje) ? "closed" : e.status;
+
+/** Última data de um alerta: `ate`, ou a maior data dd/mm(/aaaa) escrita em `quando`. */
+export function dataDoAlerta(a: AlertaEdital, e?: Edital): string {
+  if (a.ate) return a.ate;
+  const anoBase = (e?.prazoIso || hojeIso()).slice(0, 4);
+  let maior = "";
+  for (const m of (a.quando || "").matchAll(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/g)) {
+    const dia = Number(m[1]); const mes = Number(m[2]);
+    if (!dia || dia > 31 || !mes || mes > 12) continue;
+    const ano = m[3] ? (m[3].length === 2 ? "20" + m[3] : m[3]) : anoBase;
+    const iso = ano + "-" + String(mes).padStart(2, "0") + "-" + String(dia).padStart(2, "0");
+    if (iso > maior) maior = iso;
+  }
+  return maior;
+}
+
+/** Alerta cuja data já passou (sem data nenhuma, nunca vence sozinho). */
+export function alertaVencido(a: AlertaEdital, e?: Edital, hoje = hojeIso()): boolean {
+  const d = dataDoAlerta(a, e);
+  return Boolean(d) && d < hoje;
+}
+
+/** Alertas ainda valendo de um edital. */
+export const alertasVigentes = (e: Edital, hoje = hojeIso()): AlertaEdital[] =>
+  (e.alertas || []).filter((a) => !alertaVencido(a, e, hoje));
+
 export const ROTULO_URGENCIA: Record<Urgencia, string> = {
   vencido: "venceu", hoje: "é hoje", d3: "≤ 3 dias", d7: "≤ 7 dias", futuro: "",
 };
@@ -53,11 +91,18 @@ export function itensDePrazo(painel: DadosPainel, hoje = hojeIso()): ItemPrazo[]
 
   for (const e of painel.editais) {
     if (!e.prazoIso || e.status === "closed" || e.status === "norma") continue;
-    const n = painel.projetos.filter((p) => p.editalId === e.id && !p.arquivado).length;
+    const projetos = painel.projetos.filter((p) => p.editalId === e.id && !p.arquivado);
+    const urgencia = urgenciaDe(e.prazoIso, hoje);
+    // Prazo passado só é pendência se sobrou projeto que não chegou a ser inscrito
+    // (é preciso decidir: inscreveu e falta atualizar, ou desistiu).
+    const semInscricao = projetos.filter((p) => p.status === "prospeccao" || p.status === "preparacao");
+    if (urgencia === "vencido" && !semInscricao.length) continue;
     itens.push({
       iso: e.prazoIso, tipo: "edital", id: e.id, titulo: e.nome,
-      detalhe: n ? n + " projeto(s)" : "sem projeto ainda",
-      urgencia: urgenciaDe(e.prazoIso, hoje),
+      detalhe: urgencia === "vencido"
+        ? semInscricao.length + " projeto(s) sem inscrição registrada"
+        : projetos.length ? projetos.length + " projeto(s)" : "sem projeto ainda",
+      urgencia,
     });
   }
   for (const t of painel.tarefas) {

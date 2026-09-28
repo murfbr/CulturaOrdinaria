@@ -16,6 +16,7 @@ import {
   type CategoriaEdital,
 } from "../../../types";
 import { url } from "../../../utils";
+import { alertaVencido, prazoEncerrado } from "../../../lib/prazos";
 
 const SUB_ABAS: [string, string][] = [
   ["geral", "Geral"], ["criterios", "Critérios"], ["formulario", "Formulário"], ["docs", "Documentos"],
@@ -53,8 +54,11 @@ export function FichaEdital({ id, sub }: { id: string; sub: string }) {
           <div className="panel alerta-panel">
             <h4>Muda decisão</h4>
             {(e.alertas || []).map((a, i) => (
-              <div className="alerta" key={i}>
-                <div><b>{a.titulo}</b>{a.quando && <span className="badge ur-d7" style={{ marginLeft: 6 }}>{a.quando}</span>}</div>
+              <div className={"alerta" + (alertaVencido(a, e) ? " alerta-passou" : "")} key={i}>
+                <div>
+                  <b>{a.titulo}</b>{a.quando && <span className="badge ur-d7" style={{ marginLeft: 6 }}>{a.quando}</span>}
+                  {alertaVencido(a, e) && <span className="badge" style={{ marginLeft: 6 }}>data já passou</span>}
+                </div>
                 <div className="alerta-t">{a.texto}</div>
                 {a.fazer && <div className="alerta-f"><b>Fazer:</b> {a.fazer}</div>}
               </div>
@@ -274,6 +278,7 @@ export function FichaEdital({ id, sub }: { id: string; sub: string }) {
           <div className="muted" style={{ fontSize: 12.5, margin: "2px 0 4px" }}>{e.nome}</div>
           <span className={"badge esfera " + esf.classe}>{esf.rotulo}</span>{" "}
           <span className={"badge " + st.classe}>{st.rotulo}</span>{" "}
+          {prazoEncerrado(e) && <><span className="badge ur-vencido" title="O edital está marcado como Aberto, mas o prazo já passou. Atualize o status em Editar.">prazo encerrado</span>{" "}</>}
           {cat && <span className="badge b-type">{cat.rotulo}</span>}{" "}
           <span className="muted" style={{ fontSize: 12.5 }} title={e.prazo}>· prazo {prazoCurto(e) || "—"}</span>
         </div>

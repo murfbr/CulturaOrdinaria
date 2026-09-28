@@ -32,6 +32,8 @@ export const edital: EntidadeSpec = {
     { chave: "comoInscrever", rotulo: "Como se inscrever", tipo: "textarea" },
     { chave: "contrapartidas", rotulo: "Contrapartidas", tipo: "textarea" },
     { chave: "docsExig", rotulo: "Documentos exigidos (um por linha)", tipo: "lines" },
+    { chave: "cnpjMinAnos", rotulo: "Tempo mínimo de CNPJ do proponente (anos; vazio = não exige)", tipo: "numero" },
+    { chave: "limitePorProponente", rotulo: "Máximo de propostas por proponente (vazio = sem limite)", tipo: "numero" },
     { chave: "linkEdital", rotulo: "Link do edital (site oficial)" },
     { chave: "linkDrive", rotulo: "Link da pasta no Google Drive" },
     { chave: "obs", rotulo: "Observações", tipo: "textarea" },

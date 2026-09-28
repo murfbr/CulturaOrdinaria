@@ -6,7 +6,9 @@ import { abrirEdicao } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { tituloCurto } from "../../lib/agenda";
 import { nomeEquipe } from "../../lib/nomes";
-import { CLASSE_URGENCIA, ROTULO_URGENCIA, itensDePrazo, type ItemPrazo } from "../../lib/prazos";
+import { CLASSE_URGENCIA, ROTULO_URGENCIA, alertasVigentes, dataDoAlerta, hojeIso, itensDePrazo, statusEfetivo, type ItemPrazo } from "../../lib/prazos";
+import { adiarTarefa, alternarTarefaConcluida } from "../../store/mutacoes";
+import { toast } from "../../components/Toast";
 import { STATUS_ATIVOS, STATUS_PROJETO } from "../../types";
 import { formatarData } from "../../utils";
 
@@ -24,7 +26,8 @@ export function Resumo() {
   const projetos = painel.projetos.filter((p) => !p.arquivado);
   const ativos = projetos.filter((p) => STATUS_ATIVOS.includes(p.status)).length;
   const ganhos = projetos.filter((p) => ["aprovado", "captando", "execucao", "prestacao"].includes(p.status)).length;
-  const abertos = painel.editais.filter((e) => e.status === "open" || e.status === "cont").length;
+  const hoje = hojeIso();
+  const abertos = painel.editais.filter((e) => ["open", "cont"].includes(statusEfetivo(e, hoje))).length;
   const tarefasAbertas = painel.tarefas.filter((t) => t.status !== "feito").length;
 
   const prazos = itensDePrazo(painel);
@@ -43,7 +46,16 @@ export function Resumo() {
   const maiorColuna = Math.max(1, ...colunas.map((s) => projetos.filter((p) => p.status === s.id).length));
   const artistasComDocPendente = painel.artistas.filter((a) => a.det?.docs?.some((d) => d.status !== "ok"));
   const artistasComPendencia = painel.artistas.filter((a) => (a.det?.pendencias || []).some((x) => x.status !== "resolvida"));
-  const alertasEditais = painel.editais.filter((e) => (e.status === "open" || e.status === "cont" || e.status === "prev") && (e.alertas || []).length);
+  // Alertas ainda valendo, de editais que não estão encerrados (nem pelo prazo), do mais próximo ao mais distante.
+  const alertasEditais = painel.editais
+    .filter((e) => ["open", "cont", "prev"].includes(statusEfetivo(e, hoje)))
+    .flatMap((e) => alertasVigentes(e, hoje).map((a) => ({ e, a, data: dataDoAlerta(a, e) || "9999" })))
+    .sort((x, y) => x.data.localeCompare(y.data))
+    .filter((x, i, todos) => todos.findIndex((y) => y.a.titulo === x.a.titulo) === i);
+  // Tarefas em aberto: vencidas primeiro, depois pelo prazo; sem prazo no fim.
+  const tarefasOrdenadas = painel.tarefas
+    .filter((t) => t.status !== "feito")
+    .sort((a, b) => (a.prazo || "9999").localeCompare(b.prazo || "9999"));
 
   return (
     <>
@@ -89,15 +101,25 @@ export function Resumo() {
         </div>
         <div className="panel">
           <h4>Tarefas da equipe</h4>
-          {painel.tarefas.filter((t) => t.status !== "feito").slice(0, 5).map((t) => (
-            <div className="mini" key={t.id}>
-              <span>
-                <span className="dot" style={{ width: 18, height: 18, fontSize: 9, marginRight: 6 }}>{nomeEquipe(t.respId)[0] || "?"}</span>
-                {t.titulo}
-              </span>
-              <span className="muted">{t.prazo ? formatarData(t.prazo) : ""}</span>
-            </div>
-          ))}
+          {tarefasOrdenadas.slice(0, 6).map((t) => {
+            const vencida = Boolean(t.prazo) && (t.prazo as string) < hoje;
+            return (
+              <div className="mini tarefa-rapida" key={t.id}>
+                <span className="pz" onClick={() => abrirEdicao("tarefa", t.id)} title="abrir a tarefa">
+                  <span className="dot" style={{ width: 18, height: 18, fontSize: 9, marginRight: 6 }}>{nomeEquipe(t.respId)[0] || "?"}</span>
+                  {t.titulo}
+                </span>
+                <span className="acoes-rapidas">
+                  {t.prazo && <span className={vencida ? "badge ur-vencido" : "muted"}>{formatarData(t.prazo)}</span>}
+                  <button className="btn sm quiet" title="marcar como concluída" onClick={() => { alternarTarefaConcluida(t); toast("Tarefa concluída"); }}>✓</button>
+                  {vencida && <button className="btn sm quiet" title="adiar 7 dias a partir de hoje" onClick={() => { adiarTarefa(t, 7); toast("Prazo adiado 7 dias"); }}>+7d</button>}
+                </span>
+              </div>
+            );
+          })}
+          {tarefasOrdenadas.length > 6 && (
+            <div className="mini pz muted" onClick={() => irParaAmbiente("gestao", "quadro")}>+ {tarefasOrdenadas.length - 6} tarefa(s) no quadro →</div>
+          )}
         </div>
         <div className="panel">
           <h4>Alertas</h4>
@@ -107,12 +129,15 @@ export function Resumo() {
               <span className="badge ur-vencido">venceu</span>
             </div>
           )}
-          {alertasEditais.map((e) => (
-            <div className="mini pz" key={"al" + e.id} onClick={() => abrirDetalhe("edital", e.id)}>
-              <span>⚑ {e.curto || e.nome}: {(e.alertas || [])[0].titulo}</span>
-              <span className="badge ur-d7">{(e.alertas || [])[0].quando || "alerta"}</span>
+          {alertasEditais.slice(0, 8).map(({ e, a }) => (
+            <div className="mini pz" key={"al" + e.id + a.titulo} onClick={() => abrirDetalhe("edital", e.id)}>
+              <span>⚑ {e.curto || e.nome}: {a.titulo}</span>
+              <span className="badge ur-d7">{a.quando || "alerta"}</span>
             </div>
           ))}
+          {alertasEditais.length > 8 && (
+            <div className="mini pz muted" onClick={() => irParaAmbiente("cadastros", "editais")}>+ {alertasEditais.length - 8} alerta(s) em Cadastros → Editais → Alertas</div>
+          )}
           {artistasComPendencia.length > 0 && (
             <div className="mini pz" onClick={() => irParaAmbiente("painel", "pendencias")}>
               <span>❓ {artistasComPendencia.length} artista(s) com pendências ou perguntas em aberto</span>

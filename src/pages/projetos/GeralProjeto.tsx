@@ -4,7 +4,9 @@
    tarefas, alertas do edital e o histórico de status. */
 import { useState, type ReactNode } from "react";
 import { usarCentral } from "../../store/central";
-import { salvarRegistro, trocarFormulario } from "../../store/mutacoes";
+import { escolherProponente, salvarRegistro, trocarFormulario } from "../../store/mutacoes";
+import { anosDeCnpj, avisosProponente, idadeLegivel, proponenteDoProjeto } from "../../lib/proponentes";
+import { irParaAmbiente } from "../../store/navegacao";
 import { abrirDetalhe } from "../../store/navegacao";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
 import { badgeTarefa, editalDoProjeto, nomeCurto, nomeEquipe, prazoCurto } from "../../lib/nomes";
@@ -12,6 +14,7 @@ import { temValor } from "../../lib/simulador/motor";
 import { PERFIS_JURIDICOS } from "../../data";
 import { ROTULO_STATUS_PROJETO, STATUS_EDITAL, type Projeto, type StatusProjeto } from "../../types";
 import { clonar, formatarData, url } from "../../utils";
+import { alertaVencido } from "../../lib/prazos";
 
 export function GeralProjeto({ p }: { p: Projeto }) {
   const { painel, rascunhos, formularios } = usarCentral();
@@ -22,6 +25,8 @@ export function GeralProjeto({ p }: { p: Projeto }) {
   const formularioVazio = !rascunho || !Object.values(rascunho.valores || {}).some(temValor);
   const tarefas = painel.tarefas.filter((t) => t.origem === "proj:" + p.id);
   const artistas = p.artistaIds.map((id) => painel.artistas.find((a) => a.id === id)).filter(Boolean);
+  const proponente = proponenteDoProjeto(p, painel);
+  const avisosProp = avisosProponente(p, painel);
   const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
   const dias = (s: string) => {
     if (!s) return "";
@@ -90,8 +95,8 @@ export function GeralProjeto({ p }: { p: Projeto }) {
         <div className="bloco alerta-bloco">
           <div className="bloco-h"><h4>Alertas do edital</h4><span className="cont">do Mapa dos Editais</span></div>
           {edital.alertas.map((a, i) => (
-            <div className="alerta" key={i}>
-              <div><b>{a.titulo}</b>{a.quando && <span className="muted"> · {a.quando}</span>}</div>
+            <div className={"alerta" + (alertaVencido(a, edital) ? " alerta-passou" : "")} key={i}>
+              <div><b>{a.titulo}</b>{a.quando && <span className="muted"> · {a.quando}</span>}{alertaVencido(a, edital) && <span className="muted"> · data já passou</span>}</div>
               <div className="alerta-t">{a.texto}</div>
               {a.fazer && <div className="alerta-f"><b>Fazer:</b> {a.fazer}</div>}
             </div>
@@ -102,23 +107,54 @@ export function GeralProjeto({ p }: { p: Projeto }) {
       <div className="bloco">
         <div className="bloco-h"><h4>Proponente</h4><span className="q">quem assina a inscrição (quase nunca é o artista)</span></div>
         <div className="prop">
-          <div className="prop-l">
-            <span className="eyebrow">nome</span>
-            <input type="text" value={p.proponente.nome} placeholder="pessoa ou empresa que inscreve"
-              onChange={(e) => alterar((c) => { c.proponente.nome = e.target.value; }, false)} />
+          <div className="prop-l wide">
+            <span className="eyebrow">do cadastro de proponentes</span>
+            <span className="prop-escolha">
+              <select value={p.proponenteId || ""} onChange={(e) => escolherProponente(p, painel.proponentes.find((x) => x.id === e.target.value))}>
+                <option value="">— nenhum do cadastro (usar o nome escrito abaixo)</option>
+                {[...painel.proponentes].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")).map((x) => (
+                  <option key={x.id} value={x.id}>{x.nome}{x.situacao === "a_confirmar" ? " (a confirmar)" : ""}</option>
+                ))}
+              </select>
+              <button className="btn sm ghost" onClick={() => irParaAmbiente("cadastros", "proponentes")}>cadastro →</button>
+            </span>
           </div>
-          <div className="prop-l">
-            <span className="eyebrow">perfil jurídico</span>
-            <select value={p.proponente.perfil} onChange={(e) => alterar((c) => { c.proponente.perfil = e.target.value; })}>
-              {PERFIS_JURIDICOS.map((x) => <option key={x}>{x}</option>)}
-            </select>
-          </div>
+          {proponente && (
+            <div className="prop-l wide prop-ficha">
+              <span>{proponente.perfil || "perfil não informado"}</span>
+              {proponente.cnpj && <span>CNPJ {proponente.cnpj}</span>}
+              {proponente.abertura && <span>aberto há {idadeLegivel(anosDeCnpj(proponente.abertura))}</span>}
+              {proponente.cnae && <span>CNAE {proponente.cnae}</span>}
+              {proponente.representante && <span>assina: {proponente.representante}</span>}
+              <a className="lnk" onClick={() => abrirEdicao("proponente", proponente.id)}>editar cadastro</a>
+            </div>
+          )}
+          {!proponente && (
+            <>
+              <div className="prop-l">
+                <span className="eyebrow">nome</span>
+                <input type="text" value={p.proponente.nome} placeholder="pessoa ou empresa que inscreve"
+                  onChange={(e) => alterar((c) => { c.proponente.nome = e.target.value; }, false)} />
+              </div>
+              <div className="prop-l">
+                <span className="eyebrow">perfil jurídico</span>
+                <select value={p.proponente.perfil} onChange={(e) => alterar((c) => { c.proponente.perfil = e.target.value; })}>
+                  {PERFIS_JURIDICOS.map((x) => <option key={x}>{x}</option>)}
+                </select>
+              </div>
+            </>
+          )}
           <div className="prop-l wide">
             <span className="eyebrow">observação</span>
             <input type="text" value={p.proponente.obs} placeholder="sem CPF, RG ou dados bancários aqui"
               onChange={(e) => alterar((c) => { c.proponente.obs = e.target.value; }, false)} />
           </div>
         </div>
+        {avisosProp.length > 0 && (
+          <div className="prop-avisos">
+            {avisosProp.map((a) => <div key={a}>⚠ {a}</div>)}
+          </div>
+        )}
       </div>
 
       <div className="bloco">

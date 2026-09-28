@@ -11,8 +11,9 @@ import { normalizarProjeto, rascunhoVazio } from "../lib/migracao/v3";
 import {
   STATUS_PROJETO, STATUS_TAREFA,
   type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist,
-  type Julgamento, type Projeto, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
+  type Julgamento, type Projeto, type Proponente, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
 } from "../types";
+import type { PlanoProponentes } from "../lib/proponentes";
 
 type RegistroPainel = DadosPainel[ColecaoPainel][number];
 type Documento = Record<string, unknown> & { id: string };
@@ -327,12 +328,57 @@ export function alternarTarefaConcluida(t: Tarefa) {
   salvarRegistro("tarefas", copia);
 }
 
+/** Adia o prazo da tarefa em `dias`, contando de hoje se ela já estava vencida. */
+export function adiarTarefa(t: Tarefa, dias = 7) {
+  const copia = clonar(t);
+  const d = new Date();
+  const hoje = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const base = copia.prazo && copia.prazo > hoje ? copia.prazo : hoje;
+  const nova = new Date(base + "T12:00:00");
+  nova.setDate(nova.getDate() + dias);
+  copia.prazo = nova.getFullYear() + "-" + String(nova.getMonth() + 1).padStart(2, "0") + "-" + String(nova.getDate()).padStart(2, "0");
+  salvarRegistro("tarefas", copia);
+}
+
 /** Avança ou volta o status da tarefa (a fazer ⇄ em andamento ⇄ concluído). */
 export function girarStatusTarefa(t: Tarefa, direcao: -1 | 1) {
   const copia = clonar(t);
   const i = Math.max(0, Math.min(2, STATUS_TAREFA.indexOf(copia.status) + direcao));
   copia.status = STATUS_TAREFA[i];
   salvarRegistro("tarefas", copia);
+}
+
+/* ══════════ Proponentes ══════════ */
+
+/** Liga o projeto a um proponente do cadastro e espelha nome e perfil no texto do projeto. */
+export function escolherProponente(p: Projeto, pr: Proponente | undefined) {
+  const copia = clonar(p);
+  copia.proponenteId = pr ? pr.id : "";
+  if (pr) {
+    copia.proponente = { ...copia.proponente, nome: pr.nome, perfil: pr.perfil || copia.proponente.perfil };
+  }
+  salvarRegistro("projetos", copia);
+}
+
+/** Grava o plano de "criar a partir dos projetos": cadastros novos e vínculos. */
+export function aplicarPlanoProponentes(plano: PlanoProponentes): number {
+  const agora = new Date().toISOString();
+  plano.novos.forEach((pr) => salvarRegistro("proponentes", { ...pr, atualizado: agora }));
+  const { painel } = obterEstado();
+  for (const v of plano.vinculos) {
+    const p = painel.projetos.find((x) => x.id === v.projetoId);
+    if (!p) continue;
+    const copia = clonar(p);
+    copia.proponenteId = v.proponenteId;
+    // A ressalva "(a confirmar)" era deste projeto: vai para a observação do proponente no projeto.
+    if (v.aConfirmar && !/a confirmar/i.test(copia.proponente.obs || "")) {
+      copia.proponente = { ...copia.proponente, obs: ["proponente a confirmar", copia.proponente.obs].filter(Boolean).join(" · ") };
+    }
+    const pr = plano.novos.find((x) => x.id === v.proponenteId);
+    if (pr) copia.proponente = { ...copia.proponente, nome: pr.nome, perfil: pr.perfil || copia.proponente.perfil };
+    salvarRegistro("projetos", copia);
+  }
+  return plano.novos.length;
 }
 
 /* ══════════ Formulários e rascunhos ══════════ */

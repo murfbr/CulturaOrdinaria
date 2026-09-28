@@ -1,16 +1,30 @@
 /* Visão geral dos projetos: todos, em aberto ou arquivados, agrupados por
-   status, com o progresso do formulário, filtros e o "Novo projeto". */
-import { useState } from "react";
+   edital (o status de cada um aparece no cartão e no Pipeline), com o
+   progresso do formulário, filtros e o "Novo projeto". */
+import { useState, type ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { arquivarProjeto, duplicarProjeto } from "../../store/mutacoes";
-import { abrirProjeto } from "../../store/navegacao";
+import { abrirDetalhe, abrirProjeto } from "../../store/navegacao";
 import { editalDoProjeto, nomeCurto, nomeEquipe, nomesArtistas, prazoCurto } from "../../lib/nomes";
 import { resumoRascunho } from "../../lib/simulador/motor";
 import { toast } from "../../components/Toast";
-import { STATUS_PROJETO, type Projeto } from "../../types";
+import { STATUS_EDITAL, STATUS_PROJETO, type Edital, type Projeto } from "../../types";
 import { comparar, relativo } from "../../utils";
 import { ModalNovoProjeto } from "./ModalNovoProjeto";
 import { usarExclusaoProjeto } from "./exclusao";
+
+/** Ordem dos grupos: editais abertos e em fluxo contínuo primeiro, depois
+    previstos, encerrados e normas; dentro de cada faixa, o prazo mais próximo
+    primeiro (sem data vai para o fim da faixa). */
+function compararEditais(a: Edital, b: Edital): number {
+  const oa = STATUS_EDITAL[a.status]?.ordem ?? 9;
+  const ob = STATUS_EDITAL[b.status]?.ordem ?? 9;
+  if (oa !== ob) return oa - ob;
+  const pa = a.prazoIso || "9999";
+  const pb = b.prazoIso || "9999";
+  if (pa !== pb) return pa.localeCompare(pb);
+  return comparar(nomeCurto(a), nomeCurto(b));
+}
 
 /** Barra de progresso do formulário (colado, revisado, rascunho). */
 export function ProgressoFormulario({ p }: { p: Projeto }) {
@@ -42,7 +56,7 @@ export function VisaoGeral() {
   const [artista, setArtista] = useState("");
   const [edital, setEdital] = useState("");
   const [resp, setResp] = useState("");
-  const [ordem, setOrdem] = useState<"status" | "recentes" | "nome">("status");
+  const [ordem, setOrdem] = useState<"edital" | "recentes" | "nome">("edital");
   const exclusao = usarExclusaoProjeto();
 
   const abertos = painel.projetos.filter((p) => !p.arquivado);
@@ -90,20 +104,47 @@ export function VisaoGeral() {
   };
 
   let corpo;
-  if (ordem === "status") {
-    corpo = STATUS_PROJETO.map((s) => {
-      const doStatus = lista.filter((p) => p.status === s.id);
-      if (!doStatus.length) return null;
-      return (
-        <div className="grupo" key={s.id}>
-          <div className="grupo-h">
-            <h3>{s.rotulo}</h3>
-            <span className="n">{doStatus.length} projeto{doStatus.length === 1 ? "" : "s"}</span>
-          </div>
-          <div className="rasc">{doStatus.map(cartao)}</div>
+  if (ordem === "edital") {
+    // Um grupo por edital; "Livre" e "Sem edital" no fim. Dentro do grupo, pela ordem do pipeline.
+    const porStatus = (a: Projeto, b: Projeto) =>
+      STATUS_PROJETO.findIndex((s) => s.id === a.status) - STATUS_PROJETO.findIndex((s) => s.id === b.status)
+      || comparar(a.nome, b.nome);
+    const editais = [...new Set(lista.map((p) => p.editalId).filter(Boolean))]
+      .map((id) => painel.editais.find((e) => e.id === id))
+      .filter((e): e is Edital => Boolean(e))
+      .sort(compararEditais);
+    const semEdital = lista.filter((p) => !editalDoProjeto(p));
+    const grupo = (chave: string, titulo: ReactNode, extra: ReactNode, projetos: Projeto[]) => (
+      <div className="grupo" key={chave}>
+        <div className="grupo-h">
+          <h3>{titulo}</h3>
+          {extra}
+          <span className="n">{projetos.length} projeto{projetos.length === 1 ? "" : "s"}</span>
         </div>
-      );
-    });
+        <div className="rasc">{[...projetos].sort(porStatus).map(cartao)}</div>
+      </div>
+    );
+    corpo = (
+      <>
+        {editais.map((e) => {
+          const st = STATUS_EDITAL[e.status] || STATUS_EDITAL.open;
+          const prazo = e.status !== "closed" && e.prazo ? prazoCurto(e) : "";
+          return grupo(
+            e.id,
+            <a className="lnk" onClick={() => abrirDetalhe("edital", e.id)} title={e.nome}>{nomeCurto(e)}</a>,
+            <>
+              <span className={"badge " + st.classe}>{st.rotulo}</span>
+              {prazo && <span className="plat">prazo {prazo}</span>}
+            </>,
+            lista.filter((p) => p.editalId === e.id),
+          );
+        })}
+        {semEdital.some((p) => p.formId === "livre")
+          && grupo("_livre", "Livre", <span className="plat">sem formulário de edital</span>, semEdital.filter((p) => p.formId === "livre"))}
+        {semEdital.some((p) => p.formId !== "livre")
+          && grupo("_sem", "Sem edital", null, semEdital.filter((p) => p.formId !== "livre"))}
+      </>
+    );
   } else {
     const ordenada = [...lista].sort((a, b) => ordem === "nome"
       ? comparar(a.nome, b.nome)
@@ -118,7 +159,7 @@ export function VisaoGeral() {
           <h2>Projetos</h2>
           <p className="sub">
             Cada projeto é uma candidatura: nasce ligado a um formulário mapeado (e ao edital dele) ou Livre.
-            O status é o antigo pipeline de captação.
+            Aqui eles aparecem agrupados por edital; o status de cada um está no cartão e no Pipeline.
           </p>
         </div>
         <div className="acts">
@@ -150,7 +191,7 @@ export function VisaoGeral() {
           {painel.equipe.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
         </select>
         <select value={ordem} onChange={(e) => setOrdem(e.target.value as typeof ordem)}>
-          <option value="status">agrupar por status</option>
+          <option value="edital">agrupar por edital</option>
           <option value="recentes">editados por último</option>
           <option value="nome">nome A→Z</option>
         </select>

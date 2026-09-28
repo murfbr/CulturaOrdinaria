@@ -7,6 +7,7 @@ export type TipoCampoRegistro =
   | "texto"      // input simples (padrão)
   | "textarea"
   | "date"
+  | "numero"     // número (vazio = sem valor)
   | "select"     // opções fixas (o valor É o rótulo)
   | "opts"       // pares [valor, rótulo]
   | "ref"        // aponta um registro de outra coleção

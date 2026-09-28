@@ -16,12 +16,12 @@ export interface Ambiente {
 
 /** Os sete ambientes do site, com suas abas. */
 export const AMBIENTES: Ambiente[] = [
-  { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"]] },
-  { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["editais", "Editais"], ["formularios", "Formulários"]] },
+  { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
+  { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["cronograma", "Cronograma"], ["calendario", "Calendário"]] },
   { id: "pessoas", rotulo: "Pessoas", abas: [["elenco", "Elenco / Colaboradores"], ["equipe", "Equipe"], ["contatos", "Contatos externos"]] },
   { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
-  { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"]] },
+  { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
 ];
 

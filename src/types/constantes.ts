@@ -5,10 +5,10 @@ import type {
 import type { ResultadoJulgamento, TipoFonte, TipoRegra } from "./contexto";
 import type { StatusCampo } from "./simulador";
 
-/** As oito coleções do Painel, na ordem de exibição. */
+/** As coleções do Painel, na ordem de exibição. */
 export const COLECOES_PAINEL: ColecaoPainel[] = [
   "artistas", "projetos", "editais", "tarefas",
-  "equipe", "elenco", "contatos", "reunioes",
+  "equipe", "elenco", "contatos", "reunioes", "proponentes",
 ];
 
 /** Nomes das coleções do Painel, para o exportar/importar e afins. */
@@ -16,7 +16,11 @@ export const ROTULO_COLECAO: Record<ColecaoPainel, string> = {
   artistas: "Artistas", projetos: "Projetos", editais: "Editais & fontes",
   tarefas: "Tarefas", equipe: "Equipe do coletivo",
   elenco: "Elenco / colaboradores", contatos: "Contatos externos", reunioes: "Reuniões",
+  proponentes: "Proponentes",
 };
+
+/** Situação do cadastro de proponente. */
+export const SITUACAO_PROPONENTE: [string, string][] = [["a_confirmar", "A confirmar"], ["confirmado", "Confirmado"]];
 
 /** Status do projeto, na ordem do pipeline. `fim` = encerra o ciclo (vai para o fim do quadro). */
 export const STATUS_PROJETO: { id: StatusProjeto; rotulo: string; classe: string; fim?: boolean }[] = [

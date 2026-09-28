@@ -119,6 +119,20 @@ export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclus
     };
   }
 
+  if (chave === "proponente") {
+    const projetos = painel.projetos.filter((p) => p.proponenteId === id);
+    return {
+      vinculos: [],
+      notas: projetos.length
+        ? [n(projetos.length, "projeto perde", "projetos perdem") + " o vínculo com o cadastro e fica com o nome escrito como está."]
+        : [],
+      excluir() {
+        projetos.forEach((p) => salvarRegistro("projetos", { ...p, proponenteId: "" }));
+        excluirRegistro("proponentes", id);
+      },
+    };
+  }
+
   if (chave === "reuniao") {
     const tarefas = tarefasDe("reuniao:" + id);
     return {

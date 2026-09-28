@@ -80,6 +80,8 @@ const observadores: Record<string, Set<Observador>> = {};
 const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 const aoStatus: Set<(s: StatusSalvamento) => void> = new Set();
 let statusAtual: StatusSalvamento = { texto: "carregando…", classe: "" };
+/** Coleções cuja última resposta ainda veio só do cache local (sem confirmação do servidor). */
+const emCache = new Set<string>();
 
 function carregarEspelho(): Record<string, Mapa> {
   try { return JSON.parse(localStorage.getItem(CHAVE_LOCAL) || "{}").colls || {}; }
@@ -105,6 +107,17 @@ function avisar(colecao: string, confirmado = !firebaseAtivo) {
 function mudarStatus(s: StatusSalvamento) {
   statusAtual = s;
   for (const cb of aoStatus) cb(s);
+}
+
+/** Estado de sincronização vindo das escutas. Não passa por cima de um estado de
+    gravação ("salvando…", "salvo HH:MM", "sem conexão"): esses já dizem mais. */
+function statusDaSincronizacao() {
+  const t = statusAtual.texto;
+  const deGravacao = t.startsWith("salv") || t.startsWith("sem conexão");
+  if (deGravacao) return;
+  mudarStatus(emCache.size
+    ? { texto: "sincronizando…", classe: "sv" }
+    : { texto: "sincronizado", classe: "ok" });
 }
 
 /* No modo local, outras abas avisam via evento "storage". */
@@ -163,10 +176,26 @@ export const Banco = {
 
     const ligar = () => {
       if (desligado || !db) return;
+      let jaRecebeu = false;
+      let confirmou = false;
       parar = onSnapshot(
         collection(db, colecao),
+        // Com os metadados, o SDK também avisa quando o servidor confirma o que
+        // veio do cache (sem mudança de dado). Sem isso o "sincronizando…" ficava
+        // preso para sempre em quem já tinha tudo em cache.
+        { includeMetadataChanges: true },
         (snap) => {
           falhas = 0;
+          if (snap.metadata.fromCache) emCache.add(colecao); else emCache.delete(colecao);
+          if (jaRecebeu && snap.docChanges().length === 0) {
+            // Só metadados mudaram (confirmação do servidor, gravação aceita):
+            // nada a reconciliar. Se é a confirmação, avisa quem espera por ela.
+            if (!snap.metadata.fromCache && !confirmou) { confirmou = true; avisar(colecao, true); }
+            statusDaSincronizacao();
+            return;
+          }
+          jaRecebeu = true;
+          if (!snap.metadata.fromCache) confirmou = true;
           const remoto: Mapa = {};
           snap.forEach((d) => { remoto[d.id] = clonar(d.data()) as Documento; });
 
@@ -197,11 +226,12 @@ export const Banco = {
 
           espelho[colecao] = mapa;
           salvarEspelho();
-          mudarStatus({ texto: snap.metadata.fromCache ? "sincronizando…" : "sincronizado", classe: snap.metadata.fromCache ? "sv" : "ok" });
+          statusDaSincronizacao();
           avisar(colecao, !snap.metadata.fromCache);
           subir.forEach((id) => { void this.descarregar(colecao, id); });
         },
         () => {
+          emCache.add(colecao);
           mudarStatus({ texto: "banco indisponível — tentando reconectar…", classe: "er" });
           religar = setTimeout(ligar, Math.min(30000, 1000 * 2 ** falhas++));
         },
@@ -215,6 +245,7 @@ export const Banco = {
       desligado = true;
       clearTimeout(religar);
       observadores[colecao].delete(cb);
+      emCache.delete(colecao);
       parar();
     };
   },

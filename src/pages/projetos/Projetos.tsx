@@ -8,6 +8,7 @@ import { fecharDetalhe, usarNavegacao } from "../../store/navegacao";
 import { VisaoGeral } from "./VisaoGeral";
 import { Pipeline } from "./Pipeline";
 import { FichaProjeto } from "./FichaProjeto";
+import { BancoTextos } from "./BancoTextos";
 
 export function Projetos() {
   const nav = usarNavegacao();
@@ -23,6 +24,7 @@ export function Projetos() {
   let tela;
   if (detalhe && projeto) tela = <FichaProjeto p={projeto} sub={detalhe.sub || "geral"} />;
   else if (nav.aba === "pipeline") tela = <Pipeline />;
+  else if (nav.aba === "textos") tela = <BancoTextos />;
   else tela = <VisaoGeral />;
 
   return <div id="sim">{tela}</div>;

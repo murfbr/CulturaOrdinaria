@@ -88,21 +88,29 @@ function converterContextoImportado(c: Record<string, unknown>) {
 
 /* ── aplicar no Painel: mesclar ou substituir ── */
 
-export type ModoPainel = "mesclar" | "substituir";
+/** mesclar = troca o registro inteiro de mesmo id; campos = só os campos que vieram no
+    arquivo mudam (o resto do registro fica); substituir = a coleção fica igual ao arquivo. */
+export type ModoPainel = "mesclar" | "substituir" | "campos";
 
 /**
  * Mescla: registros com o mesmo id são atualizados, os demais entram no fim.
  * Nada é apagado.
  */
-function mesclarPainel(novo: DadosPainel): string {
+function mesclarPainel(novo: DadosPainel, soCampos = false): string {
   let criados = 0, atualizados = 0;
   for (const c of COLECOES_PAINEL) {
     for (const registro of (novo[c] || []) as RegistroPainel[]) {
-      if (obterEstado().painel[c].some((x) => x.id === registro.id)) atualizados++; else criados++;
-      salvarRegistro(c, registro);
+      const existente = obterEstado().painel[c].find((x) => x.id === registro.id);
+      if (existente) atualizados++; else criados++;
+      if (soCampos && existente) {
+        // Só os campos que vieram no arquivo mudam; o resto do registro fica como está.
+        salvarRegistro(c, { ...clonar(existente), ...clonar(registro) } as RegistroPainel);
+      } else {
+        salvarRegistro(c, c === "projetos" ? normalizarProjeto(registro as never) as unknown as RegistroPainel : registro);
+      }
     }
   }
-  return `Painel: ${criados} novo(s), ${atualizados} atualizado(s)`;
+  return `Painel: ${criados} novo(s), ${atualizados} atualizado(s)` + (soCampos ? " (só os campos do arquivo)" : "");
 }
 
 /**
@@ -126,7 +134,23 @@ function substituirPainel(novo: DadosPainel): string {
 }
 
 const aplicarPainel = (novo: DadosPainel, modo: ModoPainel): string =>
-  modo === "substituir" ? substituirPainel(novo) : mesclarPainel(novo);
+  modo === "substituir" ? substituirPainel(novo) : mesclarPainel(novo, modo === "campos");
+
+/** No modo "campos": junta com o que já existe (em rascunhos, também resposta a resposta). */
+function juntarRascunho(r: Rascunho): Rascunho {
+  const atual = obterEstado().rascunhos[r.id];
+  if (!atual) return r;
+  return {
+    ...clonar(atual), ...clonar(r),
+    valores: { ...(atual.valores || {}), ...(r.valores || {}) },
+    status: { ...(atual.status || {}), ...(r.status || {}) },
+    notas: { ...(atual.notas || {}), ...(r.notas || {}) },
+    anexos: { ...(atual.anexos || {}), ...(r.anexos || {}) },
+  } as Rascunho;
+}
+function juntar<T extends { id: string }>(atual: Record<string, T>, novo: T): T {
+  return atual[novo.id] ? { ...clonar(atual[novo.id]), ...clonar(novo) } : novo;
+}
 
 /** Rascunho avulso importado vira um projeto novo (id novo se já existir um igual). */
 function adicionarRascunhoImportado(r: Rascunho): boolean {
@@ -155,15 +179,17 @@ function aplicarV3(painel: DadosPainel | null, rascunhos: Record<string, Rascunh
   if (painel) partes.push(aplicarPainel(painel, modo));
   // Respostas entram com o mesmo id: é o que liga cada uma ao seu projeto.
   const rs = Object.values(rascunhos || {});
-  rs.forEach((r) => salvarRascunho(normalizarRascunho(clonar(r)), true));
+  rs.forEach((r) => salvarRascunho(normalizarRascunho(modo === "campos" ? juntarRascunho(clonar(r)) : clonar(r)), true));
   if (rs.length) partes.push(rs.length + " resposta(s) de formulário");
   const fs = Object.values(formularios || {});
   fs.forEach((f) => Banco.gravar("formularios", f.id, { ...(clonar(f) as unknown as Documento), atualizado: new Date().toISOString() }, true));
   if (fs.length) partes.push(fs.length + " formulário(s)");
   if (contexto) {
-    Object.values(contexto.fichas || {}).forEach(salvarFicha);
-    Object.values(contexto.regras || {}).forEach(salvarRegra);
-    Object.values(contexto.julg || {}).forEach(salvarJulgamento);
+    const est = obterEstado();
+    const campos = modo === "campos";
+    Object.values(contexto.fichas || {}).forEach((f) => salvarFicha(campos ? juntar(est.fichas, f) : f));
+    Object.values(contexto.regras || {}).forEach((r) => salvarRegra(campos ? juntar(est.regras, r) : r));
+    Object.values(contexto.julg || {}).forEach((j) => salvarJulgamento(campos ? juntar(est.julgamentos, j) : j));
     partes.push("contexto");
   }
   return "Importado: " + partes.join(", ");
@@ -202,7 +228,8 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
         const ctxBruto = j.contexto ? converterContextoImportado(j.contexto as Record<string, unknown>) : null;
         const rascunhos = (j.rascunhos || {}) as Record<string, Rascunho>;
         const formularios = (j.formularios || {}) as Record<string, Formulario>;
-        if (antigo && painelBruto) {
+        // No modo "campos" o pacote é parcial por definição: projeto sem status não é v2.
+        if (antigo && painelBruto && modo !== "campos") {
           const convertido = converterV2(
             converterPainelImportado(painelBruto) as unknown as PainelV2, clonar(rascunhos),
             { fichas: ctxBruto?.fichas || {}, regras: ctxBruto?.regras || {}, julg: ctxBruto?.julg || {} },
@@ -211,7 +238,8 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
           return aplicarV3(dados.painel, dados.rascunhos, formularios, ctxBruto ? dados.contexto : null, modo);
         }
         const painel = colecoes.length && painelBruto ? converterPainelImportado(painelBruto) : null;
-        if (painel) painel.projetos = (painel.projetos || []).map((p) => normalizarProjeto(p));
+        // No modo "campos" o projeto pode vir parcial ({id, status}): normalizar encheria de padrões.
+        if (painel && modo !== "campos") painel.projetos = (painel.projetos || []).map((p) => normalizarProjeto(p));
         return aplicarV3(painel, rascunhos, formularios, ctxBruto, modo);
       },
     };
