@@ -5,8 +5,8 @@
    Central quando vinculado; senão, texto. */
 import { Fragment } from "react";
 import {
-  N, ORDEM_STATUS_CUSTO, R, R2, ROTULO_STATUS_CUSTO, br, casarItem, comSinal, fornecedores, nomeFornecedor,
-  pct, previsto, soma, valor, type Calculo,
+  N, ORDEM_STATUS_CUSTO, R, R2, ROTULO_STATUS_CUSTO, aplicarStatusCusto, br, casarItem, comSinal, fornecedores, nomeFornecedor,
+  pct, previsto, soma, totaisPorStatus, valor, type Calculo,
 } from "../calculo";
 import { uid } from "../../../utils";
 import { alterarEdicao } from "../dados";
@@ -35,7 +35,7 @@ export function Orcamento({ painel, e, k }: { painel: Painel; e: Edicao; k: Calc
   const totP = soma(e.custos, previsto);
   const totR = soma(e.custos, (c) => c.realizado);
   const temRealizado = e.custos.some((c) => c.realizado != null);
-  const pago = soma(e.custos.filter((c) => c.status === "pago"), valor);
+  const t = totaisPorStatus(e);
   const totAnterior = anterior ? soma(anterior.custos, (c) => c.realizado) : 0;
   const usados = new Set(comparar ? e.custos.map((x) => casarItem(x, anterior)).filter((m): m is Custo => Boolean(m)).map((m) => m.id) : []);
 
@@ -48,9 +48,13 @@ export function Orcamento({ painel, e, k }: { painel: Painel; e: Edicao; k: Calc
       aoAplicar: (s) => {
         if (!s.item) return;
         alterarEdicao(e.id, (ed) => {
-          const alvo = ed.custos.find((x) => x.id === atual.id);
-          if (alvo) Object.assign(alvo, s);
-          else ed.custos.push({ ...atual, ...s } as Custo);
+          const i = ed.custos.findIndex((x) => x.id === atual.id);
+          const antes = i >= 0 ? ed.custos[i] : atual;
+          const editado = { ...antes, ...s } as Custo;
+          // Regra do pago: realizado em branco com status pago vira o orçado; exceção digitada fica.
+          const final = aplicarStatusCusto({ ...editado, status: antes.status }, editado.status);
+          if (i >= 0) ed.custos[i] = final;
+          else ed.custos.push(final);
         });
       },
       aoExcluir: c ? () => {
@@ -59,11 +63,13 @@ export function Orcamento({ painel, e, k }: { painel: Painel; e: Edicao; k: Calc
     });
   }
 
-  /** previsto → contratado → pago → previsto. */
+  /** previsto → contratado → pago → previsto; pago preenche o realizado com o orçado (ver aplicarStatusCusto). */
   function girarStatus(c: Custo) {
     alterarEdicao(e.id, (ed) => {
-      const alvo = ed.custos.find((x) => x.id === c.id);
-      if (alvo) alvo.status = ORDEM_STATUS_CUSTO[(ORDEM_STATUS_CUSTO.indexOf(alvo.status) + 1) % 3];
+      const i = ed.custos.findIndex((x) => x.id === c.id);
+      if (i < 0) return;
+      const proximo = ORDEM_STATUS_CUSTO[(ORDEM_STATUS_CUSTO.indexOf(ed.custos[i].status) + 1) % 3];
+      ed.custos[i] = aplicarStatusCusto(ed.custos[i], proximo);
     });
   }
 
@@ -101,11 +107,19 @@ export function Orcamento({ painel, e, k }: { painel: Painel; e: Edicao; k: Calc
               <div className="sdp-card"><div className="k">Diferença</div><div className={"v " + (totP > totAnterior ? "red" : "green")}>{comSinal(totP - totAnterior)}</div><div className="foot">{pctTexto(totP, totAnterior)} vs. {anterior.nome}</div></div>
             </>
           ) : (
-            <div className="sdp-card"><div className="k">Pago</div><div className="v green">{R(pago)}</div></div>
+            <div className="sdp-card"><div className="k">Contratado</div><div className="v">{R(t.contratado)}</div><div className="foot">inclui os pagos</div></div>
           )}
           <div className="sdp-card hl"><div className="k">Resultado projetado</div><div className="v">{R(k.resultado)}</div><div className="foot">com a simulação: {N(e.sim?.publico)} pessoas · bar {R2(e.sim?.ticketBar)}/presente</div></div>
         </div>
       )}
+
+      <div className="ksub">Pagamentos</div>
+      <div className="sdp-grid sdp-g4">
+        <div className="sdp-card"><div className="k">Contratado</div><div className="v">{R(t.contratado)}</div><div className="foot">{t.itens.contratado + t.itens.pago} itens, inclui os pagos</div></div>
+        <div className="sdp-card"><div className="k">Pago</div><div className="v green">{R(t.pago)}</div><div className="foot">{t.itens.pago} itens</div></div>
+        <div className={"sdp-card" + (t.aPagar > 0 ? " hl" : "")}><div className="k">A pagar</div><div className="v">{R(t.aPagar)}</div><div className="foot">contratado − pago</div></div>
+        <div className="sdp-card"><div className="k">Ainda previsto</div><div className="v">{R(t.emAberto)}</div><div className="foot">{t.itens.previsto} itens sem contrato</div></div>
+      </div>
 
       {comparar ? (() => {
         const catAnterior = new Map<string, number>();

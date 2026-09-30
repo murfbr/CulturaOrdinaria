@@ -1,7 +1,7 @@
 /* Capa da edição: data, horário, local e lineup; faixa com os números
    (fechada: receita, despesa, resultado, público; em produção: contagem,
    tarefas, custos previstos, resultado projetado); editar os dados. */
-import { N, R, ROTULO_STATUS_EDICAO, brCompleta, diasAte, hojeIso, tarefasDaEdicao, type Calculo } from "../calculo";
+import { N, R, ROTULO_STATUS_EDICAO, brCompleta, diasAte, hojeIso, tarefasDaEdicao, totaisPorStatus, type Calculo } from "../calculo";
 import { alterarEdicao } from "../dados";
 import { usarModalCampos } from "../ModalCampos";
 import { CAMPOS_DADOS_EDICAO } from "./pedidos";
@@ -14,6 +14,7 @@ export function CapaEdicao({ painel, e, k }: { painel: Painel; e: Edicao; k: Cal
   const tarefas = tarefasDaEdicao(painel, e);
   const feitas = tarefas.filter((t) => t.status === "feito").length;
   const atrasadas = tarefas.filter((t) => t.status !== "feito" && t.prazo && t.prazo < hoje).length;
+  const totais = totaisPorStatus(e);
 
   function editar() {
     modal.abrir({
@@ -49,7 +50,7 @@ export function CapaEdicao({ painel, e, k }: { painel: Painel; e: Edicao; k: Cal
               <div className="sdp-cell">
                 <div className="k">Custos previstos</div>
                 <div className="v">{R(k.operacao)}</div>
-                <div className="foot">{e.custos.filter((c) => c.status === "pago").length} pagos · {e.custos.filter((c) => c.status === "contratado").length} contratados</div>
+                <div className="foot">pago {R(totais.pago)} · contratado {R(totais.contratado)}</div>
               </div>
               <div className="sdp-cell">
                 <div className="k">Resultado projetado</div>

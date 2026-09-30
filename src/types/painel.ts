@@ -1,3 +1,5 @@
+import type { ResumoEdicao } from "./paginas";
+
 /* Tipos das entidades do Painel (as nove coleções de gestão).
    Os nomes dos campos são exatamente os do artefato original — e são os nomes
    das propriedades dos documentos no Firestore. Onde o artefato usava tuplas
@@ -142,6 +144,8 @@ export interface Projeto {
   obs: string;
   /** De onde veio na migração v2 → v3 (projeto e candidatura antigos). */
   origem?: { projeto?: string; candidatura?: string; rascunho?: string };
+  /** Totais por edição, gravados pela página própria do projeto (o detalhe fica na página). */
+  resumoEdicoes?: ResumoEdicao[];
   _ord?: number;
   atualizado?: string;
 }

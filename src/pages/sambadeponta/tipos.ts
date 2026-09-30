@@ -5,7 +5,7 @@
    No banco: `paginas/sambadeponta` (a festa) e `paginas/sambadeponta/edicoes/*`
    (uma edição por documento). Tarefas moram em `tarefas`, fornecedores em
    `contatos`, fases e categorias em `presets/festa`. */
-import type { Contato, PessoaEquipe, PresetFesta, Projeto, Tarefa } from "../../types";
+import type { Contato, PessoaEquipe, PresetFesta, Projeto, StatusEdicao, Tarefa } from "../../types";
 
 export interface Meta {
   rev: number;
@@ -47,7 +47,7 @@ export interface PaginaFesta {
   atualizado?: string;
 }
 
-export type StatusEdicao = "planejada" | "execucao" | "fechada";
+export type { StatusEdicao };
 export type StatusCusto = "previsto" | "contratado" | "pago";
 
 export interface Receitas { bar: number | null; porta: number | null; comida: number | null; sympla: number | null }

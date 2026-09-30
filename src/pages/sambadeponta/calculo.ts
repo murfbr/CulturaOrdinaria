@@ -2,10 +2,10 @@
    iguais, agora puras sobre o Painel. Nada aqui grava; as telas chamam e
    mostram. Formatação de dinheiro, número e data também mora aqui. */
 import { uid } from "../../utils";
-import type { Contato, Tarefa } from "../../types";
-import type { Custo, Edicao, Painel, Simulacao, Socio, StatusCusto, StatusEdicao } from "./tipos";
+import { ROTULO_STATUS_EDICAO, type Contato, type ResumoEdicao, type Tarefa } from "../../types";
+import type { Custo, Edicao, Painel, Simulacao, Socio, StatusCusto } from "./tipos";
 
-export const ROTULO_STATUS_EDICAO: Record<StatusEdicao, string> = { fechada: "Fechada", execucao: "Em execução", planejada: "Planejada" };
+export { ROTULO_STATUS_EDICAO };
 export const ROTULO_STATUS_CUSTO: Record<StatusCusto, string> = { previsto: "previsto", contratado: "contratado", pago: "pago" };
 export const ORDEM_STATUS_CUSTO: StatusCusto[] = ["previsto", "contratado", "pago"];
 
@@ -86,6 +86,28 @@ export const valor = (c: Custo): number => (c.realizado != null ? c.realizado : 
 /** Repasse (comida): entra igual em receita e despesa, não é custo de verdade. */
 export const ehRepasse = (c: Custo): boolean => /repasse/i.test(c.item || "") || /repasse/i.test(c.obs || "");
 
+/**
+ * Regra do pago: pagar é o dinheiro sair, então o realizado é o orçado
+ * (quantidade × unitário), preenchido sozinho, salvo exceção já informada no
+ * editar. Ao deixar de ser pago, o realizado preenchido sozinho (igual ao
+ * orçado) é apagado; um valor diferente, digitado como exceção, fica.
+ * Recebe a linha com o status ANTIGO e devolve a linha com o novo.
+ */
+export function aplicarStatusCusto(linha: Custo, status: StatusCusto): Custo {
+  const c: Custo = { ...linha, status };
+  const orcado = previsto(linha);
+  if (status === "pago" && linha.realizado == null) {
+    c.realizado = orcado;
+    c.qtdReal = linha.qtd;
+    c.unitReal = linha.unit;
+  } else if (status !== "pago" && linha.status === "pago" && linha.realizado != null && linha.realizado === orcado) {
+    c.realizado = null;
+    delete c.qtdReal;
+    delete c.unitReal;
+  }
+  return c;
+}
+
 const chave = (s: string) =>
   String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
 
@@ -109,6 +131,47 @@ export function ultimoPreco(painel: Painel, contatoId: string): { valor: number;
     if (linhas.length) return { valor: soma(linhas, (c) => c.realizado), edicao: e };
   }
   return null;
+}
+
+/* ══════════ pagamentos ══════════ */
+
+export interface TotaisStatus {
+  /** Soma de quantidade × unitário. */
+  previsto: number;
+  /** Linhas contratadas ou pagas. */
+  contratado: number;
+  pago: number;
+  /** contratado − pago. */
+  aPagar: number;
+  /** Linhas ainda só previstas (sem contrato). */
+  emAberto: number;
+  /** Soma do realizado informado. */
+  realizado: number;
+  itens: Record<StatusCusto, number>;
+}
+
+/**
+ * A matemática do orçamento por status. O valor de cada linha é o realizado
+ * quando informado, senão o previsto. Contratado inclui os pagos; a pagar é
+ * contratado − pago; em aberto é o que ainda não foi contratado.
+ */
+export function totaisPorStatus(e: Edicao): TotaisStatus {
+  const itens: Record<StatusCusto, number> = { previsto: 0, contratado: 0, pago: 0 };
+  let contratado = 0;
+  let pago = 0;
+  let emAberto = 0;
+  for (const c of e.custos) {
+    const s: StatusCusto = ORDEM_STATUS_CUSTO.includes(c.status) ? c.status : "previsto";
+    itens[s]++;
+    const v = valor(c);
+    if (s === "pago") { pago += v; contratado += v; }
+    else if (s === "contratado") contratado += v;
+    else emAberto += v;
+  }
+  return {
+    previsto: soma(e.custos, previsto), contratado, pago, aPagar: contratado - pago, emAberto,
+    realizado: soma(e.custos, (c) => c.realizado), itens,
+  };
 }
 
 /* ══════════ resultado da edição ══════════ */
@@ -201,6 +264,18 @@ export function acerto(painel: Painel, e: Edicao): LinhaAcerto[] {
     );
     return { socio: s, pagou, devido: k.porSocio, saldo: pagou + k.porSocio };
   });
+}
+
+/** Os totais que a Central recebe (Projeto.resumoEdicoes): arredondados a centavos, sem carimbo de tempo. */
+export function resumoDaEdicao(painel: Painel, e: Edicao): ResumoEdicao {
+  const k = calcular(painel, e);
+  const t = totaisPorStatus(e);
+  const centavos = (n: number) => Math.round(n * 100) / 100;
+  return {
+    id: e.id, nome: e.nome, data: e.data || "", status: e.status,
+    previsto: centavos(t.previsto), contratado: centavos(t.contratado), pago: centavos(t.pago),
+    realizado: centavos(t.realizado), receita: centavos(k.receita), resultado: centavos(k.resultado),
+  };
 }
 
 /* ══════════ indicadores (comparativo) ══════════ */

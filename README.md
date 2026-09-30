@@ -98,7 +98,10 @@ e o registro em `presets/paginas`. O que a Central já tem, a página usa e não
 repete: as tarefas de cada edição são documentos de `tarefas` (origem `proj:<id>`,
 campos `edicaoId` e `fase`) e aparecem no quadro, no Resumo e na ficha do projeto;
 os fornecedores são `contatos` do tipo Fornecedor, e a linha de custo aponta
-`contatoId`; o nome da festa é o nome do projeto. O que só a página usa fica em
+`contatoId`; o nome da festa é o nome do projeto. Os totais por edição (previsto,
+contratado, pago, realizado, receita, resultado) a página grava no projeto
+(`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições e o
+cartão, a próxima edição; o detalhe nunca sai da página. O que só a página usa fica em
 `paginas/<slug>` (festa) e `paginas/<slug>/edicoes` (uma edição por documento).
 A primeira abertura semeia esses documentos a partir do JSON do artefato original.
 As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar a

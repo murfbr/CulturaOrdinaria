@@ -4,3 +4,4 @@ export * from "./simulador";
 export * from "./contexto";
 export * from "./constantes";
 export * from "./presets";
+export * from "./paginas";

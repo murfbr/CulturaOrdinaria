@@ -15,6 +15,7 @@ import { PERFIS_JURIDICOS } from "../../data";
 import { ROTULO_STATUS_PROJETO, STATUS_EDITAL, type Projeto, type StatusProjeto } from "../../types";
 import { clonar, formatarData, url } from "../../utils";
 import { alertaVencido } from "../../lib/prazos";
+import { EdicoesDoProjeto } from "./EdicoesDoProjeto";
 
 export function GeralProjeto({ p }: { p: Projeto }) {
   const { painel, rascunhos, formularios } = usarCentral();
@@ -92,6 +93,8 @@ export function GeralProjeto({ p }: { p: Projeto }) {
         {pagina && linha("Página própria", <a href={"/" + pagina.slug + "/"}>{pagina.titulo} ↗</a>)}
         {p.obs && linha("Observações", <span style={{ whiteSpace: "pre-wrap" }}>{p.obs}</span>)}
       </div>
+
+      <EdicoesDoProjeto p={p} />
 
       {edital?.alertas?.length ? (
         <div className="bloco alerta-bloco">

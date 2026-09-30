@@ -11,6 +11,7 @@ import { toast } from "../../components/Toast";
 import { STATUS_EDITAL, STATUS_PROJETO, type Edital, type Projeto } from "../../types";
 import { comparar, relativo } from "../../utils";
 import { ModalNovoProjeto } from "./ModalNovoProjeto";
+import { ResumoEdicoesCartao } from "./EdicoesDoProjeto";
 import { usarExclusaoProjeto } from "./exclusao";
 
 /** Ordem dos grupos: editais abertos e em fluxo contínuo primeiro, depois
@@ -90,6 +91,7 @@ export function VisaoGeral() {
           {paginaDoProjeto(p.id) && <a className="chip" href={"/" + paginaDoProjeto(p.id)!.slug + "/"} title="página própria do projeto">página ↗</a>}
         </div>
         <ProgressoFormulario p={p} />
+        <ResumoEdicoesCartao p={p} />
         <div className="meta">
           {p.respId ? nomeEquipe(p.respId) + " · " : ""}editado {relativo(p.atualizado)}
           <span className="sp">

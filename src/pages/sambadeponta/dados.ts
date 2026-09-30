@@ -6,18 +6,23 @@
    O Painel que as telas recebem é montado em memória a partir disso tudo.
    Tudo passa pelo `Banco`: tempo real, offline, autoria e log de graça.
 
+   Integração com a Central: as tarefas são da Central; os fornecedores são
+   contatos; e os TOTAIS de cada edição (previsto, contratado, pago,
+   realizado, receita, resultado) vão para o documento do projeto a cada
+   mudança (`Projeto.resumoEdicoes`). O detalhe fica só aqui.
+
    Semente: quando o banco confirma que a página não existe (e a Equipe, os
-   contatos e os presets já responderam), o JSON do artefato vira os
-   documentos de cima, uma vez só. */
+   contatos, os projetos e os presets já responderam), o JSON do artefato vira
+   os documentos de cima, uma vez só. */
 import { useMemo, useSyncExternalStore } from "react";
 import { Banco } from "../../services/banco";
 import { clonar, uid } from "../../utils";
 import {
-  assinarEstado, colecaoConfirmada, iniciarDados, obterEstado, presetFesta, usarCentral,
+  assinarEstado, colecaoConfirmada, iniciarDados, obterEstado, presetFesta, usarCentral, type EstadoCentral,
 } from "../../store/central";
 import { excluirRegistro, salvarRegistro } from "../../store/mutacoes";
 import { STATUS_TAREFA, type Contato, type Tarefa } from "../../types";
-import { criarProximaEdicao, hojeIso } from "./calculo";
+import { criarProximaEdicao, hojeIso, resumoDaEdicao } from "./calculo";
 import { PROJETO_ID, SLUG, converterArtefato } from "./semente";
 import type { Edicao, PaginaFesta, Painel } from "./tipos";
 
@@ -38,7 +43,7 @@ export function iniciarSambaDePonta() {
   if (ligado) return;
   ligado = true;
   iniciarDados(["tarefas", "equipe", "contatos", "projetos"]);
-  assinarEstado(talvezSemear);
+  assinarEstado(() => { talvezSemear(); sincronizarResumo(); });
   Banco.assinarDocumento(COLECAO_PAGINAS, SLUG, (documento, confirmado) => {
     pagina = (documento as unknown as PaginaFesta) || null;
     if (confirmado) paginaConfirmada = true;
@@ -48,13 +53,14 @@ export function iniciarSambaDePonta() {
   Banco.assinar(COLECAO_EDICOES, (mapa) => {
     edicoes = mapa as unknown as Record<string, Edicao>;
     publicar();
+    sincronizarResumo();
   });
 }
 
 /** Primeira abertura: a página não existe no banco e o resto já respondeu → grava o JSON do artefato. */
 function talvezSemear() {
   if (semeou || !paginaConfirmada || pagina) return;
-  if (!["equipe", "contatos", "presets"].every(colecaoConfirmada)) return;
+  if (!["equipe", "contatos", "projetos", "presets"].every(colecaoConfirmada)) return;
   semeou = true;
   void import("./semente.json").then(({ default: json }) => {
     const { painel, presets } = obterEstado();
@@ -68,6 +74,38 @@ function talvezSemear() {
     s.edicoes.forEach((e) => Banco.gravar(COLECAO_EDICOES, e.id, e as unknown as Documento, true));
     Banco.gravar(COLECAO_PAGINAS, SLUG, s.pagina as unknown as Documento, true);
   });
+}
+
+/** Monta o Painel que as telas usam, a partir da página, das edições e do store da Central. */
+function montarPainel(p: PaginaFesta | null, mapa: Record<string, Edicao>, central: EstadoCentral): Painel | null {
+  if (!p) return null;
+  const lista = Object.values(mapa).sort((a, b) => a.num - b.num);
+  const ids = new Set(lista.map((e) => e.id));
+  const projeto = central.painel.projetos.find((x) => x.id === p.projetoId);
+  const registro = (central.presets.paginas?.paginas || []).find((x) => x.slug === SLUG);
+  return {
+    pagina: p,
+    titulo: projeto?.nome || registro?.titulo || "Ponta de Lança",
+    edicoes: lista,
+    presets: presetFesta(),
+    projeto,
+    tarefas: central.painel.tarefas.filter((t) => t.edicaoId && ids.has(t.edicaoId)),
+    equipe: central.painel.equipe,
+    contatos: central.painel.contatos,
+  };
+}
+
+/**
+ * Os totais por edição vão para o documento do projeto (Projeto.resumoEdicoes).
+ * Chamado a cada mudança das edições e do store; só grava quando o resumo
+ * mudou de fato, então chamar à toa não custa nada e não entra em laço.
+ */
+function sincronizarResumo() {
+  const painel = montarPainel(pagina, edicoes, obterEstado());
+  if (!painel?.projeto) return;
+  const novo = painel.edicoes.map((e) => resumoDaEdicao(painel, e));
+  if (JSON.stringify(painel.projeto.resumoEdicoes || []) === JSON.stringify(novo)) return;
+  salvarRegistro("projetos", { ...clonar(painel.projeto), resumoEdicoes: novo }, false);
 }
 
 function usarEstadoDaPagina() {
@@ -88,23 +126,7 @@ export function usarSambaDePonta(): Painel | null {
   const p = usarEstadoDaPagina();
   const mapa = usarEdicoes();
   const central = usarCentral();
-  return useMemo(() => {
-    if (!p) return null;
-    const lista = Object.values(mapa).sort((a, b) => a.num - b.num);
-    const ids = new Set(lista.map((e) => e.id));
-    const projeto = central.painel.projetos.find((x) => x.id === p.projetoId);
-    const registro = (central.presets.paginas?.paginas || []).find((x) => x.slug === SLUG);
-    return {
-      pagina: p,
-      titulo: projeto?.nome || registro?.titulo || "Ponta de Lança",
-      edicoes: lista,
-      presets: presetFesta(),
-      projeto,
-      tarefas: central.painel.tarefas.filter((t) => t.edicaoId && ids.has(t.edicaoId)),
-      equipe: central.painel.equipe,
-      contatos: central.painel.contatos,
-    };
-  }, [p, mapa, central]);
+  return useMemo(() => montarPainel(p, mapa, central), [p, mapa, central]);
 }
 
 /* ══════════ gravação ══════════ */
@@ -119,7 +141,7 @@ export function alterarPagina(mudar: (p: PaginaFesta) => void, rapido = true) {
   Banco.gravar(COLECAO_PAGINAS, SLUG, copia as unknown as Documento, rapido);
 }
 
-/** Muda uma edição (pelo id) e grava só o documento dela. */
+/** Muda uma edição (pelo id) e grava só o documento dela. Os totais seguem para o projeto pela escuta. */
 export function alterarEdicao(id: string, mudar: (e: Edicao) => void, rapido = true) {
   const atual = edicoes[id];
   if (!atual) return;
