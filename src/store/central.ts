@@ -14,8 +14,9 @@ import { useSyncExternalStore } from "react";
 import { Banco } from "../services/banco";
 import { clonar } from "../utils";
 import {
-  COLECOES_PAINEL, type Candidatura, type DadosPainel, type Ficha, type Formulario,
-  type ItemLixeira, type Julgamento, type Projeto, type Rascunho, type Regra,
+  COLECOES_PAINEL, PRESET_FESTA_PADRAO, type Candidatura, type ColecaoPainel, type DadosPainel, type Ficha,
+  type Formulario, type ItemLixeira, type Julgamento, type PaginaPropria, type PresetFesta, type Presets,
+  type Projeto, type Rascunho, type Regra,
 } from "../types";
 import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
 
@@ -41,6 +42,8 @@ export interface EstadoCentral {
     /** Projetos que ainda estão no formato v2 (sem status/lista de artistas). */
     projetosV2: number;
   };
+  /** Presets do sistema (coleção `presets`): listas editáveis sem deploy e o registro das páginas próprias. */
+  presets: Presets;
 }
 
 let estado: EstadoCentral = {
@@ -48,6 +51,7 @@ let estado: EstadoCentral = {
   painel: { artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [], proponentes: [] },
   rascunhos: {}, formularios: {}, lixeira: {}, fichas: {}, regras: {}, julgamentos: {},
   legado: { candidaturas: [], projetosV2: 0 },
+  presets: {},
 };
 
 const assinantes = new Set<() => void>();
@@ -57,6 +61,22 @@ function publicar() {
 }
 
 export const obterEstado = () => estado;
+
+/** Assina mudanças do estado fora de componentes (páginas próprias usam para montar o próprio painel). */
+export function assinarEstado(cb: () => void): () => void {
+  assinantes.add(cb);
+  return () => { assinantes.delete(cb); };
+}
+
+/** A coleção já respondeu com dado do servidor (ou é modo local)? */
+export const colecaoConfirmada = (colecao: string): boolean => confirmadas.has(colecao);
+
+/** Preset de página tipo festa; o padrão do código vale enquanto o banco não tem o documento. */
+export const presetFesta = (): PresetFesta => estado.presets.festa || PRESET_FESTA_PADRAO;
+
+/** Página própria registrada para um projeto (presets/paginas), se houver. */
+export const paginaDoProjeto = (projetoId: string): PaginaPropria | undefined =>
+  (estado.presets.paginas?.paginas || []).find((p) => p.projetoId === projetoId);
 
 /** Hook: qualquer componente que use isso re-renderiza quando os dados mudam. */
 export function usarCentral(): EstadoCentral {
@@ -89,11 +109,14 @@ const temDadosGuardados = () =>
   || Object.keys(estado.regras).length > 0
   || Object.keys(estado.julgamentos).length > 0;
 
-/** Liga as 13 coleções. Chamar depois do login (ou direto no modo local); é idempotente. */
-export function iniciarDados() {
+/** Liga as 13 coleções (mais `presets`). Chamar depois do login (ou direto no modo local); é idempotente.
+    Uma página própria passa só as coleções do Painel que usa: liga essas, mais `presets`, e nada
+    de semente, `pronto`, rascunhos ou Contexto. */
+export function iniciarDados(colecoes?: ColecaoPainel[]) {
   if (assinaturas.length) return;
+  const soAlgumas = Boolean(colecoes);
 
-  for (const colecao of COLECOES_PAINEL) {
+  for (const colecao of colecoes || COLECOES_PAINEL) {
     assinaturas.push(Banco.assinar(colecao, (mapa, confirmado) => {
       let lista = ordenado<Record<string, unknown>>(mapa);
       if (colecao === "projetos") {
@@ -106,6 +129,13 @@ export function iniciarDados() {
       publicar();
     }));
   }
+  // Presets do sistema: sempre, nos dois modos (documentos `festa` e `paginas`).
+  assinaturas.push(Banco.assinar("presets", (mapa, confirmado) => {
+    estado.presets = mapa as unknown as Presets;
+    if (confirmado) confirmadas.add("presets");
+    publicar();
+  }));
+  if (soAlgumas) return;
   // Legado v2: candidaturas que ainda não viraram projeto (fora do `pronto`).
   assinaturas.push(Banco.assinar("candidaturas", (mapa) => {
     estado.legado = { ...estado.legado, candidaturas: ordenado<Candidatura>(mapa) };

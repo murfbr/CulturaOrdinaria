@@ -332,6 +332,10 @@ export interface Tarefa {
   prazo: string;
   obs: string;
   status: StatusTarefa;
+  /** Tarefa de uma edição de página própria (ex.: a festa Ponta de Lança): id da edição. */
+  edicaoId?: string;
+  /** Fase da edição (D-60, D-15, Dia, Pós...), id do preset de festa. */
+  fase?: string;
   _ord?: number;
   atualizado?: string;
 }
@@ -396,9 +400,10 @@ export interface Contato {
   id: string;
   nome: string;
   tipo: string;
-  /** Referência (edital, empresa...). */
+  /** Referência (edital, empresa...). Para fornecedor: o serviço. */
   ref: string;
   contato: string;
+  obs?: string;
   _ord?: number;
   atualizado?: string;
 }

@@ -17,6 +17,10 @@ import { Login } from "./pages/Login";
 import { RoteadorPainel } from "./pages/RoteadorPainel";
 import { Projetos } from "./pages/projetos/Projetos";
 import { Contexto } from "./pages/contexto/Contexto";
+import { PAGINAS_PROPRIAS } from "./pages/paginasProprias";
+
+/** Caminho da URL sem a barra final: páginas próprias de projeto moram em /<slug>/. */
+const CAMINHO = window.location.pathname.replace(/[/]+$/, "").toLowerCase();
 
 export default function App() {
   const sessao = usarSessao();
@@ -26,6 +30,9 @@ export default function App() {
     if (sessao.carregando) return <div className="carregando-tela">abrindo a Central…</div>;
     if (!sessao.usuario) return <Login />;
   }
+  // Página própria de projeto (/<slug>/): mesmo login e mesmo banco, casca própria.
+  const Pagina = PAGINAS_PROPRIAS[CAMINHO.slice(1)];
+  if (Pagina) return <Pagina />;
   return <Central emailUsuario={sessao.usuario?.email || null} />;
 }
 

@@ -1,0 +1,2808 @@
+{
+ "meta": {
+  "rev": 3,
+  "atualizadoEm": "2026-09-22",
+  "titulo": "Ponta de Lança",
+  "versaoModelo": "1.1"
+ },
+ "label": {
+  "nome": "Ponta de Lança",
+  "sub": "Festa do Samba de Ponta · guerrilha cultural no Centro do Rio",
+  "local": "Largo Alexandre Herculano, Centro",
+  "modelo": "Entrada colaborativa, faturamento no bar. Evento-sócio Samba de Ponta × Gustavo, resultado dividido 50/50.",
+  "socios": [
+   {
+    "id": "SDP",
+    "nome": "Samba de Ponta"
+   },
+   {
+    "id": "GUSTAVO",
+    "nome": "Gustavo"
+   }
+  ],
+  "fases": [
+   {
+    "id": "d60",
+    "label": "D-60",
+    "desc": "Data, lineup, licença"
+   },
+   {
+    "id": "d45",
+    "label": "D-45",
+    "desc": "Orçamento e cotações"
+   },
+   {
+    "id": "d30",
+    "label": "D-30",
+    "desc": "Artes e plano de comunicação"
+   },
+   {
+    "id": "d15",
+    "label": "D-15",
+    "desc": "ADS, e-mail, contratos fechados"
+   },
+   {
+    "id": "d7",
+    "label": "D-7",
+    "desc": "Equipe, máquinas, cardápio"
+   },
+   {
+    "id": "dia",
+    "label": "Dia",
+    "desc": "Montagem, operação, fechamento das máquinas"
+   },
+   {
+    "id": "pos",
+    "label": "Pós",
+    "desc": "Reconciliação, análise, fechamento da edição"
+   }
+  ],
+  "checklist": [
+   {
+    "id": "m01",
+    "fase": "d60",
+    "tarefa": "Definir data e confirmar lineup (SdP, atração convidada, DJs)",
+    "dono": "Antonio + Gustavo",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m02",
+    "fase": "d60",
+    "tarefa": "Pedir nada a opor da Subprefeitura para o Largo",
+    "dono": "Gustavo",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m03",
+    "fase": "d60",
+    "tarefa": "Garantir exclusividade da atração convidada no dia",
+    "dono": "Gustavo",
+    "origem": "Ed. 01"
+   },
+   {
+    "id": "m04",
+    "fase": "d45",
+    "tarefa": "Abrir a edição no painel com orçamento herdado e revisar item a item",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m05",
+    "fase": "d45",
+    "tarefa": "Cotar estrutura (FF), som e palco (Tales), banheiros e bebida (MYX)",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m06",
+    "fase": "d45",
+    "tarefa": "Negociar preço de compra de cerveja e buscar apoio de marca",
+    "dono": "Gustavo",
+    "origem": "Ed. 01: custo de cerveja"
+   },
+   {
+    "id": "m07",
+    "fase": "d30",
+    "tarefa": "Briefing para designer e video maker; calendário de posts por D-x",
+    "dono": "Antonio",
+    "origem": "Ed. 01: peças validadas"
+   },
+   {
+    "id": "m08",
+    "fase": "d30",
+    "tarefa": "Criar evento no Sympla e revisar cardápio e preços",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m09",
+    "fase": "d15",
+    "tarefa": "ADS no ar e primeiro e-mail para a base",
+    "dono": "Antonio",
+    "origem": "Ed. 01: ADS R$ 1 por retirada"
+   },
+   {
+    "id": "m10",
+    "fase": "d15",
+    "tarefa": "Contratos fechados: estrutura, som, bebida, licença, polícia",
+    "dono": "Antonio + Gustavo",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m11",
+    "fase": "d7",
+    "tarefa": "Escala de equipe (garçons, barmen, cross, porta, caixas) e mapa de máquinas por ID de estação",
+    "dono": "Antonio",
+    "origem": "Ed. 01: filas, porta, reconciliação"
+   },
+   {
+    "id": "m12",
+    "fase": "d7",
+    "tarefa": "Plano B de check-in e briefing da porta",
+    "dono": "Antonio",
+    "origem": "Ed. 01: porta travou"
+   },
+   {
+    "id": "m13",
+    "fase": "d7",
+    "tarefa": "Cardápio impresso, copos, gelo, insumos, limpeza confirmados",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m14",
+    "fase": "dia",
+    "tarefa": "Montagem conforme cronograma; conferir máquinas antes de abrir",
+    "dono": "Antonio",
+    "origem": "Ed. 01"
+   },
+   {
+    "id": "m15",
+    "fase": "dia",
+    "tarefa": "Fotografar cupom e painel de cada estação no fechamento",
+    "dono": "Antonio",
+    "origem": "Ed. 01: reconciliação"
+   },
+   {
+    "id": "m16",
+    "fase": "pos",
+    "tarefa": "Relatório MYX, reconciliação das máquinas, Sympla e Instagram",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   },
+   {
+    "id": "m17",
+    "fase": "pos",
+    "tarefa": "Fechar a edição no painel e fazer o acerto entre sócios",
+    "dono": "Antonio",
+    "origem": "Rotina"
+   }
+  ],
+  "fornecedores": [
+   {
+    "nome": "FF Estruturas",
+    "servico": "Tinas, mesas, banheiros químicos, placas de fechamento, tendas, grades, balcões",
+    "contato": "",
+    "ultimo": "R$ 6.202 (ed. 01, inclui taxa de reposição e extra de R$ 600)",
+    "obs": ""
+   },
+   {
+    "nome": "Tales",
+    "servico": "Palco e som",
+    "contato": "",
+    "ultimo": "Palco R$ 1.000 + som R$ 3.500",
+    "obs": ""
+   },
+   {
+    "nome": "MYX",
+    "servico": "Bebida consignada (devolução do não vendido)",
+    "contato": "",
+    "ultimo": "R$ 15.806 líquido (ed. 01); aluguel de maquininhas R$ 20/un negociado fora",
+    "obs": "Renegociar preço da cerveja"
+   },
+   {
+    "nome": "Getnet",
+    "servico": "Máquinas de cartão",
+    "contato": "",
+    "ultimo": "Taxa 3,5% sobre o faturamento",
+    "obs": "Chave de reconciliação: ID da estação"
+   },
+   {
+    "nome": "Gustavinho (Forró de Pife)",
+    "servico": "Atração convidada",
+    "contato": "",
+    "ultimo": "R$ 6.000",
+    "obs": "Exclusividade no dia"
+   },
+   {
+    "nome": "DJ Carol / DJ Arisco",
+    "servico": "DJs",
+    "contato": "",
+    "ultimo": "R$ 500 cada",
+    "obs": ""
+   },
+   {
+    "nome": "Ana Colier",
+    "servico": "Designer",
+    "contato": "",
+    "ultimo": "R$ 800",
+    "obs": ""
+   },
+   {
+    "nome": "Pedro",
+    "servico": "Video maker",
+    "contato": "",
+    "ultimo": "R$ 800",
+    "obs": ""
+   },
+   {
+    "nome": "Vivi",
+    "servico": "Decoração",
+    "contato": "",
+    "ultimo": "R$ 250 + material R$ 350",
+    "obs": ""
+   },
+   {
+    "nome": "Reuse",
+    "servico": "Copos do evento",
+    "contato": "",
+    "ultimo": "R$ 600",
+    "obs": ""
+   },
+   {
+    "nome": "Gabriel",
+    "servico": "Técnico de som",
+    "contato": "",
+    "ultimo": "R$ 550",
+    "obs": ""
+   },
+   {
+    "nome": "Subprefeitura / Prefeitura",
+    "servico": "Licença e nada a opor",
+    "contato": "",
+    "ultimo": "R$ 2.000",
+    "obs": "Nada a opor nº 221/2026 na ed. 01"
+   },
+   {
+    "nome": "Polícia",
+    "servico": "Policiamento",
+    "contato": "",
+    "ultimo": "R$ 1.000",
+    "obs": ""
+   },
+   {
+    "nome": "Equipe fixa",
+    "servico": "Carlito e Joaz (produção), Ingrid (financeiro), Cadu, Adílio e Maya (recepção), Vini e Wallan (subs)",
+    "contato": "",
+    "ultimo": "Produção R$ 500, financeiro R$ 300, recepção R$ 200, sub R$ 250",
+    "obs": ""
+   }
+  ],
+  "aprendizados": [
+   {
+    "ed": 1,
+    "texto": "O problema é faturamento por presente, não custo de estrutura: evento de rua exige estrutura mínima alta",
+    "tarefa": "Bar duplo, cross, barmen extras"
+   },
+   {
+    "ed": 1,
+    "texto": "Quem está na fila não consome: caipirinha, bar único e banheiros derrubaram o ticket",
+    "tarefa": "m11, m13"
+   },
+   {
+    "ed": 1,
+    "texto": "A porta precisa de máquinas de sobra e plano B de check-in; todo mundo que entra deve ouvir do evento",
+    "tarefa": "m12"
+   },
+   {
+    "ed": 1,
+    "texto": "ADS a R$ 1 por retirada e ~38% de comparecimento são o padrão a repetir; a base de e-mails soma custo zero",
+    "tarefa": "m09"
+   },
+   {
+    "ed": 1,
+    "texto": "O nome de usuário na maquininha não é confiável; só o ID da estação fecha a reconciliação",
+    "tarefa": "m11, m15"
+   },
+   {
+    "ed": 1,
+    "texto": "Orçamento estoura nos itens não previstos (equipe extra, técnico, substituições, copos, alimentação): prever de saída",
+    "tarefa": "m04"
+   },
+   {
+    "ed": 1,
+    "texto": "Consumo da produção custa preço de compra (~R$ 1.165), não preço de balcão (R$ 3.835): não entra como receita",
+    "tarefa": ""
+   }
+  ]
+ },
+ "edicoes": [
+  {
+   "id": "e01",
+   "num": 1,
+   "nome": "Edição 01",
+   "data": "2026-08-01",
+   "diaSemana": "sábado",
+   "status": "fechada",
+   "horario": "21h → 06h",
+   "local": "Largo Alexandre Herculano, Centro",
+   "lineup": "Samba de Ponta + Forró de Pife + DJs Carol e Arisco",
+   "receitas": {
+    "bar": 52386,
+    "porta": 2668,
+    "comida": 2288,
+    "sympla": 0
+   },
+   "variaveis": {
+    "bebida": 15485.9,
+    "bebidaObs": "MYX R$ 15.805,90 já com devolução, menos R$ 320 de 16 maquininhas",
+    "comissaoPct": 8,
+    "comissaoBase": 47894,
+    "taxaPct": 3.5
+   },
+   "kpis": {
+    "publico": 1700,
+    "retiradas": 4449,
+    "visitas": 14093,
+    "emails": 1882,
+    "checkin": 568,
+    "ads": 4500
+   },
+   "curva": [
+    {
+     "dia": "D-8",
+     "n": 241
+    },
+    {
+     "dia": "D-7",
+     "n": 66
+    },
+    {
+     "dia": "D-6",
+     "n": 23
+    },
+    {
+     "dia": "D-5",
+     "n": 447
+    },
+    {
+     "dia": "D-4",
+     "n": 310
+    },
+    {
+     "dia": "D-3",
+     "n": 224
+    },
+    {
+     "dia": "D-2",
+     "n": 363
+    },
+    {
+     "dia": "D-1",
+     "n": 553
+    },
+    {
+     "dia": "Dia",
+     "n": 2103
+    },
+    {
+     "dia": "D+1",
+     "n": 119
+    }
+   ],
+   "custos": [
+    {
+     "cat": "Artístico",
+     "item": "Forró de Pife",
+     "qtd": 1,
+     "unit": 6000,
+     "qtdReal": 1,
+     "unitReal": 6000,
+     "realizado": 6000,
+     "fornecedor": "Gustavinho",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-01"
+    },
+    {
+     "cat": "Artístico",
+     "item": "DJ Carol",
+     "qtd": 1,
+     "unit": 500,
+     "qtdReal": 1,
+     "unitReal": 500,
+     "realizado": 500,
+     "fornecedor": "Carol",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "previsão original: DJs R$ 1.000 em uma linha",
+     "id": "c1-02"
+    },
+    {
+     "cat": "Artístico",
+     "item": "DJ Arisco",
+     "qtd": 1,
+     "unit": 500,
+     "qtdReal": 1,
+     "unitReal": 500,
+     "realizado": 500,
+     "fornecedor": "Arisco",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-03"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Palco",
+     "qtd": 1,
+     "unit": 1000,
+     "qtdReal": 1,
+     "unitReal": 1000,
+     "realizado": 1000,
+     "fornecedor": "Tales",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-04"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Som",
+     "qtd": 1,
+     "unit": 3500,
+     "qtdReal": 1,
+     "unitReal": 3500,
+     "realizado": 3500,
+     "fornecedor": "Tales",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-05"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Tina",
+     "qtd": 12,
+     "unit": 45,
+     "qtdReal": 15,
+     "unitReal": 45,
+     "realizado": 675,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-06"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Gelo (saco)",
+     "qtd": 300,
+     "unit": 5,
+     "qtdReal": 230,
+     "unitReal": 5,
+     "realizado": 1150,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-07"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Jogo de mesa",
+     "qtd": 8,
+     "unit": 15,
+     "qtdReal": 8,
+     "unitReal": 15,
+     "realizado": 120,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-08"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Jogo de mesa madeira",
+     "qtd": 3,
+     "unit": 40,
+     "qtdReal": 3,
+     "unitReal": 40,
+     "realizado": 120,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-09"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Bistrô",
+     "qtd": 4,
+     "unit": 8,
+     "qtdReal": 4,
+     "unitReal": 8,
+     "realizado": 32,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-10"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Baldes",
+     "qtd": 250,
+     "unit": 0.5,
+     "qtdReal": 250,
+     "unitReal": 0.5,
+     "realizado": 125,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-11"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Lixeira",
+     "qtd": 15,
+     "unit": 10,
+     "qtdReal": 15,
+     "unitReal": 10,
+     "realizado": 150,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-12"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Banheiro químico",
+     "qtd": 10,
+     "unit": 110,
+     "qtdReal": 13,
+     "unitReal": 100,
+     "realizado": 1300,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-13"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Balcão drink",
+     "qtd": 5,
+     "unit": 70,
+     "qtdReal": 5,
+     "unitReal": 70,
+     "realizado": 350,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-14"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Placas de fechamento",
+     "qtd": 40,
+     "unit": 40,
+     "qtdReal": 40,
+     "unitReal": 40,
+     "realizado": 1600,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-15"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Tenda 10x10",
+     "qtd": 1,
+     "unit": 150,
+     "qtdReal": 0,
+     "unitReal": 150,
+     "realizado": 0,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "prevista, não usada",
+     "id": "c1-16"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Tenda 3x6",
+     "qtd": 1,
+     "unit": 280,
+     "qtdReal": 2,
+     "unitReal": 280,
+     "realizado": 560,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-17"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Grade baixa",
+     "qtd": 20,
+     "unit": 8,
+     "qtdReal": 20,
+     "unitReal": 8,
+     "realizado": 160,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-18"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Grade alta",
+     "qtd": 3,
+     "unit": 7,
+     "qtdReal": 3,
+     "unitReal": 15,
+     "realizado": 45,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "unitário subiu de 7 para 15",
+     "id": "c1-19"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Taxa de reposição",
+     "qtd": 0,
+     "unit": 89.9,
+     "qtdReal": 1,
+     "unitReal": 89.9,
+     "realizado": 89.9,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-20"
+    },
+    {
+     "cat": "Estrutura",
+     "item": "Valor extra FF",
+     "qtd": 0,
+     "unit": 600,
+     "qtdReal": 1,
+     "unitReal": 600,
+     "realizado": 600,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto; entender o que foi",
+     "id": "c1-21"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Chef de bar",
+     "qtd": 1,
+     "unit": 350,
+     "qtdReal": 1,
+     "unitReal": 350,
+     "realizado": 350,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-22"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Assistente de produção",
+     "qtd": 1,
+     "unit": 500,
+     "qtdReal": 1,
+     "unitReal": 500,
+     "realizado": 500,
+     "fornecedor": "Carlito",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-23"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Assistente de produção (2º)",
+     "qtd": 0,
+     "unit": 500,
+     "qtdReal": 1,
+     "unitReal": 500,
+     "realizado": 500,
+     "fornecedor": "Joaz",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-24"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Segurança",
+     "qtd": 5,
+     "unit": 180,
+     "qtdReal": 5,
+     "unitReal": 180,
+     "realizado": 900,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-25"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Limpeza",
+     "qtd": 2,
+     "unit": 180,
+     "qtdReal": 3,
+     "unitReal": 180,
+     "realizado": 540,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-26"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Pós-limpeza",
+     "qtd": 1,
+     "unit": 180,
+     "qtdReal": 1,
+     "unitReal": 180,
+     "realizado": 180,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-27"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Brigadista",
+     "qtd": 1,
+     "unit": 180,
+     "qtdReal": 0,
+     "unitReal": 180,
+     "realizado": 0,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "previsto, não usado",
+     "id": "c1-28"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Recepção",
+     "qtd": 2,
+     "unit": 200,
+     "qtdReal": 3,
+     "unitReal": 200,
+     "realizado": 600,
+     "fornecedor": "Cadu, Adílio e Maya",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-29"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Financeiro",
+     "qtd": 1,
+     "unit": 300,
+     "qtdReal": 1,
+     "unitReal": 300,
+     "realizado": 300,
+     "fornecedor": "Ingrid",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-30"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Bartender",
+     "qtd": 3,
+     "unit": 200,
+     "qtdReal": 3,
+     "unitReal": 200,
+     "realizado": 600,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-31"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Eletricista",
+     "qtd": 1,
+     "unit": 500,
+     "qtdReal": 1,
+     "unitReal": 500,
+     "realizado": 500,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-32"
+    },
+    {
+     "cat": "Equipe",
+     "item": "Equipe bar (montagem, atendimento, desmontagem)",
+     "qtd": 4,
+     "unit": 180,
+     "qtdReal": 5,
+     "unitReal": 180,
+     "realizado": 900,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-33"
+    },
+    {
+     "cat": "Publicidade",
+     "item": "Video maker",
+     "qtd": 1,
+     "unit": 400,
+     "qtdReal": 1,
+     "unitReal": 800,
+     "realizado": 800,
+     "fornecedor": "Pedro",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-34"
+    },
+    {
+     "cat": "Publicidade",
+     "item": "ADS Gustavo",
+     "qtd": 0,
+     "unit": 1750,
+     "qtdReal": 1,
+     "unitReal": 1750,
+     "realizado": 1750,
+     "fornecedor": "Meta",
+     "adiantadoPor": "GUSTAVO",
+     "status": "pago",
+     "venc": "",
+     "obs": "previsão original: ADS único de 3.500 (na linha ADS SdP)",
+     "id": "c1-35"
+    },
+    {
+     "cat": "Publicidade",
+     "item": "ADS SdP",
+     "qtd": 1,
+     "unit": 3500,
+     "qtdReal": 1,
+     "unitReal": 2750,
+     "realizado": 2750,
+     "fornecedor": "Meta",
+     "adiantadoPor": "SDP",
+     "status": "pago",
+     "venc": "",
+     "obs": "previsão original: ADS único de 3.500",
+     "id": "c1-36"
+    },
+    {
+     "cat": "Publicidade",
+     "item": "Designer",
+     "qtd": 1,
+     "unit": 600,
+     "qtdReal": 1,
+     "unitReal": 800,
+     "realizado": 800,
+     "fornecedor": "Ana Colier",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-37"
+    },
+    {
+     "cat": "Extras",
+     "item": "Insumos drinks",
+     "qtd": 1,
+     "unit": 415,
+     "qtdReal": 1,
+     "unitReal": 400,
+     "realizado": 400,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-38"
+    },
+    {
+     "cat": "Extras",
+     "item": "Licença",
+     "qtd": 1,
+     "unit": 2000,
+     "qtdReal": 1,
+     "unitReal": 2000,
+     "realizado": 2000,
+     "fornecedor": "Prefeitura",
+     "adiantadoPor": "GUSTAVO",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-39"
+    },
+    {
+     "cat": "Extras",
+     "item": "Decoradora",
+     "qtd": 1,
+     "unit": 250,
+     "qtdReal": 1,
+     "unitReal": 250,
+     "realizado": 250,
+     "fornecedor": "Vivi",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-40"
+    },
+    {
+     "cat": "Extras",
+     "item": "Decoração (material)",
+     "qtd": 1,
+     "unit": 200,
+     "qtdReal": 1,
+     "unitReal": 350,
+     "realizado": 350,
+     "fornecedor": "Vivi",
+     "adiantadoPor": "SDP",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-41"
+    },
+    {
+     "cat": "Extras",
+     "item": "Polícia",
+     "qtd": 1,
+     "unit": 800,
+     "qtdReal": 1,
+     "unitReal": 1000,
+     "realizado": 1000,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-42"
+    },
+    {
+     "cat": "Extras",
+     "item": "Material de limpeza",
+     "qtd": 1,
+     "unit": 306.3,
+     "qtdReal": 1,
+     "unitReal": 339,
+     "realizado": 339,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "",
+     "id": "c1-43"
+    },
+    {
+     "cat": "Extras",
+     "item": "Copos do evento",
+     "qtd": 0,
+     "unit": 600,
+     "qtdReal": 1,
+     "unitReal": 600,
+     "realizado": 600,
+     "fornecedor": "Reuse",
+     "adiantadoPor": "SDP",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-44"
+    },
+    {
+     "cat": "Extras",
+     "item": "Alimentação equipe",
+     "qtd": 0,
+     "unit": 350,
+     "qtdReal": 1,
+     "unitReal": 350,
+     "realizado": 350,
+     "fornecedor": "iFood",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-45"
+    },
+    {
+     "cat": "Extras",
+     "item": "Técnico de som",
+     "qtd": 0,
+     "unit": 550,
+     "qtdReal": 1,
+     "unitReal": 550,
+     "realizado": 550,
+     "fornecedor": "Gabriel",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-46"
+    },
+    {
+     "cat": "Extras",
+     "item": "Substituição de músicos",
+     "qtd": 0,
+     "unit": 250,
+     "qtdReal": 2,
+     "unitReal": 250,
+     "realizado": 500,
+     "fornecedor": "Vini e Wallan",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "não previsto",
+     "id": "c1-47"
+    },
+    {
+     "cat": "Extras",
+     "item": "Comidas (repasse)",
+     "qtd": 0,
+     "unit": 2288,
+     "qtdReal": 1,
+     "unitReal": 2288,
+     "realizado": 2288,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "pago",
+     "venc": "",
+     "obs": "repasse: entra igual em receita e despesa",
+     "id": "c1-48"
+    }
+   ],
+   "tarefas": [],
+   "cronograma": [
+    {
+     "hora": "14h",
+     "montagem": "Montagem estruturas",
+     "equipe": "Chegada Gustavo",
+     "atracao": ""
+    },
+    {
+     "hora": "15h",
+     "montagem": "Montagem palco / som",
+     "equipe": "",
+     "atracao": ""
+    },
+    {
+     "hora": "16h",
+     "montagem": "Passagem Pife",
+     "equipe": "",
+     "atracao": ""
+    },
+    {
+     "hora": "17h",
+     "montagem": "Montagem decoração",
+     "equipe": "Chegada Vivi",
+     "atracao": ""
+    },
+    {
+     "hora": "18h",
+     "montagem": "",
+     "equipe": "Chegada Joaz",
+     "atracao": ""
+    },
+    {
+     "hora": "19:30",
+     "montagem": "Montagem palco SdP",
+     "equipe": "Chegada Jacarandá",
+     "atracao": ""
+    },
+    {
+     "hora": "20h",
+     "montagem": "Passagem SdP",
+     "equipe": "Chegada Cadu",
+     "atracao": ""
+    },
+    {
+     "hora": "20:30",
+     "montagem": "",
+     "equipe": "Chegada Antonio",
+     "atracao": "Abertura"
+    },
+    {
+     "hora": "21h",
+     "montagem": "",
+     "equipe": "Chegada 2ª porta",
+     "atracao": "DJ Arisco"
+    },
+    {
+     "hora": "22:15",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "1º set Samba de Ponta"
+    },
+    {
+     "hora": "23:15",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "DJ Arisco"
+    },
+    {
+     "hora": "23:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "2º set Samba de Ponta"
+    },
+    {
+     "hora": "00h",
+     "montagem": "",
+     "equipe": "Saída Vivi",
+     "atracao": ""
+    },
+    {
+     "hora": "00:30",
+     "montagem": "",
+     "equipe": "Saída Jacarandá",
+     "atracao": "DJ Carol"
+    },
+    {
+     "hora": "01:30",
+     "montagem": "",
+     "equipe": "Saída Joaz",
+     "atracao": "Forró de Pife"
+    },
+    {
+     "hora": "02h",
+     "montagem": "",
+     "equipe": "Saída Cadu",
+     "atracao": ""
+    },
+    {
+     "hora": "02:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "DJ Carol"
+    },
+    {
+     "hora": "03h",
+     "montagem": "",
+     "equipe": "Saída 2ª porta",
+     "atracao": ""
+    },
+    {
+     "hora": "03:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "Encerramento"
+    },
+    {
+     "hora": "05h",
+     "montagem": "Desmontagem estruturas",
+     "equipe": "Saída Antonio",
+     "atracao": ""
+    }
+   ],
+   "maquinas": [
+    {
+     "n": 1,
+     "resp": "Isabela",
+     "nat": "Bar",
+     "vendas": 6525,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 2,
+     "resp": "Ayla",
+     "nat": "Bar",
+     "vendas": 5864,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 3,
+     "resp": "Lucas",
+     "nat": "Bar",
+     "vendas": 5134,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 4,
+     "resp": "Patrícia",
+     "nat": "Bar",
+     "vendas": 6953,
+     "fontes": "cupom ×2 + painel",
+     "estacao": ""
+    },
+    {
+     "n": 5,
+     "resp": "Kelly",
+     "nat": "Bar",
+     "vendas": 7442,
+     "fontes": "cupom ×2 + painel",
+     "estacao": ""
+    },
+    {
+     "n": 6,
+     "resp": "Flávia",
+     "nat": "Bar",
+     "vendas": 10112,
+     "fontes": "2 turnos + painel",
+     "estacao": ""
+    },
+    {
+     "n": 7,
+     "resp": "Rose",
+     "nat": "Bar",
+     "vendas": 5864,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 8,
+     "resp": "Produção / cortesia",
+     "nat": "Bar interno",
+     "vendas": 3835,
+     "fontes": "cupom ×2 + painel",
+     "estacao": ""
+    },
+    {
+     "n": 9,
+     "resp": "Caixa fixo (Filial 2)",
+     "nat": "Bar",
+     "vendas": 4492,
+     "fontes": "cupom + PDV",
+     "estacao": ""
+    },
+    {
+     "n": 10,
+     "resp": "Portaria (3 usuários)",
+     "nat": "Porta",
+     "vendas": 920,
+     "fontes": "cupom ×3 + painel",
+     "estacao": ""
+    },
+    {
+     "n": 11,
+     "resp": "Portaria",
+     "nat": "Porta",
+     "vendas": 1730,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 12,
+     "resp": "Alimentação 2",
+     "nat": "Comida",
+     "vendas": 1486,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    },
+    {
+     "n": 13,
+     "resp": "Alimentação 1",
+     "nat": "Comida",
+     "vendas": 768,
+     "fontes": "cupom + painel",
+     "estacao": ""
+    }
+   ],
+   "comunicacao": [
+    {
+     "data": "23/07",
+     "peca": "Arte do evento",
+     "formato": "Feed",
+     "perfis": "SdP + Pife",
+     "obs": "Post principal"
+    },
+    {
+     "data": "23/07",
+     "peca": "Arte do evento",
+     "formato": "Stories",
+     "perfis": "SdP + Pife",
+     "obs": "Com link Sympla"
+    },
+    {
+     "data": "24/07",
+     "peca": "Chamada SdP",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP",
+     "obs": "Só no perfil SdP"
+    },
+    {
+     "data": "26/07",
+     "peca": "Chamada SdP + Pife",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP + Pife",
+     "obs": "Chamada dos dois"
+    },
+    {
+     "data": "28/07",
+     "peca": "Variação com fotos",
+     "formato": "Feed",
+     "perfis": "SdP",
+     "obs": "Marcando Pife"
+    },
+    {
+     "data": "28/07",
+     "peca": "Variação com fotos",
+     "formato": "Stories",
+     "perfis": "SdP + Pife",
+     "obs": "Repost dos dois"
+    },
+    {
+     "data": "31/07",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Stories",
+     "perfis": "SdP",
+     "obs": "Inverter hoje/amanhã"
+    },
+    {
+     "data": "01/08",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP",
+     "obs": "Dia do evento"
+    },
+    {
+     "data": "01/08",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Stories (vídeo)",
+     "perfis": "SdP + Pife",
+     "obs": "Dia do evento"
+    }
+   ],
+   "balanco": {
+    "certo": [
+     "ADS e alcance: R$ 1,01 por retirada, 14 mil visitas, 4.449 ingressos, ótimo para evento gratuito no Centro num sábado cheio",
+     "Comunicação: calendário de posts, artes e vídeos entregaram no prazo e converteram",
+     "Comparecimento saudável: ~38% das retiradas viraram presença (~1.700 pessoas), padrão de evento gratuito",
+     "Base de e-mails: 1.882 contatos capturados",
+     "Operação reconciliada: 13 máquinas fechadas nota a nota, sem furo de caixa"
+    ],
+    "errado": [
+     "Ticket médio de bar baixo, o principal problema: ~R$ 31 por presente",
+     "Porta travou: Sympla falhou e faltaram máquinas; muita gente entrou sem ouvir do evento e sem chance de contribuir (R$ 1,56 por presente)",
+     "Filas desestimularam consumo: caipirinha, poucos barmen, poucos banheiros",
+     "Prejuízo de R$ 3.156 (R$ 1.578 por sócio); a saída é faturar mais por presente, não cortar estrutura",
+     "Orçamento estourou 25% (previsto R$ 31.209, realizado R$ 39.174): itens não previstos somaram R$ 5.078 (2º assistente, técnico de som, substituições, copos, alimentação, comidas)"
+    ]
+   },
+   "instagram": "",
+   "acertoObs": "Tudo pago e reembolsos resolvidos. Adiantado: Gustavo R$ 3.750 (ADS 1.750 + licença 2.000), SdP R$ 3.700 (ADS 2.750 + decoração 350 + copos 600).",
+   "arquivos": [
+    {
+     "nome": "Pasta do acervo (Drive)",
+     "desc": "Todos os arquivos brutos da edição",
+     "url": "https://drive.google.com/open?id=1z5Nk4pqJ0KCM4dtvN88iHyrHhyw005_0"
+    },
+    {
+     "nome": "Financeiro (14.08).xlsx",
+     "desc": "Previsão, fechamento item a item, pagamentos, acerto entre sócios (versão final)",
+     "url": "https://drive.google.com/file/d/1oom-5lMHesQX484pVyQcCaz_Alwa1D75/view"
+    },
+    {
+     "nome": "Análise Faturamento (01.08).xlsx",
+     "desc": "13 máquinas, conferência cupom × painel, produtos, ficha de auditoria",
+     "url": "https://drive.google.com/file/d/1MQZEEJWtdW0YuNviLBQamJLBLTxlulrO/view"
+    },
+    {
+     "nome": "Ponta_de_Lanca_Compilado.xlsx",
+     "desc": "Compilado geral da edição",
+     "url": "https://drive.google.com/file/d/1chE_dMdHINXimPxlAu5NqLl8MCblsjdg/view"
+    },
+    {
+     "nome": "Análise retiradas Sympla.xlsx",
+     "desc": "Curva de retiradas, público, comparação entre eventos",
+     "url": "https://drive.google.com/file/d/1VHXQvGQ-J1vYqo-yduxqXBySM2fWpQnD/view"
+    },
+    {
+     "nome": "Mailist Sympla (01.08).xlsx",
+     "desc": "1.882 e-mails únicos para os próximos eventos",
+     "url": "https://drive.google.com/file/d/1Q-JRg-bfRlrVGRvp_bJ88xg4g62P6BcL/view"
+    },
+    {
+     "nome": "PDV Legal (Produto 1).pdf",
+     "desc": "Analítico Filial 1, R$ 51.599,90",
+     "url": "https://drive.google.com/file/d/1S3GqUj5v1AOAw_HQ5PWPtUvbVMDH7hRq/view"
+    },
+    {
+     "nome": "PDV Legal (Produto 2).pdf",
+     "desc": "Analítico Filial 2, R$ 4.492,00",
+     "url": "https://drive.google.com/file/d/1KKnRoV7wCtuoQ8sERn5lrC-FAr38IZwh/view"
+    },
+    {
+     "nome": "Contratos Estruturas (01.08).pdf",
+     "desc": "FF Estruturas: palco, tendas, mobiliário",
+     "url": "https://drive.google.com/file/d/1GzuhGFgcY_UUa3BYE81s5od3l91K26Xe/view"
+    },
+    {
+     "nome": "Pedido Bebidas (01.08).pdf",
+     "desc": "MYX, venda 2475 (consignado)",
+     "url": "https://drive.google.com/file/d/12Eft6FWAnp_tJ46GuRI_QbJMmSc8wA0o/view"
+    },
+    {
+     "nome": "Forró de Pife - Rider e Mapa.pdf",
+     "desc": "Rider técnico e mapa de palco",
+     "url": "https://drive.google.com/file/d/1RpdIDcw6jWxAuvTV1gXRPZI_aPZvJcJJ/view"
+    },
+    {
+     "nome": "Nada a Opor (01.08).jpeg",
+     "desc": "Autorização Subprefeitura nº 221/2026",
+     "url": "https://drive.google.com/file/d/1GEqI2aurg0yKIMXDwvnxaU_0xOu0M9A1/view"
+    },
+    {
+     "nome": "ponta_de_lanca.html",
+     "desc": "Relatório estático de fechamento da edição 01 (versão original)",
+     "url": ""
+    }
+   ],
+   "notas": ""
+  },
+  {
+   "id": "e02",
+   "num": 2,
+   "nome": "Edição 02",
+   "data": "2026-10-03",
+   "diaSemana": "sexta-feira",
+   "status": "execucao",
+   "horario": "20h → 04h",
+   "local": "Largo Alexandre Herculano, Centro",
+   "lineup": "Samba de Ponta + Forró de Pife + DJs Carol e Arisco",
+   "receitas": {
+    "bar": null,
+    "porta": null,
+    "comida": null,
+    "sympla": null
+   },
+   "sim": {
+    "publico": 1700,
+    "ticketBar": 30.82,
+    "ticketPorta": 1.57,
+    "obs": "Ponto de partida: números da edição 01. Mexa nos três e veja o resultado."
+   },
+   "variaveis": {
+    "bebida": null,
+    "bebidaPct": null,
+    "bebidaObs": "",
+    "comissaoPct": 8,
+    "comissaoBase": null,
+    "taxaPct": 3.5
+   },
+   "kpis": {
+    "publico": null,
+    "retiradas": null,
+    "visitas": null,
+    "emails": null,
+    "checkin": null,
+    "ads": 4500
+   },
+   "curva": [],
+   "custos": [
+    {
+     "id": "c2-01",
+     "ref": "c1-01",
+     "cat": "Artístico",
+     "item": "Forró de Pife",
+     "qtd": 1,
+     "unit": 7000,
+     "realizado": null,
+     "fornecedor": "Gustavinho",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-02",
+     "ref": "c1-02",
+     "cat": "Artístico",
+     "item": "DJ Carol",
+     "qtd": 1,
+     "unit": 500,
+     "realizado": null,
+     "fornecedor": "Carol",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-03",
+     "ref": "c1-03",
+     "cat": "Artístico",
+     "item": "DJ Arisco",
+     "qtd": 1,
+     "unit": 500,
+     "realizado": null,
+     "fornecedor": "Arisco",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-04",
+     "ref": "c1-04",
+     "cat": "Estrutura",
+     "item": "Palco",
+     "qtd": 1,
+     "unit": 1000,
+     "realizado": null,
+     "fornecedor": "Tales",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-05",
+     "ref": "c1-05",
+     "cat": "Estrutura",
+     "item": "Som",
+     "qtd": 1,
+     "unit": 1500,
+     "realizado": null,
+     "fornecedor": "Tales",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-06",
+     "ref": "c1-06",
+     "cat": "Estrutura",
+     "item": "Tina",
+     "qtd": 15,
+     "unit": 45,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-07",
+     "ref": "c1-07",
+     "cat": "Estrutura",
+     "item": "Gelo (saco)",
+     "qtd": 230,
+     "unit": 5,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-08",
+     "ref": "c1-08",
+     "cat": "Estrutura",
+     "item": "Jogo de mesa",
+     "qtd": 8,
+     "unit": 15,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-09",
+     "ref": "c1-09",
+     "cat": "Estrutura",
+     "item": "Jogo de mesa madeira",
+     "qtd": 3,
+     "unit": 40,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-10",
+     "ref": "c1-10",
+     "cat": "Estrutura",
+     "item": "Bistrô",
+     "qtd": 4,
+     "unit": 8,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-11",
+     "ref": "c1-11",
+     "cat": "Estrutura",
+     "item": "Baldes",
+     "qtd": 250,
+     "unit": 0.5,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-12",
+     "ref": "c1-12",
+     "cat": "Estrutura",
+     "item": "Lixeira",
+     "qtd": 15,
+     "unit": 10,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-13",
+     "ref": "c1-13",
+     "cat": "Estrutura",
+     "item": "Banheiro químico",
+     "qtd": 13,
+     "unit": 100,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-14",
+     "ref": "c1-14",
+     "cat": "Estrutura",
+     "item": "Balcão drink",
+     "qtd": 5,
+     "unit": 70,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-15",
+     "ref": "c1-15",
+     "cat": "Estrutura",
+     "item": "Placas de fechamento",
+     "qtd": 40,
+     "unit": 40,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-17",
+     "ref": "c1-17",
+     "cat": "Estrutura",
+     "item": "Tenda 3x6",
+     "qtd": 2,
+     "unit": 280,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-18",
+     "ref": "c1-18",
+     "cat": "Estrutura",
+     "item": "Grade baixa",
+     "qtd": 20,
+     "unit": 8,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-19",
+     "ref": "c1-19",
+     "cat": "Estrutura",
+     "item": "Grade alta",
+     "qtd": 3,
+     "unit": 15,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-20",
+     "ref": "c1-20",
+     "cat": "Estrutura",
+     "item": "Taxa de reposição",
+     "qtd": 1,
+     "unit": 89.9,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-21",
+     "ref": "c1-21",
+     "cat": "Estrutura",
+     "item": "Valor extra FF",
+     "qtd": 1,
+     "unit": 600,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-22",
+     "ref": "c1-22",
+     "cat": "Equipe",
+     "item": "Chef de bar",
+     "qtd": 1,
+     "unit": 350,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-23",
+     "ref": "c1-23",
+     "cat": "Equipe",
+     "item": "Assistente de produção",
+     "qtd": 1,
+     "unit": 500,
+     "realizado": null,
+     "fornecedor": "Carlito",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-24",
+     "ref": "c1-24",
+     "cat": "Equipe",
+     "item": "Assistente de produção (2º)",
+     "qtd": 1,
+     "unit": 500,
+     "realizado": null,
+     "fornecedor": "Joaz",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-25",
+     "ref": "c1-25",
+     "cat": "Equipe",
+     "item": "Segurança",
+     "qtd": 5,
+     "unit": 180,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-26",
+     "ref": "c1-26",
+     "cat": "Equipe",
+     "item": "Limpeza",
+     "qtd": 3,
+     "unit": 180,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-27",
+     "ref": "c1-27",
+     "cat": "Equipe",
+     "item": "Pós-limpeza",
+     "qtd": 1,
+     "unit": 180,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-29",
+     "ref": "c1-29",
+     "cat": "Equipe",
+     "item": "Recepção",
+     "qtd": 3,
+     "unit": 200,
+     "realizado": null,
+     "fornecedor": "Cadu, Adílio e Maya",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-30",
+     "ref": "c1-30",
+     "cat": "Equipe",
+     "item": "Financeiro",
+     "qtd": 1,
+     "unit": 300,
+     "realizado": null,
+     "fornecedor": "Ingrid",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-31",
+     "ref": "c1-31",
+     "cat": "Equipe",
+     "item": "Bartender",
+     "qtd": 3,
+     "unit": 200,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-32",
+     "ref": "c1-32",
+     "cat": "Equipe",
+     "item": "Eletricista",
+     "qtd": 1,
+     "unit": 500,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-33",
+     "ref": "c1-33",
+     "cat": "Equipe",
+     "item": "Equipe bar (montagem, atendimento, desmontagem)",
+     "qtd": 5,
+     "unit": 180,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-34",
+     "ref": "c1-34",
+     "cat": "Publicidade",
+     "item": "Video maker",
+     "qtd": 1,
+     "unit": 800,
+     "realizado": null,
+     "fornecedor": "Pedro",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-35",
+     "ref": "c1-35",
+     "cat": "Publicidade",
+     "item": "ADS Gustavo",
+     "qtd": 1,
+     "unit": 1750,
+     "realizado": null,
+     "fornecedor": "Meta",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-36",
+     "ref": "c1-36",
+     "cat": "Publicidade",
+     "item": "ADS SdP",
+     "qtd": 1,
+     "unit": 2750,
+     "realizado": null,
+     "fornecedor": "Meta",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-37",
+     "ref": "c1-37",
+     "cat": "Publicidade",
+     "item": "Designer",
+     "qtd": 1,
+     "unit": 800,
+     "realizado": null,
+     "fornecedor": "Ana Colier",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-38",
+     "ref": "c1-38",
+     "cat": "Extras",
+     "item": "Insumos drinks",
+     "qtd": 1,
+     "unit": 400,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-39",
+     "ref": "c1-39",
+     "cat": "Extras",
+     "item": "Licença",
+     "qtd": 1,
+     "unit": 2000,
+     "realizado": null,
+     "fornecedor": "Prefeitura",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-40",
+     "ref": "c1-40",
+     "cat": "Extras",
+     "item": "Decoradora",
+     "qtd": 1,
+     "unit": 250,
+     "realizado": null,
+     "fornecedor": "Vivi",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-41",
+     "ref": "c1-41",
+     "cat": "Extras",
+     "item": "Decoração (material)",
+     "qtd": 1,
+     "unit": 350,
+     "realizado": null,
+     "fornecedor": "Vivi",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-42",
+     "ref": "c1-42",
+     "cat": "Extras",
+     "item": "Polícia",
+     "qtd": 1,
+     "unit": 1000,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-43",
+     "ref": "c1-43",
+     "cat": "Extras",
+     "item": "Material de limpeza",
+     "qtd": 1,
+     "unit": 339,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-44",
+     "ref": "c1-44",
+     "cat": "Extras",
+     "item": "Copos do evento",
+     "qtd": 1,
+     "unit": 600,
+     "realizado": null,
+     "fornecedor": "Reuse",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-45",
+     "ref": "c1-45",
+     "cat": "Extras",
+     "item": "Alimentação equipe",
+     "qtd": 1,
+     "unit": 350,
+     "realizado": null,
+     "fornecedor": "iFood",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-46",
+     "ref": "c1-46",
+     "cat": "Extras",
+     "item": "Técnico de som",
+     "qtd": 1,
+     "unit": 550,
+     "realizado": null,
+     "fornecedor": "Gabriel",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-47",
+     "ref": "c1-47",
+     "cat": "Extras",
+     "item": "Substituição de músicos",
+     "qtd": 2,
+     "unit": 250,
+     "realizado": null,
+     "fornecedor": "Vini e Wallan",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-48",
+     "ref": "c1-48",
+     "cat": "Extras",
+     "item": "Comidas (repasse)",
+     "qtd": 1,
+     "unit": 2288,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": ""
+    },
+    {
+     "id": "c2-n01",
+     "ref": "",
+     "cat": "Estrutura",
+     "item": "Balcão do 2º bar (cerveja)",
+     "qtd": 1,
+     "unit": 0,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: 2 bares, cotar"
+    },
+    {
+     "id": "c2-n02",
+     "ref": "",
+     "cat": "Estrutura",
+     "item": "Banheiros extras",
+     "qtd": 5,
+     "unit": 100,
+     "realizado": null,
+     "fornecedor": "FF Estruturas",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: fila de banheiro derrubou consumo; estimativa a confirmar"
+    },
+    {
+     "id": "c2-n03",
+     "ref": "",
+     "cat": "Equipe",
+     "item": "Barmen extras (caipirinha)",
+     "qtd": 2,
+     "unit": 200,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: fila da caipirinha; estimativa a confirmar"
+    },
+    {
+     "id": "c2-n04",
+     "ref": "",
+     "cat": "Equipe",
+     "item": "Vendedores volantes (cross)",
+     "qtd": 2,
+     "unit": 180,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: venda na fila e no público; estimativa a confirmar"
+    },
+    {
+     "id": "c2-n05",
+     "ref": "",
+     "cat": "Equipe",
+     "item": "Porta extra",
+     "qtd": 2,
+     "unit": 200,
+     "realizado": null,
+     "fornecedor": "",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: 3 a 5 máquinas na porta; estimativa a confirmar"
+    },
+    {
+     "id": "c2-n06",
+     "ref": "",
+     "cat": "Extras",
+     "item": "Máquinas Getnet extras",
+     "qtd": 4,
+     "unit": 20,
+     "realizado": null,
+     "fornecedor": "Getnet",
+     "adiantadoPor": "",
+     "status": "previsto",
+     "venc": "",
+     "obs": "novo: aluguel por máquina; confirmar"
+    }
+   ],
+   "tarefas": [
+    {
+     "id": "t01",
+     "fase": "d15",
+     "tarefa": "Confirmar Largo Alexandre Herculano e nada a opor da Subprefeitura para 03/10",
+     "dono": "Antonio",
+     "prazo": "2026-09-26",
+     "origem": "Obrigatório",
+     "status": "feito"
+    },
+    {
+     "id": "t02",
+     "fase": "d15",
+     "tarefa": "Confirmar Forró de Pife com exclusividade no dia (não tocar em outro lugar em 03/10)",
+     "dono": "Gustavo",
+     "prazo": "2026-09-26",
+     "origem": "Ed. 01: agenda do Pife",
+     "status": "feito"
+    },
+    {
+     "id": "t03",
+     "fase": "d15",
+     "tarefa": "Fechar pedido consignado MYX e renegociar preço de compra da cerveja",
+     "dono": "Antonio",
+     "prazo": "2026-09-26",
+     "origem": "Ed. 01: custo de cerveja",
+     "status": "afazer"
+    },
+    {
+     "id": "t04",
+     "fase": "d15",
+     "tarefa": "Sondar apoio Ambev / marcas de bebida",
+     "dono": "Gustavo",
+     "prazo": "2026-09-26",
+     "origem": "Ed. 01: custo de cerveja",
+     "status": "afazer"
+    },
+    {
+     "id": "t05",
+     "fase": "d15",
+     "tarefa": "Contratar FF Estruturas com layout novo: 2 bares (um só cerveja, outro cerveja + drinks), palco no meio, banheiros extras",
+     "dono": "Antonio",
+     "prazo": "2026-09-26",
+     "origem": "Ed. 01: bar único e filas",
+     "status": "afazer"
+    },
+    {
+     "id": "t06",
+     "fase": "d15",
+     "tarefa": "Fechar som e palco com Tales e repassar rider do Pife",
+     "dono": "Antonio",
+     "prazo": "2026-09-26",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t07",
+     "fase": "d15",
+     "tarefa": "ADS no ar (Meta) com verba definida entre SdP e Gustavo",
+     "dono": "Antonio + Gustavo",
+     "prazo": "2026-09-24",
+     "origem": "Ed. 01: ADS validado (R$ 1 por retirada)",
+     "status": "andamento"
+    },
+    {
+     "id": "t08",
+     "fase": "d15",
+     "tarefa": "Primeiro disparo de e-mail para a base de 1.882 contatos",
+     "dono": "Antonio",
+     "prazo": "2026-09-25",
+     "origem": "Ed. 01: base de e-mails",
+     "status": "afazer"
+    },
+    {
+     "id": "t09",
+     "fase": "d15",
+     "tarefa": "Cardápio simplificado com preços revisados, impresso para os caixas fixos",
+     "dono": "Antonio",
+     "prazo": "2026-09-30",
+     "origem": "Ed. 01: cardápio",
+     "status": "afazer"
+    },
+    {
+     "id": "t10",
+     "fase": "d15",
+     "tarefa": "Definir plano B de check-in na porta, sem depender do Sympla",
+     "dono": "Antonio",
+     "prazo": "2026-09-30",
+     "origem": "Ed. 01: porta travou",
+     "status": "afazer"
+    },
+    {
+     "id": "t11",
+     "fase": "d7",
+     "tarefa": "Escala de equipe: 9 garçons, barmen extras na caipirinha, vendedores volantes (cross), 3 a 5 na porta, 2 a 3 caixas fixos",
+     "dono": "Antonio",
+     "prazo": "2026-10-01",
+     "origem": "Ed. 01: filas e porta",
+     "status": "afazer"
+    },
+    {
+     "id": "t12",
+     "fase": "d7",
+     "tarefa": "Mapa de máquinas com ID de estação por pessoa (não usar nome de usuário)",
+     "dono": "Antonio",
+     "prazo": "2026-10-01",
+     "origem": "Ed. 01: reconciliação das 13 máquinas",
+     "status": "afazer"
+    },
+    {
+     "id": "t13",
+     "fase": "d7",
+     "tarefa": "Briefing da porta: todo mundo que entra ouve do evento e tem chance de contribuir",
+     "dono": "Antonio",
+     "prazo": "2026-10-02",
+     "origem": "Ed. 01: porta rendeu R$ 1,56 por presente",
+     "status": "afazer"
+    },
+    {
+     "id": "t14",
+     "fase": "d7",
+     "tarefa": "Artes e vídeo 'é amanhã ou é hoje' entregues",
+     "dono": "Antonio",
+     "prazo": "2026-10-01",
+     "origem": "Ed. 01: peças validadas",
+     "status": "afazer"
+    },
+    {
+     "id": "t15",
+     "fase": "d7",
+     "tarefa": "Confirmar gelo, copos (Reuse), insumos de drinks e material de limpeza",
+     "dono": "Antonio",
+     "prazo": "2026-10-02",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t16",
+     "fase": "d7",
+     "tarefa": "Polícia e segurança confirmados",
+     "dono": "Gustavo",
+     "prazo": "2026-10-02",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t17",
+     "fase": "dia",
+     "tarefa": "Montagem a partir das 14h conforme cronograma",
+     "dono": "Antonio",
+     "prazo": "2026-10-03",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t18",
+     "fase": "dia",
+     "tarefa": "Conferir todas as máquinas ligadas e identificadas antes de abrir a porta",
+     "dono": "Antonio",
+     "prazo": "2026-10-03",
+     "origem": "Ed. 01: faltaram máquinas na porta",
+     "status": "afazer"
+    },
+    {
+     "id": "t19",
+     "fase": "dia",
+     "tarefa": "Fotografar cupom de encerramento e painel de cada estação no fechamento",
+     "dono": "Antonio",
+     "prazo": "2026-10-03",
+     "origem": "Ed. 01: reconciliação",
+     "status": "afazer"
+    },
+    {
+     "id": "t20",
+     "fase": "pos",
+     "tarefa": "Receber relatório MYX (devolução do não vendido)",
+     "dono": "Antonio",
+     "prazo": "2026-10-10",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t21",
+     "fase": "pos",
+     "tarefa": "Reconciliar máquinas (cupom × painel × PDV) na planilha de faturamento",
+     "dono": "Antonio",
+     "prazo": "2026-10-10",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t22",
+     "fase": "pos",
+     "tarefa": "Levantar Instagram e Sympla (retiradas, check-in, e-mails novos)",
+     "dono": "Antonio",
+     "prazo": "2026-10-10",
+     "origem": "Rotina",
+     "status": "afazer"
+    },
+    {
+     "id": "t23",
+     "fase": "pos",
+     "tarefa": "Fechar a edição no painel: receitas, realizado, balanço, aprendizados e acerto com Gustavo",
+     "dono": "Antonio",
+     "prazo": "2026-10-17",
+     "origem": "Rotina",
+     "status": "afazer"
+    }
+   ],
+   "cronograma": [
+    {
+     "hora": "13h",
+     "montagem": "Montagem estruturas",
+     "equipe": "Chegada Gustavo",
+     "atracao": ""
+    },
+    {
+     "hora": "14h",
+     "montagem": "Montagem palco / som",
+     "equipe": "",
+     "atracao": ""
+    },
+    {
+     "hora": "15h",
+     "montagem": "Passagem Pife",
+     "equipe": "",
+     "atracao": ""
+    },
+    {
+     "hora": "16h",
+     "montagem": "Montagem decoração",
+     "equipe": "Chegada Vivi",
+     "atracao": ""
+    },
+    {
+     "hora": "17h",
+     "montagem": "",
+     "equipe": "Chegada assistentes",
+     "atracao": ""
+    },
+    {
+     "hora": "18:30",
+     "montagem": "Montagem palco SdP",
+     "equipe": "Chegada equipe bar",
+     "atracao": ""
+    },
+    {
+     "hora": "19h",
+     "montagem": "Passagem SdP",
+     "equipe": "Chegada porta",
+     "atracao": ""
+    },
+    {
+     "hora": "19:30",
+     "montagem": "",
+     "equipe": "Chegada Antonio",
+     "atracao": "Abertura"
+    },
+    {
+     "hora": "20h",
+     "montagem": "",
+     "equipe": "Chegada 2ª porta",
+     "atracao": "DJ Arisco"
+    },
+    {
+     "hora": "21:15",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "1º set Samba de Ponta"
+    },
+    {
+     "hora": "22:15",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "DJ Arisco"
+    },
+    {
+     "hora": "22:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "2º set Samba de Ponta"
+    },
+    {
+     "hora": "23:30",
+     "montagem": "",
+     "equipe": "Saída Vivi",
+     "atracao": "DJ Carol"
+    },
+    {
+     "hora": "00:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "Forró de Pife"
+    },
+    {
+     "hora": "01:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "DJ Carol"
+    },
+    {
+     "hora": "02:30",
+     "montagem": "",
+     "equipe": "",
+     "atracao": "Encerramento"
+    },
+    {
+     "hora": "04h",
+     "montagem": "Desmontagem estruturas",
+     "equipe": "Saída Antonio",
+     "atracao": ""
+    }
+   ],
+   "cronogramaObs": "Herdado da edição 01 e deslocado 1h para o início às 20h. Ajustar.",
+   "maquinas": [
+    {
+     "n": 1,
+     "resp": "Garçom 1 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 2,
+     "resp": "Garçom 2 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 3,
+     "resp": "Garçom 3 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 4,
+     "resp": "Garçom 4 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 5,
+     "resp": "Garçom 5 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 6,
+     "resp": "Garçom 6 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 7,
+     "resp": "Garçom 7 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 8,
+     "resp": "Garçom 8 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 9,
+     "resp": "Garçom 9 (a definir)",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 10,
+     "resp": "Caixa fixo 1",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 11,
+     "resp": "Caixa fixo 2",
+     "nat": "Bar",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 12,
+     "resp": "Porta 1",
+     "nat": "Porta",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 13,
+     "resp": "Porta 2",
+     "nat": "Porta",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 14,
+     "resp": "Porta 3",
+     "nat": "Porta",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 15,
+     "resp": "Porta 4",
+     "nat": "Porta",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 16,
+     "resp": "Alimentação 1",
+     "nat": "Comida",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    },
+    {
+     "n": 17,
+     "resp": "Alimentação 2",
+     "nat": "Comida",
+     "vendas": null,
+     "fontes": "",
+     "estacao": ""
+    }
+   ],
+   "maquinasObs": "Planejado: 9 garçons, 2 a 3 caixas fixos, 3 a 5 na porta. Preencher responsável e ID de estação.",
+   "comunicacao": [
+    {
+     "data": "24/09",
+     "peca": "Arte do evento",
+     "formato": "Feed",
+     "perfis": "SdP + Pife",
+     "obs": "Post principal (D-9)"
+    },
+    {
+     "data": "24/09",
+     "peca": "Arte do evento",
+     "formato": "Stories",
+     "perfis": "SdP + Pife",
+     "obs": "Com link Sympla"
+    },
+    {
+     "data": "25/09",
+     "peca": "E-mail para a base (1.882)",
+     "formato": "E-mail",
+     "perfis": "SdP",
+     "obs": "Novo: primeiro disparo"
+    },
+    {
+     "data": "25/09",
+     "peca": "Chamada SdP",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP",
+     "obs": "Só no perfil SdP"
+    },
+    {
+     "data": "27/09",
+     "peca": "Chamada SdP + Pife",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP + Pife",
+     "obs": "Chamada dos dois"
+    },
+    {
+     "data": "29/09",
+     "peca": "Variação com fotos",
+     "formato": "Feed",
+     "perfis": "SdP",
+     "obs": "Marcando Pife"
+    },
+    {
+     "data": "29/09",
+     "peca": "Variação com fotos",
+     "formato": "Stories",
+     "perfis": "SdP + Pife",
+     "obs": "Repost dos dois"
+    },
+    {
+     "data": "02/10",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Stories",
+     "perfis": "SdP",
+     "obs": "Inverter hoje/amanhã"
+    },
+    {
+     "data": "02/10",
+     "peca": "E-mail lembrete",
+     "formato": "E-mail",
+     "perfis": "SdP",
+     "obs": "Novo: véspera"
+    },
+    {
+     "data": "03/10",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Feed (vídeo)",
+     "perfis": "SdP",
+     "obs": "Dia do evento"
+    },
+    {
+     "data": "03/10",
+     "peca": "É amanhã ou é hoje",
+     "formato": "Stories (vídeo)",
+     "perfis": "SdP + Pife",
+     "obs": "Dia do evento"
+    }
+   ],
+   "comunicacaoObs": "Herdado da edição 01 com as datas recalculadas por D-x, mais os disparos de e-mail.",
+   "balanco": {
+    "certo": [],
+    "errado": []
+   },
+   "instagram": "",
+   "acertoObs": "",
+   "arquivos": [],
+   "notas": ""
+  }
+ ]
+}

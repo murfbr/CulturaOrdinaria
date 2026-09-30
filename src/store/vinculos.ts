@@ -3,7 +3,7 @@
    dele) ou DESVINCULANDO (mantém os registros, só limpando a ligação).
    O rascunho de um projeto vai sempre junto com ele (é o formulário do
    projeto); os docs do Contexto apontam pelo mesmo id e ficam como estão. */
-import { obterEstado } from "./central";
+import { obterEstado, paginaDoProjeto } from "./central";
 import { excluirRegistro, salvarRegistro } from "./mutacoes";
 import { ENTIDADES, type ChaveEntidade } from "../forms/especificacoes";
 import type { Projeto, Tarefa } from "../types";
@@ -86,10 +86,12 @@ export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclus
     const p = painel.projetos.find((x) => x.id === id);
     const tarefas = tarefasDe("proj:" + id);
     const temRascunho = Boolean(p?.rascunhoId && obterEstado().rascunhos[p.rascunhoId]);
+    const pagina = paginaDoProjeto(id);
     return {
       vinculos: tarefas.length ? [n(tarefas.length, "tarefa ligada", "tarefas ligadas")] : [],
       notas: [
         ...(temRascunho ? ["As respostas do formulário vão junto para a lixeira (dá para restaurar em 30 dias)."] : []),
+        ...(pagina ? ["A página própria \"" + pagina.titulo + "\" e as edições dela vão junto para a lixeira."] : []),
         ...notaContexto([id]),
       ],
       excluir(destino) { if (p) excluirProjeto(p, destino); },

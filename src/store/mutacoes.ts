@@ -10,7 +10,7 @@ import { obterEstado } from "./central";
 import { normalizarProjeto, rascunhoVazio } from "../lib/migracao/v3";
 import {
   STATUS_PROJETO, STATUS_TAREFA,
-  type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist,
+  type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist, type ItemLixeira,
   type Julgamento, type Projeto, type Proponente, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
 } from "../types";
 import type { PlanoProponentes } from "../lib/proponentes";
@@ -20,8 +20,14 @@ type Documento = Record<string, unknown> & { id: string };
 
 /* ══════════ Lixeira ══════════ */
 
-/** Chave do documento na lixeira: coleção + id (ids de coleções diferentes não colidem). */
-const chaveLixeira = (colecao: string, id: string) => colecao + "__" + id;
+/** Chave do documento na lixeira: coleção + id (ids de coleções diferentes não colidem).
+    Caminho de subcoleção tem barra, que id de documento não aceita: vira ponto. */
+const chaveLixeira = (colecao: string, id: string) => colecao.replace(/\//g, ".") + "__" + id;
+
+/** A lixeira como está agora: o que a escuta trouxe mais o que esta sessão acabou de mandar
+    (numa página própria a escuta da lixeira não está ligada, e o Desfazer precisa funcionar). */
+const lixeiraAtual = (): Record<string, ItemLixeira> =>
+  ({ ...(Banco.ler("lixeira") as unknown as Record<string, ItemLixeira>), ...obterEstado().lixeira });
 
 /** Lote de exclusão: uma ação do usuário = um toast com Desfazer, mesmo em cascata. */
 let loteAberto: { id: string; qtd: number } | null = null;
@@ -68,7 +74,7 @@ function moverParaLixeira(colecao: string, id: string) {
 
 /** Devolve um item da lixeira para a coleção de origem. false = o id renasceu lá. */
 export function restaurarDaLixeira(chave: string): boolean {
-  const item = obterEstado().lixeira[chave];
+  const item = lixeiraAtual()[chave];
   if (!item) return false;
   const destino = item._de;
   if (Banco.ler(destino)[item.id]) return false; // não sobrescreve um registro recriado
@@ -83,7 +89,7 @@ export function restaurarDaLixeira(chave: string): boolean {
 /** Restaura tudo o que caiu junto numa exclusão (o Desfazer do toast). */
 export function restaurarLote(lote: string): number {
   let n = 0;
-  for (const [chave, item] of Object.entries(obterEstado().lixeira)) {
+  for (const [chave, item] of Object.entries(lixeiraAtual())) {
     if (item._lote === lote && restaurarDaLixeira(chave)) n++;
   }
   return n;
@@ -133,6 +139,28 @@ export function excluirRegistro(colecao: ColecaoPainel, id: string) {
       if (projeto?.rascunhoId && Banco.ler("rascunhos")[projeto.rascunhoId]) moverParaLixeira("rascunhos", projeto.rascunhoId);
     }
   });
+  // A página própria do projeto (registro em presets/paginas) vai junto, num lote próprio.
+  if (colecao === "projetos") void excluirPaginasDoProjeto(id);
+}
+
+/** Documento da página e edições de cada página própria do projeto vão para a lixeira; o registro sai. */
+async function excluirPaginasDoProjeto(projetoId: string) {
+  const registro = obterEstado().presets.paginas;
+  const minhas = (registro?.paginas || []).filter((p) => p.projetoId === projetoId);
+  if (!registro || !minhas.length) return;
+  for (const p of minhas) {
+    const caminhoEdicoes = "paginas/" + p.slug + "/edicoes";
+    await Banco.carregarDocumento("paginas", p.slug);
+    const edicoes = await Banco.carregarColecao(caminhoEdicoes);
+    emLoteDeExclusao(() => {
+      Object.keys(edicoes).forEach((id) => moverParaLixeira(caminhoEdicoes, id));
+      moverParaLixeira("paginas", p.slug);
+    });
+  }
+  Banco.gravar("presets", "paginas", {
+    ...(clonar(registro) as unknown as Documento),
+    paginas: registro.paginas.filter((p) => p.projetoId !== projetoId),
+  }, true);
 }
 
 /** Busca por id em qualquer coleção do Painel. */

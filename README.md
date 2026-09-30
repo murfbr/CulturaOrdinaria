@@ -62,10 +62,10 @@ usam **os mesmos nomes do artefato**:
 | `projetos`     | cada projeto é uma candidatura (→ `artistaIds[]`, `editalId`, `formId`, `rascunhoId`, `status`) |
 | `editais`      | editais e fontes, com os campos do Mapa dos Editais (critérios, linhas, lacunas, alertas, campos do formulário) |
 | `candidaturas` | só no formato antigo (v2): a migração v3 converte em projetos e esvazia |
-| `tarefas`      | tarefas da equipe (→ `respId`, `origem`)          |
+| `tarefas`      | tarefas da equipe (→ `respId`, `origem`; `edicaoId` e `fase` quando é de uma edição de página própria) |
 | `equipe`       | pessoas do coletivo (contém CPF/RG — ver LGPD)    |
 | `elenco`       | músicos e técnicos que entram nos editais         |
-| `contatos`     | contatos externos                                 |
+| `contatos`     | contatos externos (tipo Fornecedor: quem a festa contrata) |
 | `reunioes`     | reuniões, pauta e ata                             |
 | `rascunhos`    | respostas de cada projeto no formulário dele (`valores`, `status`, `notas`; `ref` = id do projeto) |
 | `formularios`  | definições dos formulários, com `origem` ("chrome" = extraído da plataforma; "documento" = reconstruído do espelho/regulamento), importáveis em Cadastros → Formulários sem deploy |
@@ -75,6 +75,8 @@ usam **os mesmos nomes do artefato**:
 | `fichas`       | Contexto: conhecimento de escrita (id = id do Painel) |
 | `regras`       | Contexto: regras com fonte obrigatória            |
 | `julgamentos`  | Contexto: pareceres e lições                      |
+| `presets`      | presets do sistema, lidos por todo mundo no login: `festa` (fases, categorias de custo, naturezas de máquina, formatos de peça) e `paginas` (registro das páginas próprias: slug, projeto, tipo, título) |
+| `paginas`      | páginas próprias de projeto, uma por slug (`paginas/sambadeponta` é a festa Ponta de Lança); subcoleção `edicoes`, uma edição por documento. Só a página lê |
 
 Detalhes que diferem do artefato (por limitação do Firestore, que não aceita
 array dentro de array): as tuplas viraram arrays de objetos —
@@ -86,6 +88,21 @@ exportado do artefato entra direto pelo botão **Importar**.
 
 Campos de manutenção: `_ord` (posição na listagem) e `atualizado` (ISO da última
 gravação, usado no último-ganha da sincronização).
+
+### Páginas próprias de projeto
+
+Um projeto pode ter uma página de gestão própria, em `/<slug>/` (a primeira é
+`/sambadeponta/`, a festa Ponta de Lança). Mesmo login e mesmo banco, casca
+própria, tudo em `src/pages/<slug>/`; o slug entra em `src/pages/paginasProprias.ts`
+e o registro em `presets/paginas`. O que a Central já tem, a página usa e não
+repete: as tarefas de cada edição são documentos de `tarefas` (origem `proj:<id>`,
+campos `edicaoId` e `fase`) e aparecem no quadro, no Resumo e na ficha do projeto;
+os fornecedores são `contatos` do tipo Fornecedor, e a linha de custo aponta
+`contatoId`; o nome da festa é o nome do projeto. O que só a página usa fica em
+`paginas/<slug>` (festa) e `paginas/<slug>/edicoes` (uma edição por documento).
+A primeira abertura semeia esses documentos a partir do JSON do artefato original.
+As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar a
+subcoleção.
 
 ## Mapa do código
 

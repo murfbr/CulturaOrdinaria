@@ -2,7 +2,7 @@
    edital (o status de cada um aparece no cartão e no Pipeline), com o
    progresso do formulário, filtros e o "Novo projeto". */
 import { useState, type ReactNode } from "react";
-import { usarCentral } from "../../store/central";
+import { paginaDoProjeto, usarCentral } from "../../store/central";
 import { arquivarProjeto, duplicarProjeto } from "../../store/mutacoes";
 import { abrirDetalhe, abrirProjeto } from "../../store/navegacao";
 import { editalDoProjeto, nomeCurto, nomeEquipe, nomesArtistas, prazoCurto } from "../../lib/nomes";
@@ -87,6 +87,7 @@ export function VisaoGeral() {
           </span>
           {p.grupo && <span className="chip" title="faz parte de">{p.grupo}</span>}
           {p.inscricao && <span className="chip" title="nº de inscrição">nº {p.inscricao}</span>}
+          {paginaDoProjeto(p.id) && <a className="chip" href={"/" + paginaDoProjeto(p.id)!.slug + "/"} title="página própria do projeto">página ↗</a>}
         </div>
         <ProgressoFormulario p={p} />
         <div className="meta">

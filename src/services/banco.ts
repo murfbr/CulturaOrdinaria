@@ -6,7 +6,7 @@
    As gravações são adiadas (debounce) por documento, como no artefato original,
    para digitação fluida sem uma gravação por tecla. */
 import {
-  Timestamp, collection, deleteDoc, doc, onSnapshot, setDoc,
+  Timestamp, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc,
 } from "firebase/firestore";
 import { db, firebaseAtivo } from "./firebase";
 import { clonar, hora } from "../utils";
@@ -15,6 +15,8 @@ type Documento = Record<string, unknown> & { id: string };
 type Mapa = Record<string, Documento>;
 /** `confirmado` = o dado veio do servidor (ou é modo local): seguro para decidir semeadura. */
 type Observador = (m: Mapa, confirmado: boolean) => void;
+/** Observador de um documento só (páginas próprias): recebe o documento, ou undefined se não existe. */
+type ObservadorDoc = (d: Documento | undefined, confirmado: boolean) => void;
 
 const CHAVE_LOCAL = "central-coletivo-local-v1";
 
@@ -71,12 +73,15 @@ function registrarAlteracao(colecao: string, id: string, acao: "novo" | "edicao"
     rotulo,
     expiraEm: Timestamp.fromMillis(agora.getTime() + DIAS_DE_LOG * 86400000),
   };
-  const idLog = agora.toISOString().replace(/[:.]/g, "-") + "_" + colecao + "_" + id;
+  // Id de documento não aceita barra: caminho de subcoleção ("paginas/x/edicoes") vira ponto.
+  const idLog = agora.toISOString().replace(/[:.]/g, "-") + "_" + colecao.replace(/\//g, ".") + "_" + id;
   setDoc(doc(db, COLECAO_LOG, idLog), linha).catch(() => { /* log é melhor esforço */ });
 }
 
 const espelho: Record<string, Mapa> = carregarEspelho();
 const observadores: Record<string, Set<Observador>> = {};
+/** Observadores de documento, pela chave colecao/id. */
+const observadoresDoc: Record<string, Set<ObservadorDoc>> = {};
 const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 const aoStatus: Set<(s: StatusSalvamento) => void> = new Set();
 let statusAtual: StatusSalvamento = { texto: "carregando…", classe: "" };
@@ -102,6 +107,12 @@ function salvarEspelho() {
 
 function avisar(colecao: string, confirmado = !firebaseAtivo) {
   for (const cb of observadores[colecao] || []) cb(espelho[colecao] || {}, confirmado);
+  // Quem escuta um documento desta coleção também é avisado (gravação local, reconciliação).
+  for (const [chave, cbs] of Object.entries(observadoresDoc)) {
+    if (chave.lastIndexOf("/") !== colecao.length || !chave.startsWith(colecao + "/")) continue;
+    const id = chave.slice(colecao.length + 1);
+    for (const cb of cbs) cb((espelho[colecao] || {})[id], confirmado);
+  }
 }
 
 function mudarStatus(s: StatusSalvamento) {
@@ -250,6 +261,89 @@ export const Banco = {
     };
   },
 
+  /**
+   * Conecta um documento só (ex.: a ficha de uma página própria em `paginas/<slug>`),
+   * sem trazer a coleção inteira. Mesmo espelho e mesma reconciliação de `assinar`:
+   * gravação em andamento fica; local marcado _novo sobe; o mais recente pelo
+   * `atualizado` vence; sumido do servidor sem _novo = excluído.
+   */
+  assinarDocumento(colecao: string, id: string, cb: ObservadorDoc): () => void {
+    const chave = colecao + "/" + id;
+    (observadoresDoc[chave] = observadoresDoc[chave] || new Set()).add(cb);
+    espelho[colecao] = espelho[colecao] || {};
+
+    if (!firebaseAtivo || !db) {
+      cb(espelho[colecao][id], true);
+      mudarStatus({ texto: "salvo só neste navegador", classe: "" });
+      return () => observadoresDoc[chave].delete(cb);
+    }
+
+    let parar = () => {};
+    let desligado = false;
+    let falhas = 0;
+    let religar: ReturnType<typeof setTimeout> | undefined;
+
+    const ligar = () => {
+      if (desligado || !db) return;
+      parar = onSnapshot(
+        doc(db, colecao, id),
+        { includeMetadataChanges: true },
+        (snap) => {
+          falhas = 0;
+          if (snap.metadata.fromCache) emCache.add(chave); else emCache.delete(chave);
+          const local = (espelho[colecao] || {})[id];
+          const remoto = snap.exists() ? (clonar(snap.data()) as Documento) : undefined;
+          let atual = remoto;
+          let subir = false;
+          if (local && timers[chave]) atual = local;
+          else if (local && !remoto && local._novo) { atual = local; subir = true; }
+          else if (local && remoto && String(local.atualizado || "") > String(remoto.atualizado || "")) { atual = local; subir = true; }
+          if (atual) espelho[colecao][id] = atual; else delete espelho[colecao][id];
+          salvarEspelho();
+          statusDaSincronizacao();
+          for (const f of observadoresDoc[chave] || []) f(atual, !snap.metadata.fromCache);
+          if (subir) void this.descarregar(colecao, id);
+        },
+        () => {
+          emCache.add(chave);
+          mudarStatus({ texto: "banco indisponível — tentando reconectar…", classe: "er" });
+          religar = setTimeout(ligar, Math.min(30000, 1000 * 2 ** falhas++));
+        },
+      );
+    };
+    ligar();
+
+    cb(espelho[colecao][id], false);
+    return () => {
+      desligado = true;
+      clearTimeout(religar);
+      observadoresDoc[chave].delete(cb);
+      emCache.delete(chave);
+      parar();
+    };
+  },
+
+  /** Lê um documento de uma vez, sem escuta (ações pontuais, como a cascata de exclusão). Alimenta o espelho. */
+  async carregarDocumento(colecao: string, id: string): Promise<Documento | undefined> {
+    if (firebaseAtivo && db) {
+      const snap = await getDoc(doc(db, colecao, id));
+      espelho[colecao] = espelho[colecao] || {};
+      if (snap.exists()) espelho[colecao][id] = clonar(snap.data()) as Documento;
+    }
+    return (espelho[colecao] || {})[id];
+  },
+
+  /** Lê uma coleção (ou subcoleção) de uma vez, sem escuta. Alimenta o espelho. */
+  async carregarColecao(colecao: string): Promise<Mapa> {
+    if (firebaseAtivo && db) {
+      const snap = await getDocs(collection(db, colecao));
+      const mapa: Mapa = {};
+      snap.forEach((d) => { mapa[d.id] = clonar(d.data()) as Documento; });
+      espelho[colecao] = { ...(espelho[colecao] || {}), ...mapa };
+    }
+    return espelho[colecao] || {};
+  },
+
   /** Estado atual de uma coleção (mapa id → documento). */
   ler(colecao: string): Mapa {
     return espelho[colecao] || {};
@@ -323,13 +417,13 @@ export const Banco = {
     const pendentes = Object.keys(timers);
     for (const chave of pendentes) {
       clearTimeout(timers[chave]);
-      const corte = chave.indexOf("/");
+      const corte = chave.lastIndexOf("/"); // a coleção pode ser um caminho com barras
       const documento = (espelho[chave.slice(0, corte)] || {})[chave.slice(corte + 1)];
       if (documento) documento._novo = true;
     }
     if (pendentes.length) salvarEspelho();
     await Promise.all(pendentes.map((chave) => {
-      const corte = chave.indexOf("/");
+      const corte = chave.lastIndexOf("/");
       return this.descarregar(chave.slice(0, corte), chave.slice(corte + 1));
     }));
   },

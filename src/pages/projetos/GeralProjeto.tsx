@@ -3,7 +3,7 @@
    anotações, agentes, cronograma interno, documentos da inscrição, produção,
    tarefas, alertas do edital e o histórico de status. */
 import { useState, type ReactNode } from "react";
-import { usarCentral } from "../../store/central";
+import { paginaDoProjeto, usarCentral } from "../../store/central";
 import { escolherProponente, salvarRegistro, trocarFormulario } from "../../store/mutacoes";
 import { anosDeCnpj, avisosProponente, idadeLegivel, proponenteDoProjeto } from "../../lib/proponentes";
 import { irParaAmbiente } from "../../store/navegacao";
@@ -26,6 +26,7 @@ export function GeralProjeto({ p }: { p: Projeto }) {
   const tarefas = painel.tarefas.filter((t) => t.origem === "proj:" + p.id);
   const artistas = p.artistaIds.map((id) => painel.artistas.find((a) => a.id === id)).filter(Boolean);
   const proponente = proponenteDoProjeto(p, painel);
+  const pagina = paginaDoProjeto(p.id);
   const avisosProp = avisosProponente(p, painel);
   const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
   const dias = (s: string) => {
@@ -88,6 +89,7 @@ export function GeralProjeto({ p }: { p: Projeto }) {
         {linha("Nº de inscrição", p.inscricao)}
         {linha("Resultado", p.resultado)}
         {linha("Pasta no Drive", p.linkDrive ? <a href={url(p.linkDrive)} target="_blank" rel="noopener noreferrer">📁 abrir ↗</a> : "")}
+        {pagina && linha("Página própria", <a href={"/" + pagina.slug + "/"}>{pagina.titulo} ↗</a>)}
         {p.obs && linha("Observações", <span style={{ whiteSpace: "pre-wrap" }}>{p.obs}</span>)}
       </div>
 
