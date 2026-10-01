@@ -12,20 +12,22 @@ interface Props {
   aoSalvar: () => void;
   /** Com excluir, aparece o botão à esquerda (dois cliques). */
   aoExcluir?: () => void;
+  /** Enquanto um upload roda: Salvar desabilitado e com "Enviando…". */
+  ocupado?: boolean;
   children: ReactNode;
 }
 
 /** Faz o campo ocupar as duas colunas do corpo do modal. */
 export const LINHA_INTEIRA = "cdf:md:col-span-2";
 
-export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, children }: Props) {
+export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, ocupado, children }: Props) {
   useEffect(() => {
     const tecla = (ev: KeyboardEvent) => { if (ev.key === "Escape") aoFechar(); };
     window.addEventListener("keydown", tecla);
     return () => window.removeEventListener("keydown", tecla);
   }, [aoFechar]);
 
-  function enviar(ev: FormEvent) { ev.preventDefault(); aoSalvar(); }
+  function enviar(ev: FormEvent) { ev.preventDefault(); if (!ocupado) aoSalvar(); }
 
   return (
     <div
@@ -52,7 +54,7 @@ export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, childr
             {aoExcluir && <BotaoArmado variante="perigo" confirmar="Confirmar exclusão" onClick={aoExcluir}>Excluir</BotaoArmado>}
             <span className="cdf:flex-1" />
             <Botao onClick={aoFechar}>Cancelar</Botao>
-            <Botao type="submit" variante="primario">Salvar</Botao>
+            <Botao type="submit" variante="primario" disabled={ocupado}>{ocupado ? "Enviando…" : "Salvar"}</Botao>
           </div>
         </footer>
       </form>

@@ -31,6 +31,8 @@ export interface ArtefatoJson {
   orcamento_itens?: Record<string, Record<string, unknown>>;
   slots?: Record<string, Record<string, unknown>>;
   tarefas?: Record<string, Record<string, unknown>>;
+  arquivos?: Record<string, Record<string, unknown>>;
+  comentarios?: Record<string, Record<string, unknown>>;
 }
 
 export interface Semeadura {
@@ -63,7 +65,7 @@ export function converterArtefato(json: ArtefatoJson, agora: string): Semeadura 
     id: SLUG, tipo: TIPO, listas, nucleos,
     parametros: { metaCaptacao: p.metaCaptacao ?? null, inicio: p.inicio ?? null, fim: p.fim ?? null, logo },
     simulador: { ...SIMULADOR_PADRAO, ...(semCarimbo(config.simulador || {}) as Partial<Simulador>) },
-    meta: { rev: 1, atualizadoEm: agora.slice(0, 10) },
+    meta: { rev: 1, atualizadoEm: agora.slice(0, 10), fase6: true },
     atualizado: agora,
   };
   const colecoes = {} as Record<Colecao, Documento[]>;
@@ -71,4 +73,9 @@ export function converterArtefato(json: ArtefatoJson, agora: string): Semeadura 
     colecoes[c] = Object.entries(json[c] || {}).map(([id, d]) => ({ ...semCarimbo(d), id, atualizado: agora }));
   }
   return { pagina, colecoes, registro: { slug: SLUG, projetoId: "", tipo: TIPO, titulo: TITULO } };
+}
+
+/** Só os cartões de arquivo (Fase 6), para a semente complementar de quem já tinha a página gravada. */
+export function sementeFase6(json: ArtefatoJson, agora: string): Documento[] {
+  return Object.entries(json.arquivos || {}).map(([id, d]) => ({ ...semCarimbo(d), id, atualizado: agora }));
 }

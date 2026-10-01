@@ -14,7 +14,7 @@ import { Banco } from "../../services/banco";
 import { clonar, uid } from "../../utils";
 import type { PaginaPropria } from "../../types";
 import { hojeIso } from "./calculo";
-import { converterArtefato } from "./semente";
+import { converterArtefato, sementeFase6 } from "./semente";
 import { COLECOES, SLUG, type Base, type Cadastro, type Colecao, type PaginaFestival, type Simulador } from "./tipos";
 
 type Documento = Record<string, unknown> & { id: string };
@@ -27,6 +27,7 @@ export const caminho = (c: Colecao) => COLECAO_PAGINAS + "/" + SLUG + "/" + c;
 /** Prefixo dos ids novos de cada coleção (uid da Central: "c-x7k2p9"). */
 const PREFIXO: Record<Colecao, string> = {
   cadastro: "c", espacos: "e", cotas: "q", patrocinios: "p", parceiros: "r", orcamento_itens: "o", slots: "h", tarefas: "t",
+  arquivos: "a", comentarios: "m",
 };
 
 interface Estado { pagina: PaginaFestival | null; colecoes: Record<Colecao, Mapa> }
@@ -36,6 +37,8 @@ let estado: Estado = {
   colecoes: Object.fromEntries(COLECOES.map((c) => [c, {}])) as Record<Colecao, Mapa>,
 };
 let presets: Mapa = {};
+/** Subcoleções que já responderam com dado do servidor (ou modo local). */
+const confirmadas = new Set<Colecao>();
 let paginaConfirmada = false;
 let presetsConfirmados = false;
 let ligado = false;
@@ -51,6 +54,7 @@ export function iniciarCaminhosDoForro() {
     estado = { ...estado, pagina: (documento as unknown as PaginaFestival) || null };
     if (confirmado) paginaConfirmada = true;
     talvezSemear();
+    talvezSemearFase6();
     publicar();
   });
   Banco.assinar("presets", (mapa, confirmado) => {
@@ -59,8 +63,10 @@ export function iniciarCaminhosDoForro() {
     talvezSemear();
   });
   for (const c of COLECOES) {
-    Banco.assinar(caminho(c), (mapa) => {
+    Banco.assinar(caminho(c), (mapa, confirmado) => {
       estado = { ...estado, colecoes: { ...estado.colecoes, [c]: mapa } };
+      if (confirmado) confirmadas.add(c);
+      talvezSemearFase6();
       publicar();
     });
   }
@@ -80,6 +86,22 @@ function talvezSemear() {
   });
 }
 
+/** Semente complementar da Fase 6: a página já existia antes dos cartões de arquivo (meta.fase6 ausente) e
+    \`arquivos\` está confirmada vazia → grava os cartões e marca a página. Roda uma vez. */
+let semeouFase6 = false;
+function talvezSemearFase6() {
+  const p = estado.pagina;
+  if (semeouFase6 || !p || p.meta?.fase6 || !confirmadas.has("arquivos")) return;
+  semeouFase6 = true;
+  const marcar = () => alterarPagina((pg) => { pg.meta = { ...pg.meta, fase6: true }; });
+  // Já tem cartões (semeados antes da marca existir): só marca, para não semear de novo se um dia esvaziarem.
+  if (Object.keys(estado.colecoes.arquivos).length) { marcar(); return; }
+  void import("./semente.json").then(({ default: json }) => {
+    sementeFase6(clonar(json) as never, new Date().toISOString()).forEach((d) => Banco.gravar(caminho("arquivos"), d.id, d, true));
+    marcar();
+  });
+}
+
 /** Hook: a base montada (null enquanto a página não carregou). */
 export function usarCaminhosDoForro(): Base | null {
   const e = useSyncExternalStore(
@@ -96,7 +118,7 @@ export function alterarPagina(mudar: (p: PaginaFestival) => void, rapido = true)
   if (!estado.pagina) return;
   const copia = clonar(estado.pagina);
   mudar(copia);
-  copia.meta = { rev: (copia.meta?.rev || 0) + 1, atualizadoEm: hojeIso() };
+  copia.meta = { ...copia.meta, rev: (copia.meta?.rev || 0) + 1, atualizadoEm: hojeIso() };
   copia.atualizado = new Date().toISOString();
   Banco.gravar(COLECAO_PAGINAS, SLUG, copia as unknown as Documento, rapido);
 }

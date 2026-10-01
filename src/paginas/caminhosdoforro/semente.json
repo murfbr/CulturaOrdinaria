@@ -3827,5 +3827,64 @@
       "titulo": "Definir as ativações da parceria com a Rio no Forró",
       "urgente": false
     }
-  }
+  },
+  "arquivos": {
+    "ap-institucional": {
+      "secao": "apresentacao",
+      "grupo": "institucional",
+      "nome": "Apresentação institucional",
+      "descricao": "Deck de 10 slides para parceiros e instituições.",
+      "ordem": 1,
+      "versoes": []
+    },
+    "ap-comercial1": {
+      "secao": "apresentacao",
+      "grupo": "comercial1",
+      "nome": "Apresentação comercial · primeiro contato",
+      "descricao": "Para a primeira conversa com uma empresa.",
+      "ordem": 2,
+      "versoes": []
+    },
+    "ap-comercial2": {
+      "secao": "apresentacao",
+      "grupo": "comercial2",
+      "nome": "Apresentação comercial · segundo contato",
+      "descricao": "Com a proposta de cota para a empresa.",
+      "ordem": 3,
+      "versoes": []
+    },
+    "ctx-projeto": {
+      "secao": "contexto",
+      "grupo": "projeto",
+      "nome": "Projeto artístico e conceitual",
+      "descricao": "O projeto escrito (V12).",
+      "ordem": 1,
+      "versoes": []
+    },
+    "ctx-pesquisa": {
+      "secao": "contexto",
+      "grupo": "pesquisa",
+      "nome": "Pesquisa externa",
+      "descricao": "Data, local e tema: IPHAN, Unesco, tombamento da Praça XV, Anastácia.",
+      "ordem": 1,
+      "versoes": []
+    },
+    "ctx-planilha": {
+      "secao": "contexto",
+      "grupo": "base",
+      "nome": "Planilha de orçamento",
+      "descricao": "Três cenários: essencial, ideal e expandido.",
+      "ordem": 1,
+      "versoes": []
+    },
+    "ctx-identidade": {
+      "secao": "contexto",
+      "grupo": "base",
+      "nome": "Identidade visual",
+      "descricao": "Canva \"Id-Visual-Caminhos-Forró\", de Ana Colier.",
+      "ordem": 2,
+      "versoes": []
+    }
+  },
+  "comentarios": {}
 }

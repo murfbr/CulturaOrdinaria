@@ -12,12 +12,13 @@ export const TIPO = "festival";
 export const TITULO = "Festival Caminhos do Forró";
 
 /** As oito coleções do festival (subcoleções de paginas/caminhosdoforro), na ordem da Configuração. */
-export const COLECOES = ["cadastro", "espacos", "cotas", "patrocinios", "parceiros", "orcamento_itens", "slots", "tarefas"] as const;
+export const COLECOES = ["cadastro", "espacos", "cotas", "patrocinios", "parceiros", "orcamento_itens", "slots", "tarefas", "arquivos", "comentarios"] as const;
 export type Colecao = (typeof COLECOES)[number];
 
 export const ROTULO_COLECAO: Record<Colecao, string> = {
   cadastro: "Cadastro geral", espacos: "Espaços", cotas: "Cotas", patrocinios: "Patrocínios",
   parceiros: "Parceiros institucionais", orcamento_itens: "Itens de orçamento", slots: "Horários da grade", tarefas: "Tarefas",
+  arquivos: "Arquivos (apresentações e contexto)", comentarios: "Comentários",
 };
 
 /* ══════════ configuração (documento da página) ══════════ */
@@ -73,7 +74,7 @@ export interface PaginaFestival {
   nucleos: Nucleo[];
   parametros: Parametros;
   simulador: Simulador;
-  meta: { rev: number; atualizadoEm: string };
+  meta: { rev: number; atualizadoEm: string; /** Os cartões de arquivo da Fase 6 já foram semeados. */ fase6?: boolean };
   atualizado?: string;
 }
 
@@ -233,4 +234,60 @@ export interface Base {
   orcamento_itens: Record<string, ItemOrcamento>;
   slots: Record<string, Horario>;
   tarefas: Record<string, TarefaFestival>;
+  arquivos: Record<string, ArquivoBase>;
+  comentarios: Record<string, Comentario>;
 }
+
+/* ══════════ arquivos (Apresentações e Contexto) e comentários ══════════ */
+
+/** Um arquivo guardado: upload no Firebase Storage ou só o link. */
+export interface ArquivoGuardado {
+  tipo: "storage" | "link";
+  url: string;
+  /** Caminho no Storage (para apagar), só no tipo storage. */
+  caminho?: string;
+  nomeOriginal?: string;
+  tamanho?: number;
+}
+
+export interface VersaoArquivo {
+  versao: string;
+  /** Data ISO. */
+  data: string;
+  /** E-mail de quem subiu (vazio em modo local). */
+  por: string;
+  arquivo: ArquivoGuardado;
+}
+
+/** Cartão de arquivo: a última versão é a atual; sem versões = faltante. */
+export interface ArquivoBase {
+  id: string;
+  secao: "apresentacao" | "contexto";
+  /** Apresentação: a versão do deck; contexto: projeto, pesquisa ou base. */
+  grupo: string;
+  nome: string;
+  descricao: string;
+  ordem: number;
+  versoes: VersaoArquivo[];
+  atualizado?: string;
+}
+
+/** Comentário sobre um cartão de arquivo; `por` é id do cadastro (equipe). */
+export interface Comentario {
+  id: string;
+  /** "arquivo:<id>". */
+  sobre: string;
+  data: string;
+  por: string | null;
+  texto: string;
+  em: number;
+  atualizado?: string;
+}
+
+/** Os grupos da aba Contexto, na ordem. */
+export const GRUPOS_CONTEXTO: [string, string][] = [["projeto", "Projeto escrito"], ["pesquisa", "Pesquisa externa"], ["base", "Arquivos base"]];
+
+/** As três versões do deck, na ordem (os cartões da aba Apresentações). */
+export const VERSOES_APRESENTACAO: [string, string][] = [
+  ["institucional", "Institucional"], ["comercial1", "Comercial · primeiro contato"], ["comercial2", "Comercial · segundo contato"],
+];

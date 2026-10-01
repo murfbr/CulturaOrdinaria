@@ -16,7 +16,7 @@ export const NAV: { id: Vista; nome: string; fase?: number }[] = [
   { id: "programacao", nome: "Programação" },
   { id: "orcamento", nome: "Orçamento" },
   { id: "tarefas", nome: "Tarefas" },
-  { id: "contexto", nome: "Contexto", fase: 6 },
+  { id: "contexto", nome: "Contexto" },
 ];
 
 /** Título e texto de abertura de cada vista. */
@@ -27,13 +27,13 @@ export const TITULOS: Partial<Record<Vista, [string, string]>> = {
   programacao: ["Programação", "A grade dos três dias. Quem sobe ao palco ou ocupa uma sala vem do cadastro geral; horários, espaços e atividades se editam aqui."],
   orcamento: ["Orçamento", "Quanto o festival custa, de onde vem o dinheiro e o que falta. Os valores seguem o cenário escolhido."],
   tarefas: ["Tarefas", "O que cada núcleo tem para fazer até o festival. Arraste os cartões entre as colunas ou mude o status no próprio cartão."],
+  contexto: ["Contexto", "O projeto escrito, a pesquisa externa e os arquivos base do festival, com versões e comentários. Cada cartão guarda o arquivo (upload ou link)."],
   config: ["Configuração", "Parâmetros do festival, listas usadas nos campos de seleção e o que está carregado na base."],
 };
 
 /** As seções da Fase 6 do artefato: ainda são só um aviso. */
 export const FUTURAS: Partial<Record<Vista, { fase: number; titulo: string; texto: string }>> = {
   apresentacoes: { fase: 6, titulo: "Apresentações", texto: "Roteiro slide a slide das três versões: institucional, comercial de primeiro contato e comercial de segundo contato." },
-  contexto: { fase: 6, titulo: "Contexto", texto: "Projeto escrito (V12), pesquisa externa, arquivos base com versão e espaço para comentários." },
 };
 
 /** Documento de trabalho do festival, para onde o artefato manda enquanto a Fase 6 não chega. */
