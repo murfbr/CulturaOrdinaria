@@ -9,7 +9,7 @@ export type IrPara = (vista: Vista) => void;
 
 /** O menu, na ordem do artefato. `fase` marca as seções que ainda não existem. */
 export const NAV: { id: Vista; nome: string; fase?: number }[] = [
-  { id: "painel", nome: "Painel geral", fase: 6 },
+  { id: "painel", nome: "Painel geral" },
   { id: "apresentacoes", nome: "Apresentações", fase: 6 },
   { id: "cadastro", nome: "Cadastro geral" },
   { id: "patrocinios", nome: "Patrocínios e apoios" },
@@ -21,6 +21,7 @@ export const NAV: { id: Vista; nome: string; fase?: number }[] = [
 
 /** Título e texto de abertura de cada vista. */
 export const TITULOS: Partial<Record<Vista, [string, string]>> = {
+  painel: ["Painel geral", "O festival num olhar: quanto falta, quanto já entrou, quem está confirmado e como cada núcleo está."],
   cadastro: ["Cadastro geral", "Fonte única de pessoas, organizações e espaços do festival. As outras telas puxam daqui, então cada informação é digitada uma vez só."],
   patrocinios: ["Patrocínios e apoios", "Cotas à venda, negociações com empresas e parceiros institucionais do festival."],
   programacao: ["Programação", "A grade dos três dias. Quem sobe ao palco ou ocupa uma sala vem do cadastro geral; horários, espaços e atividades se editam aqui."],
@@ -31,7 +32,6 @@ export const TITULOS: Partial<Record<Vista, [string, string]>> = {
 
 /** As seções da Fase 6 do artefato: ainda são só um aviso. */
 export const FUTURAS: Partial<Record<Vista, { fase: number; titulo: string; texto: string }>> = {
-  painel: { fase: 6, titulo: "Painel geral", texto: "Contagem regressiva, captado contra a meta, line-up confirmado e resumo de cada núcleo." },
   apresentacoes: { fase: 6, titulo: "Apresentações", texto: "Roteiro slide a slide das três versões: institucional, comercial de primeiro contato e comercial de segundo contato." },
   contexto: { fase: 6, titulo: "Contexto", texto: "Projeto escrito (V12), pesquisa externa, arquivos base com versão e espaço para comentários." },
 };
