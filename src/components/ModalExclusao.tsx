@@ -1,7 +1,9 @@
 /* Confirmação de exclusão com o impacto nos vínculos: lista o que está ligado
    ao registro e oferece excluir levando junto ou desvinculando (mantém os
    registros, só limpa a ligação). Sem vínculos, é uma confirmação simples. */
-import { Modal, RodapeModal } from "./Modal";
+import { AcoesModal, Modal, RodapeModal } from "./Modal";
+import { Botao } from "./ui/Botao";
+import { Dica } from "./ui/Dica";
 import type { DestinoVinculos, ImpactoExclusao } from "../store/vinculos";
 
 interface Props {
@@ -20,29 +22,29 @@ export function ModalExclusao({ titulo, nome, impacto, aoFechar, aoExcluir }: Pr
     <Modal titulo={"Excluir " + titulo.toLowerCase() + (nome ? ": " + nome : "") + "?"} aoFechar={aoFechar}>
       {temVinculos ? (
         <>
-          <p className="hint" style={{ marginTop: 0 }}>Este registro tem vínculos:</p>
-          <ul className="import-lista">
+          <Dica emModal className="mb-3">Este registro tem vínculos:</Dica>
+          <ul className="mb-3 mt-1.5 list-disc pl-[18px] text-sm text-muted [&_li]:my-0.5">
             {impacto.vinculos.map((v) => <li key={v}>{v}</li>)}
           </ul>
-          <p className="hint">
-            <b>Levar junto</b> apaga também o que está listado.{" "}
-            <b>Desvincular</b> mantém esses registros, só limpando a ligação.
-          </p>
+          <Dica emModal className="mb-3">
+            <b className="text-ink">Levar junto</b> apaga também o que está listado.{" "}
+            <b className="text-ink">Desvincular</b> mantém esses registros, só limpando a ligação.
+          </Dica>
         </>
       ) : (
-        <p className="hint" style={{ marginTop: 0 }}>Nenhum registro do Painel depende deste.</p>
+        <Dica emModal className="mb-3">Nenhum registro do Painel depende deste.</Dica>
       )}
-      {impacto.notas.map((nota) => <p className="hint" key={nota}>{nota}</p>)}
+      {impacto.notas.map((nota) => <Dica emModal className="mb-3" key={nota}>{nota}</Dica>)}
       <RodapeModal>
-        <span className="sp">
-          <button className="btn ghost" onClick={aoFechar}>Cancelar</button>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
           {temVinculos && (
-            <button className="btn ghost" onClick={() => aoExcluir("desvincular")}>Excluir e desvincular</button>
+            <Botao variante="fantasma" onClick={() => aoExcluir("desvincular")}>Excluir e desvincular</Botao>
           )}
-          <button className="btn perigo" onClick={() => aoExcluir("junto")}>
+          <Botao variante="perigo" onClick={() => aoExcluir("junto")}>
             {temVinculos ? "Excluir levando junto" : "Excluir"}
-          </button>
-        </span>
+          </Botao>
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

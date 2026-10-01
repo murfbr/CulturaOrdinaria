@@ -27,7 +27,7 @@ export default function App() {
 
   // Modo nuvem: só entra (e só conecta no banco) depois do login.
   if (firebaseAtivo) {
-    if (sessao.carregando) return <div className="carregando-tela">abrindo a Central…</div>;
+    if (sessao.carregando) return <div className="flex min-h-[60vh] items-center justify-center text-base text-muted">abrindo a Central…</div>;
     if (!sessao.usuario) return <Login />;
   }
   // Página própria de projeto (/<slug>/): mesmo login e mesmo banco, casca própria.
@@ -45,7 +45,7 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
 
   return (
     <>
-      <div className="aviso">
+      <div className="border-b border-warn/40 bg-warn-soft px-[18px] py-[7px] text-sm text-warn-ink">
         <b>Cópia interna de trabalho.</b> Os formulários dos Projetos reproduzem a estrutura das plataformas só para
         redigir fora delas; não são canal de inscrição, não usam a identidade visual de nenhum
         órgão e a inscrição válida é a feita no site oficial, dentro do prazo.
@@ -56,7 +56,7 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
       <BarraFerramentas />
 
       {!central.pronto && Banco.modo === "nuvem" ? (
-        <div className="carregando-tela">carregando os dados do coletivo…</div>
+        <div className="flex min-h-[60vh] items-center justify-center text-base text-muted">carregando os dados do coletivo…</div>
       ) : nav.amb === "projetos" ? (
         <Projetos />
       ) : nav.amb === "contexto" ? (

@@ -1,7 +1,9 @@
 /* Barra de abas do ambiente ativo. Em Gestão, a aba "Migração v3" só
-   aparece enquanto houver dado no formato antigo (ou quando já está aberta). */
+   aparece enquanto houver dado no formato antigo (ou quando já está aberta).
+   No celular as abas rolam de lado. */
 import { usarCentral } from "../../store/central";
 import { ambienteDe, irParaAba, usarNavegacao } from "../../store/navegacao";
+import { cx } from "../../utils/classes";
 
 export function BarraAbas() {
   const nav = usarNavegacao();
@@ -10,13 +12,23 @@ export function BarraAbas() {
   const pendente = legado.candidaturas.length > 0 || legado.projetosV2 > 0;
 
   return (
-    <nav className="tabs">
-      <div className="tabs-in">
+    <nav className="sticky top-0 z-[5] border-b border-line bg-bg">
+      <div className="mx-auto flex max-w-[1200px] gap-0.5 overflow-x-auto px-[18px]">
         {ambiente.abas
           .filter(([id]) => id !== "migracao" || pendente || nav.aba === "migracao")
           .map(([id, rotulo]) => (
-            <button key={id} className={id === nav.aba ? "on" : ""} onClick={() => irParaAba(id)}>
-              {rotulo}{id === "migracao" && pendente && <span className="amb-badge">!</span>}
+            <button
+              key={id}
+              className={cx(
+                "cursor-pointer whitespace-nowrap border-0 border-b-2 border-solid bg-transparent px-3.5 py-3 text-sm font-semibold disabled:cursor-default disabled:opacity-40",
+                id === nav.aba ? "border-accent text-accent" : "border-transparent text-muted hover:text-ink",
+              )}
+              onClick={() => irParaAba(id)}
+            >
+              {rotulo}
+              {id === "migracao" && pendente && (
+                <span className="ml-1.5 rounded-full bg-accent px-1.5 py-px align-[1px] text-3xs font-bold text-white">!</span>
+              )}
             </button>
           ))}
       </div>

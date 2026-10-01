@@ -1,8 +1,25 @@
+/* Tailwind da festa: branding em tailwind.config.js desta pasta, prefixo sdp
+   para não brigar com as classes da Central, e só procura classes aqui dentro.
+   Sem o reset padrão (a Central liga o dela no fim da migração). O CSS antigo
+   abaixo fica até cada tela migrar. */
+@layer theme, base, legado, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(sdp);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(sdp) source(none);
+@source "./";
+@config "./tailwind.config.js";
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+}
+
 /* CSS da página Samba de Ponta: o CSS do artefato "Ponta de Lança" com todo
    seletor dentro de .sambadeponta (nada vaza para a Central) e as classes que a
    Central também estiliza (btn, card, grid, modal, hero, bar, col, cell,
    eyebrow, brand, side, toolbar, prazo, rm) renomeadas com o prefixo sdp-.
    Gerado a partir do artefato; ajustes à mão ficam no bloco final. */
+/* CSS antigo do artefato, na camada legado (abaixo das utilities). Some na etapa 7. */
+@layer legado {
 .sambadeponta{--green:#006837;--lime:#97C230;--cream:#FFFFCB;--dark:#00311B;
   --paper:#F5F7F2;--card:#FFFFFF;--ink:#0B1F16;--muted:#63736A;--line:#DCE4DA;--zebra:#F5FAF1;
   --red:#B23A2E;--red-soft:#F9E4E1;--amber:#9A6212;--amber-soft:#FBEEDC;--ok-soft:#E4F0DA;--ok:#3D6B16;
@@ -230,3 +247,4 @@
 .sambadeponta nav.sdp-side .estado button{background:none;border:0;color:rgba(255,255,255,.6);padding:0;font-size:11px;text-align:left;cursor:pointer;text-decoration:underline}
 .sambadeponta .edtile.new{cursor:pointer}
 .sambadeponta .sdp-eyebrow{color:var(--dark)}
+}

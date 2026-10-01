@@ -5,9 +5,10 @@
    e um deploy só invalida o que mudou. */
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   // O dev server aceita a porta via variável PORT (útil quando a 5173 está ocupada).
   server: { port: Number(process.env.PORT) || 5173 },
   build: {

@@ -4,6 +4,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usarCentral } from "../store/central";
 import { filtrar, montarIndice, type ResultadoBusca } from "../lib/busca";
+import { cx } from "../utils/classes";
+import { Overlay } from "./Modal";
+import { Badge } from "./ui/Badge";
 
 let abrirFora: (() => void) | null = null;
 /** Abre a paleta de busca de qualquer lugar. */
@@ -45,34 +48,35 @@ export function BuscaGlobal() {
   };
 
   return (
-    <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) setAberta(false); }}>
-      <div className="paleta" role="dialog" aria-label="Busca global">
+    <Overlay aoFechar={() => setAberta(false)}>
+      <div className="w-full max-w-[580px] overflow-hidden rounded-xl border border-line bg-card shadow-modal" role="dialog" aria-label="Busca global">
         <input
           ref={caixa} type="search" value={termo}
+          className="w-full border-0 border-b border-solid border-line bg-transparent px-4 py-3.5 text-lg text-ink outline-none"
           placeholder="buscar em tudo: artistas, editais, projetos, tarefas, formulários…"
           onChange={(e) => setTermo(e.target.value)} onKeyDown={teclas}
         />
-        <div className="paleta-lista">
+        <div className="max-h-[min(430px,62vh)] overflow-auto p-1.5">
           {resultados.map((x, i) => (
             <div
               key={i} ref={i === ativo ? linhaAtiva : undefined}
-              className={"paleta-item" + (i === ativo ? " on" : "")}
+              className={cx("flex cursor-pointer items-baseline gap-2 rounded-lg px-2.5 py-2 text-sm", i === ativo && "bg-accent-soft")}
               // onMouseMove (não Enter): rolar a lista sob o cursor parado não rouba a seleção do teclado
               onMouseMove={() => ativo !== i && setAtivo(i)} onClick={() => escolher(x)}
             >
-              <span className="badge b-type">{x.grupo}</span>
-              <span className="t">{x.titulo}</span>
-              {x.detalhe && <span className="s">{x.detalhe}</span>}
+              <Badge mini className="flex-none">{x.grupo}</Badge>
+              <span className="truncate font-semibold">{x.titulo}</span>
+              {x.detalhe && <span className="ml-auto max-w-[42%] flex-none truncate text-xs text-muted">{x.detalhe}</span>}
             </div>
           ))}
           {termo.trim() !== "" && !resultados.length && (
-            <div className="paleta-vazia">nada encontrado para “{termo}”</div>
+            <div className="px-4 py-3.5 text-sm text-muted">nada encontrado para “{termo}”</div>
           )}
           {termo.trim() === "" && (
-            <div className="paleta-vazia">digite para buscar · ↑↓ navega · Enter abre · Esc fecha</div>
+            <div className="px-4 py-3.5 text-sm text-muted">digite para buscar · ↑↓ navega · Enter abre · Esc fecha</div>
           )}
         </div>
       </div>
-    </div>
+    </Overlay>
   );
 }

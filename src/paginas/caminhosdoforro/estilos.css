@@ -1,0 +1,74 @@
+/* Tailwind do festival: branding em tailwind.config.js desta pasta, prefixo
+   cdf para não brigar com as classes da Central nem com as da festa do Samba,
+   e só procura classes aqui dentro. Sem o reset padrão (a Central liga o dela
+   no fim da migração). Não há CSS legado: a página nasceu em Tailwind. */
+@layer theme, base, legado, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(cdf);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(cdf) source(none);
+@source "./";
+@config "./tailwind.config.js";
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+}
+
+/* Tokens da identidade visual (Ana Colier, Canva "Id-Visual-Caminhos-Forró").
+   As cinco cores da marca estão no config; os tons de texto e de status
+   derivam delas para garantir contraste. Para trocar a marca, mude só este
+   bloco (e o config). */
+@layer base {
+  .caminhosdoforro {
+    --cdf-fundo: #F5F1EA; --cdf-superficie: #FFFCF7; --cdf-superficie-2: #F0E9DD;
+    --cdf-tinta: #3A1F19; --cdf-tinta-2: #674840; --cdf-fraco: #86695E; --cdf-linha: #E2D6C5;
+    --cdf-primaria: #8B3226; --cdf-primaria-texto: #FFF8EE; --cdf-primaria-suave: #F5E0D6;
+    --cdf-destaque: #E55B28; --cdf-link: #1C6D7A; --cdf-erro: #B23A1E;
+    --cdf-lateral: #8B3226; --cdf-lateral-texto: #FBF1E4; --cdf-lateral-fraco: #E8C0AF; --cdf-lateral-ativo: #A03F30;
+    --cdf-logo: #E0D24A; --cdf-sol: #E55B28;
+    --cdf-st-contatar-bg: #EAE2D4; --cdf-st-contatar: #5C483E;
+    --cdf-st-conversa-bg: #F4EDB6; --cdf-st-conversa: #665600;
+    --cdf-st-conf-bg: #D2ECEF; --cdf-st-conf: #135E6A;
+    --cdf-st-rec-bg: #F8D8CB; --cdf-st-rec: #8B3226;
+    --cdf-sombra: 0 18px 48px rgba(58, 31, 25, .28);
+    --cdf-grao: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .16  0 0 0 .07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  }
+  @media (prefers-color-scheme: dark) {
+    .caminhosdoforro {
+      --cdf-fundo: #241310; --cdf-superficie: #301A15; --cdf-superficie-2: #3B231C;
+      --cdf-tinta: #F5F1EA; --cdf-tinta-2: #DDCBBB; --cdf-fraco: #B39A8B; --cdf-linha: #52332A;
+      --cdf-primaria: #F07A4A; --cdf-primaria-texto: #2A110B; --cdf-primaria-suave: #4B2A20;
+      --cdf-destaque: #F07A4A; --cdf-link: #6FC7D4; --cdf-erro: #FF8C6B;
+      --cdf-lateral: #5C2018; --cdf-lateral-texto: #FBF1E4; --cdf-lateral-fraco: #E0B3A2; --cdf-lateral-ativo: #732A20;
+      --cdf-logo: #E0D24A; --cdf-sol: #C84E22;
+      --cdf-st-contatar-bg: #3E2A23; --cdf-st-contatar: #E6D6C6;
+      --cdf-st-conversa-bg: #4A4213; --cdf-st-conversa: #F1E47C;
+      --cdf-st-conf-bg: #163E45; --cdf-st-conf: #93D8E2;
+      --cdf-st-rec-bg: #57231A; --cdf-st-rec: #FFB8A2;
+      --cdf-sombra: 0 18px 48px rgba(0, 0, 0, .6);
+      --cdf-grao: none;
+    }
+  }
+}
+
+/* Base da página (faz o papel do body): fonte, fundo, cor, caixa e os
+   controles herdando a fonte. Fica na camada "legado" de propósito: é a
+   camada do CSS antigo da Central, que estiliza elementos soltos (h1, input,
+   table…); como este arquivo entra depois, vence onde os dois se cruzam. */
+@layer legado {
+  .caminhosdoforro {
+    font-family: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--cdf-tinta);
+    background: var(--cdf-fundo) var(--cdf-grao);
+    -webkit-text-size-adjust: 100%;
+  }
+  .caminhosdoforro *, .caminhosdoforro *::before, .caminhosdoforro *::after { box-sizing: border-box; }
+  .caminhosdoforro button, .caminhosdoforro input, .caminhosdoforro select, .caminhosdoforro textarea {
+    font: inherit; color: inherit; letter-spacing: inherit; margin: 0; border-radius: 0; box-shadow: none; background: none; border: 0; padding: 0;
+  }
+  .caminhosdoforro img { max-width: 100%; }
+  .caminhosdoforro a { color: var(--cdf-link); }
+  .caminhosdoforro :focus-visible { outline: 3px solid var(--cdf-destaque); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .caminhosdoforro * { transition: none !important; } }
+}

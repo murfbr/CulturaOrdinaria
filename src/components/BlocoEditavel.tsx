@@ -2,6 +2,9 @@
    textarea de texto simples (um item por linha; pares separados por " | ").
    Usado no acervo do artista — mesmo jeitão dos blocos das fichas do Contexto. */
 import { useState, type ReactNode } from "react";
+import { Botao } from "./ui/Botao";
+import { Dica } from "./ui/Dica";
+import { Painel } from "./ui/Painel";
 
 interface Props {
   titulo: ReactNode;
@@ -19,27 +22,26 @@ export function BlocoEditavel({ titulo, dica, valor, aoSalvar, children }: Props
   const [texto, setTexto] = useState("");
 
   return (
-    <div className="panel">
-      <h4>
-        {titulo}
-        <span className="act">
-          {!editando && (
-            <button className="btn ghost sm" onClick={() => { setTexto(valor); setEditando(true); }}>editar</button>
-          )}
-        </span>
-      </h4>
+    <Painel
+      titulo={titulo}
+      acoes={!editando && (
+        <Botao variante="fantasma" tamanho="pequeno" onClick={() => { setTexto(valor); setEditando(true); }}>editar</Botao>
+      )}
+    >
       {editando ? (
         <>
-          <textarea className="bloco-edt" autoFocus value={texto}
+          <textarea
+            className="w-full resize-y rounded-lg border border-line bg-white px-[11px] py-[9px] text-sm leading-[1.55] text-ink outline-none focus:border-accent"
+            autoFocus value={texto}
             rows={Math.max(4, valor.split("\n").length + 2)}
             onChange={(e) => setTexto(e.target.value)} />
-          <div className="bloco-edt-f">
-            <span className="hint" style={{ margin: 0 }}>{dica}</span>
-            <button className="btn sm" onClick={() => { aoSalvar(texto); setEditando(false); }}>Salvar</button>
-            <button className="btn ghost sm" onClick={() => setEditando(false)}>Cancelar</button>
+          <div className="mt-2 flex items-center gap-2">
+            <Dica className="mr-auto">{dica}</Dica>
+            <Botao tamanho="pequeno" onClick={() => { aoSalvar(texto); setEditando(false); }}>Salvar</Botao>
+            <Botao variante="fantasma" tamanho="pequeno" onClick={() => setEditando(false)}>Cancelar</Botao>
           </div>
         </>
       ) : children}
-    </div>
+    </Painel>
   );
 }

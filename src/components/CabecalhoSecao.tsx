@@ -9,10 +9,10 @@ interface Props {
 
 export function CabecalhoSecao({ titulo, sub, children }: Props) {
   return (
-    <div className="shead">
-      <h2>{titulo}</h2>
-      {sub && <span className="sub">{sub}</span>}
-      <span className="act">{children}</span>
+    <div className="mb-3.5 mt-[22px] flex flex-wrap items-center gap-3">
+      <h2 className="m-0 text-lg font-bold tracking-[-.2px]">{titulo}</h2>
+      {sub && <span className="text-sm text-muted">{sub}</span>}
+      <span className="ml-auto flex flex-wrap gap-2">{children}</span>
     </div>
   );
 }

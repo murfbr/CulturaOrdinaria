@@ -1,16 +1,26 @@
 /* Controles de organização das listas do Painel: a barra de busca/filtros com
    a contagem "x de y", e o cabeçalho de tabela clicável que ordena a coluna.
-   Cada página compõe os seus controles dentro de <BarraFiltros>. */
+   Cada página compõe os seus controles dentro de <BarraFiltros>.
+   Ponte da migração: a classe "filtros" fica no HTML porque o CSS antigo
+   estiliza o <label class="chk"> das telas que ainda não migraram. */
 import type { ReactNode } from "react";
 import { comparar } from "../utils";
+import { cx } from "../utils/classes";
+import { ESTILO_TH } from "./ui/Tabela";
+
+/** Visual dos controles da barra: menores e mais leves que os do formulário. */
+const ESTILO_FILTRO =
+  "max-w-[230px] rounded-[7px] border border-line bg-card px-[9px] py-1.5 text-sm text-ink outline-none focus:border-accent";
 
 export function BarraFiltros({ mostrando, total, children }: {
   mostrando: number; total: number; children?: ReactNode;
 }) {
   return (
-    <div className="filtros">
+    <div className="filtros mb-3.5 flex flex-wrap items-center gap-2">
       {children}
-      <span className="n">{mostrando === total ? total + " registro(s)" : mostrando + " de " + total}</span>
+      <span className="ml-auto text-xs text-muted tabular-nums">
+        {mostrando === total ? total + " registro(s)" : mostrando + " de " + total}
+      </span>
     </div>
   );
 }
@@ -18,7 +28,10 @@ export function BarraFiltros({ mostrando, total, children }: {
 export function CampoBusca({ valor, aoMudar, placeholder = "buscar…" }: {
   valor: string; aoMudar: (v: string) => void; placeholder?: string;
 }) {
-  return <input type="search" value={valor} placeholder={placeholder} onChange={(e) => aoMudar(e.target.value)} />;
+  return (
+    <input type="search" className={cx(ESTILO_FILTRO, "min-w-[170px]")} value={valor} placeholder={placeholder}
+      onChange={(e) => aoMudar(e.target.value)} />
+  );
 }
 
 interface Opcao { valor: string; rotulo: string }
@@ -28,7 +41,7 @@ export function SeletorFiltro({ valor, aoMudar, rotuloTodos, opcoes }: {
   valor: string; aoMudar: (v: string) => void; rotuloTodos?: string; opcoes: (Opcao | string)[];
 }) {
   return (
-    <select value={valor} onChange={(e) => aoMudar(e.target.value)}>
+    <select className={ESTILO_FILTRO} value={valor} onChange={(e) => aoMudar(e.target.value)}>
       {rotuloTodos != null && <option value="">{rotuloTodos}</option>}
       {opcoes.map((o) => typeof o === "string"
         ? <option key={o} value={o}>{o}</option>
@@ -60,9 +73,9 @@ export function ThOrdenavel({ campo, ordem, aoOrdenar, children }: {
       : !ordem.desc ? { campo, desc: true }
         : { campo: "", desc: false };
   return (
-    <th className={"th-ord" + (ativo ? " on" : "")} title="clique para ordenar por esta coluna"
-      onClick={() => aoOrdenar(proxima())}>
-      {children} <span className="seta">{ativo ? (ordem.desc ? "↓" : "↑") : "↕"}</span>
+    <th className={cx(ESTILO_TH, "cursor-pointer select-none", ativo ? "text-accent" : "text-muted hover:text-ink")}
+      title="clique para ordenar por esta coluna" onClick={() => aoOrdenar(proxima())}>
+      {children} <span className={cx("text-3xs", ativo ? "opacity-100" : "opacity-40")}>{ativo ? (ordem.desc ? "↓" : "↑") : "↕"}</span>
     </th>
   );
 }

@@ -2,6 +2,8 @@
    Não há auto-cadastro — contas são criadas no console do Firebase pelo coletivo. */
 import { useState, type FormEvent } from "react";
 import { entrar, redefinirSenha } from "../services/sessao";
+import { Botao } from "../components/ui/Botao";
+import { Campo, Entrada } from "../components/ui/Campo";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -35,27 +37,25 @@ export function Login() {
   }
 
   return (
-    <div className="login-fundo">
-      <form className="login-caixa" onSubmit={aoEnviar}>
-        <h1>Central do Coletivo</h1>
-        <p className="sub">captação, escrita e contexto dos projetos culturais</p>
-        {erro && <div className="erro">{erro}</div>}
-        {avisoOk && <div className="aviso-ok">{avisoOk}</div>}
-        <div className="field">
-          <label htmlFor="login-email">E-mail</label>
-          <input id="login-email" type="email" autoComplete="email" value={email}
+    <div className="flex min-h-screen items-center justify-center bg-bg p-5">
+      <form className="w-full max-w-[380px] rounded-[14px] border border-line bg-card px-[30px] py-7 shadow-card" onSubmit={aoEnviar}>
+        <h1 className="m-0 mb-0.5 text-xl font-bold tracking-[-.2px]">Central do Coletivo</h1>
+        <p className="m-0 mb-[18px] text-sm text-muted">captação, escrita e contexto dos projetos culturais</p>
+        {erro && <div className="mb-2.5 rounded-lg bg-no-soft px-2.5 py-2 text-sm text-no-ink">{erro}</div>}
+        {avisoOk && <div className="mb-2.5 rounded-lg bg-ok-soft px-2.5 py-2 text-sm text-ok-ink">{avisoOk}</div>}
+        <Campo rotulo="E-mail" htmlFor="login-email">
+          <Entrada id="login-email" type="email" autoComplete="email" value={email}
             onChange={(e) => setEmail(e.target.value)} autoFocus />
-        </div>
-        <div className="field">
-          <label htmlFor="login-senha">Senha</label>
-          <input id="login-senha" type="password" autoComplete="current-password" value={senha}
+        </Campo>
+        <Campo rotulo="Senha" htmlFor="login-senha">
+          <Entrada id="login-senha" type="password" autoComplete="current-password" value={senha}
             onChange={(e) => setSenha(e.target.value)} />
-        </div>
-        <button className="btn" type="submit" disabled={entrando}>
+        </Campo>
+        <Botao type="submit" tamanho="grande" className="mt-1 w-full" disabled={entrando}>
           {entrando ? "Entrando…" : "Entrar"}
-        </button>
-        <button className="esqueci" type="button" onClick={aoEsquecer}>Esqueci a senha</button>
-        <p className="rodape">Sem conta? Peça a quem administra o coletivo para criar a sua no painel do Firebase.</p>
+        </Botao>
+        <Botao variante="link" tamanho="pequeno" className="mt-3" onClick={aoEsquecer}>Esqueci a senha</Botao>
+        <p className="mt-4 border-t border-line pt-3 text-xs text-faint">Sem conta? Peça a quem administra o coletivo para criar a sua no painel do Firebase.</p>
       </form>
     </div>
   );

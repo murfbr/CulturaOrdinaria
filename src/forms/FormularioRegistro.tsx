@@ -3,9 +3,11 @@
    Abre pelo estado global de edição (store/edicao): qualquer tela chama
    abrirNovo()/abrirEdicao() e o modal aparece. */
 import { useMemo, useState } from "react";
-import { Modal, RodapeModal } from "../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../components/Modal";
 import { ModalExclusao } from "../components/ModalExclusao";
 import { toast } from "../components/Toast";
+import { Botao } from "../components/ui/Botao";
+import { Campo } from "../components/ui/Campo";
 import { CampoDoFormulario } from "./CampoDoFormulario";
 import { ENTIDADES } from "./especificacoes";
 import { fecharEdicao, usarEdicao } from "../store/edicao";
@@ -67,26 +69,25 @@ function ModalDeRegistro() {
   return (
     <Modal titulo={(editando ? "Editar: " : "Novo: ") + spec.titulo} aoFechar={fecharEdicao}>
       {spec.campos.map((c) => (
-        <div className="field" key={c.chave}>
-          <label htmlFor={"campo-" + c.chave}>{c.rotulo}</label>
+        <Campo rotulo={c.rotulo} htmlFor={"campo-" + c.chave} key={c.chave}>
           <CampoDoFormulario
             campo={c}
             valor={valores[c.chave]}
             definir={(valor) => setValores((v) => ({ ...v, [c.chave]: valor }))}
             opcoesOrigem={opcoesOrigem}
           />
-        </div>
+        </Campo>
       ))}
       <RodapeModal>
         {editando && (
-          <button className="del" onClick={() => setImpacto(impactoExclusao(aberto!.chave, aberto!.id!))}>
+          <Botao variante="apagar" onClick={() => setImpacto(impactoExclusao(aberto!.chave, aberto!.id!))}>
             Excluir
-          </button>
+          </Botao>
         )}
-        <span className="sp">
-          <button className="btn ghost" onClick={fecharEdicao}>Cancelar</button>
-          <button className="btn" onClick={salvar}>Salvar</button>
-        </span>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={fecharEdicao}>Cancelar</Botao>
+          <Botao onClick={salvar}>Salvar</Botao>
+        </AcoesModal>
       </RodapeModal>
 
       {impacto && (

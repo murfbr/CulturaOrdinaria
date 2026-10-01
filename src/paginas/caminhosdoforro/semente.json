@@ -1,0 +1,3831 @@
+{
+  "exportadoEm": "2026-09-30",
+  "origem": "https://claude.ai/artifact/91yz4RD1nsWbTXATyWQS1j",
+  "config": {
+    "listas": {
+      "atividades": [
+        {
+          "id": "show",
+          "nome": "Show"
+        },
+        {
+          "id": "dj",
+          "nome": "DJ"
+        },
+        {
+          "id": "baile",
+          "nome": "DJ e baile"
+        },
+        {
+          "id": "roda",
+          "nome": "Roda de conversa"
+        },
+        {
+          "id": "apresentacao",
+          "nome": "Apresentação"
+        },
+        {
+          "id": "encontro",
+          "nome": "Encontro"
+        },
+        {
+          "id": "transicao",
+          "nome": "Transição"
+        },
+        {
+          "id": "oficina",
+          "nome": "Oficina"
+        },
+        {
+          "id": "aula_danca",
+          "nome": "Aula de dança"
+        }
+      ],
+      "cartaAnuencia": [
+        {
+          "id": "nao_se_aplica",
+          "nome": "Não se aplica"
+        },
+        {
+          "id": "nao_enviada",
+          "nome": "Não enviada"
+        },
+        {
+          "id": "enviada",
+          "nome": "Enviada"
+        },
+        {
+          "id": "assinada",
+          "nome": "Assinada"
+        }
+      ],
+      "categoriasOrcamento": [
+        {
+          "id": "artistico",
+          "nome": "Artístico"
+        },
+        {
+          "id": "formacao",
+          "nome": "Formação e mediação"
+        },
+        {
+          "id": "producao_equipe",
+          "nome": "Produção e equipe"
+        },
+        {
+          "id": "tecnica",
+          "nome": "Técnica: palco, som e luz"
+        },
+        {
+          "id": "infraestrutura",
+          "nome": "Infraestrutura"
+        },
+        {
+          "id": "operacao",
+          "nome": "Operação"
+        },
+        {
+          "id": "exposicao",
+          "nome": "Exposição e artes visuais"
+        },
+        {
+          "id": "marketing",
+          "nome": "Marketing e comunicação"
+        },
+        {
+          "id": "foto_video",
+          "nome": "Foto e vídeo"
+        },
+        {
+          "id": "acessibilidade",
+          "nome": "Acessibilidade"
+        },
+        {
+          "id": "alimentacao",
+          "nome": "Alimentação e logística"
+        },
+        {
+          "id": "taxas",
+          "nome": "Taxas, seguros e administração"
+        }
+      ],
+      "categoriasParceiro": [
+        {
+          "id": "local",
+          "nome": "Local de realização"
+        },
+        {
+          "id": "casa_apoio",
+          "nome": "Casa de apoio"
+        },
+        {
+          "id": "poder_publico",
+          "nome": "Poder público"
+        },
+        {
+          "id": "comunidade",
+          "nome": "Comunidade e turismo"
+        }
+      ],
+      "dias": [
+        {
+          "id": "d1",
+          "nome": "Sexta 11/12"
+        },
+        {
+          "id": "d2",
+          "nome": "Sábado 12/12"
+        },
+        {
+          "id": "d3",
+          "nome": "Domingo 13/12"
+        }
+      ],
+      "etapasFunil": [
+        {
+          "id": "prospeccao",
+          "nome": "Prospecção"
+        },
+        {
+          "id": "contato_feito",
+          "nome": "Contato feito"
+        },
+        {
+          "id": "proposta_enviada",
+          "nome": "Proposta enviada"
+        },
+        {
+          "id": "negociacao",
+          "nome": "Negociação"
+        },
+        {
+          "id": "confirmado",
+          "nome": "Confirmado"
+        },
+        {
+          "id": "perdido",
+          "nome": "Perdido"
+        }
+      ],
+      "momentos": [
+        {
+          "id": "pre",
+          "nome": "Pré-produção"
+        },
+        {
+          "id": "mont",
+          "nome": "Montagem"
+        },
+        {
+          "id": "d1",
+          "nome": "Sexta 11/12"
+        },
+        {
+          "id": "d2",
+          "nome": "Sábado 12/12"
+        },
+        {
+          "id": "d3",
+          "nome": "Domingo 13/12"
+        },
+        {
+          "id": "pos",
+          "nome": "Pós-produção"
+        }
+      ],
+      "statusContato": [
+        {
+          "id": "a_contatar",
+          "nome": "A contatar"
+        },
+        {
+          "id": "em_conversa",
+          "nome": "Em conversa"
+        },
+        {
+          "id": "confirmado",
+          "nome": "Confirmado"
+        },
+        {
+          "id": "recusou",
+          "nome": "Recusou"
+        }
+      ],
+      "statusOrcamento": [
+        {
+          "id": "previsto",
+          "nome": "Previsto"
+        },
+        {
+          "id": "confirmado",
+          "nome": "Confirmado"
+        }
+      ],
+      "statusTarefa": [
+        {
+          "id": "backlog",
+          "nome": "Backlog"
+        },
+        {
+          "id": "andamento",
+          "nome": "Em andamento"
+        },
+        {
+          "id": "aguardando",
+          "nome": "Aguardando"
+        },
+        {
+          "id": "concluido",
+          "nome": "Concluído"
+        }
+      ],
+      "tiposCadastro": [
+        {
+          "id": "artista",
+          "nome": "Artista ou banda"
+        },
+        {
+          "id": "dj",
+          "nome": "DJ"
+        },
+        {
+          "id": "oficineiro",
+          "nome": "Oficineiro(a)"
+        },
+        {
+          "id": "danca",
+          "nome": "Professor(a) de dança"
+        },
+        {
+          "id": "mediador",
+          "nome": "Mediador(a)"
+        },
+        {
+          "id": "artista_visual",
+          "nome": "Artista visual"
+        },
+        {
+          "id": "parceiro_cultural",
+          "nome": "Parceiro cultural"
+        },
+        {
+          "id": "fornecedor",
+          "nome": "Fornecedor"
+        },
+        {
+          "id": "gastronomia",
+          "nome": "Gastronomia"
+        },
+        {
+          "id": "parceiro_institucional",
+          "nome": "Parceiro institucional"
+        },
+        {
+          "id": "patrocinador",
+          "nome": "Patrocinador"
+        },
+        {
+          "id": "equipe",
+          "nome": "Equipe"
+        }
+      ],
+      "tiposEspaco": [
+        {
+          "id": "palco",
+          "nome": "Palco"
+        },
+        {
+          "id": "sala",
+          "nome": "Sala"
+        },
+        {
+          "id": "galeria",
+          "nome": "Galeria"
+        },
+        {
+          "id": "convivencia",
+          "nome": "Área de convivência"
+        },
+        {
+          "id": "barraca",
+          "nome": "Barraca"
+        }
+      ]
+    },
+    "nucleos": [
+      {
+        "id": "artistico",
+        "nome": "Artístico",
+        "responsavel": null,
+        "membros": []
+      },
+      {
+        "id": "producao",
+        "nome": "Produção e operação",
+        "responsavel": null,
+        "membros": []
+      },
+      {
+        "id": "comunicacao",
+        "nome": "Comunicação",
+        "responsavel": null,
+        "membros": []
+      },
+      {
+        "id": "captacao",
+        "nome": "Captação e parcerias",
+        "responsavel": null,
+        "membros": []
+      },
+      {
+        "id": "administrativo",
+        "nome": "Administrativo e legal",
+        "responsavel": null,
+        "membros": []
+      }
+    ],
+    "parametros": {
+      "metaCaptacao": null,
+      "inicio": "2026-12-11",
+      "fim": "2026-12-13",
+      "logo": null
+    },
+    "simulador": {
+      "cenario": "X",
+      "bar": "proprio",
+      "publico": 1000,
+      "ticket": 30,
+      "colab": 21,
+      "gastro": 10000,
+      "contingencia": 10,
+      "cotasModo": "confirmado",
+      "cotasManual": 120000
+    }
+  },
+  "cadastro": {
+    "amigos-dedicados": {
+      "anotacoes": "Coral com músicas do Nordeste e apresentação de forró. Dia e horário a definir.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Amigos Dedicados (Lar Fabiano de Cristo)",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "antonio": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Antônio",
+      "nucleo": null,
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "equipe"
+      ]
+    },
+    "beto-lemos": {
+      "anotacoes": "Oficina de rabeca.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Beto Lemos",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "caramuela": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Caramuela",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "casa-caiada": {
+      "anotacoes": "Citada na V12 como referência inicial para a vaga da chamada aberta de sexta.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Casa Caiada",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "casa-ronald": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Casa Ronald McDonald RJ",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "cassio-sa": {
+      "anotacoes": "DJ do Forró pra Juventude; curadoria do Caminhos Negros do Forró.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Cássio Sá",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "chellem-verlink": {
+      "anotacoes": "Literatura: livro Monstruário (contos e imaginários do Nordeste). Produtora ligada ao Espaço COBRA.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Chellem Verlink",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "parceiro_cultural"
+      ]
+    },
+    "crys-mourao": {
+      "anotacoes": "Oficina de triângulo. Na V12 aparece como \"Cris\".",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Crys Mourão",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "daladeira": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Daladeira",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "dany-souto": {
+      "anotacoes": "Oficina de cavaquinho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Dany Souto",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "durval-pereira": {
+      "anotacoes": "Oficina de zabumba.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Durval Pereira",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "edson-bailado-carioca": {
+      "anotacoes": "Literatura e memória oral. Nome inicialmente considerado na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Edson (Bailado Carioca)",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "mediador"
+      ]
+    },
+    "egil": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Egil",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "eron-lima": {
+      "anotacoes": "Oficina de sanfona.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Eron Lima",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "espaco-cobra": {
+      "anotacoes": "Praça XV, 34, Loja A, Centro. Local das atividades internas.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "Negro Obum (presidente)",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Espaço Kwe Dan Ogun – COBRA",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "evi-santana": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Evi Santana",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "forro-da-josi": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró da Josi",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-da-praca": {
+      "anotacoes": "Sábado 12/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró da Praça",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-da-taylor": {
+      "anotacoes": "Domingo 13/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró da Taylor",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-de-pife": {
+      "anotacoes": "Sexta 11/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró de Pife",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-de-rabeca": {
+      "anotacoes": "Sexta 11/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró de Rabeca",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-de-roda": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró de Roda",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-do-kiko": {
+      "anotacoes": "Domingo 13/12 na V12, com participação de Marcelo Mimoso em articulação.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró do Kiko",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "forro-pra-juventude": {
+      "anotacoes": "Projeto de discotecagem e mediação. Curadoria do Caminhos Negros do Forró (escuta em vinil, roda e baile).",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Forró pra Juventude",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj",
+        "parceiro_cultural"
+      ]
+    },
+    "gonzagao": {
+      "anotacoes": "Oficina de voz e preparação vocal.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Gonzagão",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "oficineiro"
+      ]
+    },
+    "gustavo": {
+      "anotacoes": "Central e MVP do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Gustavo",
+      "nucleo": null,
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "equipe"
+      ]
+    },
+    "lar-fabiano": {
+      "anotacoes": "Unidades Casa de Marechal Mattos e Amigos Dedicados.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Lar Fabiano de Cristo",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "lari-franca": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Lari França",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "lucas": {
+      "anotacoes": "Documento de trabalho original e identidade visual.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Lucas",
+      "nucleo": null,
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "equipe"
+      ]
+    },
+    "maravilhas": {
+      "anotacoes": "Domingo 13/12 na V12. Nos decks aparece como \"Forró das Maravilhas\".",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Maravilhas",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "marcelo-mimoso": {
+      "anotacoes": "Participação no show do Forró do Kiko (domingo).",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Marcelo Mimoso",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "mari-mello-trio": {
+      "anotacoes": "Nos decks e na lista prioritária do documento de trabalho; não aparece na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Mari Mello Trio",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "pena-que-voa": {
+      "anotacoes": "Caminhos de Anastácia.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Pena Que Voa",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "raiz-do-sana": {
+      "anotacoes": "Domingo 13/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Raiz do Sana",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "rio-no-forro": {
+      "anotacoes": "Excursões de público. Ideia de ativações para quem vier com a excursão (copo diferenciado, vale-massagem). Tipo de parceria a definir.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "Denise",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Rio no Forró",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "ruan-mata": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Ruan Mata",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "saisse-e-os-bois": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Saísse e os Bois",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "salamandra": {
+      "anotacoes": "Sexta 11/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Salamandra",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "sambura": {
+      "anotacoes": "Sábado 12/12 na V12. O documento de trabalho chama de \"Trio Samburá\".",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Samburá",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "sexteto-sucupira": {
+      "anotacoes": "Sábado 12/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Sexteto Sucupira",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "smac": {
+      "anotacoes": "Pedir reunião: sustentabilidade e aproximação à ISO 20121:2024.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Secretaria Municipal de Meio Ambiente e Clima (SMAC)",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "smtur": {
+      "anotacoes": "Pedir reunião: promoção interestadual e informação ao visitante.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Secretaria Municipal de Turismo (SMTUR-Rio)",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "parceiro_institucional"
+      ]
+    },
+    "tais-lara": {
+      "anotacoes": "Caminhos de Anastácia: mediação da roda \"Mulheres nos Caminhos do Forró\" e show Rainhas do Forró.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Taís Lara",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "artista",
+        "mediador"
+      ]
+    },
+    "taroba": {
+      "anotacoes": "DJ do Forró pra Juventude; curadoria do Caminhos Negros do Forró.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Tarobá",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "tocaia": {
+      "anotacoes": "Nos decks e na lista prioritária do documento de trabalho; não aparece na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Tocaia",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "veronica-lima": {
+      "anotacoes": "Parcerias (contato na proposta Vivo).",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Verônica Lima",
+      "nucleo": null,
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "equipe"
+      ]
+    },
+    "vic-roque": {
+      "anotacoes": "",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Vic Roque",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "vivo": {
+      "anotacoes": "Proposta da cota Apresenta enviada.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Vivo",
+      "nucleo": "captacao",
+      "revisar": true,
+      "status": "em_conversa",
+      "tipos": [
+        "patrocinador"
+      ]
+    },
+    "william-faria": {
+      "anotacoes": "Concepção e texto-base (Word V12); articulação de artistas, parceiros e poder público.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "William Faria",
+      "nucleo": null,
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "equipe"
+      ]
+    },
+    "xaxadinho": {
+      "anotacoes": "Sábado 12/12 na V12.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Xaxadinho",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "artista"
+      ]
+    },
+    "xeleleu": {
+      "anotacoes": "DJ do Forró pra Juventude; curadoria do Caminhos Negros do Forró.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Xeleléu",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "confirmado",
+      "tipos": [
+        "dj"
+      ]
+    },
+    "zoiao": {
+      "anotacoes": "Lista em aberto do documento de trabalho.",
+      "carta": null,
+      "cartaArquivo": null,
+      "contato": {
+        "email": "",
+        "nome": "",
+        "telefone": ""
+      },
+      "documento": "",
+      "historico": [],
+      "nome": "Zóião",
+      "nucleo": "artistico",
+      "revisar": true,
+      "status": "a_contatar",
+      "tipos": [
+        "artista"
+      ]
+    }
+  },
+  "espacos": {
+    "area-gastronomica": {
+      "aceita": [
+        "gastronomia"
+      ],
+      "anotacoes": "Número de barracas a definir.",
+      "capacidade": null,
+      "nome": "Área gastronômica",
+      "revisar": true,
+      "tipo": "barraca"
+    },
+    "exposicao": {
+      "aceita": [
+        "artista_visual"
+      ],
+      "anotacoes": "Exposição viva, com intervenções de artistas visuais ao longo dos três dias.",
+      "capacidade": null,
+      "nome": "Exposição Memória do Forró (COBRA)",
+      "revisar": true,
+      "tipo": "galeria"
+    },
+    "palco-praca-xv": {
+      "aceita": [
+        "artista",
+        "dj",
+        "mediador"
+      ],
+      "anotacoes": "Ao ar livre. A Praça XV é tombada: a estrutura depende de anuência do IPHAN.",
+      "capacidade": null,
+      "nome": "Palco principal — Praça XV",
+      "revisar": true,
+      "tipo": "palco"
+    },
+    "rodas-cobra": {
+      "aceita": [
+        "mediador",
+        "parceiro_cultural",
+        "dj",
+        "artista"
+      ],
+      "anotacoes": "Rodas de conversa, literatura e Caminhos Negros do Forró.",
+      "capacidade": null,
+      "nome": "Rodas e literatura (COBRA)",
+      "revisar": true,
+      "tipo": "sala"
+    },
+    "sala-danca": {
+      "aceita": [
+        "danca",
+        "dj"
+      ],
+      "anotacoes": "Piso adequado, som próprio e ventilação para programação contínua.",
+      "capacidade": null,
+      "nome": "Sala Caminhos da Dança (COBRA)",
+      "revisar": true,
+      "tipo": "sala"
+    },
+    "salas-oficina": {
+      "aceita": [
+        "oficineiro"
+      ],
+      "anotacoes": "",
+      "capacidade": null,
+      "nome": "Salas de oficina (COBRA)",
+      "revisar": true,
+      "tipo": "sala"
+    }
+  },
+  "cotas": {
+    "apoio-cultural": {
+      "anotacoes": "Valor variável.",
+      "contrapartidas": "Participação por produtos, serviços, estrutura, logística, comunicação, alimentação, mobilidade, hospedagem ou equipamentos. Contrapartidas caso a caso.",
+      "nome": "Apoio cultural",
+      "ordem": 5,
+      "quantidade": null,
+      "revisar": true,
+      "valor": 0
+    },
+    "apresenta": {
+      "anotacoes": "",
+      "contrapartidas": "Cota exclusiva: \"[Marca] apresenta Festival Caminhos do Forró\". Maior destaque em toda a comunicação. Marca no palco da Praça XV em posição principal. Ativação com prioridade de espaço. Experiência proprietária da marca. Área VIP e exclusividade de segmento.",
+      "nome": "Apresenta",
+      "ordem": 1,
+      "quantidade": 1,
+      "revisar": true,
+      "valor": 90000
+    },
+    "encontro": {
+      "anotacoes": "",
+      "contrapartidas": "Presença institucional na comunicação. Marca nas áreas oficiais. Credenciais e área VIP.",
+      "nome": "Encontro",
+      "ordem": 4,
+      "quantidade": 8,
+      "revisar": true,
+      "valor": 15000
+    },
+    "naming-rights": {
+      "anotacoes": "Valor a negociar.",
+      "contrapartidas": "Nome da marca no palco principal ou em territórios do festival (salas de música e dança, convivência, área gastronômica), definido com a produção.",
+      "nome": "Naming rights",
+      "ordem": 6,
+      "quantidade": null,
+      "revisar": true,
+      "valor": 0
+    },
+    "palco": {
+      "anotacoes": "",
+      "contrapartidas": "Destaque no palco da Praça XV. Menções nos três dias. Ativação presencial e ação especial. Área VIP e hospitalidade.",
+      "nome": "Palco",
+      "ordem": 2,
+      "quantidade": 2,
+      "revisar": true,
+      "valor": 45000
+    },
+    "roda": {
+      "anotacoes": "",
+      "contrapartidas": "Presença na comunicação e nas áreas do festival. Ativação presencial. Ação de relacionamento com o público. Acesso à área VIP.",
+      "nome": "Roda",
+      "ordem": 3,
+      "quantidade": 3,
+      "revisar": true,
+      "valor": 30000
+    }
+  },
+  "patrocinios": {
+    "vivo": {
+      "anotacoes": "",
+      "cota": "apresenta",
+      "empresa": "vivo",
+      "etapa": "proposta_enviada",
+      "proposta": {
+        "nome": "Festival_Caminhos_do_Forro_Proposta_VIVO.pdf",
+        "tipo": "link",
+        "url": "https://drive.google.com/file/d/1rCzCiHP71lv4hkxBI4zQsA2s4aAaIjtF/view"
+      },
+      "proximoPasso": "",
+      "revisar": true,
+      "ultimoContato": null,
+      "valor": 90000
+    }
+  },
+  "parceiros": {
+    "casa-ronald": {
+      "categoria": "casa_apoio",
+      "oferece": "Mobilização das famílias atendidas.",
+      "parceiro": "casa-ronald",
+      "recebe": "",
+      "revisar": true
+    },
+    "espaco-cobra": {
+      "categoria": "local",
+      "oferece": "Espaço para oficinas, dança, exposição, literatura, rodas e convivência.",
+      "parceiro": "espaco-cobra",
+      "recebe": "",
+      "revisar": true
+    },
+    "lar-fabiano": {
+      "categoria": "casa_apoio",
+      "oferece": "Dois ônibus para o público 60+ (Casa de Marechal Mattos e Amigos Dedicados); coral e apresentação de forró da Amigos Dedicados.",
+      "parceiro": "lar-fabiano",
+      "recebe": "",
+      "revisar": true
+    },
+    "rio-no-forro": {
+      "categoria": "comunidade",
+      "oferece": "Excursões trazendo público de fora.",
+      "parceiro": "rio-no-forro",
+      "recebe": "Ativações para quem vier na excursão (a definir).",
+      "revisar": true
+    },
+    "smac": {
+      "categoria": "poder_publico",
+      "oferece": "Orientação técnica em sustentabilidade (a pedir).",
+      "parceiro": "smac",
+      "recebe": "",
+      "revisar": true
+    },
+    "smtur": {
+      "categoria": "poder_publico",
+      "oferece": "Promoção turística e informação ao visitante (a pedir).",
+      "parceiro": "smtur",
+      "recebe": "",
+      "revisar": true
+    }
+  },
+  "orcamento_itens": {
+    "item-01": {
+      "anotacoes": "3 apresentações por dia. Cachê mínimo de R$ 4.000 por banda",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Bandas convidadas",
+      "nucleo": "artistico",
+      "ordem": 1,
+      "quantidade": 3,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "grupos",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 4000,
+        "I": 4000,
+        "X": 4000
+      }
+    },
+    "item-02": {
+      "anotacoes": "1 grupo sorteado por dia, com cachê de circulação",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Bandas da chamada aberta",
+      "nucleo": "artistico",
+      "ordem": 2,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "grupo",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 1500,
+        "I": 1500,
+        "X": 1500
+      }
+    },
+    "item-03": {
+      "anotacoes": "Roda de conversa mediada e 2 apresentações musicais, no sábado",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 1,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Caminhos de Anastácia",
+      "nucleo": "artistico",
+      "ordem": 3,
+      "quantidade": 3,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "atrações",
+      "unidadeVezes": "dia",
+      "unitario": {
+        "E": 1000,
+        "I": 1700,
+        "X": 2000
+      }
+    },
+    "item-04": {
+      "anotacoes": "3 blocos de DJ por dia, entre abertura, transições e bailes",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "DJs e cultura do baile",
+      "nucleo": "artistico",
+      "ordem": 4,
+      "quantidade": 3,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "sets",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 350,
+        "I": 550,
+        "X": 670
+      }
+    },
+    "item-05": {
+      "anotacoes": "Momento coletivo de encerramento, com músicos convidados no palco",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Encontro Caminhos do Forró",
+      "nucleo": "artistico",
+      "ordem": 5,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "ação",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 800,
+        "I": 1500,
+        "X": 2500
+      }
+    },
+    "item-06": {
+      "anotacoes": "Coordenação curatorial, articulação e consolidação da grade",
+      "categoria": "artistico",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Curadoria e direção artística",
+      "nucleo": "artistico",
+      "ordem": 6,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 3000,
+        "I": 3000,
+        "X": 3500
+      }
+    },
+    "item-07": {
+      "anotacoes": "2 oficinas por dia: zabumba, triângulo, voz, rabeca, cavaquinho e sanfona",
+      "categoria": "formacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Oficinas de instrumentos",
+      "nucleo": "artistico",
+      "ordem": 7,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "oficinas",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 600,
+        "I": 800,
+        "X": 1000
+      }
+    },
+    "item-08": {
+      "anotacoes": "4 períodos por dia, com professores e escolas convidadas",
+      "categoria": "formacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Sala Caminhos da Dança",
+      "nucleo": "artistico",
+      "ordem": 8,
+      "quantidade": 4,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "períodos",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 170,
+        "I": 200,
+        "X": 270
+      }
+    },
+    "item-09": {
+      "anotacoes": "1 encontro por dia, incluindo mediação e convidados",
+      "categoria": "formacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Literatura e rodas de conversa",
+      "nucleo": "artistico",
+      "ordem": 9,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "encontro",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 400,
+        "I": 530,
+        "X": 800
+      }
+    },
+    "item-10": {
+      "anotacoes": "Forró de Memórias 60+ e desenho de dança acessível",
+      "categoria": "formacao",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Vivências inclusivas e facilitação",
+      "nucleo": "artistico",
+      "ordem": 10,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1200,
+        "I": 1200,
+        "X": 2400
+      }
+    },
+    "item-11": {
+      "anotacoes": "Gestão integral do festival, até a prestação de contas",
+      "categoria": "producao_equipe",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 3
+      },
+      "fornecedor": null,
+      "nome": "Coordenação geral",
+      "nucleo": "producao",
+      "ordem": 11,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoa",
+      "unidadeVezes": "meses",
+      "unitario": {
+        "E": 1670,
+        "I": 2000,
+        "X": 2330
+      }
+    },
+    "item-12": {
+      "anotacoes": "Execução e relação com fornecedores",
+      "categoria": "producao_equipe",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 3
+      },
+      "fornecedor": null,
+      "nome": "Produção executiva",
+      "nucleo": "producao",
+      "ordem": 12,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoa",
+      "unidadeVezes": "meses",
+      "unitario": {
+        "E": 1330,
+        "I": 1670,
+        "X": 1830
+      }
+    },
+    "item-13": {
+      "anotacoes": "Operação dos três dias mais montagem",
+      "categoria": "producao_equipe",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 2,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Coordenação de produção",
+      "nucleo": "producao",
+      "ordem": 13,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoa",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 600,
+        "I": 800,
+        "X": 900
+      }
+    },
+    "item-14": {
+      "anotacoes": "Apoio em pré-produção, montagem e evento",
+      "categoria": "producao_equipe",
+      "distribuicao": {
+        "d1": 2,
+        "d2": 2,
+        "d3": 2,
+        "mont": 4,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Assistentes de produção",
+      "nucleo": "producao",
+      "ordem": 14,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoas",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 250,
+        "I": 300,
+        "X": 350
+      }
+    },
+    "item-15": {
+      "anotacoes": "Palco, carregamento e circulação técnica",
+      "categoria": "producao_equipe",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 2,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Stage, road e logística",
+      "nucleo": "producao",
+      "ordem": 15,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoas",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 500,
+        "I": 500,
+        "X": 600
+      }
+    },
+    "item-16": {
+      "anotacoes": "Estrutura com cobertura, montagem e desmontagem",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Palco principal",
+      "nucleo": "producao",
+      "ordem": 16,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "palco",
+      "unidadeVezes": "locação",
+      "unitario": {
+        "E": 8000,
+        "I": 10000,
+        "X": 12000
+      }
+    },
+    "item-17": {
+      "anotacoes": "PA, monitores, mesa e técnicos, para até 1.000 pessoas",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Sonorização",
+      "nucleo": "producao",
+      "ordem": 17,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "sistema",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 3330,
+        "I": 4000,
+        "X": 4670
+      }
+    },
+    "item-18": {
+      "anotacoes": "Luz de palco e operação",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Iluminação",
+      "nucleo": "producao",
+      "ordem": 18,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "sistema",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 2330
+      }
+    },
+    "item-19": {
+      "anotacoes": "Instrumentos e equipamentos compartilhados entre as bandas",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Backline",
+      "nucleo": "producao",
+      "ordem": 19,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "kit",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 1170,
+        "I": 1670,
+        "X": 2000
+      }
+    },
+    "item-20": {
+      "anotacoes": "Energia, distribuição e contingência técnica",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Gerador e elétrica",
+      "nucleo": "producao",
+      "ordem": 20,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 1330,
+        "I": 1670,
+        "X": 2000
+      }
+    },
+    "item-21": {
+      "anotacoes": "Piso, som próprio e ventilação para a programação contínua",
+      "categoria": "tecnica",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Estrutura da Sala de Dança",
+      "nucleo": "producao",
+      "ordem": 21,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "montagem",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 2500,
+        "I": 3500,
+        "X": 5000
+      }
+    },
+    "item-22": {
+      "anotacoes": "Convivência, oficinas e áreas de apoio",
+      "categoria": "infraestrutura",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Tendas e coberturas",
+      "nucleo": "producao",
+      "ordem": 22,
+      "quantidade": 4,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "tendas",
+      "unidadeVezes": "locação",
+      "unitario": {
+        "E": 750,
+        "I": 1000,
+        "X": 1250
+      }
+    },
+    "item-23": {
+      "anotacoes": "Organização de público e backstage",
+      "categoria": "infraestrutura",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Grades e disciplinadores",
+      "nucleo": "producao",
+      "ordem": 23,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "locação",
+      "unitario": {
+        "E": 2000,
+        "I": 2500,
+        "X": 3000
+      }
+    },
+    "item-24": {
+      "anotacoes": "Complemento conforme o local, incluindo acessível",
+      "categoria": "infraestrutura",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Banheiros e apoio sanitário",
+      "nucleo": "producao",
+      "ordem": 24,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "locação",
+      "unitario": {
+        "E": 2000,
+        "I": 2500,
+        "X": 3500
+      }
+    },
+    "item-25": {
+      "anotacoes": "Mesas, cadeiras e apoio a oficinas e convivência",
+      "categoria": "infraestrutura",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Mobiliário",
+      "nucleo": "producao",
+      "ordem": 25,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "locação",
+      "unitario": {
+        "E": 2000,
+        "I": 2000,
+        "X": 2500
+      }
+    },
+    "item-26": {
+      "anotacoes": "Fluxos, placas e identidade no território",
+      "categoria": "infraestrutura",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Sinalização e ambientação",
+      "nucleo": "producao",
+      "ordem": 26,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 3000,
+        "I": 3000,
+        "X": 4000
+      }
+    },
+    "item-27": {
+      "anotacoes": "6 agentes por dia, conforme público e licenciamento",
+      "categoria": "operacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Segurança",
+      "nucleo": "producao",
+      "ordem": 27,
+      "quantidade": 6,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "agentes",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 220,
+        "I": 280,
+        "X": 330
+      }
+    },
+    "item-28": {
+      "anotacoes": "2 brigadistas por dia, exigência do alvará",
+      "categoria": "operacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Brigada de incêndio",
+      "nucleo": "producao",
+      "ordem": 28,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "brigadistas",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 250,
+        "I": 330,
+        "X": 330
+      }
+    },
+    "item-29": {
+      "anotacoes": "5 pessoas por dia, mais montagem e pós-evento",
+      "categoria": "operacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Limpeza",
+      "nucleo": "producao",
+      "ordem": 29,
+      "quantidade": 5,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pessoas",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 170,
+        "I": 200,
+        "X": 230
+      }
+    },
+    "item-30": {
+      "anotacoes": "Ambulância com equipe",
+      "categoria": "operacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Primeiros socorros",
+      "nucleo": "producao",
+      "ordem": 30,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "ambulância",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 670,
+        "I": 670,
+        "X": 830
+      }
+    },
+    "item-31": {
+      "anotacoes": "Equipe e material de acesso",
+      "categoria": "operacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Credenciamento e recepção",
+      "nucleo": "producao",
+      "ordem": 31,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "equipe",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 500,
+        "I": 600,
+        "X": 800
+      }
+    },
+    "item-32": {
+      "anotacoes": "Memória do forró e cultura nordestina",
+      "categoria": "exposicao",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Curadoria da exposição",
+      "nucleo": "artistico",
+      "ordem": 32,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 2500
+      }
+    },
+    "item-33": {
+      "anotacoes": "1 artista por dia, ao longo dos três dias",
+      "categoria": "exposicao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Intervenções de artistas visuais",
+      "nucleo": "artistico",
+      "ordem": 33,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "artista",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 500,
+        "I": 830,
+        "X": 1330
+      }
+    },
+    "item-34": {
+      "anotacoes": "Painéis, reproduções e instalação",
+      "categoria": "exposicao",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Impressão e montagem",
+      "nucleo": "artistico",
+      "ordem": 34,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 2000,
+        "I": 2000,
+        "X": 3000
+      }
+    },
+    "item-35": {
+      "anotacoes": "Materiais expositivos e ambientação",
+      "categoria": "exposicao",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Materiais e cenografia leve",
+      "nucleo": "artistico",
+      "ordem": 35,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1000,
+        "I": 1500,
+        "X": 2500
+      }
+    },
+    "item-36": {
+      "anotacoes": "Marca, key visual e desdobramentos em peças",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Identidade visual",
+      "nucleo": "comunicacao",
+      "ordem": 36,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 3000,
+        "I": 4000,
+        "X": 4500
+      }
+    },
+    "item-37": {
+      "anotacoes": "Planejamento e operação de redes",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 3
+      },
+      "fornecedor": null,
+      "nome": "Social media",
+      "nucleo": "comunicacao",
+      "ordem": 37,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "meses",
+      "unitario": {
+        "E": 1000,
+        "I": 1330,
+        "X": 1670
+      }
+    },
+    "item-38": {
+      "anotacoes": "Imprensa e relacionamento editorial",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 2
+      },
+      "fornecedor": null,
+      "nome": "Assessoria de imprensa",
+      "nucleo": "comunicacao",
+      "ordem": 38,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "meses",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 2500
+      }
+    },
+    "item-39": {
+      "anotacoes": "Impulsionamento e campanha de público",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Mídia paga",
+      "nucleo": "comunicacao",
+      "ordem": 39,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "campanha",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 5000,
+        "I": 7000,
+        "X": 10000
+      }
+    },
+    "item-40": {
+      "anotacoes": "Textos, roteiros e materiais digitais",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Conteúdo, copy e peças",
+      "nucleo": "comunicacao",
+      "ordem": 40,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pacote",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 2500
+      }
+    },
+    "item-41": {
+      "anotacoes": "Materiais de rua e apoio",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Impressos e sinalização promocional",
+      "nucleo": "comunicacao",
+      "ordem": 41,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pacote",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 2500
+      }
+    },
+    "item-42": {
+      "anotacoes": "Sorteio ao vivo, parcerias e ativações pré-evento",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Ações especiais de divulgação",
+      "nucleo": "comunicacao",
+      "ordem": 42,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pacote",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 500,
+        "I": 1000,
+        "X": 1500
+      }
+    },
+    "item-43": {
+      "anotacoes": "Ajustes e mídia tática durante a campanha",
+      "categoria": "marketing",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Reserva de comunicação",
+      "nucleo": "comunicacao",
+      "ordem": 43,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "reserva",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 500,
+        "I": 1000,
+        "X": 1000
+      }
+    },
+    "item-44": {
+      "anotacoes": "Cobertura dos três dias",
+      "categoria": "foto_video",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Fotografia",
+      "nucleo": "comunicacao",
+      "ordem": 44,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "fotógrafo",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 500,
+        "I": 670,
+        "X": 830
+      }
+    },
+    "item-45": {
+      "anotacoes": "Captação institucional e para redes",
+      "categoria": "foto_video",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Vídeo",
+      "nucleo": "comunicacao",
+      "ordem": 45,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "equipe",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 670,
+        "I": 1000,
+        "X": 1330
+      }
+    },
+    "item-46": {
+      "anotacoes": "Aftermovie e cortes para as marcas. Momento movido para pós-produção.",
+      "categoria": "foto_video",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 1,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Edição e entregas pós-evento",
+      "nucleo": "comunicacao",
+      "ordem": 46,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "pacote",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 500,
+        "I": 1000,
+        "X": 1500
+      }
+    },
+    "item-47": {
+      "anotacoes": "2 intérpretes nos momentos-chave",
+      "categoria": "acessibilidade",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Intérpretes de Libras",
+      "nucleo": "producao",
+      "ordem": 47,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "intérpretes",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 330,
+        "I": 420,
+        "X": 580
+      }
+    },
+    "item-48": {
+      "anotacoes": "Materiais e recursos acessíveis",
+      "categoria": "acessibilidade",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Comunicação acessível",
+      "nucleo": "producao",
+      "ordem": 48,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1000,
+        "I": 1000,
+        "X": 1500
+      }
+    },
+    "item-49": {
+      "anotacoes": "Planejamento e acompanhamento",
+      "categoria": "acessibilidade",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Consultoria de acessibilidade",
+      "nucleo": "producao",
+      "ordem": 49,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1000,
+        "I": 1500,
+        "X": 2000
+      }
+    },
+    "item-50": {
+      "anotacoes": "Artistas e equipe técnica",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Camarim",
+      "nucleo": "producao",
+      "ordem": 50,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "camarim",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 1200,
+        "I": 1700,
+        "X": 2200
+      }
+    },
+    "item-51": {
+      "anotacoes": "30 refeições por dia, incluindo montagem",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 2,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Alimentação da equipe",
+      "nucleo": "producao",
+      "ordem": 51,
+      "quantidade": 30,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "refeições",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 28,
+        "I": 35,
+        "X": 42
+      }
+    },
+    "item-52": {
+      "anotacoes": "Público, equipe e artistas",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Água e gelo",
+      "nucleo": "producao",
+      "ordem": 52,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "conjunto",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 450,
+        "I": 650,
+        "X": 850
+      }
+    },
+    "item-53": {
+      "anotacoes": "4 deslocamentos locais por dia",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Transporte de artistas",
+      "nucleo": "producao",
+      "ordem": 53,
+      "quantidade": 4,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "deslocamentos",
+      "unidadeVezes": "dias",
+      "unitario": {
+        "E": 200,
+        "I": 270,
+        "X": 330
+      }
+    },
+    "item-54": {
+      "anotacoes": "Equipamentos, exposição e cenografia",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 1,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Frete e carga",
+      "nucleo": "producao",
+      "ordem": 54,
+      "quantidade": 2,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "viagens",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1000,
+        "I": 1500,
+        "X": 2000
+      }
+    },
+    "item-55": {
+      "anotacoes": "Acolhimento na chegada dos ônibus do Lar Fabiano",
+      "categoria": "alimentacao",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "Recepção do público 60+",
+      "nucleo": "producao",
+      "ordem": 55,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "equipe",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 200,
+        "I": 250,
+        "X": 350
+      }
+    },
+    "item-56": {
+      "anotacoes": "Prefeitura, PM, CBMERJ e, com a Praça XV, anuência do IPHAN",
+      "categoria": "taxas",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Licenças e autorizações",
+      "nucleo": "administrativo",
+      "ordem": 56,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "processo",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1500,
+        "I": 2500,
+        "X": 3500
+      }
+    },
+    "item-57": {
+      "anotacoes": "Direitos autorais sobre execução musical pública",
+      "categoria": "taxas",
+      "distribuicao": {
+        "d1": 1,
+        "d2": 1,
+        "d3": 1,
+        "mont": 0,
+        "pos": 0,
+        "pre": 0
+      },
+      "fornecedor": null,
+      "nome": "ECAD",
+      "nucleo": "administrativo",
+      "ordem": 57,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "recolhimento",
+      "unidadeVezes": "diárias",
+      "unitario": {
+        "E": 400,
+        "I": 500,
+        "X": 670
+      }
+    },
+    "item-58": {
+      "anotacoes": "Obrigatório para emissão do alvará",
+      "categoria": "taxas",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Seguro de responsabilidade civil",
+      "nucleo": "administrativo",
+      "ordem": 58,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "apólice",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 2500,
+        "I": 3500,
+        "X": 4500
+      }
+    },
+    "item-59": {
+      "anotacoes": "Contratos e prestação de contas",
+      "categoria": "taxas",
+      "distribuicao": {
+        "d1": 0,
+        "d2": 0,
+        "d3": 0,
+        "mont": 0,
+        "pos": 0,
+        "pre": 1
+      },
+      "fornecedor": null,
+      "nome": "Assessoria jurídica e contábil",
+      "nucleo": "administrativo",
+      "ordem": 59,
+      "quantidade": 1,
+      "revisar": true,
+      "status": "previsto",
+      "unidade": "contrato",
+      "unidadeVezes": "vez",
+      "unitario": {
+        "E": 1500,
+        "I": 2000,
+        "X": 3000
+      }
+    }
+  },
+  "slots": {
+    "d1-01": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "18:45",
+      "inicio": "18:00",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-02": {
+      "anotacoes": "Vaga da chamada aberta (sorteio)",
+      "atividade": "show",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "19:30",
+      "inicio": "18:45",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-03": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "19:50",
+      "inicio": "19:30",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-04": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "20:40",
+      "inicio": "19:50",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-05": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "21:00",
+      "inicio": "20:40",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-06": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "21:50",
+      "inicio": "21:00",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-07": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "22:10",
+      "inicio": "21:50",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-08": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "23:10",
+      "inicio": "22:10",
+      "participantes": [],
+      "revisar": true
+    },
+    "d1-09": {
+      "anotacoes": "",
+      "atividade": "baile",
+      "dia": "d1",
+      "espaco": "palco-praca-xv",
+      "fim": "00:00",
+      "inicio": "23:10",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-01": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "16:45",
+      "inicio": "16:00",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-02": {
+      "anotacoes": "Vaga da chamada aberta (sorteio)",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "17:30",
+      "inicio": "16:45",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-03": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "17:50",
+      "inicio": "17:30",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-04": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "18:35",
+      "inicio": "17:50",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-05": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "19:00",
+      "inicio": "18:35",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-06": {
+      "anotacoes": "Roda \"Mulheres nos Caminhos do Forró\" · Caminhos de Anastácia",
+      "atividade": "roda",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "19:40",
+      "inicio": "19:00",
+      "participantes": [
+        "tais-lara"
+      ],
+      "revisar": true
+    },
+    "d2-07": {
+      "anotacoes": "Troca de palco",
+      "atividade": "transicao",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "19:55",
+      "inicio": "19:40",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-08": {
+      "anotacoes": "Rainhas do Forró · Caminhos de Anastácia",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "20:45",
+      "inicio": "19:55",
+      "participantes": [
+        "tais-lara"
+      ],
+      "revisar": true
+    },
+    "d2-09": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "21:05",
+      "inicio": "20:45",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-10": {
+      "anotacoes": "Caminhos de Anastácia",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "21:55",
+      "inicio": "21:05",
+      "participantes": [
+        "pena-que-voa"
+      ],
+      "revisar": true
+    },
+    "d2-11": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "22:15",
+      "inicio": "21:55",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-12": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "23:10",
+      "inicio": "22:15",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-13": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "23:30",
+      "inicio": "23:10",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-14": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "00:30",
+      "inicio": "23:30",
+      "participantes": [],
+      "revisar": true
+    },
+    "d2-15": {
+      "anotacoes": "",
+      "atividade": "baile",
+      "dia": "d2",
+      "espaco": "palco-praca-xv",
+      "fim": "01:00",
+      "inicio": "00:30",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-01": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "13:40",
+      "inicio": "13:00",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-02": {
+      "anotacoes": "Coral · músicas do Nordeste",
+      "atividade": "apresentacao",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "14:05",
+      "inicio": "13:40",
+      "participantes": [
+        "amigos-dedicados"
+      ],
+      "revisar": true
+    },
+    "d3-03": {
+      "anotacoes": "Apresentação de forró · público 60+",
+      "atividade": "apresentacao",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "14:25",
+      "inicio": "14:05",
+      "participantes": [
+        "amigos-dedicados"
+      ],
+      "revisar": true
+    },
+    "d3-04": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "14:45",
+      "inicio": "14:25",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-05": {
+      "anotacoes": "Vaga da chamada aberta (sorteio)",
+      "atividade": "show",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "15:30",
+      "inicio": "14:45",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-06": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "15:50",
+      "inicio": "15:30",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-07": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "16:35",
+      "inicio": "15:50",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-08": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "16:55",
+      "inicio": "16:35",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-09": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "17:40",
+      "inicio": "16:55",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-10": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "18:00",
+      "inicio": "17:40",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-11": {
+      "anotacoes": "Banda convidada a definir",
+      "atividade": "show",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "18:50",
+      "inicio": "18:00",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-12": {
+      "anotacoes": "",
+      "atividade": "dj",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "19:10",
+      "inicio": "18:50",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-13": {
+      "anotacoes": "Encontro Caminhos do Forró · músicos convidados no palco (confirmar se existe)",
+      "atividade": "encontro",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "19:40",
+      "inicio": "19:10",
+      "participantes": [],
+      "revisar": true
+    },
+    "d3-14": {
+      "anotacoes": "",
+      "atividade": "baile",
+      "dia": "d3",
+      "espaco": "palco-praca-xv",
+      "fim": "20:00",
+      "inicio": "19:40",
+      "participantes": [],
+      "revisar": true
+    }
+  },
+  "tarefas": {
+    "t-01": {
+      "anotacoes": "Caminho crítico. A praça é tombada: palco, tendas, som e banheiros na área pública dependem da anuência prévia. Ver alerta na pesquisa externa.",
+      "nucleo": "administrativo",
+      "ordem": 1,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Pedir anuência do IPHAN para as estruturas na Praça XV",
+      "urgente": true
+    },
+    "t-02": {
+      "anotacoes": "Caminho crítico. Pelo sistema Rio Mais Fácil Eventos. O evento só fica legalizado com a certificação do CBMERJ junto ao alvará.",
+      "nucleo": "administrativo",
+      "ordem": 2,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Dar entrada no Alvará Transitório de Eventos e nas autorizações de PMERJ, Polícia Civil e Bombeiros",
+      "urgente": true
+    },
+    "t-03": {
+      "anotacoes": "",
+      "nucleo": "administrativo",
+      "ordem": 3,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Contratar o seguro de responsabilidade civil exigido pelo alvará",
+      "urgente": false
+    },
+    "t-04": {
+      "anotacoes": "Partir dos 59 itens do Detalhamento. O orçamento herdado prevê 9 bandas convidadas; a V12 fala em 11.",
+      "nucleo": "administrativo",
+      "ordem": 4,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Revisar o orçamento real e levantar cotações com fornecedores",
+      "urgente": false
+    },
+    "t-05": {
+      "anotacoes": "Origem, perfil, participação por atividade, satisfação e intenção de retorno em 2027.",
+      "nucleo": "administrativo",
+      "ordem": 5,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Estruturar inscrição gratuita, controle de capacidade e pesquisa de público",
+      "urgente": false
+    },
+    "t-06": {
+      "anotacoes": "Usar o filtro “Só a revisar” no Cadastro e na Programação.",
+      "nucleo": "administrativo",
+      "ordem": 6,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Revisar a carga inicial da Central e dar acesso de edição à equipe",
+      "urgente": false
+    },
+    "t-07": {
+      "anotacoes": "Capacidade, ambientes, infraestrutura, acessibilidade, fluxos, horários de montagem e desmontagem.",
+      "nucleo": "producao",
+      "ordem": 7,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Fazer a visita técnica ao Espaço COBRA",
+      "urgente": true
+    },
+    "t-08": {
+      "anotacoes": "Cronograma de montagem, logística, segurança, acessibilidade, alimentação, desmontagem e pós-produção.",
+      "nucleo": "producao",
+      "ordem": 8,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Montar o plano operacional",
+      "urgente": false
+    },
+    "t-09": {
+      "anotacoes": "Chuva, calor, lotação, atraso, ausência de artista, falha técnica e emergência, com gatilhos de decisão entre Praça XV e COBRA.",
+      "nucleo": "producao",
+      "ordem": 9,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Elaborar o plano de contingência",
+      "urgente": false
+    },
+    "t-10": {
+      "anotacoes": "Dia e horário do coral e do forró da Amigos Dedicados, os dois ônibus, embarque e recepção do público 60+.",
+      "nucleo": "producao",
+      "ordem": 10,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Fechar a logística do Lar Fabiano de Cristo",
+      "urgente": false
+    },
+    "t-11": {
+      "anotacoes": "Estimativa de famílias, mobilização, chegada e saída, acolhimento e acessibilidade.",
+      "nucleo": "producao",
+      "ordem": 11,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Integrar a Casa Ronald McDonald RJ",
+      "urgente": false
+    },
+    "t-12": {
+      "anotacoes": "Participação dos expositores e operação de alimentos e bebidas, valorizando culinária nordestina.",
+      "nucleo": "producao",
+      "ordem": 12,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Definir o modelo da área gastronômica",
+      "urgente": false
+    },
+    "t-13": {
+      "anotacoes": "Para orientar adaptações, metodologia e comunicação, sem soluções genéricas.",
+      "nucleo": "producao",
+      "ordem": 13,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Encontrar profissional ou coletivo de dança acessível",
+      "urgente": false
+    },
+    "t-14": {
+      "anotacoes": "Critérios de habilitação, período de inscrição, documentos, regras do sorteio ao vivo e suplência. O sorteio está previsto para novembro.",
+      "nucleo": "artistico",
+      "ordem": 14,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Escrever o regulamento da chamada aberta",
+      "urgente": true
+    },
+    "t-15": {
+      "anotacoes": "Decidir também entre 12 e 14 shows.",
+      "nucleo": "artistico",
+      "ordem": 15,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Fechar o line-up: Forró da Praça, Samburá, Maravilhas, Forró da Taylor e Marcelo Mimoso",
+      "urgente": false
+    },
+    "t-16": {
+      "anotacoes": "Registrar no Cadastro geral, campo Carta de anuência.",
+      "nucleo": "artistico",
+      "ordem": 16,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Coletar as cartas de anuência dos artistas",
+      "urgente": false
+    },
+    "t-17": {
+      "anotacoes": "Taís Lara, Pena Que Voa, formato da roda e o dia.",
+      "nucleo": "artistico",
+      "ordem": 17,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Confirmar o Caminhos de Anastácia",
+      "urgente": false
+    },
+    "t-18": {
+      "anotacoes": "Repertório, convidados, mediação, duração e horário no COBRA.",
+      "nucleo": "artistico",
+      "ordem": 18,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Fechar a curadoria do Caminhos Negros do Forró com o Forró pra Juventude",
+      "urgente": false
+    },
+    "t-19": {
+      "anotacoes": "Professores e escolas, níveis, Nunca Dancei Forró e Forró de Memórias.",
+      "nucleo": "artistico",
+      "ordem": 19,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Montar a grade da Sala Caminhos da Dança",
+      "urgente": false
+    },
+    "t-20": {
+      "anotacoes": "Conteúdos e necessidades técnicas de zabumba, triângulo, voz, rabeca, cavaquinho e sanfona.",
+      "nucleo": "artistico",
+      "ordem": 20,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Estruturar as oficinas com os oficineiros",
+      "urgente": false
+    },
+    "t-21": {
+      "anotacoes": "Responsável curatorial, proposta expositiva e intervenções de artistas visuais.",
+      "nucleo": "artistico",
+      "ordem": 21,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Definir a curadoria da exposição Memória do Forró",
+      "urgente": false
+    },
+    "t-22": {
+      "anotacoes": "Edson, do Bailado Carioca, e o recorte do Monstruário com Chellem Verlink.",
+      "nucleo": "artistico",
+      "ordem": 22,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Consolidar literatura e memória oral",
+      "urgente": false
+    },
+    "t-23": {
+      "anotacoes": "Oficinas, Sala Caminhos da Dança, rodas e literatura.",
+      "nucleo": "artistico",
+      "ordem": 23,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Montar na Programação a grade dos espaços do COBRA",
+      "urgente": false
+    },
+    "t-24": {
+      "anotacoes": "Próximo passo apontado na reunião de 30/09.",
+      "nucleo": "comunicacao",
+      "ordem": 24,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Colocar o site e o Instagram no ar",
+      "urgente": true
+    },
+    "t-25": {
+      "anotacoes": "Redes, imprensa, divulgação da chamada aberta e da programação, campanha de público.",
+      "nucleo": "comunicacao",
+      "ordem": 25,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Fazer o plano de comunicação e lançamento",
+      "urgente": false
+    },
+    "t-26": {
+      "anotacoes": "Logo em PNG ou SVG com fundo transparente; confirmar se a fonte de títulos é Better Faster ou Londrina Solid; arquivos WOFF2.",
+      "nucleo": "comunicacao",
+      "ordem": 26,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Pedir ao Lucas e à Ana Colier a logo, os hex oficiais e as fontes",
+      "urgente": false
+    },
+    "t-27": {
+      "anotacoes": "Puxar também os ajustes já feitos na apresentação comercial.",
+      "nucleo": "comunicacao",
+      "ordem": 27,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Aplicar a identidade na apresentação institucional",
+      "urgente": false
+    },
+    "t-28": {
+      "anotacoes": "Preencher em Configuração. Hoje o cenário Ideal custa cerca de R$ 256,5 mil.",
+      "nucleo": "captacao",
+      "ordem": 28,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Definir a meta de captação",
+      "urgente": true
+    },
+    "t-29": {
+      "anotacoes": "Cota Apresenta R$ 90 mil nos decks e R$ 120 mil no documento antigo; público 5 mil+ ou 1.000 por dia.",
+      "nucleo": "captacao",
+      "ordem": 29,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Alinhar valores das cotas e estimativa de público nos decks",
+      "urgente": true
+    },
+    "t-30": {
+      "anotacoes": "Primeiro contato: resumo, cotas e um slide para a empresa.",
+      "nucleo": "captacao",
+      "ordem": 30,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Preparar a versão genérica da apresentação comercial",
+      "urgente": false
+    },
+    "t-31": {
+      "anotacoes": "Cota Apresenta.",
+      "nucleo": "captacao",
+      "ordem": 31,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Acompanhar a proposta enviada à Vivo",
+      "urgente": false
+    },
+    "t-32": {
+      "anotacoes": "Sustentabilidade e aproximação à ISO 20121:2024.",
+      "nucleo": "captacao",
+      "ordem": 32,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Pedir reunião com a SMAC",
+      "urgente": false
+    },
+    "t-33": {
+      "anotacoes": "Promoção interestadual e informação ao visitante.",
+      "nucleo": "captacao",
+      "ordem": 33,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Pedir reunião com a SMTUR",
+      "urgente": false
+    },
+    "t-34": {
+      "anotacoes": "Excursões com a Denise; ideias de copo diferenciado ou vale-massagem.",
+      "nucleo": "captacao",
+      "ordem": 34,
+      "prazo": null,
+      "responsavel": null,
+      "status": "backlog",
+      "titulo": "Definir as ativações da parceria com a Rio no Forró",
+      "urgente": false
+    }
+  }
+}

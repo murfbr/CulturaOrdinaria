@@ -1,8 +1,11 @@
 /* Modal de exportação: o pacote .json completo (backup que restaura tudo) e
    cada coleção do Painel como planilha .csv (Excel/Google, relações pelo nome)
    ou .json (registro completo, reimportável). */
-import { Modal, RodapeModal } from "../Modal";
+import { AcoesModal, Modal, RodapeModal } from "../Modal";
 import { toast } from "../Toast";
+import { Botao } from "../ui/Botao";
+import { Dica } from "../ui/Dica";
+import { Tabela, Td } from "../ui/Tabela";
 import { usarCentral } from "../../store/central";
 import { exportarTudo } from "../../store/importarExportar";
 import { exportarColecaoCsv, exportarColecaoJson } from "../../store/planilha";
@@ -14,48 +17,46 @@ export function ModalExportar({ aoFechar }: { aoFechar: () => void }) {
 
   return (
     <Modal titulo="Exportar dados" aoFechar={aoFechar} largo>
-      <div className="export-tudo">
+      <div className="flex items-center justify-between gap-3.5 rounded-[10px] border border-line bg-bg px-3.5 py-3">
         <div>
           <b>Backup completo (.json)</b>
-          <p className="hint" style={{ margin: "2px 0 0" }}>
+          <Dica emModal className="mt-0.5">
             Painel inteiro + {Object.keys(rascunhos).length} resposta(s) de formulário dos projetos + os formulários
             + {docsContexto} doc(s) do Contexto. É o arquivo que restaura tudo pelo Importar.
-          </p>
+          </Dica>
         </div>
-        <button className="btn" onClick={() => { exportarTudo(); toast("Backup completo gerado"); }}>
+        <Botao className="flex-none" onClick={() => { exportarTudo(); toast("Backup completo gerado"); }}>
           ⤓ Baixar pacote
-        </button>
+        </Botao>
       </div>
 
-      <p className="hint" style={{ margin: "14px 0 8px" }}>
+      <Dica emModal className="mb-2 mt-3.5">
         Por coleção: <b>CSV</b> abre no Excel/Google Planilhas (bom pra revisar e compartilhar);{" "}
         <b>JSON</b> guarda o registro completo e volta pelo Importar sem perder nada.
-      </p>
-      <div className="tbl-wrap">
-        <table>
-          <tbody>
-            {COLECOES_PAINEL.map((c) => (
-              <tr key={c}>
-                <td><b>{ROTULO_COLECAO[c]}</b></td>
-                <td className="muted" style={{ whiteSpace: "nowrap" }}>{painel[c].length} registro(s)</td>
-                <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                  <button className="btn ghost sm" disabled={!painel[c].length}
-                    onClick={() => { exportarColecaoCsv(c); toast("Planilha de " + ROTULO_COLECAO[c] + " gerada"); }}>
-                    ⤓ CSV
-                  </button>{" "}
-                  <button className="btn ghost sm" disabled={!painel[c].length}
-                    onClick={() => { exportarColecaoJson(c); toast(ROTULO_COLECAO[c] + " exportado em .json"); }}>
-                    ⤓ JSON
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      </Dica>
+      <Tabela>
+        <tbody>
+          {COLECOES_PAINEL.map((c) => (
+            <tr key={c}>
+              <Td><b>{ROTULO_COLECAO[c]}</b></Td>
+              <Td className="whitespace-nowrap text-muted">{painel[c].length} registro(s)</Td>
+              <Td className="whitespace-nowrap text-right">
+                <Botao variante="fantasma" tamanho="pequeno" disabled={!painel[c].length}
+                  onClick={() => { exportarColecaoCsv(c); toast("Planilha de " + ROTULO_COLECAO[c] + " gerada"); }}>
+                  ⤓ CSV
+                </Botao>{" "}
+                <Botao variante="fantasma" tamanho="pequeno" disabled={!painel[c].length}
+                  onClick={() => { exportarColecaoJson(c); toast(ROTULO_COLECAO[c] + " exportado em .json"); }}>
+                  ⤓ JSON
+                </Botao>
+              </Td>
+            </tr>
+          ))}
+        </tbody>
+      </Tabela>
 
       <RodapeModal>
-        <span className="sp"><button className="btn ghost" onClick={aoFechar}>Fechar</button></span>
+        <AcoesModal><Botao variante="fantasma" onClick={aoFechar}>Fechar</Botao></AcoesModal>
       </RodapeModal>
     </Modal>
   );

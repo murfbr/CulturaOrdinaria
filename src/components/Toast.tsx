@@ -2,6 +2,7 @@
    ("Desfazer" da lixeira). Qualquer código chama `toast("msg")` ou
    `toast("msg", { acao })`; o componente vive no App. Com ação, dura 6 s. */
 import { useEffect, useState } from "react";
+import { cx } from "../utils/classes";
 
 export interface AcaoToast { rotulo: string; fazer: () => void }
 
@@ -40,10 +41,19 @@ export function Toast() {
   }, []);
 
   return (
-    <div className={"toast" + (ligado ? " on" : "")} role="status" aria-live="polite">
+    <div
+      className={cx(
+        "fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-lg bg-ink px-4 py-2 text-sm text-white transition-opacity duration-[180ms] motion-reduce:transition-none",
+        ligado ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+      )}
+      role="status" aria-live="polite"
+    >
       {texto}
       {acao && ligado && (
-        <button className="toast-acao" onClick={() => { setLigado(false); acao.fazer(); }}>
+        <button
+          className="ml-3 cursor-pointer border-0 bg-transparent p-0 text-sm font-bold text-gold underline hover:text-white"
+          onClick={() => { setLigado(false); acao.fazer(); }}
+        >
           {acao.rotulo}
         </button>
       )}
