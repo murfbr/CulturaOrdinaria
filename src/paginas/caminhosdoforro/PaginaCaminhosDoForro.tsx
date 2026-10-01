@@ -7,6 +7,10 @@ import { useEffect, useState } from "react";
 import { Toast } from "../../components/Toast";
 import { TelaCadastro } from "./cadastro/TelaCadastro";
 import { TelaConfiguracao } from "./configuracao/TelaConfiguracao";
+import { TelaOrcamento } from "./orcamento/TelaOrcamento";
+import { TelaPatrocinios } from "./patrocinios/TelaPatrocinios";
+import { TelaProgramacao } from "./programacao/TelaProgramacao";
+import { TelaTarefas } from "./tarefas/TelaTarefas";
 import { iniciarCaminhosDoForro, usarCaminhosDoForro } from "./dados";
 import { EmBreve } from "./EmBreve";
 import { MenuLateral } from "./MenuLateral";
@@ -79,6 +83,10 @@ export function PaginaCaminhosDoForro() {
       <main className="cdf:min-w-0 cdf:max-w-[1320px] cdf:px-4 cdf:pb-[72px] cdf:pt-6 cdf:md:px-[clamp(16px,4vw,48px)] cdf:md:pt-9">
         {vista === "config" ? <TelaConfiguracao base={base} />
           : vista === "cadastro" ? <TelaCadastro base={base} irPara={irPara} />
+          : vista === "patrocinios" ? <TelaPatrocinios base={base} irPara={irPara} />
+          : vista === "orcamento" ? <TelaOrcamento base={base} />
+          : vista === "programacao" ? <TelaProgramacao base={base} />
+          : vista === "tarefas" ? <TelaTarefas base={base} />
           : <EmBreve vista={vista} base={base} />}
       </main>
       <Toast />

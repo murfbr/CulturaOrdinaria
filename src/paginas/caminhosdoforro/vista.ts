@@ -39,12 +39,8 @@ export const FUTURAS: Partial<Record<Vista, { fase: number; titulo: string; text
 /** Documento de trabalho do festival, para onde o artefato manda enquanto a Fase 6 não chega. */
 export const DOCUMENTO_DE_TRABALHO = "https://claude.ai/artifact/YC7wZNR2pFbjeUZsz1AavF";
 
-/** Em que etapa da construção da página cada vista entra, e que coleções ela mostra. */
+/** Em que etapa da construção da página cada vista entra, e que coleções ela mostra (vazio: todas as vistas do MVP existem). */
 export const ETAPA_DA_VISTA: Partial<Record<Vista, { etapa: number; colecoes: Colecao[] }>> = {
-  patrocinios: { etapa: 3, colecoes: ["cotas", "patrocinios", "parceiros"] },
-  orcamento: { etapa: 4, colecoes: ["orcamento_itens"] },
-  programacao: { etapa: 5, colecoes: ["slots"] },
-  tarefas: { etapa: 6, colecoes: ["tarefas"] },
 };
 
 /** Filtro com que a tela de Tarefas abre quando se chega por "Ver tarefas" (de um núcleo ou de uma pessoa). */

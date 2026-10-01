@@ -15,7 +15,7 @@ import { clonar, uid } from "../../utils";
 import type { PaginaPropria } from "../../types";
 import { hojeIso } from "./calculo";
 import { converterArtefato } from "./semente";
-import { COLECOES, SLUG, type Base, type Colecao, type PaginaFestival } from "./tipos";
+import { COLECOES, SLUG, type Base, type Cadastro, type Colecao, type PaginaFestival, type Simulador } from "./tipos";
 
 type Documento = Record<string, unknown> & { id: string };
 type Mapa = Record<string, Documento>;
@@ -113,3 +113,17 @@ export const novoId = (colecao: Colecao) => uid(PREFIXO[colecao]);
 
 /** Apaga um registro de uma coleção (sem lixeira, como o artefato; o Banco grava o log). */
 export const apagar = (colecao: Colecao, id: string) => { void Banco.apagar(caminho(colecao), id); };
+
+/** Cadastro rápido de dentro de um modal ("Cadastrar nova empresa…"): nasce em conversa, no núcleo dado, e devolve o id. */
+export function criarCadastroRapido(nome: string, tipo: string, nucleoId: string | null): string {
+  const d: Cadastro = {
+    id: novoId("cadastro"), nome, tipos: [tipo], status: "em_conversa", nucleo: nucleoId,
+    contato: { nome: "", telefone: "", email: "" }, documento: "", carta: null, cartaArquivo: null, historico: [], anotacoes: "", revisar: false,
+  };
+  gravar("cadastro", d);
+  return d.id;
+}
+
+/** Muda parâmetros do simulador (documento da página). Arrastar a faixa usa o debounce longo. */
+export const alterarSimulador = (parte: Partial<Simulador>, rapido = true) =>
+  alterarPagina((p) => { p.simulador = { ...p.simulador, ...parte }; }, rapido);

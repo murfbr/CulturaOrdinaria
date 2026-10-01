@@ -2,7 +2,7 @@
    cadastro, os núcleos e as tarefas precisam. As contas do funil, do orçamento
    e da grade entram com as telas delas. */
 import { formatarData } from "../../utils";
-import type { Base, Cadastro, Nucleo, TarefaFestival } from "./tipos";
+import type { Base, Cadastro, Cenario, Cota, ItemOrcamento, Momento, Nucleo, Simulador, TarefaFestival } from "./tipos";
 
 /** Hoje em ISO (yyyy-mm-dd), no fuso local. */
 export const hojeIso = () => {
@@ -110,5 +110,111 @@ export function contasNucleo(base: Base, nucleoId: string) {
     feitas: ts.filter((t) => !tarefaAberta(t)).length,
     abertas: ts.filter(tarefaAberta).length,
     atrasadas: ts.filter(tarefaAtrasada).length,
+  };
+}
+
+/* ══════════ patrocínios e cotas ══════════ */
+
+/** Posição da etapa no funil (-1 = não está na lista). */
+export const indiceEtapa = (base: Base, id: string) => base.pagina.listas.etapasFunil.findIndex((e) => e.id === id);
+
+/** Para ordenar: etapa fora da lista vai para o fim. */
+export const ordemEtapa = (base: Base, id: string) => { const i = indiceEtapa(base, id); return i < 0 ? 99 : i; };
+
+/** Totais do funil e das cotas: confirmado; em negociação (tudo menos perdido e confirmado); dessa parte, o que já tem proposta enviada; inventário (valor × quantidade das cotas). */
+export function totaisPatrocinio(base: Base) {
+  const iProposta = indiceEtapa(base, "proposta_enviada");
+  let emNegociacao = 0, confirmado = 0, comProposta = 0;
+  for (const p of Object.values(base.patrocinios)) {
+    const v = Number(p.valor) || 0;
+    if (p.etapa === "perdido") continue;
+    if (p.etapa === "confirmado") { confirmado += v; continue; }
+    emNegociacao += v;
+    if (iProposta >= 0 && indiceEtapa(base, p.etapa) >= iProposta) comProposta += v;
+  }
+  const inventario = Object.values(base.cotas).reduce((t, c) => t + (Number(c.valor) || 0) * (Number(c.quantidade) || 0), 0);
+  return { emNegociacao, confirmado, comProposta, inventario };
+}
+
+/** Cotas na ordem definida (depois por nome). */
+export const cotasOrdenadas = (base: Base): Cota[] =>
+  Object.values(base.cotas).sort((a, b) => (a.ordem || 99) - (b.ordem || 99) || porNome(a, b));
+
+/** Quantos patrocínios confirmados usam cada cota. */
+export function vendidasPorCota(base: Base): Record<string, number> {
+  const r: Record<string, number> = {};
+  for (const p of Object.values(base.patrocinios)) if (p.etapa === "confirmado" && p.cota) r[p.cota] = (r[p.cota] || 0) + 1;
+  return r;
+}
+
+export const nomeCota = (base: Base, id: string | null | undefined) => (id && base.cotas[id] ? base.cotas[id].nome : "—");
+
+/* ══════════ orçamento e simulador ══════════ */
+
+/** Premissas do simulador, herdadas do documento de trabalho: bar próprio tem custo fixo de R$ 14.800 e
+    custo variável de 39% da receita; concessão rende 22% da receita bruta; 70% do público adere à colaboração. */
+export const BAR_FIXO = 14800;
+export const BAR_VARIAVEL = 0.39;
+export const BAR_CONCESSAO = 0.22;
+export const ADESAO = 0.7;
+export const MOMENTOS: Momento[] = ["pre", "mont", "d1", "d2", "d3", "pos"];
+export const CENARIOS: [Cenario, string][] = [["E", "Essencial"], ["I", "Ideal"], ["X", "Expandido"]];
+export const rotuloCenario = (c: string) => CENARIOS.find((x) => x[0] === c)?.[1] || c;
+
+/** Cores das fatias dos gráficos (as da marca e derivadas), a da contingência e a do "sem categoria". */
+export const CORES = ["#8B3226", "#E55B28", "#E0D24A", "#2A96A7", "#5E2219", "#F29A6B", "#A89B2E", "#1C6D7A", "#C9775E", "#C9C06A", "#7CC3CE", "#B8A99A", "#6B4A3F"];
+export const COR_CONTINGENCIA = "#CFC3B2";
+export const COR_SEM = "#9C8F84";
+
+/** Quantas vezes o item entra: num momento só, ou somando todos. */
+export const vezesItem = (it: ItemOrcamento, so?: Momento | "") =>
+  so ? (Number(it.distribuicao?.[so]) || 0) : MOMENTOS.reduce((t, k) => t + (Number(it.distribuicao?.[k]) || 0), 0);
+
+/** Quantidade × vezes × unitário do cenário. */
+export const valorItem = (it: ItemOrcamento, cenario: Cenario, so?: Momento | "") =>
+  (Number(it.quantidade) || 0) * vezesItem(it, so) * (Number(it.unitario?.[cenario]) || 0);
+
+/** "12,5%" de v sobre t. */
+export const pctTexto = (v: number, t: number) => (t ? (Math.round((v / t) * 1000) / 10).toLocaleString("pt-BR") + "%" : "0%");
+
+export interface ContaOrcamento {
+  p: Simulador; cenario: Cenario;
+  subtotal: number; contingencia: number; despesas: number; confirmado: number;
+  porCategoria: Record<string, number>; porNucleo: Record<string, number>;
+  pessoas: number; receitaBar: number; bar: number; barProprio: number; barConcessao: number;
+  colaboracao: number; gastronomia: number; cotas: number; cotasConfirmadas: number;
+  receitas: number; saldo: number;
+}
+
+/** A conta do orçamento no cenário atual: despesas por categoria e núcleo, contingência, receitas do simulador e o saldo. */
+export function calcularOrcamento(base: Base): ContaOrcamento {
+  const p = base.pagina.simulador;
+  const cenario = p.cenario;
+  let subtotal = 0, confirmado = 0;
+  const porCategoria: Record<string, number> = {}, porNucleo: Record<string, number> = {};
+  for (const it of Object.values(base.orcamento_itens)) {
+    const v = valorItem(it, cenario);
+    subtotal += v;
+    if (it.status === "confirmado") confirmado += v;
+    const c = it.categoria || "_sem", n = it.nucleo || "_sem";
+    porCategoria[c] = (porCategoria[c] || 0) + v;
+    porNucleo[n] = (porNucleo[n] || 0) + v;
+  }
+  const contingencia = (subtotal * (Number(p.contingencia) || 0)) / 100;
+  const despesas = subtotal + contingencia;
+  const pessoas = (Number(p.publico) || 0) * 3;
+  const receitaBar = pessoas * (Number(p.ticket) || 0);
+  const barProprio = Math.max(0, receitaBar - (receitaBar * BAR_VARIAVEL + BAR_FIXO));
+  const barConcessao = receitaBar * BAR_CONCESSAO;
+  const bar = p.bar === "proprio" ? barProprio : p.bar === "concessao" ? barConcessao : 0;
+  const colaboracao = pessoas * (Number(p.colab) || 0) * ADESAO;
+  const gastronomia = Number(p.gastro) || 0;
+  const cotasConfirmadas = totaisPatrocinio(base).confirmado;
+  const cotas = p.cotasModo === "manual" ? (Number(p.cotasManual) || 0) : cotasConfirmadas;
+  const receitas = cotas + bar + colaboracao + gastronomia;
+  return {
+    p, cenario, subtotal, contingencia, despesas, confirmado, porCategoria, porNucleo,
+    pessoas, receitaBar, bar, barProprio, barConcessao, colaboracao, gastronomia, cotas, cotasConfirmadas,
+    receitas, saldo: receitas - despesas,
   };
 }
