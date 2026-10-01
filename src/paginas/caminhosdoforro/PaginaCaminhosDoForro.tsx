@@ -5,6 +5,7 @@
    em paginas/caminhosdoforro e nas subcoleções dela (ver dados.ts). */
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/Toast";
+import { TelaApresentacoes } from "./apresentacoes/TelaApresentacoes";
 import { TelaCadastro } from "./cadastro/TelaCadastro";
 import { TelaConfiguracao } from "./configuracao/TelaConfiguracao";
 import { TelaContexto } from "./contexto/TelaContexto";
@@ -86,6 +87,7 @@ export function PaginaCaminhosDoForro() {
         {vista === "config" ? <TelaConfiguracao base={base} />
           : vista === "painel" ? <TelaPainel base={base} irPara={irPara} />
           : vista === "contexto" ? <TelaContexto base={base} />
+          : vista === "apresentacoes" ? <TelaApresentacoes base={base} />
           : vista === "cadastro" ? <TelaCadastro base={base} irPara={irPara} />
           : vista === "patrocinios" ? <TelaPatrocinios base={base} irPara={irPara} />
           : vista === "orcamento" ? <TelaOrcamento base={base} />
