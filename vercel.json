@@ -1,3 +1,7 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/sambadeponta/:caminho*", "destination": "/sambadeponta/index.html" },
+    { "source": "/caminhosdoforro/:caminho*", "destination": "/caminhosdoforro/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

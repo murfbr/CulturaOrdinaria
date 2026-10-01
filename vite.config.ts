@@ -3,9 +3,13 @@
    (React, Firebase) e os dados estáticos (formulários replicados, catálogos do
    Salic, sementes), cada parte é cacheada de forma independente pelo navegador
    e um deploy só invalida o que mudou. */
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+
+/** Caminho absoluto de um arquivo relativo a esta pasta. */
+const aqui = (arquivo: string) => fileURLToPath(new URL(arquivo, import.meta.url));
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -13,6 +17,15 @@ export default defineConfig({
   server: { port: Number(process.env.PORT) || 5173 },
   build: {
     rollupOptions: {
+      // Um HTML por endereço: a raiz (Central) e as páginas próprias, cada uma
+      // com título, descrição, ícone e prévia de link (Open Graph) próprios. O
+      // JavaScript é o mesmo; o App escolhe a página pelo caminho. Cada HTML
+      // sai no dist no mesmo caminho em que está aqui (dist/sambadeponta/).
+      input: {
+        central: aqui("index.html"),
+        sambadeponta: aqui("sambadeponta/index.html"),
+        caminhosdoforro: aqui("caminhosdoforro/index.html"),
+      },
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {

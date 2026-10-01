@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <!-- Entrada da página própria /sambadeponta/. É o mesmo site da raiz (o script
+       é o mesmo e o App escolhe a página pelo caminho); o que muda é o que o robô
+       de prévia de link (WhatsApp, Telegram, Slack) lê sem rodar JavaScript:
+       título, descrição, cor, ícone e a imagem em public/sambadeponta/. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Ponta de Lança · Samba de Ponta</title>
+  <meta name="description" content="Painel da festa Ponta de Lança: edições, orçamento, tarefas, cronograma e fechamento." />
+  <meta name="theme-color" content="#006837" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%23006837'/><path d='M20 3 L27 15 L22 15 L22 30 L18 30 L18 15 L13 15 Z' fill='%2397C230'/><path d='M20 3 L23 8 L17 8 Z' fill='%23FFFFCB'/></svg>" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Central do Coletivo" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:url" content="https://cultura-ordinaria.vercel.app/sambadeponta/" />
+  <meta property="og:title" content="Ponta de Lança · Samba de Ponta" />
+  <meta property="og:description" content="Painel da festa Ponta de Lança: edições, orçamento, tarefas, cronograma e fechamento." />
+  <meta property="og:image" content="https://cultura-ordinaria.vercel.app/sambadeponta/compartilhar.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Samba de Ponta: painel da festa Ponta de Lança" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ponta de Lança · Samba de Ponta" />
+  <meta name="twitter:description" content="Painel da festa Ponta de Lança: edições, orçamento, tarefas, cronograma e fechamento." />
+  <meta name="twitter:image" content="https://cultura-ordinaria.vercel.app/sambadeponta/compartilhar.png" />
+</head>
+<body>
+  <div id="raiz"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
