@@ -110,3 +110,6 @@ export function gravar<T extends { id: string }>(colecao: Colecao, registro: T, 
 
 /** Id para um registro novo da coleção. */
 export const novoId = (colecao: Colecao) => uid(PREFIXO[colecao]);
+
+/** Apaga um registro de uma coleção (sem lixeira, como o artefato; o Banco grava o log). */
+export const apagar = (colecao: Colecao, id: string) => { void Banco.apagar(caminho(colecao), id); };

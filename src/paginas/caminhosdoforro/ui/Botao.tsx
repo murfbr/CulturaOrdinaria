@@ -1,10 +1,10 @@
 /* Botão da página: normal (superfície com borda), primário (cor da marca),
-   fraco (só o texto, na cor de link) e perigo (vermelho vazado). `mini` para
-   ações de linha. */
+   fraco (só o texto, na cor de link), perigo (vermelho vazado) e armado (o
+   estado "confirmar" do BotaoArmado). `mini` para ações de linha. */
 import type { ButtonHTMLAttributes } from "react";
 import { cx } from "../../../utils/classes";
 
-export type VarianteBotao = "normal" | "primario" | "fraco" | "perigo";
+export type VarianteBotao = "normal" | "primario" | "fraco" | "perigo" | "armado";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variante?: VarianteBotao;
@@ -16,6 +16,7 @@ const VARIANTES: Record<VarianteBotao, string> = {
   primario: "cdf:border-primaria cdf:bg-primaria cdf:text-primaria-texto cdf:hover:brightness-[1.08]",
   fraco: "cdf:border-transparent cdf:bg-transparent cdf:text-link cdf:hover:underline",
   perigo: "cdf:border-erro cdf:bg-transparent cdf:text-erro",
+  armado: "cdf:border-erro cdf:bg-erro cdf:text-white",
 };
 
 export function Botao({ variante = "normal", mini, className, type = "button", ...resto }: Props) {

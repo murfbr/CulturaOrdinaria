@@ -5,6 +5,7 @@
    em paginas/caminhosdoforro e nas subcoleções dela (ver dados.ts). */
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/Toast";
+import { TelaCadastro } from "./cadastro/TelaCadastro";
 import { TelaConfiguracao } from "./configuracao/TelaConfiguracao";
 import { iniciarCaminhosDoForro, usarCaminhosDoForro } from "./dados";
 import { EmBreve } from "./EmBreve";
@@ -76,7 +77,9 @@ export function PaginaCaminhosDoForro() {
       <Filtros />
       <MenuLateral base={base} vista={vista} irPara={irPara} />
       <main className="cdf:min-w-0 cdf:max-w-[1320px] cdf:px-4 cdf:pb-[72px] cdf:pt-6 cdf:md:px-[clamp(16px,4vw,48px)] cdf:md:pt-9">
-        {vista === "config" ? <TelaConfiguracao base={base} /> : <EmBreve vista={vista} base={base} />}
+        {vista === "config" ? <TelaConfiguracao base={base} />
+          : vista === "cadastro" ? <TelaCadastro base={base} irPara={irPara} />
+          : <EmBreve vista={vista} base={base} />}
       </main>
       <Toast />
     </div>

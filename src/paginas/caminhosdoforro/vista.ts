@@ -41,9 +41,12 @@ export const DOCUMENTO_DE_TRABALHO = "https://claude.ai/artifact/YC7wZNR2pFbjeUZ
 
 /** Em que etapa da construção da página cada vista entra, e que coleções ela mostra. */
 export const ETAPA_DA_VISTA: Partial<Record<Vista, { etapa: number; colecoes: Colecao[] }>> = {
-  cadastro: { etapa: 2, colecoes: ["cadastro", "espacos"] },
   patrocinios: { etapa: 3, colecoes: ["cotas", "patrocinios", "parceiros"] },
   orcamento: { etapa: 4, colecoes: ["orcamento_itens"] },
   programacao: { etapa: 5, colecoes: ["slots"] },
   tarefas: { etapa: 6, colecoes: ["tarefas"] },
 };
+
+/** Filtro com que a tela de Tarefas abre quando se chega por "Ver tarefas" (de um núcleo ou de uma pessoa). */
+export let filtroTarefasPedido: { nucleo?: string; resp?: string } | null = null;
+export const pedirFiltroTarefas = (f: { nucleo?: string; resp?: string } | null) => { filtroTarefasPedido = f; };

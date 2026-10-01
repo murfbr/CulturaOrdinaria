@@ -77,3 +77,24 @@ export function idDeItem(nome: string, usados: Set<string>): string {
   usados.add(id);
   return id;
 }
+
+/** Opções para um <select>: [id, nome][], com a opção vazia na frente quando pedida. */
+export const opcoes = (p: PaginaFestival, nome: NomeLista | "nucleos", vazio?: string): [string, string][] => [
+  ...(vazio != null ? [["", vazio] as [string, string]] : []),
+  ...itens(p, nome).map((x) => [x.id, x.nome] as [string, string]),
+];
+
+/** Classes de cor dos status de contato e das etapas do funil (ids que o código conhece; o resto fica neutro). */
+const CLASSE_STATUS: Record<string, string> = {
+  a_contatar: "cdf:bg-contatar-bg cdf:text-contatar",
+  em_conversa: "cdf:bg-conversa-bg cdf:text-conversa",
+  confirmado: "cdf:bg-conf-bg cdf:text-conf",
+  recusou: "cdf:bg-rec-bg cdf:text-rec",
+  prospeccao: "cdf:bg-contatar-bg cdf:text-contatar",
+  contato_feito: "cdf:bg-conversa-bg cdf:text-conversa",
+  proposta_enviada: "cdf:bg-conversa-bg cdf:text-conversa",
+  negociacao: "cdf:bg-conversa-bg cdf:text-conversa",
+  perdido: "cdf:bg-rec-bg cdf:text-rec",
+};
+export const classeStatus = (id: string | null | undefined) =>
+  CLASSE_STATUS[id || ""] || "cdf:bg-superficie-2 cdf:text-tinta-2";

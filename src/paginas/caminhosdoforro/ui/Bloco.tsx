@@ -14,3 +14,12 @@ export function Bloco({ titulo, nota, className, children }: Props) {
     </section>
   );
 }
+
+/** Caixa tracejada para lista vazia ou aviso ("Nenhum cadastro ainda…"). */
+export function Vazio({ children }: { children: ReactNode }) {
+  return (
+    <div className="cdf:mt-2 cdf:max-w-[720px] cdf:rounded-xl cdf:border cdf:border-dashed cdf:border-linha cdf:bg-superficie cdf:p-6">
+      <p className="cdf:m-0">{children}</p>
+    </div>
+  );
+}
