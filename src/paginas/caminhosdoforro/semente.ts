@@ -57,7 +57,7 @@ export function converterArtefato(json: ArtefatoJson, agora: string): Semeadura 
   const config = json.config || { listas: {} };
   const listas = Object.fromEntries(NOMES_LISTA.map((n) => [n, (config.listas || {})[n] || []])) as Listas;
   const nucleos: Nucleo[] = (config.nucleos || []).map((n) => ({
-    id: n.id, nome: n.nome, responsavel: n.responsavel ?? null, membros: n.membros || [],
+    id: n.id, nome: n.nome, responsavel: n.responsavel ?? null, membros: n.membros || [], ...(n.escopo ? { escopo: n.escopo } : {}),
   }));
   const p = config.parametros || {};
   const logo = typeof p.logo === "string" ? p.logo : (p.logo && p.logo.url) || null;

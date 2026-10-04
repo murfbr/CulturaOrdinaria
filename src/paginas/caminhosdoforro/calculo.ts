@@ -2,7 +2,7 @@
    cadastro, os núcleos e as tarefas precisam. As contas do funil, do orçamento
    e da grade entram com as telas delas. */
 import { formatarData } from "../../utils";
-import type { Base, Cadastro, Cenario, Cota, ItemOrcamento, Momento, Nucleo, Simulador, TarefaFestival } from "./tipos";
+import { PRIORIDADES, type Base, type Cadastro, type Cenario, type Cota, type ItemOrcamento, type Momento, type Nucleo, type Simulador, type TarefaFestival } from "./tipos";
 
 /** Hoje em ISO (yyyy-mm-dd), no fuso local. */
 export const hojeIso = () => {
@@ -102,16 +102,35 @@ export const tarefaAtrasada = (t: TarefaFestival) => !!t.prazo && t.status !== "
 export const foraDoNucleo = (base: Base, t: TarefaFestival) =>
   !!t.responsavel && !(nucleo(base, t.nucleo)?.membros || []).includes(t.responsavel);
 
-/** Contagem de tarefas do núcleo ("_sem" = sem núcleo). */
-export function contasNucleo(base: Base, nucleoId: string) {
-  const ts = Object.values(base.tarefas).filter((t) => (t.nucleo || "_sem") === nucleoId);
+/** Prioridade da tarefa (id de `PRIORIDADES`); tarefa antiga marcada como urgente conta como crítica. */
+export const prioridadeDe = (t: TarefaFestival): string => t.prioridade || (t.urgente ? "critica" : "");
+
+/** Nome da prioridade pelo id; vazio mostra "—". */
+export const rotuloPrioridade = (id: string) => PRIORIDADES.find(([v]) => v === id)?.[1] || (id ? id : "—");
+
+/** Posição da prioridade para ordenar: crítica primeiro, sem prioridade por último. */
+export const pesoPrioridade = (t: TarefaFestival) => {
+  const i = PRIORIDADES.findIndex(([v]) => v === prioridadeDe(t));
+  return i < 0 ? PRIORIDADES.length : i;
+};
+
+/** Contagem de um conjunto de tarefas: total, abertas, concluídas, atrasadas, críticas em aberto e quantas em cada status. */
+export function contarTarefas(ts: TarefaFestival[]) {
+  const porStatus: Record<string, number> = {};
+  ts.forEach((t) => { porStatus[t.status] = (porStatus[t.status] || 0) + 1; });
   return {
     total: ts.length,
     feitas: ts.filter((t) => !tarefaAberta(t)).length,
     abertas: ts.filter(tarefaAberta).length,
     atrasadas: ts.filter(tarefaAtrasada).length,
+    criticas: ts.filter((t) => tarefaAberta(t) && prioridadeDe(t) === "critica").length,
+    porStatus,
   };
 }
+
+/** Contagem de tarefas do núcleo ("_sem" = sem núcleo). */
+export const contasNucleo = (base: Base, nucleoId: string) =>
+  contarTarefas(Object.values(base.tarefas).filter((t) => (t.nucleo || "_sem") === nucleoId));
 
 /* ══════════ patrocínios e cotas ══════════ */
 
