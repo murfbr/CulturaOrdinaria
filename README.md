@@ -107,6 +107,28 @@ A primeira abertura semeia esses documentos a partir do JSON do artefato origina
 As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar a
 subcoleção.
 
+### Caminhos do Forró: tarefas e o plano de ação por GTs
+
+Na página do festival (`/caminhosdoforro/`), a aba Tarefas é o plano de ação da
+equipe. Cada tarefa (documento de `paginas/caminhosdoforro/tarefas`) tem, além
+de título, núcleo, responsável, prazo, status e anotações, os campos do plano:
+`codigo` (o ID, "ART-001"), `frente`, `prioridade` (crítica, alta, média ou
+baixa; `urgente` segue gravado por compatibilidade), `dependencia` e `entrega`.
+O núcleo é o Grupo de Trabalho e guarda o `escopo`.
+
+**Importar plano** lê a planilha da equipe (.xlsx ou .csv) no navegador, sem
+biblioteca, achando a tabela pelo cabeçalho (ID e Tarefa são obrigatórias).
+Antes de gravar, mostra a prévia: tarefas novas, atualizadas, sem mudança e as
+que estão na Central e não na planilha (só são apagadas se a pessoa marcar).
+Reimportar não duplica nem atropela a equipe: cada tarefa guarda dois retratos
+da última importação (`planilha`, o texto das células, e `importado`, o que foi
+gravado a partir dele), então só entra o que mudou na planilha, coluna que não
+veio não mexe em nada, e o que mudou dos dois lados aparece como conflito (vale
+a Central, a não ser que se escolha a planilha). **Baixar planilha** devolve as
+tarefas no mesmo formato.
+O código está em `src/paginas/caminhosdoforro/tarefas/` (`xlsx.ts` lê o arquivo,
+`plano.ts` compara, `ModalImportarPlano.tsx` mostra e grava).
+
 ## Mapa do código
 
 Estrutura padrão de projeto React: `components` (UI compartilhada), `pages`

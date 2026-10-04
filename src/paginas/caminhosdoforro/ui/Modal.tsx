@@ -14,20 +14,24 @@ interface Props {
   aoExcluir?: () => void;
   /** Enquanto um upload roda: Salvar desabilitado e com "Enviando…". */
   ocupado?: boolean;
+  /** Texto do botão principal quando não é "Salvar" ("Importar 116 tarefas"). */
+  rotuloSalvar?: string;
+  /** Botão principal desabilitado (ainda não há o que salvar). */
+  bloqueado?: boolean;
   children: ReactNode;
 }
 
 /** Faz o campo ocupar as duas colunas do corpo do modal. */
 export const LINHA_INTEIRA = "cdf:md:col-span-2";
 
-export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, ocupado, children }: Props) {
+export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, ocupado, rotuloSalvar, bloqueado, children }: Props) {
   useEffect(() => {
     const tecla = (ev: KeyboardEvent) => { if (ev.key === "Escape") aoFechar(); };
     window.addEventListener("keydown", tecla);
     return () => window.removeEventListener("keydown", tecla);
   }, [aoFechar]);
 
-  function enviar(ev: FormEvent) { ev.preventDefault(); if (!ocupado) aoSalvar(); }
+  function enviar(ev: FormEvent) { ev.preventDefault(); if (!ocupado && !bloqueado) aoSalvar(); }
 
   return (
     <div
@@ -54,7 +58,7 @@ export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, ocupad
             {aoExcluir && <BotaoArmado variante="perigo" confirmar="Confirmar exclusão" onClick={aoExcluir}>Excluir</BotaoArmado>}
             <span className="cdf:flex-1" />
             <Botao onClick={aoFechar}>Cancelar</Botao>
-            <Botao type="submit" variante="primario" disabled={ocupado}>{ocupado ? "Enviando…" : "Salvar"}</Botao>
+            <Botao type="submit" variante="primario" disabled={ocupado || bloqueado}>{ocupado ? "Enviando…" : rotuloSalvar || "Salvar"}</Botao>
           </div>
         </footer>
       </form>

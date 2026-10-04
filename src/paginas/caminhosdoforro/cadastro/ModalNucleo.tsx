@@ -1,13 +1,14 @@
-/* Novo ou editar núcleo: nome, membros (pessoas da equipe) e responsável
-   (um dos membros). Os núcleos ficam no documento da página. Excluir só
-   quando nenhum cadastro, item de orçamento ou tarefa usa o núcleo. */
+/* Novo ou editar núcleo: nome, escopo (o que o grupo de trabalho cuida, como
+   no plano de ação), membros (pessoas da equipe) e responsável (um dos
+   membros). Os núcleos ficam no documento da página. Excluir só quando
+   nenhum cadastro, item de orçamento ou tarefa usa o núcleo. */
 import { useState } from "react";
 import { toast } from "../../../components/Toast";
 import { cadastrosDoTipo, nomeCadastro, nucleo, nucleosDe } from "../calculo";
 import { alterarPagina } from "../dados";
 import { idDeItem, usos } from "../listas";
 import type { Base } from "../tipos";
-import { Campo, Entrada, Grupo, Selecao } from "../ui/Campo";
+import { AreaTexto, Campo, Entrada, Grupo, Selecao } from "../ui/Campo";
 import { LISTA_MARCAR } from "../ui/classes";
 import { LINHA_INTEIRA, Modal } from "../ui/Modal";
 
@@ -16,6 +17,7 @@ interface Props { base: Base; id: string | null; aoFechar: () => void }
 export function ModalNucleo({ base, id, aoFechar }: Props) {
   const existente = id ? nucleo(base, id) : null;
   const [nome, setNome] = useState(existente?.nome || "");
+  const [escopo, setEscopo] = useState(existente?.escopo || "");
   const [membros, setMembros] = useState<string[]>(() => (existente?.membros || []).filter((m) => base.cadastro[m]));
   const [resp, setResp] = useState(existente?.responsavel || "");
   const equipe = cadastrosDoTipo(base, "equipe");
@@ -28,10 +30,10 @@ export function ModalNucleo({ base, id, aoFechar }: Props) {
     let nid = id;
     if (nid) {
       const i = lista.findIndex((x) => x.id === nid);
-      lista[i] = { ...lista[i], nome: n, membros, responsavel: respValido || null };
+      lista[i] = { ...lista[i], nome: n, escopo: escopo.trim(), membros, responsavel: respValido || null };
     } else {
       nid = idDeItem(n, new Set(lista.map((x) => x.id)));
-      lista.push({ id: nid, nome: n, membros, responsavel: respValido || null });
+      lista.push({ id: nid, nome: n, escopo: escopo.trim(), membros, responsavel: respValido || null });
     }
     const saiu = Object.values(base.tarefas).filter((t) => t.nucleo === nid && t.responsavel && !membros.includes(t.responsavel)).length;
     alterarPagina((p) => { p.nucleos = lista; });
@@ -50,6 +52,7 @@ export function ModalNucleo({ base, id, aoFechar }: Props) {
   return (
     <Modal titulo={id ? "Editar núcleo" : "Novo núcleo"} aoFechar={aoFechar} aoSalvar={salvar} aoExcluir={id ? excluir : undefined}>
       <Campo rotulo="Nome do núcleo" className={LINHA_INTEIRA}><Entrada autoFocus required value={nome} onChange={(e) => setNome(e.target.value)} /></Campo>
+      <Campo rotulo="Escopo (o que o núcleo cuida)" className={LINHA_INTEIRA}><AreaTexto rows={2} value={escopo} onChange={(e) => setEscopo(e.target.value)} /></Campo>
       <Grupo rotulo="Membros" className={LINHA_INTEIRA}>
         <div className={LISTA_MARCAR}>
           {equipe.length ? equipe.map((e) => {

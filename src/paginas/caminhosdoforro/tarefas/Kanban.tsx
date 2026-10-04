@@ -1,6 +1,7 @@
-/* O kanban: uma coluna por status da lista, cartões com núcleo, responsável
-   (herdado do núcleo quando a tarefa não tem), prazo e avisos. Arrastar o
-   cartão entre as colunas ou trocar o status no próprio cartão grava. */
+/* O kanban: uma coluna por status da lista, cartões com o ID e a frente do
+   plano, prioridade, núcleo, responsável (herdado do núcleo quando a tarefa
+   não tem), prazo, de quem depende e avisos. Arrastar o cartão entre as
+   colunas ou trocar o status no próprio cartão grava. */
 import { useState } from "react";
 import { toast } from "../../../components/Toast";
 import { clonar } from "../../../utils";
@@ -11,15 +12,11 @@ import { opcoes, rotulo } from "../listas";
 import type { Base, TarefaFestival } from "../tipos";
 import { ESTILO_CONTROLE_BASE, Opcoes } from "../ui/Campo";
 import { NOTA } from "../ui/classes";
+import { PilulaPrioridade, comparador, type OrdemTarefas } from "./etiquetas";
 
-interface Props { base: Base; tarefas: TarefaFestival[]; abrir: (id: string) => void }
+interface Props { base: Base; tarefas: TarefaFestival[]; ordem: OrdemTarefas; abrir: (id: string) => void }
 
-const ordem = (a: TarefaFestival, b: TarefaFestival) =>
-  (b.urgente ? 1 : 0) - (a.urgente ? 1 : 0)
-  || String(a.prazo || "9999").localeCompare(String(b.prazo || "9999"))
-  || (a.ordem || 999) - (b.ordem || 999);
-
-export function Kanban({ base, tarefas, abrir }: Props) {
+export function Kanban({ base, tarefas, ordem, abrir }: Props) {
   const [alvo, setAlvo] = useState<string | null>(null);
   const p = base.pagina;
   const status = p.listas.statusTarefa;
@@ -37,7 +34,7 @@ export function Kanban({ base, tarefas, abrir }: Props) {
     <>
       <div className="cdf:grid cdf:auto-cols-[minmax(260px,1fr)] cdf:grid-flow-col cdf:items-start cdf:gap-3 cdf:overflow-x-auto cdf:pb-1.5">
         {status.map((st) => {
-          const cartoes = tarefas.filter((t) => t.status === st.id).sort(ordem);
+          const cartoes = tarefas.filter((t) => t.status === st.id).sort(comparador(ordem));
           return (
             <section
               key={st.id} aria-label={st.nome}
@@ -76,15 +73,23 @@ function Cartao({ base, t, abrir, mover }: { base: Base; t: TarefaFestival; abri
       onDragStart={(e) => { e.dataTransfer.setData("text/plain", t.id); e.dataTransfer.effectAllowed = "move"; }}
       className={cx("cdf:cursor-grab cdf:rounded-[10px] cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie cdf:px-3 cdf:py-2.5", atrasada && "cdf:shadow-[inset_4px_0_0_var(--cdf-erro)]")}
     >
+      {(t.codigo || t.frente) && (
+        <p className="cdf:m-0 cdf:mb-1 cdf:text-xs cdf:font-bold cdf:text-fraco">
+          {t.codigo && <span className="cdf:tabular-nums cdf:text-tinta-2">{t.codigo}</span>}
+          {t.codigo && t.frente && " · "}
+          {t.frente && <span className="cdf:uppercase cdf:tracking-[.04em]">{t.frente}</span>}
+        </p>
+      )}
       <h4 className={cx("cdf:m-0 cdf:mb-1.5 cdf:text-[15px] cdf:font-semibold cdf:leading-[1.3]", feita && "cdf:text-fraco cdf:line-through")}>
         <button type="button" onClick={() => abrir(t.id)} className="cdf:cursor-pointer cdf:border-0 cdf:bg-transparent cdf:p-0 cdf:text-left">{t.titulo}</button>
       </h4>
       <div className="cdf:flex cdf:flex-wrap cdf:items-center cdf:gap-x-2.5 cdf:gap-y-1 cdf:text-[13px] cdf:text-fraco">
-        {t.urgente && <span className="cdf:inline-block cdf:rounded-full cdf:bg-destaque cdf:px-2 cdf:text-xs cdf:font-bold cdf:text-white">Urgente</span>}
+        <PilulaPrioridade t={t} />
         <span className="cdf:rounded-md cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie-2 cdf:px-2 cdf:py-0.5">{rotulo(p, "nucleos", t.nucleo)}</span>
         <span className={herdado ? "cdf:italic" : ""}>{r ? nomeCadastro(base, r) + (herdado ? " (responsável do núcleo)" : "") : "Sem responsável"}</span>
         {t.prazo && <span className={atrasada ? "cdf:font-bold cdf:text-erro" : ""}>{(atrasada ? "Venceu " : "Até ") + dataBr(t.prazo)}</span>}
       </div>
+      {t.dependencia && <p className="cdf:m-0 cdf:mt-1.5 cdf:text-[13px] cdf:text-fraco">Depende de: {t.dependencia}</p>}
       {foraDoNucleo(base, t) && (
         <span className="cdf:mt-1.5 cdf:inline-block cdf:cursor-help cdf:rounded-full cdf:bg-rec-bg cdf:px-2 cdf:py-0.5 cdf:text-[12.5px] cdf:font-bold cdf:text-rec" title="O responsável não é mais membro deste núcleo.">Fora do núcleo</span>
       )}

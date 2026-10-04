@@ -26,7 +26,7 @@ export const TITULOS: Partial<Record<Vista, [string, string]>> = {
   patrocinios: ["Patrocínios e apoios", "Cotas à venda, negociações com empresas e parceiros institucionais do festival."],
   programacao: ["Programação", "A grade dos três dias. Quem sobe ao palco ou ocupa uma sala vem do cadastro geral; horários, espaços e atividades se editam aqui."],
   orcamento: ["Orçamento", "Quanto o festival custa, de onde vem o dinheiro e o que falta. Os valores seguem o cenário escolhido."],
-  tarefas: ["Tarefas", "O que cada núcleo tem para fazer até o festival. Arraste os cartões entre as colunas ou mude o status no próprio cartão."],
+  tarefas: ["Tarefas", "O plano de ação do festival, por núcleo: o que cada grupo de trabalho tem para fazer, até quando e com que prioridade. Mude o status na própria linha ou, no quadro, arraste o cartão."],
   apresentacoes: ["Apresentações", "As três versões do deck: institucional, comercial de primeiro contato e comercial de segundo contato. Cada cartão guarda o arquivo (upload ou link), com as versões e os comentários."],
   contexto: ["Contexto", "O projeto escrito, a pesquisa externa e os arquivos base do festival, com versões e comentários. Cada cartão guarda o arquivo (upload ou link)."],
   config: ["Configuração", "Parâmetros do festival, listas usadas nos campos de seleção e o que está carregado na base."],

@@ -33,8 +33,9 @@ export type NomeLista = (typeof NOMES_LISTA)[number];
 export interface ItemLista { id: string; nome: string }
 export type Listas = Record<NomeLista, ItemLista[]>;
 
-/** Núcleo de trabalho: membros e responsável são ids do cadastro (tipo equipe). */
-export interface Nucleo { id: string; nome: string; responsavel: string | null; membros?: string[] }
+/** Núcleo de trabalho (o GT do plano de ação): membros e responsável são ids do cadastro (tipo equipe); `escopo` é o
+    "Escopo principal" do plano, e `escopoDoPlano` o que a planilha dizia na última importação (para não passar por cima do que foi editado aqui). */
+export interface Nucleo { id: string; nome: string; responsavel: string | null; membros?: string[]; escopo?: string; escopoDoPlano?: string }
 
 export interface Parametros {
   metaCaptacao: number | null;
@@ -208,6 +209,13 @@ export interface Horario {
   atualizado?: string;
 }
 
+/** Prioridades da tarefa, da mais para a menos urgente (as do plano de ação por GTs). Fixas: o código ordena e colore por elas. */
+export const PRIORIDADES: [string, string][] = [["critica", "Crítica"], ["alta", "Alta"], ["media", "Média"], ["baixa", "Baixa"]];
+
+/** Campos da tarefa que vêm do plano de ação (a planilha por GTs); são os que a importação compara e junta. */
+export const CAMPOS_DO_PLANO = ["titulo", "nucleo", "frente", "responsavel", "prazo", "prioridade", "status", "dependencia", "entrega", "anotacoes"] as const;
+export type CampoDoPlano = (typeof CAMPOS_DO_PLANO)[number];
+
 export interface TarefaFestival {
   id: string;
   titulo: string;
@@ -217,9 +225,24 @@ export interface TarefaFestival {
   prazo: string | null;
   /** Id de `statusTarefa`. */
   status: string;
+  /** Anterior à prioridade; segue gravado (verdadeiro quando a prioridade é crítica) para quem ainda lê. */
   urgente: boolean;
   anotacoes: string;
   ordem: number;
+  /** Id da tarefa no plano de ação ("ART-001"); é por ele que a importação reconhece a tarefa. */
+  codigo?: string;
+  /** Frente ou subtema dentro do núcleo ("Line-up", "Licenças"). */
+  frente?: string;
+  /** Id de `PRIORIDADES`; vazio = sem prioridade. */
+  prioridade?: string;
+  /** De quem ou do que a tarefa depende ("Bandas", "ART-018"). */
+  dependencia?: string;
+  /** O que comprova a tarefa feita ("Contratos assinados"). */
+  entrega?: string;
+  /** Retratos da última importação do plano, para separar o que mudou na planilha do que mudou aqui:
+      `planilha` é o texto das células e `importado` o valor gravado na tarefa a partir dele (ver tarefas/plano.ts). */
+  planilha?: Partial<Record<CampoDoPlano, string | null>>;
+  importado?: Partial<Record<CampoDoPlano, string | null>>;
   atualizado?: string;
 }
 
