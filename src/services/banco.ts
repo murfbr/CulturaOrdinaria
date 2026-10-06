@@ -330,7 +330,7 @@ export const Banco = {
           const remoto = snap.exists() ? (clonar(snap.data()) as Documento) : undefined;
           let atual = remoto;
           let subir = false;
-          if (local && timers[chave]) atual = local;
+          if (local && (timers[chave] || enviando.has(chave))) atual = local;
           else if (local && !remoto && local._novo) { atual = local; subir = true; }
           else if (local && remoto && String(local.atualizado || "") > String(remoto.atualizado || "")) { atual = local; subir = true; }
           if (atual) espelho[colecao][id] = atual; else delete espelho[colecao][id];
