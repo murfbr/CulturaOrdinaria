@@ -1,9 +1,12 @@
 /* Versões do rascunho: as fotografias automáticas, com "ver" (o texto da
    versão) e "restaurar". Restaurar fotografa o estado atual antes de voltar —
    restaurar nunca destrói nada. */
-import { useEffect, useState } from "react";
-import { Modal, RodapeModal } from "../../../components/Modal";
+import { Fragment, useEffect, useState } from "react";
+import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { toast } from "../../../components/Toast";
+import { Botao } from "../../../components/ui/Botao";
+import { Dica } from "../../../components/ui/Dica";
+import { Linha } from "../../../components/ui/Linha";
 import { salvarRascunho } from "../../../store/mutacoes";
 import { comoTexto } from "../../../lib/simulador/motor";
 import { fotografar, listarVersoes, type VersaoRascunho } from "../../../lib/simulador/versoes";
@@ -33,40 +36,44 @@ export function ModalVersoes({ rascunho: r, aoFechar }: { rascunho: Rascunho; ao
 
   return (
     <Modal titulo="Versões do rascunho" aoFechar={aoFechar} largo>
-      <p className="hint" style={{ marginTop: 0 }}>
+      <Dica emModal className="mb-3">
         Fotografias automáticas: ao abrir o rascunho, no máximo uma a cada 4 horas
         (até 20 por rascunho — as mais antigas caem). <b>Restaurar</b> fotografa o
         estado atual antes de voltar, então nada se perde.
-      </p>
+      </Dica>
 
-      {versoes === null && <p className="hint">carregando versões…</p>}
+      {versoes === null && <Dica emModal>carregando versões…</Dica>}
       {versoes?.length === 0 && (
-        <p className="hint">Nenhuma versão ainda — a primeira nasce na próxima abertura do rascunho com conteúdo.</p>
+        <Dica emModal>Nenhuma versão ainda — a primeira nasce na próxima abertura do rascunho com conteúdo.</Dica>
       )}
 
-      {(versoes || []).map((v) => (
-        <div key={v.id}>
-          <div className="versao-linha">
-            <b>{quando(v.criadoEm)}</b>
-            <span className="muted">{relativo(v.criadoEm)}{v.autor ? " · " + v.autor : ""}</span>
-            <span className="acoes">
-              <button className="btn ghost sm" onClick={() => setVendo(vendo === v.id ? null : v.id)}>
-                {vendo === v.id ? "fechar" : "ver"}
-              </button>
-              <button
-                className="btn sm"
-                onClick={() => (confirmando === v.id ? void restaurar(v) : setConfirmando(v.id))}
-              >
-                {confirmando === v.id ? "Confirmar restauração" : "Restaurar"}
-              </button>
-            </span>
-          </div>
-          {vendo === v.id && <pre className="versao-texto">{comoTexto(v.rascunho) || "(vazio)"}</pre>}
-        </div>
-      ))}
+      <div>
+        {(versoes || []).map((v) => (
+          <Fragment key={v.id}>
+            <Linha
+              direita={<>
+                <Botao variante="fantasma" tamanho="pequeno" onClick={() => setVendo(vendo === v.id ? null : v.id)}>
+                  {vendo === v.id ? "fechar" : "ver"}
+                </Botao>
+                <Botao tamanho="pequeno" onClick={() => (confirmando === v.id ? void restaurar(v) : setConfirmando(v.id))}>
+                  {confirmando === v.id ? "Confirmar restauração" : "Restaurar"}
+                </Botao>
+              </>}
+            >
+              <b>{quando(v.criadoEm)}</b>{" "}
+              <span className="text-muted">{relativo(v.criadoEm)}{v.autor ? " · " + v.autor : ""}</span>
+            </Linha>
+            {vendo === v.id && (
+              <pre className="mb-2 mt-0 max-h-[300px] overflow-auto whitespace-pre-wrap rounded-lg border border-line bg-bg px-3 py-2.5 font-sans text-xs leading-[1.55]">
+                {comoTexto(v.rascunho) || "(vazio)"}
+              </pre>
+            )}
+          </Fragment>
+        ))}
+      </div>
 
       <RodapeModal>
-        <span className="sp"><button className="btn ghost" onClick={aoFechar}>Fechar</button></span>
+        <AcoesModal><Botao variante="fantasma" onClick={aoFechar}>Fechar</Botao></AcoesModal>
       </RodapeModal>
     </Modal>
   );

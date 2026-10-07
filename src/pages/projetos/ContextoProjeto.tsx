@@ -9,6 +9,9 @@ import { nomeCurto } from "../../lib/nomes";
 import { porId } from "../../store/mutacoes";
 import { montarBloco } from "../../lib/contexto/bloco";
 import { copiarComAviso } from "../../components/Toast";
+import { Botao } from "../../components/ui/Botao";
+import { Painel } from "../../components/ui/Painel";
+import { Pilulas } from "../../components/ui/Pilulas";
 import { RegrasParaRascunho } from "../contexto/RegrasParaRascunho";
 import { PainelFicha } from "../contexto/Fichas";
 import { ModalRegra, type PedidoModalRegra } from "../contexto/ModalRegra";
@@ -27,27 +30,22 @@ export function ContextoProjeto({ p }: { p: Projeto }) {
   };
 
   return (
-    <div className="ctx-embutido">
-      <div className="pilulas">
-        <button className={aberta === "resumo" ? "on" : ""} onClick={() => setAberta("resumo")}>Resumo para escrever</button>
-        {ids.map((id) => (
-          <button key={id} className={aberta === id ? "on" : ""} onClick={() => setAberta(id)}>{rotulo(id)}</button>
-        ))}
-        <button className="btn sm" style={{ marginLeft: "auto" }}
+    <>
+      <Pilulas ativa={aberta} aoEscolher={setAberta}
+        opcoes={[{ id: "resumo", rotulo: "Resumo para escrever" }, ...ids.map((id) => ({ id, rotulo: rotulo(id) }))]}>
+        <Botao variante="fantasma" tamanho="pequeno" className="ml-auto"
           onClick={() => void copiarComAviso(montarBloco(ids, true), "Contexto do projeto copiado para colar numa conversa")}>
           Copiar tudo para o Claude
-        </button>
-      </div>
+        </Botao>
+      </Pilulas>
 
       {aberta === "resumo" ? (
-        <div className="drawer" style={{ borderColor: "var(--line)" }}>
-          <RegrasParaRascunho ids={ids} />
-        </div>
+        <Painel><RegrasParaRascunho ids={ids} /></Painel>
       ) : (
-        <div id="ctx"><PainelFicha key={aberta} id={aberta} aoAbrirRegra={setModalRegra} semCabecalho /></div>
+        <PainelFicha key={aberta} id={aberta} aoAbrirRegra={setModalRegra} semCabecalho />
       )}
 
-      {modalRegra && <div id="ctx"><ModalRegra pedido={modalRegra} aoFechar={() => setModalRegra(null)} /></div>}
-    </div>
+      {modalRegra && <ModalRegra pedido={modalRegra} aoFechar={() => setModalRegra(null)} />}
+    </>
   );
 }

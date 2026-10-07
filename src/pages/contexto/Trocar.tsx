@@ -2,15 +2,23 @@
    Para fora: marca fichas (e as regras gerais) e copia o bloco de contexto que
    abre uma conversa de escrita. Para dentro: cola o bloco que o Claude devolveu
    e o site cria/atualiza fichas, regras (como "a confirmar") e julgamentos. */
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { usarCentral, obterEstado } from "../../store/central";
 import { salvarFicha, salvarJulgamento, salvarRegra } from "../../store/mutacoes";
 import {
   TIPOS_FICHA, entidadePorId, entidades, fichaDe, nomeDaEntidade, temFicha,
 } from "../../lib/contexto/consultas";
 import { lerBloco, montarBloco, type BlocoLido } from "../../lib/contexto/bloco";
-import { Modal, RodapeModal } from "../../components/Modal";
+import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { AcoesModal, Modal, RodapeModal } from "../../components/Modal";
 import { copiarComAviso, toast } from "../../components/Toast";
+import { Botao } from "../../components/ui/Botao";
+import { AreaTexto, Marcacao } from "../../components/ui/Campo";
+import { Dica } from "../../components/ui/Dica";
+import { Grade } from "../../components/ui/Grade";
+import { Painel } from "../../components/ui/Painel";
+import { Rotulo } from "../../components/ui/Rotulo";
+import { ItemMarcado } from "./ItemMarcado";
 import type { TipoFicha } from "../../types";
 
 export function TelaTrocar() {
@@ -72,77 +80,77 @@ export function TelaTrocar() {
   }
 
   const grupo = (tipo: TipoFicha) => (
-    <span style={{ display: "contents" }} key={tipo}>
-      <div className="eyebrow" style={{ padding: "8px 0 2px" }}>{TIPOS_FICHA[tipo]}</div>
+    <Fragment key={tipo}>
+      <Rotulo className="pb-0.5 pt-2">{TIPOS_FICHA[tipo]}</Rotulo>
       {entidades(tipo).map((f) => (
-        <label key={f.id}>
-          <input type="checkbox" checked={selecionadas.has(f.id)} onChange={(e) => alternar(f.id, e.target.checked)} />
-          {f.nome}{!temFicha(f.id) && <> <span className="vazio">(sem ficha)</span></>}
-        </label>
+        <Marcacao key={f.id} className="w-full py-1" marcado={selecionadas.has(f.id)} aoMudar={(v) => alternar(f.id, v)}>
+          <span className="text-ink">{f.nome}</span>
+          {!temFicha(f.id) && <span className="italic text-faint">(sem ficha)</span>}
+        </Marcacao>
       ))}
-    </span>
+    </Fragment>
   );
 
   return (
     <>
-      <div className="shead">
-        <div>
-          <h2>Trocar com o Claude</h2>
-          <p className="sub">Mão dupla, sempre em texto. Para fora: o bloco de contexto que abre uma conversa de escrita. Para dentro: o bloco que o Claude devolve depois de ler os materiais.</p>
+      <CabecalhoSecao
+        grande
+        titulo="Trocar com o Claude"
+        sub="Mão dupla, sempre em texto. Para fora: o bloco de contexto que abre uma conversa de escrita. Para dentro: o bloco que o Claude devolve depois de ler os materiais."
+      />
+
+      <Grade colunas="lateral" className="md:grid-cols-[320px_1fr]">
+        <div className="min-w-0">
+          <Painel titulo="Para fora: montar o contexto">
+            <Marcacao className="w-full py-1" marcado={comGerais} aoMudar={setComGerais}>
+              <b className="text-ink">Regras gerais</b>
+            </Marcacao>
+            {grupo("artista")}{grupo("projeto")}{grupo("edital")}
+            <div className="mt-3.5 flex flex-wrap items-center gap-2">
+              <Botao onClick={() => void copiarComAviso(bloco, "Bloco copiado")}>Copiar bloco</Botao>
+              <Dica>cole no início da conversa de escrita</Dica>
+            </div>
+          </Painel>
+
+          <Painel titulo="Para dentro: colar o que o Claude devolveu">
+            <ol className="m-0 mb-3 list-decimal space-y-1.5 pl-gutter text-base text-muted">
+              <li>Numa conversa do Project, junte os materiais (edital, parecer, portfólio) e o md de orientação.</li>
+              <li>O Claude devolve um bloco no mesmo formato ao lado.</li>
+              <li>Cole aqui: fichas, regras e julgamentos são criados ou atualizados (as regras novas entram como "a confirmar").</li>
+            </ol>
+            <AreaTexto className="min-h-40 font-mono text-xs" value={entrada} onChange={(e) => setEntrada(e.target.value)}
+              placeholder={'## FICHA edital ed7 · Nome do edital\nposicionamento: ...\n- JULGADOR ...\n- REGRA [edital ed7] [prioridade] ... | fonte: edital, item 5.2'} />
+            <Botao variante="fantasma" className="mt-2" onClick={importar}>Importar bloco</Botao>
+          </Painel>
         </div>
-      </div>
 
-      <div className="troca">
-        <div className="pan">
-          <h3 style={{ fontSize: 16 }}>Para fora: montar o contexto</h3>
-          <label>
-            <input type="checkbox" checked={comGerais} onChange={(e) => setComGerais(e.target.checked)} />
-            <b>Regras gerais</b>
-          </label>
-          {grupo("artista")}{grupo("projeto")}{grupo("edital")}
-          <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
-            <button className="btn primary" onClick={() => void copiarComAviso(bloco, "Bloco copiado")}>Copiar bloco</button>
-            <span style={{ fontSize: 12.5, color: "var(--ink3)", alignSelf: "center" }}>cole no início da conversa de escrita</span>
-          </div>
-
-          <h3 style={{ fontSize: 16, marginTop: 26 }}>Para dentro: colar o que o Claude devolveu</h3>
-          <ol className="passos">
-            <li>Numa conversa do Project, junte os materiais (edital, parecer, portfólio) e o md de orientação.</li>
-            <li>O Claude devolve um bloco no mesmo formato ao lado.</li>
-            <li>Cole aqui: fichas, regras e julgamentos são criados ou atualizados (as regras novas entram como "a confirmar").</li>
-          </ol>
-          <textarea className="entrada" value={entrada} onChange={(e) => setEntrada(e.target.value)}
-            placeholder={'## FICHA edital ed7 · Nome do edital\nposicionamento: ...\n- JULGADOR ...\n- REGRA [edital ed7] [prioridade] ... | fonte: edital, item 5.2'} />
-          <button className="btn" style={{ marginTop: 8 }} onClick={importar}>Importar bloco</button>
-        </div>
-
-        <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>
+        <div className="min-w-0">
+          <Rotulo className="mb-2">
             bloco gerado ({selecionadas.size} ficha{selecionadas.size === 1 ? "" : "s"}{comGerais ? " + gerais" : ""})
-          </div>
-          <pre className="saida">{bloco}</pre>
+          </Rotulo>
+          <pre className="m-0 max-h-[70vh] overflow-auto whitespace-pre-wrap break-words rounded-xl border border-line bg-card px-4 py-3.5 font-mono text-xs">{bloco}</pre>
         </div>
-      </div>
+      </Grade>
 
       {pendente && (
         <Modal titulo="Importar bloco" aoFechar={() => setPendente(null)}>
-          <p className="hint">
+          <Dica emModal className="mb-3">
             Vai criar ou atualizar: {pendente.fichas.length} ficha(s), {pendente.regras.length} regra(s),{" "}
             {pendente.julgamentos.length} julgamento(s). Fichas de ids que não existem no Painel são ignoradas.
             Regras novas entram como "a confirmar".
-          </p>
-          <ul className="itens" style={{ maxHeight: "40vh", overflow: "auto" }}>
+          </Dica>
+          <div className="max-h-[40vh] overflow-auto">
             {pendente.fichas.map((f, i) => (
-              <li key={"f" + i}><span className="k">F</span><span>{f.tipo} {f.id}{!entidadePorId(f.id) && " (ignorada: id não existe no Painel)"}</span></li>
+              <ItemMarcado marca="F" key={"f" + i}>{f.tipo} {f.id}{!entidadePorId(f.id) && " (ignorada: id não existe no Painel)"}</ItemMarcado>
             ))}
-            {pendente.regras.map((r, i) => <li key={"r" + i}><span className="k">R</span><span>{r.texto}</span></li>)}
-            {pendente.julgamentos.map((j, i) => <li key={"j" + i}><span className="k">J</span><span>{j.id} · {nomeDaEntidade(j.edital)}</span></li>)}
-          </ul>
+            {pendente.regras.map((r, i) => <ItemMarcado marca="R" key={"r" + i}>{r.texto}</ItemMarcado>)}
+            {pendente.julgamentos.map((j, i) => <ItemMarcado marca="J" key={"j" + i}>{j.id} · {nomeDaEntidade(j.edital)}</ItemMarcado>)}
+          </div>
           <RodapeModal>
-            <span className="sp">
-              <button className="btn quiet" onClick={() => setPendente(null)}>Cancelar</button>
-              <button className="btn primary" onClick={() => aplicar(pendente)}>Importar</button>
-            </span>
+            <AcoesModal>
+              <Botao variante="fantasma" onClick={() => setPendente(null)}>Cancelar</Botao>
+              <Botao onClick={() => aplicar(pendente)}>Importar</Botao>
+            </AcoesModal>
           </RodapeModal>
         </Modal>
       )}

@@ -1,7 +1,8 @@
-/* Branding da Central do Coletivo: cores, fontes e tamanhos de fonte.
-   É a única fonte desses valores. As telas usam as classes geradas daqui
-   (bg-card, text-muted, text-sm, font-mono...). Cada página própria de outra
-   empresa tem o config dela na pasta dela (ver src/paginas/sambadeponta). */
+/* Branding da Central do Coletivo: a única fonte de cores, fontes, tamanhos,
+   larguras e camadas. As telas usam as classes geradas daqui (bg-card,
+   text-muted, text-sm, max-w-site, z-toast...). O que se repete em aparência
+   vira bloco em src/components/ui/; a tela só compõe. Cada página própria de
+   outra empresa tem o config dela na pasta dela (ver src/paginas). */
 export default {
   theme: {
     colors: {
@@ -21,9 +22,9 @@ export default {
       sand: "#F0EAE1",
       line: { DEFAULT: "#E7DFD5", strong: "#D5CBBE" },
 
-      // marca
-      brand: { DEFAULT: "#1F2A33", soft: "#AEB8C0", faint: "#7E8A93" },
-      accent: { DEFAULT: "#E4572E", soft: "#FBE7DF", ink: "#B8431F" },
+      // marca (o cabeçalho escuro e o que fica sobre ele)
+      brand: { DEFAULT: "#1F2A33", soft: "#AEB8C0", faint: "#7E8A93", line: "rgba(255,255,255,.2)", hover: "rgba(255,255,255,.08)" },
+      accent: { DEFAULT: "#E4572E", soft: "#FBE7DF", ink: "#B8431F", light: "#FFB9A3" },
       gold: "#D9A441",
 
       // estados
@@ -46,12 +47,19 @@ export default {
       prior: { DEFAULT: "#1F6B8C", soft: "#DDEBF2" },
       estilo: { DEFAULT: "#5B5F9E", soft: "#E5E6F4" },
       dica: { DEFAULT: "#4E7A44", soft: "#E2EEDF" },
+
+      // status dos projetos que não cabem nos estados acima
+      inscrito: { DEFAULT: "#1F5F8C", soft: "#DCEBF6" },
+      aguardando: { DEFAULT: "#4A4E8C", soft: "#E5E6F4" },
+      captando: { DEFAULT: "#146B55", soft: "#D6F0E8" },
     },
     fontFamily: {
       sans: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
       mono: ["ui-monospace", "Menlo", "Consolas", "monospace"],
     },
     // base = corpo do site (14px). O resto desce e sobe a partir dele.
+    // Uso: 3xs/2xs só em etiquetas e contadores; xs em dicas e rótulos; sm em
+    // texto auxiliar e controles; base no corpo; lg a 4xl em títulos.
     fontSize: {
       "3xs": "10px",
       "2xs": "11px",
@@ -65,9 +73,27 @@ export default {
       "4xl": "28px",
     },
     extend: {
+      // Raios: md 6 (chips, botões pequenos), lg 8 (botões, campos), xl 12
+      // (painéis, cartões), 2xl 16 (modal). São os padrões do Tailwind; não
+      // usar valor arbitrário.
       boxShadow: {
         card: "0 1px 2px rgba(34,30,27,.05), 0 4px 14px rgba(34,30,27,.05)",
+        menu: "0 8px 24px rgba(0,0,0,.12)",
         modal: "0 20px 60px rgba(0,0,0,.3)",
+      },
+      maxWidth: {
+        site: "1200px",
+        texto: "70ch",
+      },
+      spacing: {
+        gutter: "18px",
+      },
+      zIndex: {
+        abas: "5",
+        menu: "20",
+        gaveta: "30",
+        modal: "50",
+        toast: "60",
       },
     },
   },

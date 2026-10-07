@@ -1,16 +1,14 @@
 /* Tailwind da Central. O branding está em tailwind.config.js na raiz; aqui só
-   a ligação e a base do body. O reset padrão (preflight) fica desligado até o
-   CSS antigo (estilos.css) sumir. Só procura classes em src/, fora src/paginas (as
-   páginas próprias de projeto, cada uma com o Tailwind dela).
+   a ligação, o reset padrão (preflight) e a base do body. Só procura classes
+   em src/, fora src/paginas (as páginas próprias de projeto, cada uma com o
+   Tailwind dela).
 
-   Durante a migração, o CSS antigo entra na camada "legado", abaixo das
-   utilities: onde uma tela já usa classes do Tailwind, elas vencem; onde não
-   usa, o CSS antigo segue mandando. Na última etapa o @import sai junto com
-   o arquivo. */
+   A camada "legado" continua declarada porque as páginas próprias (Samba,
+   forró) põem a base delas nela; a Central não tem mais CSS antigo. */
 @layer theme, base, legado, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
-@import "./estilos.css" layer(legado);
 @source "../";
 @source not "../paginas";
 @config "../../tailwind.config.js";
@@ -25,11 +23,5 @@
 @layer base {
   body {
     @apply font-sans text-base leading-normal bg-bg text-ink antialiased;
-  }
-  /* Controles herdam a fonte e a cor do texto (o preflight fará isso no fim). */
-  button, input, select, textarea, optgroup {
-    font: inherit;
-    letter-spacing: inherit;
-    color: inherit;
   }
 }

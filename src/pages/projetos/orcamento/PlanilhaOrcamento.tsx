@@ -2,26 +2,36 @@
    No Salic cada item é cadastrado num modal (produto → local → etapa); aqui a
    planilha inteira fica à vista e soma sozinha. O campo Item sugere o catálogo
    real (filtrado por produto × etapa) e preenche o código; a coluna Bloco é do
-   coletivo, não existe na plataforma. */
+   coletivo, não existe na plataforma. Cada linha é um LinhaPlanilha. */
 import { useState } from "react";
 import { SALIC_DADOS } from "../../../data";
 import {
-  calcularLinha, catalogoDe, codigoDoItem, custosVinculados, linhaVazia,
+  catalogoDe, codigoDoItem, custosVinculados, linhaVazia,
   orcamentoDe, totalItens, textoOrcamento, csvOrcamento,
 } from "../../../lib/simulador/orcamento";
 import { BarraTotais } from "./BarraTotais";
+import { ESTILO_TOTAL, LinhaPlanilha } from "./LinhaPlanilha";
 import { copiarComAviso } from "../../../components/Toast";
+import { Botao } from "../../../components/ui/Botao";
+import { Campo, Entrada, Marcacao } from "../../../components/ui/Campo";
+import { Dica } from "../../../components/ui/Dica";
+import { Tabela, Td, Th } from "../../../components/ui/Tabela";
 import { BRL, baixarArquivo, slug, uid } from "../../../utils";
 import type { LinhaOrcamento, Rascunho } from "../../../types";
 import type { Alterar } from "../formulario/tipos";
 
 const SD = SALIC_DADOS;
 
+/** Os custos vinculados que podem entrar em valor absoluto. */
+const ABSOLUTOS = [["acess", "Acessibilidade"], ["adm", "Administração"], ["capt", "Captação (limite R$ 150.000,00)"]] as const;
+
 export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Alterar }) {
   const [colunasSalic, setColunasSalic] = useState(false);
   const o = orcamentoDe(r);
   const v = custosVinculados(r);
   const catalogosComNome = Object.keys(SD.catalogos);
+  // As colunas do Salic ficam escondidas até o botão ligar.
+  const sc = colunasSalic ? undefined : "hidden";
 
   /** Muda um campo de uma linha; item conhecido preenche o código sozinho. */
   const mudarLinha = (id: string, campo: keyof LinhaOrcamento, valor: string) =>
@@ -35,6 +45,21 @@ export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Altera
       }
     });
 
+  const duplicarLinha = (id: string) => alterar((copia) => {
+    const linhas = orcamentoDe(copia).linhas;
+    const i = linhas.findIndex((x) => x.id === id);
+    if (i < 0) return;
+    const nova = { ...linhas[i], id: uid("l") };
+    linhas.splice(i + 1, 0, nova);
+  }, true);
+
+  const removerLinha = (id: string) => alterar((copia) => {
+    const orc = orcamentoDe(copia);
+    const i = orc.linhas.findIndex((x) => x.id === id);
+    if (i >= 0) orc.linhas.splice(i, 1);
+    if (!orc.linhas.length) orc.linhas.push(linhaVazia());
+  }, true);
+
   // Um datalist por combinação produto × etapa em uso (catálogo do Salic + curadoria).
   const combinacoes = new Map<string, string>();
   o.linhas.forEach((l) => {
@@ -45,104 +70,53 @@ export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Altera
   return (
     <>
       <BarraTotais r={r} />
-      <p className="instr">
+      <Dica className="mb-2 max-w-[75ch]">
         No Salic cada item é cadastrado num modal, dentro de um produto, dentro de um local, dentro de
         uma etapa, e o total só aparece depois de salvar. Aqui a planilha inteira fica à vista e soma
         sozinha. A coluna <b>Bloco</b> é sua, não existe na plataforma. O campo <b>Item</b> sugere o
         catálogo real do Salic ({catalogosComNome.join(", ")}) filtrado por produto e etapa, e preenche
         o código sozinho; outros produtos caem no catálogo de {SD.catalogoPadrao}.
-      </p>
-      <div className="orcbar">
-        <label className="togg">
-          <input type="checkbox" checked={colunasSalic} onChange={(e) => setColunasSalic(e.target.checked)} />
-          {" "}Mostrar colunas do Salic (produto, local, código, fonte, detalhamento)
-        </label>
+      </Dica>
+      <div className="mt-2.5 flex flex-wrap items-center gap-2.5">
+        <Marcacao marcado={colunasSalic} aoMudar={setColunasSalic}>
+          Mostrar colunas do Salic (produto, local, código, fonte, detalhamento)
+        </Marcacao>
       </div>
 
-      <div className="tablewrap">
-        <table className={"orc" + (colunasSalic ? " full" : "")}>
-          <thead>
-            <tr>
-              <th className="c-bl">Bloco</th><th className="sc">Produto</th><th className="sc">Local</th>
-              <th>Etapa</th><th className="c-it">Item</th><th className="sc">Cód.</th><th>Unid.</th>
-              <th>Qtd</th><th>Ocor.</th><th>Vlr unit.</th><th>Total</th>
-              <th className="sc">Fonte</th><th className="sc">Detalhamento</th><th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {o.linhas.map((l) => {
-              const idLista = combinacoes.get((l.produto || "") + "|" + l.etapa);
-              return (
-                <tr key={l.id}>
-                  <td><input className="cell" list="lista-blocos" value={l.bloco} placeholder="—" onChange={(e) => mudarLinha(l.id, "bloco", e.target.value)} /></td>
-                  <td className="sc">
-                    <select className="cell" value={l.produto} onChange={(e) => mudarLinha(l.id, "produto", e.target.value)}>
-                      <option value="">—</option>
-                      {(SD.produtos || []).map((p) => <option key={p}>{p}</option>)}
-                    </select>
-                  </td>
-                  <td className="sc"><input className="cell" value={l.local} placeholder="Cidade - UF" onChange={(e) => mudarLinha(l.id, "local", e.target.value)} /></td>
-                  <td>
-                    <select className="cell" value={l.etapa} onChange={(e) => mudarLinha(l.id, "etapa", e.target.value)}>
-                      {(SD.etapas || []).map((e2) => <option key={e2[0]} value={e2[0]}>{e2[1]}</option>)}
-                    </select>
-                  </td>
-                  <td><input className="cell" list={idLista} value={l.item} placeholder="descrição do gasto" onChange={(e) => mudarLinha(l.id, "item", e.target.value)} /></td>
-                  <td className="sc"><input className="cell n" value={l.cod} placeholder="—" onChange={(e) => mudarLinha(l.id, "cod", e.target.value)} /></td>
-                  <td>
-                    <select className="cell" value={String(l.unidade)} onChange={(e) => mudarLinha(l.id, "unidade", e.target.value)}>
-                      {(SD.unidade || []).map((u) => <option key={u[1]} value={u[1]}>{u[0]}</option>)}
-                    </select>
-                  </td>
-                  <td><input className="cell n" inputMode="decimal" value={l.qtd} onChange={(e) => mudarLinha(l.id, "qtd", e.target.value)} /></td>
-                  <td><input className="cell n" inputMode="decimal" value={l.oco} onChange={(e) => mudarLinha(l.id, "oco", e.target.value)} /></td>
-                  <td><input className="cell n" inputMode="decimal" value={l.vu} placeholder="0,00" onChange={(e) => mudarLinha(l.id, "vu", e.target.value)} /></td>
-                  <td className="tot">{BRL(calcularLinha(l))}</td>
-                  <td className="sc">
-                    <select className="cell" value={String(l.fonte)} onChange={(e) => mudarLinha(l.id, "fonte", e.target.value)}>
-                      {(SD.fonte || []).map((f) => <option key={f[1]} value={f[1]}>{f[0]}</option>)}
-                    </select>
-                  </td>
-                  <td className="sc"><input className="cell" value={l.obs} placeholder="justificativa do item" onChange={(e) => mudarLinha(l.id, "obs", e.target.value)} /></td>
-                  <td className="c-x">
-                    <button type="button" className="xbtn" title="Duplicar"
-                      onClick={() => alterar((copia) => {
-                        const linhas = orcamentoDe(copia).linhas;
-                        const i = linhas.findIndex((x) => x.id === l.id);
-                        if (i < 0) return;
-                        const nova = { ...linhas[i], id: uid("l") };
-                        linhas.splice(i + 1, 0, nova);
-                      }, true)}>⧉</button>
-                    <button type="button" className="xbtn" title="Remover"
-                      onClick={() => alterar((copia) => {
-                        const orc = orcamentoDe(copia);
-                        const i = orc.linhas.findIndex((x) => x.id === l.id);
-                        if (i >= 0) orc.linhas.splice(i, 1);
-                        if (!orc.linhas.length) orc.linhas.push(linhaVazia());
-                      }, true)}>×</button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={9}>{o.linhas.length} {o.linhas.length === 1 ? "linha" : "linhas"}</td>
-              <td className="tot">{BRL(totalItens(o))}</td>
-              <td colSpan={4}></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <Tabela className="mt-2.5" minima={colunasSalic ? "min-w-[1240px]" : "min-w-[720px]"}>
+        <thead>
+          <tr>
+            <Th className="w-[170px]">Bloco</Th><Th className={sc}>Produto</Th><Th className={sc}>Local</Th>
+            <Th>Etapa</Th><Th className="min-w-[230px]">Item</Th><Th className={sc}>Cód.</Th><Th>Unid.</Th>
+            <Th>Qtd</Th><Th>Ocor.</Th><Th>Vlr unit.</Th><Th>Total</Th>
+            <Th className={sc}>Fonte</Th><Th className={sc}>Detalhamento</Th><Th></Th>
+          </tr>
+        </thead>
+        <tbody>
+          {o.linhas.map((l) => (
+            <LinhaPlanilha key={l.id} l={l} colunasSalic={colunasSalic}
+              idLista={combinacoes.get((l.produto || "") + "|" + l.etapa)}
+              mudar={(campo, valor) => mudarLinha(l.id, campo, valor)}
+              duplicar={() => duplicarLinha(l.id)} remover={() => removerLinha(l.id)} />
+          ))}
+        </tbody>
+        <tfoot>
+          <tr className="bg-sand font-semibold">
+            <Td colSpan={9}>{o.linhas.length} {o.linhas.length === 1 ? "linha" : "linhas"}</Td>
+            <Td className={ESTILO_TOTAL}>{BRL(totalItens(o))}</Td>
+            <Td colSpan={4}></Td>
+          </tr>
+        </tfoot>
+      </Tabela>
 
-      <div className="orcbar">
-        <button type="button" className="btn primary sm"
+      <div className="mt-2.5 flex flex-wrap items-center gap-2.5">
+        <Botao tamanho="pequeno"
           onClick={() => alterar((copia) => {
             const linhas = orcamentoDe(copia).linhas;
             linhas.push(linhaVazia(linhas[linhas.length - 1]));
-          }, true)}>+ Nova linha</button>
-        <button type="button" className="btn sm" onClick={() => baixarArquivo(`orcamento-${slug(r.nome)}.csv`, csvOrcamento(r), "text/csv")}>Exportar CSV</button>
-        <button type="button" className="btn sm" onClick={() => void copiarComAviso(textoOrcamento(r), "Planilha copiada em texto")}>Copiar planilha em texto</button>
+          }, true)}>+ Nova linha</Botao>
+        <Botao variante="fantasma" tamanho="pequeno" onClick={() => baixarArquivo(`orcamento-${slug(r.nome)}.csv`, csvOrcamento(r), "text/csv")}>Exportar CSV</Botao>
+        <Botao variante="fantasma" tamanho="pequeno" onClick={() => void copiarComAviso(textoOrcamento(r), "Planilha copiada em texto")}>Copiar planilha em texto</Botao>
       </div>
 
       {[...combinacoes.entries()].map(([chave, id]) => {
@@ -158,25 +132,24 @@ export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Altera
         {(SD.blocos || []).map((b) => <option value={b} key={b} />)}
       </datalist>
 
-      <details className="orcabs" open={o.usarAbs}>
-        <summary>Custos vinculados em valores absolutos (em vez dos percentuais da tela "Custos vinculados")</summary>
-        <label className="togg">
-          <input type="checkbox" checked={o.usarAbs}
-            onChange={(e) => alterar((copia) => { orcamentoDe(copia).usarAbs = e.target.checked; }, true)} />
-          {" "}Usar valores absolutos (útil ao importar um orçamento antigo; o Salic só aceita percentual)
-        </label>
+      <details className="mt-3.5 text-sm text-muted" open={o.usarAbs}>
+        <summary className="cursor-pointer text-sm font-medium text-muted">Custos vinculados em valores absolutos (em vez dos percentuais da tela "Custos vinculados")</summary>
+        <Marcacao className="mt-2" marcado={o.usarAbs}
+          aoMudar={(marcado) => alterar((copia) => { orcamentoDe(copia).usarAbs = marcado; }, true)}>
+          Usar valores absolutos (útil ao importar um orçamento antigo; o Salic só aceita percentual)
+        </Marcacao>
         {o.usarAbs && (
-          <div className="absgrid">
-            {([["acess", "Acessibilidade"], ["adm", "Administração"], ["capt", "Captação (limite R$ 150.000,00)"]] as const).map(([k, rotulo]) => (
-              <label key={k}>{rotulo}
-                <input type="text" inputMode="decimal" value={o.abs[k]} placeholder="0,00"
+          <div className="mt-2 grid gap-2.5 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+            {ABSOLUTOS.map(([k, rotulo]) => (
+              <Campo rotulo={rotulo} key={k}>
+                <Entrada type="text" inputMode="decimal" value={o.abs[k]} placeholder="0,00"
                   onChange={(e) => alterar((copia) => { orcamentoDe(copia).abs[k] = e.target.value; })} />
-              </label>
+              </Campo>
             ))}
           </div>
         )}
         {v.estourou && (
-          <p className="aviso-in">
+          <p className="mb-0 mt-2 rounded-md bg-warn-soft px-2.5 py-2 text-sm text-warn-ink">
             <b>Acima do limite:</b> a remuneração de captação daria {BRL(v.captBruto)}, mas o Salic trava
             em R$ 150.000,00. Os totais já consideram o limite.
           </p>

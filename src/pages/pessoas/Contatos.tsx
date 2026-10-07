@@ -1,5 +1,6 @@
 /* Contatos externos: patrocinadores, órgãos e responsáveis por editais —
-   com busca, filtro por tipo e colunas ordenáveis. */
+   com busca, filtro por tipo e colunas ordenáveis. A linha inteira abre a
+   edição; o botão "editar" da última coluna faz o mesmo. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
@@ -7,6 +8,9 @@ import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import {
   BarraFiltros, CampoBusca, SeletorFiltro, ThOrdenavel, ordenarLinhas, type OrdemTabela,
 } from "../../components/Filtros";
+import { Botao } from "../../components/ui/Botao";
+import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
+import { Vazio } from "../../components/ui/Vazio";
 import { comparar } from "../../utils";
 
 export function Contatos() {
@@ -25,7 +29,7 @@ export function Contatos() {
   return (
     <>
       <CabecalhoSecao titulo="Contatos externos" sub="patrocinadores, órgãos e responsáveis por editais — clique no título da coluna pra ordenar">
-        <button className="btn" onClick={() => abrirNovo("contato")}>+ Contato</button>
+        <Botao onClick={() => abrirNovo("contato")}>+ Contato</Botao>
       </CabecalhoSecao>
 
       <BarraFiltros mostrando={contatos.length} total={painel.contatos.length}>
@@ -33,31 +37,31 @@ export function Contatos() {
         <SeletorFiltro valor={filtroTipo} aoMudar={setFiltroTipo} rotuloTodos="todos os tipos" opcoes={tipos} />
       </BarraFiltros>
 
-      <div className="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <ThOrdenavel campo="nome" ordem={ordem} aoOrdenar={setOrdem}>Nome</ThOrdenavel>
-              <ThOrdenavel campo="tipo" ordem={ordem} aoOrdenar={setOrdem}>Tipo</ThOrdenavel>
-              <ThOrdenavel campo="ref" ordem={ordem} aoOrdenar={setOrdem}>Referência</ThOrdenavel>
-              <ThOrdenavel campo="contato" ordem={ordem} aoOrdenar={setOrdem}>Contato</ThOrdenavel>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {contatos.map((c) => (
-              <tr key={c.id}>
-                <td><b>{c.nome}</b></td>
-                <td>{c.tipo}</td>
-                <td>{c.ref}</td>
-                <td className="muted">{c.contato}</td>
-                <td><span className="lnk" onClick={() => abrirEdicao("contato", c.id)}>editar</span></td>
-              </tr>
-            ))}
-            {!contatos.length && <tr><td colSpan={5} className="muted">Nenhum contato com esses filtros.</td></tr>}
-          </tbody>
-        </table>
-      </div>
+      <Tabela>
+        <thead>
+          <tr>
+            <ThOrdenavel campo="nome" ordem={ordem} aoOrdenar={setOrdem}>Nome</ThOrdenavel>
+            <ThOrdenavel campo="tipo" ordem={ordem} aoOrdenar={setOrdem}>Tipo</ThOrdenavel>
+            <ThOrdenavel campo="ref" ordem={ordem} aoOrdenar={setOrdem}>Referência</ThOrdenavel>
+            <ThOrdenavel campo="contato" ordem={ordem} aoOrdenar={setOrdem}>Contato</ThOrdenavel>
+            <Th />
+          </tr>
+        </thead>
+        <tbody>
+          {contatos.map((c) => (
+            <Tr key={c.id} aoClicar={() => abrirEdicao("contato", c.id)}>
+              <Td><b>{c.nome}</b></Td>
+              <Td>{c.tipo}</Td>
+              <Td>{c.ref}</Td>
+              <Td className="text-muted">{c.contato}</Td>
+              <Td className="text-right">
+                <Botao variante="quieto" tamanho="mini" onClick={(e) => { e.stopPropagation(); abrirEdicao("contato", c.id); }}>editar</Botao>
+              </Td>
+            </Tr>
+          ))}
+          {!contatos.length && <tr><Td colSpan={5}><Vazio emLinha>Nenhum contato com esses filtros.</Vazio></Td></tr>}
+        </tbody>
+      </Tabela>
     </>
   );
 }

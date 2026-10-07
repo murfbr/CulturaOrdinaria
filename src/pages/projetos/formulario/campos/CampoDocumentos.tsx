@@ -1,5 +1,8 @@
 /* Checklist de anexos da plataforma (tipo "docs"): marque o que já está
    pronto — o upload em si é só na plataforma oficial. */
+import { RodapeCampo } from "../Contador";
+import { cx } from "../../../../utils/classes";
+import { ESTILO_CAIXA, ESTILO_DOCUMENTO, ESTILO_OBRIGATORIO } from "./estilos";
 import type { PropsCampo } from "../tipos";
 
 export function CampoDocumentos({ r, c, alterar }: PropsCampo) {
@@ -8,24 +11,24 @@ export function CampoDocumentos({ r, c, alterar }: PropsCampo) {
 
   return (
     <>
-      <div className="docs">
+      <div>
         {(c.opts || []).map((o) => {
           const obrigatorio = o.endsWith("*");
           const nome = o.replace(/\*$/, "");
           return (
-            <label className={"doc" + (marcados[nome] ? " ok" : "")} key={o}>
-              <input type="checkbox" checked={Boolean(marcados[nome])}
+            <label className={ESTILO_DOCUMENTO} key={o}>
+              <input type="checkbox" className={ESTILO_CAIXA} checked={Boolean(marcados[nome])}
                 onChange={(e) => alterar((copia) => {
                   const d = (copia.valores[c.n] = (copia.valores[c.n] && typeof copia.valores[c.n] === "object" ? copia.valores[c.n] : {}) as Record<string, boolean>);
                   d[nome] = e.target.checked;
                 })} />
-              <span>{nome}</span>
-              {obrigatorio && <span className="obr">obrigatório</span>}
+              <span className={cx(marcados[nome] && "text-muted")}>{nome}</span>
+              {obrigatorio && <span className={ESTILO_OBRIGATORIO}>obrigatório</span>}
             </label>
           );
         })}
       </div>
-      <div className="campo-f"><span>marque o que já está pronto; o upload é só na plataforma</span></div>
+      <RodapeCampo><span>marque o que já está pronto; o upload é só na plataforma</span></RodapeCampo>
     </>
   );
 }

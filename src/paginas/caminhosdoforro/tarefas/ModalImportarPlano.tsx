@@ -177,7 +177,7 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
 
           {(mudaNucleos || mudaStatus) && (
             <Grupo rotulo="Núcleos e status" className={LINHA_INTEIRA}>
-              <ul className="cdf:m-0 cdf:pl-[18px] cdf:text-sm">
+              <ul className="cdf:m-0 cdf:list-disc cdf:pl-[18px] cdf:text-sm">
                 {pr.nucleosNovos.length > 0 && <li>Núcleo novo: {pr.nucleosNovos.map((n) => n.nome).join(", ")}.</li>}
                 {pr.nucleosAtualizados.some((n) => n.escopo != null) && (
                   <li>Escopo do plano gravado em: {pr.nucleosAtualizados.filter((n) => n.escopo != null).map((n) => n.nome).join(", ")}.</li>
@@ -227,7 +227,7 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
 
           {pr.avisos.length > 0 && (
             <Grupo rotulo="Avisos" className={LINHA_INTEIRA}>
-              <ul className="cdf:m-0 cdf:pl-[18px] cdf:text-sm cdf:text-tinta-2">{pr.avisos.map((a) => <li key={a}>{a}</li>)}</ul>
+              <ul className="cdf:m-0 cdf:list-disc cdf:pl-[18px] cdf:text-sm cdf:text-tinta-2">{pr.avisos.map((a) => <li key={a}>{a}</li>)}</ul>
             </Grupo>
           )}
 

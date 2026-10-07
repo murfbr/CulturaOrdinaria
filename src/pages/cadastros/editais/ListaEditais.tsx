@@ -1,32 +1,76 @@
 /* Editais (Cadastros): o Mapa dos Editais dentro da Central. Cinco vistas:
-   Todos (por status, com filtros), O que pontua (critérios por conceito),
-   Campos que se repetem (formulários por conceito), O que falta (lacunas por
-   quem resolve) e Alertas (o que muda decisão, com data). */
+   Todos (tabela com filtros, agrupada por status ou ordenada), O que pontua
+   (critérios por conceito), Campos que se repetem (formulários por conceito),
+   O que falta (lacunas por quem resolve) e Alertas (o que muda decisão, com
+   data). Na tabela, a linha abre a ficha e "editar" abre o formulário. */
 import { useState } from "react";
 import { usarCentral } from "../../../store/central";
 import { abrirDetalhe } from "../../../store/navegacao";
 import { abrirEdicao, abrirNovo } from "../../../store/edicao";
 import { CabecalhoSecao } from "../../../components/CabecalhoSecao";
 import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../../components/Filtros";
+import { Badge } from "../../../components/ui/Badge";
+import { Botao } from "../../../components/ui/Botao";
+import { Chip } from "../../../components/ui/Chip";
+import { Pilulas } from "../../../components/ui/Pilulas";
+import { Rotulo } from "../../../components/ui/Rotulo";
+import { Tabela, Td, Th, Tr } from "../../../components/ui/Tabela";
+import { Vazio } from "../../../components/ui/Vazio";
+import { ESTILO_APAGADO } from "../../../components/ui/estilos";
+import { cx } from "../../../utils/classes";
 import { nomeCurto, prazoCurto } from "../../../lib/nomes";
 import {
   CATEGORIAS_EDITAL, ESFERAS, STATUS_EDITAL,
   type CategoriaEdital, type Edital, type EsferaEdital, type StatusEdital,
 } from "../../../types";
 import { comparar } from "../../../utils";
-import { alertasVigentes, prazoEncerrado, statusEfetivo } from "../../../lib/prazos";
+import {
+  CLASSE_URGENCIA, ROTULO_URGENCIA, alertasVigentes, prazoEncerrado, statusEfetivo, urgenciaDe,
+} from "../../../lib/prazos";
+import { BadgeConfianca } from "../formularios/ListaFormularios";
 import { MatrizCriterios, MatrizCampos, QuemResolve, ListaAlertas } from "./Panoramas";
 
-const VISTAS: [string, string][] = [
-  ["todos", "Todos os editais"], ["pontua", "O que pontua"], ["campos", "Campos que se repetem"],
-  ["falta", "O que falta"], ["alertas", "Alertas"],
+const VISTAS = [
+  { id: "todos", rotulo: "Todos os editais" }, { id: "pontua", rotulo: "O que pontua" },
+  { id: "campos", rotulo: "Campos que se repetem" }, { id: "falta", rotulo: "O que falta" },
+  { id: "alertas", rotulo: "Alertas" },
 ];
 
 /** Sim / não / não diz, para as bandeiras de quem pode se inscrever. */
-const flag = (v: boolean | null | undefined, rotulo: string) =>
-  v == null ? null : <span className={"chip " + (v ? "chip-sim" : "chip-nao")} title={rotulo + (v ? ": aceita" : ": não aceita")}>{v ? "✓" : "✕"} {rotulo}</span>;
+const bandeira = (v: boolean | null | undefined, rotulo: string) =>
+  v == null ? null : (
+    <Badge mini tom={v ? "ok" : "erro"} title={rotulo + (v ? ": aceita" : ": não aceita")}>{v ? "✓" : "✕"} {rotulo}</Badge>
+  );
 
-export function CartaoEdital({ e }: { e: Edital }) {
+/** Urgência do prazo, só quando o edital ainda conta (não encerrado nem norma) e está perto. */
+function BadgePrazo({ e }: { e: Edital }) {
+  const st = statusEfetivo(e);
+  if (!e.prazoIso || st === "closed" || st === "norma") return null;
+  const u = urgenciaDe(e.prazoIso);
+  if (u === "futuro") return null;
+  return <Badge mini tom={CLASSE_URGENCIA[u]}>{ROTULO_URGENCIA[u]}</Badge>;
+}
+
+const COLUNAS = 10;
+const CABECALHO = (
+  <thead>
+    <tr>
+      <Th>Edital</Th>
+      <Th>Status</Th>
+      <Th>Esfera</Th>
+      <Th>Órgão</Th>
+      <Th>Prazo</Th>
+      <Th>Valores</Th>
+      <Th>Aceita</Th>
+      <Th><span className="block text-right">Projetos</span></Th>
+      <Th>Formulário</Th>
+      <Th />
+    </tr>
+  </thead>
+);
+
+/** Uma linha da tabela de editais: o que o cartão antigo mostrava, em colunas. */
+export function LinhaEdital({ e }: { e: Edital }) {
   const { painel } = usarCentral();
   const esf = ESFERAS[e.esfera as EsferaEdital] || { rotulo: "—", classe: "" };
   const st = STATUS_EDITAL[statusEfetivo(e)] || STATUS_EDITAL.open;
@@ -35,30 +79,48 @@ export function CartaoEdital({ e }: { e: Edital }) {
   const n = painel.projetos.filter((p) => p.editalId === e.id && !p.arquivado).length;
   const formularios = [...new Set([...(e.formIds || []), ...(e.formId ? [e.formId] : [])])];
   return (
-    <div className="card click" onClick={() => abrirDetalhe("edital", e.id)}>
-      <button className="edit" onClick={(ev) => { ev.stopPropagation(); abrirEdicao("edital", e.id); }}>editar</button>
-      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
-        <span className={"badge " + st.classe}>{st.rotulo}</span>
-        {prazoEncerrado(e) && <span className="badge ur-vencido" title="Marcado como Aberto, mas o prazo passou: atualize o status">prazo passou</span>}
-        <span className={"badge esfera " + esf.classe}>{esf.rotulo}</span>
-        {cat && e.categoria && e.categoria !== "edital" && <span className="badge b-type">{cat.rotulo}</span>}
-        {vigentes > 0 && <span className="badge ur-d7" title="alertas que mudam decisão (com data ainda valendo)">⚑ {vigentes}</span>}
-      </div>
-      <h3>{nomeCurto(e)}</h3>
-      <p className="role">{e.nome}</p>
-      {e.orgao && <div className="kv"><span>Órgão:</span> <b className="corta">{e.orgao}</b></div>}
-      <div className="kv"><span>Prazo:</span> <b title={e.prazo}>{prazoCurto(e) || "—"}</b></div>
-      {e.teto && <div className="kv"><span>Valores:</span> <b className="corta">{e.teto}</b></div>}
-      <div style={{ marginTop: 6 }}>
-        {flag(e.aceitaPf, "PF")}{flag(e.aceitaMei, "MEI")}{flag(e.aceitaColetivo, "coletivo sem CNPJ")}
-      </div>
-      <div className="foot">
-        {n} projeto(s)
-        {formularios.length > 0 && <span className="chip">{formularios.length > 1 ? formularios.length + " formulários" : "formulário mapeado"}</span>}
-        {e.confianca && <span className={"conf conf-" + e.confianca} title="confiança do levantamento">{e.confianca}</span>}
-        <span className="arrow">abrir →</span>
-      </div>
-    </div>
+    <Tr aoClicar={() => abrirDetalhe("edital", e.id)}>
+      <Td className="min-w-[200px]">
+        <div className="font-semibold">{nomeCurto(e)}</div>
+        <div className={cx(ESTILO_APAGADO, "max-w-[40ch] truncate")} title={e.nome}>{e.nome}</div>
+      </Td>
+      <Td>
+        <div className="flex flex-wrap gap-1">
+          <Badge tom={st.classe}>{st.rotulo}</Badge>
+          {prazoEncerrado(e) && <Badge tom="ur-vencido" title="Marcado como Aberto, mas o prazo passou: atualize o status">prazo passou</Badge>}
+          {vigentes > 0 && <Badge tom="ur-d7" title="alertas que mudam decisão (com data ainda valendo)">⚑ {vigentes}</Badge>}
+        </div>
+      </Td>
+      <Td>
+        <div className="flex flex-wrap gap-1">
+          <Badge tom={esf.classe}>{esf.rotulo}</Badge>
+          {cat && e.categoria && e.categoria !== "edital" && <Badge tom="tipo">{cat.rotulo}</Badge>}
+        </div>
+      </Td>
+      <Td><div className="max-w-[24ch] truncate" title={e.orgao}>{e.orgao || "—"}</div></Td>
+      <Td>
+        <div className="flex flex-wrap items-center gap-1 whitespace-nowrap" title={e.prazo}>
+          {prazoCurto(e) || "—"}
+          <BadgePrazo e={e} />
+        </div>
+      </Td>
+      <Td><div className="max-w-[28ch] truncate" title={e.teto}>{e.teto || "—"}</div></Td>
+      <Td>
+        <div className="flex flex-wrap gap-1">
+          {bandeira(e.aceitaPf, "PF")}{bandeira(e.aceitaMei, "MEI")}{bandeira(e.aceitaColetivo, "coletivo sem CNPJ")}
+        </div>
+      </Td>
+      <Td numerico>{n || ""}</Td>
+      <Td>
+        <div className="flex flex-wrap items-center gap-1">
+          {formularios.length > 0 && <Chip>{formularios.length > 1 ? formularios.length + " formulários" : "formulário mapeado"}</Chip>}
+          {e.confianca && <BadgeConfianca nivel={e.confianca} />}
+        </div>
+      </Td>
+      <Td className="text-right">
+        <Botao variante="quieto" tamanho="mini" onClick={(ev) => { ev.stopPropagation(); abrirEdicao("edital", e.id); }}>editar</Botao>
+      </Td>
+    </Tr>
   );
 }
 
@@ -90,32 +152,44 @@ export function ListaEditais() {
   else if (vista === "campos") corpo = <MatrizCampos editais={editais} />;
   else if (vista === "falta") corpo = <QuemResolve editais={editais} />;
   else if (vista === "alertas") corpo = <ListaAlertas editais={editais} />;
+  else if (!editais.length) corpo = null;
   else if (ordem === "status") {
-    corpo = (Object.keys(STATUS_EDITAL) as StatusEdital[]).map((s) => {
-      const doGrupo = editais.filter((e) => statusEfetivo(e) === s).sort(porPrazo);
-      if (!doGrupo.length) return null;
-      return (
-        <div key={s} style={{ marginBottom: 18 }}>
-          <div className="grupo-edital">{STATUS_EDITAL[s].rotulo} <span className="muted">· {doGrupo.length}</span></div>
-          <div className="grid g2">{doGrupo.map((e) => <CartaoEdital key={e.id} e={e} />)}</div>
-        </div>
-      );
-    });
+    // Um tbody por status, com o rótulo do grupo numa linha inteira.
+    corpo = (
+      <Tabela minima="min-w-[960px]">
+        {CABECALHO}
+        {(Object.keys(STATUS_EDITAL) as StatusEdital[]).map((s) => {
+          const doGrupo = editais.filter((e) => statusEfetivo(e) === s).sort(porPrazo);
+          if (!doGrupo.length) return null;
+          return (
+            <tbody key={s}>
+              <tr>
+                <td colSpan={COLUNAS} className="border-t border-line bg-bg px-3 py-1.5">
+                  <Rotulo>{STATUS_EDITAL[s].rotulo} · {doGrupo.length}</Rotulo>
+                </td>
+              </tr>
+              {doGrupo.map((e) => <LinhaEdital key={e.id} e={e} />)}
+            </tbody>
+          );
+        })}
+      </Tabela>
+    );
   } else {
-    corpo = <div className="grid g2">{editais.map((e) => <CartaoEdital key={e.id} e={e} />)}</div>;
+    corpo = (
+      <Tabela minima="min-w-[960px]">
+        {CABECALHO}
+        <tbody>{editais.map((e) => <LinhaEdital key={e.id} e={e} />)}</tbody>
+      </Tabela>
+    );
   }
 
   return (
     <>
       <CabecalhoSecao titulo="Editais & fontes" sub="o Mapa dos Editais: o que cada um quer, como avalia e o que o formulário pede">
-        <button className="btn" onClick={() => abrirNovo("edital")}>+ Novo edital</button>
+        <Botao onClick={() => abrirNovo("edital")}>+ Novo edital</Botao>
       </CabecalhoSecao>
 
-      <div className="pilulas">
-        {VISTAS.map(([k, rotulo]) => (
-          <button key={k} className={vista === k ? "on" : ""} onClick={() => setVista(k)}>{rotulo}</button>
-        ))}
-      </div>
+      <Pilulas opcoes={VISTAS} ativa={vista} aoEscolher={setVista} />
 
       <BarraFiltros mostrando={editais.length} total={painel.editais.length}>
         <CampoBusca valor={busca} aoMudar={setBusca} placeholder="buscar nome, órgão, o que financia…" />
@@ -139,7 +213,7 @@ export function ListaEditais() {
       </BarraFiltros>
 
       {corpo}
-      {!editais.length && <p className="muted">Nenhum edital com esses filtros.</p>}
+      {!editais.length && <Vazio>Nenhum edital com esses filtros.</Vazio>}
     </>
   );
 }

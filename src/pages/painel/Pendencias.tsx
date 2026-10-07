@@ -1,11 +1,20 @@
 /* Pendências: o que falta em pessoas, artistas, projetos e editais abertos —
    com atalho "+ tarefa" que já nasce com o título da lacuna. CPF, RG e dados
-   bancários não entram como pendência: pela regra r24, ficam fora da Central. */
+   bancários não entram como pendência: pela regra r24, ficam fora da Central.
+   Cada grupo é um Painel com uma Linha por lacuna. */
 import type { ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe } from "../../store/navegacao";
 import { abrirEdicao, abrirNovo, type ChaveEntidade } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { Painel } from "../../components/ui/Painel";
+import { Linha } from "../../components/ui/Linha";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Dica } from "../../components/ui/Dica";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_APAGADO, ESTILO_LINK } from "../../components/ui/estilos";
+import { cx } from "../../utils/classes";
 import { STATUS_PROJETO } from "../../types";
 
 interface ItemPendente {
@@ -19,32 +28,37 @@ interface ItemPendente {
 
 function SecaoPendencias({ titulo, sub, itens }: { titulo: string; sub: string; itens: ItemPendente[] }) {
   if (!itens.length) {
-    return <div className="panel"><h4>{titulo}</h4><p className="muted" style={{ margin: 0 }}>✓ nada pendente aqui.</p></div>;
+    return <Painel titulo={titulo}><Vazio emLinha>✓ nada pendente aqui.</Vazio></Painel>;
   }
   const total = itens.reduce((n, x) => n + x.lacunas.length, 0);
   return (
-    <div className="panel">
-      <h4>{titulo}<span className="act"><span className="badge st-prev">{total}</span></span></h4>
-      <p className="hint" style={{ margin: "-2px 0 8px" }}>{sub}</p>
+    <Painel titulo={titulo} acoes={<Badge tom="st-prev">{total}</Badge>}>
+      <Dica className="-mt-0.5 mb-2">{sub}</Dica>
       {itens.map((item) => (
         <div key={item.id}>
-          <div style={{ margin: "12px 0 2px" }}>
-            <b style={{ fontSize: 13, cursor: "pointer", color: "var(--accent)" }} onClick={item.abrir}>{item.nome}</b>{" "}
-            <span className="muted" style={{ fontSize: 11 }}>({item.lacunas.length})</span>
+          <div className="mb-0.5 mt-3">
+            <span className={cx(ESTILO_LINK, "text-sm")} onClick={item.abrir}>{item.nome}</span>{" "}
+            <span className={ESTILO_APAGADO}>({item.lacunas.length})</span>
           </div>
           {item.lacunas.map((lacuna, i) => (
-            <div className="docitem" key={i}>
-              <span className="badge st-prev" style={{ fontSize: 9, flex: "0 0 auto" }}>falta</span>
-              <span style={{ flex: 1, cursor: "pointer" }} onClick={item.abrir}>{lacuna}</span>
-              <button className="btn ghost sm" style={{ padding: "2px 8px", fontSize: 10 }}
-                onClick={(e) => { e.stopPropagation(); abrirNovo("tarefa", { titulo: item.nome + " — " + lacuna }); }}>
-                + tarefa
-              </button>
-            </div>
+            <Linha
+              key={i}
+              direita={
+                <Botao variante="fantasma" tamanho="mini"
+                  onClick={(e) => { e.stopPropagation(); abrirNovo("tarefa", { titulo: item.nome + " — " + lacuna }); }}>
+                  + tarefa
+                </Botao>
+              }
+            >
+              <div className="flex items-center gap-2.5">
+                <Badge tom="st-prev" mini>falta</Badge>
+                <span className="flex-1 cursor-pointer" onClick={item.abrir}>{lacuna}</span>
+              </div>
+            </Linha>
           ))}
         </div>
       ))}
-    </div>
+    </Painel>
   );
 }
 

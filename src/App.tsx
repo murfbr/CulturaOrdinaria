@@ -1,6 +1,6 @@
-/* Casca do site: gate de login (modo nuvem), aviso, cabeçalho, abas, barra de
-   ferramentas e a troca entre os três grandes roteadores (Painel-família,
-   Projetos e Contexto). O conteúdo em si vive em src/pages/. */
+/* Casca do site: gate de login (modo nuvem), cabeçalho, abas e a troca entre
+   os três grandes roteadores (Painel-família, Projetos e Contexto). O conteúdo
+   em si vive em src/pages/. */
 import { useEffect } from "react";
 import { Banco } from "./services/banco";
 import { firebaseAtivo } from "./services/firebase";
@@ -9,7 +9,6 @@ import { iniciarDados, usarCentral } from "./store/central";
 import { usarNavegacao } from "./store/navegacao";
 import { Cabecalho } from "./components/layout/Cabecalho";
 import { BarraAbas } from "./components/layout/BarraAbas";
-import { BarraFerramentas } from "./components/layout/BarraFerramentas";
 import { Toast } from "./components/Toast";
 import { BuscaGlobal } from "./components/BuscaGlobal";
 import { FormularioRegistro } from "./forms/FormularioRegistro";
@@ -45,24 +44,15 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
 
   return (
     <>
-      <div className="border-b border-warn/40 bg-warn-soft px-[18px] py-[7px] text-sm text-warn-ink">
-        <b>Cópia interna de trabalho.</b> Os formulários dos Projetos reproduzem a estrutura das plataformas só para
-        redigir fora delas; não são canal de inscrição, não usam a identidade visual de nenhum
-        órgão e a inscrição válida é a feita no site oficial, dentro do prazo.
-      </div>
-
       <Cabecalho emailUsuario={emailUsuario} />
       <BarraAbas />
-      <BarraFerramentas />
 
       {!central.pronto && Banco.modo === "nuvem" ? (
         <div className="flex min-h-[60vh] items-center justify-center text-base text-muted">carregando os dados do coletivo…</div>
-      ) : nav.amb === "projetos" ? (
-        <Projetos />
-      ) : nav.amb === "contexto" ? (
-        <Contexto />
       ) : (
-        <div className="wrap"><RoteadorPainel /></div>
+        <main className="mx-auto max-w-site px-gutter pb-16">
+          {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
+        </main>
       )}
 
       <FormularioRegistro />

@@ -1,6 +1,7 @@
 /* Contexto e Regras: o conhecimento de escrita do coletivo.
    Cinco telas: Geral, Fichas, Regras, Julgamentos e Trocar com o Claude.
-   Os modais de regra e julgamento são compartilhados entre as telas e vivem aqui. */
+   Os modais de regra e julgamento são compartilhados entre as telas e vivem aqui.
+   Sem container próprio: o <main> do App já dá a largura e as margens. */
 import { useState } from "react";
 import { usarNavegacao } from "../../store/navegacao";
 import { Geral } from "./Geral";
@@ -27,7 +28,7 @@ export function Contexto() {
   else tela = <Geral aoAbrirRegra={setModalRegra} />;
 
   return (
-    <div id="ctx">
+    <>
       {tela}
       {modalRegra && <ModalRegra pedido={modalRegra} aoFechar={() => setModalRegra(null)} />}
       {modalJulgamento && (
@@ -36,6 +37,6 @@ export function Contexto() {
           aoFechar={() => setModalJulgamento(null)}
         />
       )}
-    </div>
+    </>
   );
 }

@@ -1,8 +1,6 @@
 /* Controles de organização das listas do Painel: a barra de busca/filtros com
    a contagem "x de y", e o cabeçalho de tabela clicável que ordena a coluna.
-   Cada página compõe os seus controles dentro de <BarraFiltros>.
-   Ponte da migração: a classe "filtros" fica no HTML porque o CSS antigo
-   estiliza o <label class="chk"> das telas que ainda não migraram. */
+   Cada página compõe os seus controles dentro de <BarraFiltros>. */
 import type { ReactNode } from "react";
 import { comparar } from "../utils";
 import { cx } from "../utils/classes";
@@ -16,7 +14,7 @@ export function BarraFiltros({ mostrando, total, children }: {
   mostrando: number; total: number; children?: ReactNode;
 }) {
   return (
-    <div className="filtros mb-3.5 flex flex-wrap items-center gap-2">
+    <div className="mb-3.5 flex flex-wrap items-center gap-2">
       {children}
       <span className="ml-auto text-xs text-muted tabular-nums">
         {mostrando === total ? total + " registro(s)" : mostrando + " de " + total}

@@ -2,8 +2,13 @@
    outros projetos (mesmo artista primeiro), com o tamanho comparado ao limite
    deste campo. Usar substitui (ou acrescenta ao fim) e marca como rascunho. */
 import { useState } from "react";
-import { Modal, RodapeModal } from "../../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { copiarComAviso, toast } from "../../../components/Toast";
+import { Badge } from "../../../components/ui/Badge";
+import { Botao } from "../../../components/ui/Botao";
+import { Chip } from "../../../components/ui/Chip";
+import { Dica } from "../../../components/ui/Dica";
+import { cx } from "../../../utils/classes";
 import { nomeCurto, editalDoProjeto } from "../../../lib/nomes";
 import type { TextoMestre } from "../../../lib/textos";
 import type { CampoAchatado } from "../../../lib/simulador/motor";
@@ -37,51 +42,50 @@ export function ModalReaproveitar({ c, r, conceito, sugestoes, artistaIds, alter
 
   return (
     <Modal titulo={"Reaproveitar: " + rotuloConceito} aoFechar={aoFechar} largo>
-      <p className="hint" style={{ marginTop: 0 }}>
+      <Dica emModal className="mb-3">
         Textos já escritos para "{rotuloConceito}" em outros projetos. Este campo: <b>{c.l}</b>
         {c.max ? <> · limite de {c.max.toLocaleString("pt-BR")} caracteres</> : null}
         {atual.trim() ? <> · já tem {atual.length.toLocaleString("pt-BR")} caracteres escritos</> : null}.
         Adapte ao edital depois de usar: o texto entra como rascunho.
-      </p>
-      <div className="reap-lista">
+      </Dica>
+      <div className="my-1.5 flex max-h-[60vh] flex-col gap-2 overflow-auto">
         {sugestoes.map((t, i) => {
           const e = editalDoProjeto(t.projeto);
           const doArtista = (t.projeto?.artistaIds || []).some((a) => artistaIds.includes(a));
           const passa = c.max ? t.texto.length - c.max : 0;
+          const tamanho = t.texto.length.toLocaleString("pt-BR") + " car." + (passa > 0 ? ` (passa ${passa.toLocaleString("pt-BR")})` : "");
           return (
-            <div className={"reap-item" + (aberto === i ? " on" : "")} key={t.rascunhoId + t.campo}>
-              <div className="reap-h" onClick={() => setAberto(aberto === i ? null : i)}>
-                <span className="reap-t">
+            <div className={cx("rounded-lg border bg-card px-2.5 py-2", aberto === i ? "border-accent" : "border-line")} key={t.rascunhoId + t.campo}>
+              <div className="flex flex-wrap cursor-pointer items-center justify-between gap-2" onClick={() => setAberto(aberto === i ? null : i)}>
+                <span className="min-w-[200px] flex-1 text-sm">
                   <b>{t.projeto?.nome || t.formNome}</b>
-                  <span className="muted"> · {e ? nomeCurto(e) : t.formNome} · {t.campoRotulo}</span>
+                  <span className="text-muted"> · {e ? nomeCurto(e) : t.formNome} · {t.campoRotulo}</span>
                 </span>
-                <span className="reap-tags">
-                  {doArtista && <span className="chip chip-sim">mesmo artista</span>}
-                  <span className="st" data-v={t.status}>{ROTULO_STATUS_CAMPO[t.status]}</span>
-                  <span className={passa > 0 ? "badge ur-vencido" : "chip"}>
-                    {t.texto.length.toLocaleString("pt-BR")} car.{passa > 0 ? ` (passa ${passa.toLocaleString("pt-BR")})` : ""}
-                  </span>
+                <span className="flex flex-wrap items-center gap-1">
+                  {doArtista && <Badge tom="ok">mesmo artista</Badge>}
+                  <Badge tom={t.status}>{ROTULO_STATUS_CAMPO[t.status]}</Badge>
+                  {passa > 0 ? <Badge tom="ur-vencido">{tamanho}</Badge> : <Chip>{tamanho}</Chip>}
                 </span>
               </div>
               {aberto === i ? (
                 <>
-                  <div className="reap-texto">{t.texto}</div>
-                  <div className="reap-acoes">
-                    <button className="btn sm ghost" onClick={() => void copiarComAviso(t.texto, "Texto copiado")}>Copiar</button>
-                    <span className="sp" />
-                    {atual.trim() && <button className="btn sm ghost" onClick={() => usar(t, "somar")}>Acrescentar ao fim</button>}
-                    <button className="btn sm" onClick={() => usar(t, "trocar")}>{atual.trim() ? "Substituir pelo texto" : "Usar este texto"}</button>
+                  <div className="my-2 max-h-[34vh] overflow-auto whitespace-pre-wrap rounded-md bg-bg p-2 text-sm leading-normal">{t.texto}</div>
+                  <div className="flex items-center gap-1.5">
+                    <Botao variante="fantasma" tamanho="pequeno" onClick={() => void copiarComAviso(t.texto, "Texto copiado")}>Copiar</Botao>
+                    <span className="flex-1" />
+                    {atual.trim() && <Botao variante="fantasma" tamanho="pequeno" onClick={() => usar(t, "somar")}>Acrescentar ao fim</Botao>}
+                    <Botao tamanho="pequeno" onClick={() => usar(t, "trocar")}>{atual.trim() ? "Substituir pelo texto" : "Usar este texto"}</Botao>
                   </div>
                 </>
               ) : (
-                <div className="reap-previa muted" onClick={() => setAberto(i)}>{t.texto.slice(0, 220)}{t.texto.length > 220 ? "…" : ""}</div>
+                <div className="mt-1 cursor-pointer text-sm text-muted" onClick={() => setAberto(i)}>{t.texto.slice(0, 220)}{t.texto.length > 220 ? "…" : ""}</div>
               )}
             </div>
           );
         })}
       </div>
       <RodapeModal>
-        <span className="sp"><button className="btn ghost" onClick={aoFechar}>Fechar</button></span>
+        <AcoesModal><Botao variante="fantasma" onClick={aoFechar}>Fechar</Botao></AcoesModal>
       </RodapeModal>
     </Modal>
   );

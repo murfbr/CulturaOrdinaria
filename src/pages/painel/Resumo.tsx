@@ -1,9 +1,20 @@
 /* Resumo: a visão de chegada — KPIs, prazos com urgência, projetos por status,
-   tarefas em aberto e alertas. Tudo derivado, nada editável aqui. */
+   tarefas em aberto e alertas. Tudo derivado, nada editável aqui. Montado só
+   com os blocos de ui/ (Kpi, Painel, Linha, Badge, Barra, Avatar). */
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe, irParaAmbiente } from "../../store/navegacao";
 import { abrirEdicao } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { GradeKpis, Kpi } from "../../components/ui/Kpi";
+import { Grade } from "../../components/ui/Grade";
+import { Painel } from "../../components/ui/Painel";
+import { Linha } from "../../components/ui/Linha";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Barra } from "../../components/ui/Barra";
+import { Avatar } from "../../components/ui/Avatar";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_AUXILIAR } from "../../components/ui/estilos";
 import { tituloCurto } from "../../lib/agenda";
 import { nomeEquipe } from "../../lib/nomes";
 import { CLASSE_URGENCIA, ROTULO_URGENCIA, alertasVigentes, dataDoAlerta, hojeIso, itensDePrazo, statusEfetivo, type ItemPrazo } from "../../lib/prazos";
@@ -60,101 +71,114 @@ export function Resumo() {
   return (
     <>
       <CabecalhoSecao titulo="Resumo" sub="visão de chegada — tudo se atualiza sozinho conforme você edita" />
-      <div className="kpis">
-        {kpis.map(([rotulo, n]) => (
-          <div className="kpi" key={rotulo}><div className="n">{n}</div><div className="l">{rotulo}</div></div>
-        ))}
-      </div>
-      <div className="dashgrid">
-        <div className="panel">
-          <h4>
-            Próximos prazos
-            {vencidos.length > 0 && <span className="act"><span className="badge ur-vencido">{vencidos.length} vencido(s)</span></span>}
-          </h4>
+      <GradeKpis>
+        {kpis.map(([rotulo, n]) => <Kpi key={rotulo} n={n} rotulo={rotulo} />)}
+      </GradeKpis>
+      <Grade colunas={2}>
+        <Painel
+          titulo="Próximos prazos"
+          acoes={vencidos.length > 0 ? <Badge tom="ur-vencido">{vencidos.length} vencido(s)</Badge> : undefined}
+        >
           {linhasPrazo.map((p) => (
-            <div className="mini pz" key={p.tipo + p.id} onClick={() => abrirPrazo(p)} title="abrir">
-              <span className="pz-t">
+            <Linha
+              key={p.tipo + p.id} compacta title="abrir" aoClicar={() => abrirPrazo(p)}
+              direita={
+                <>
+                  {p.urgencia !== "futuro" && <Badge tom={CLASSE_URGENCIA[p.urgencia]}>{ROTULO_URGENCIA[p.urgencia]}</Badge>}
+                  <b className="tabular-nums">{p.iso.slice(8)}/{p.iso.slice(5, 7)}</b>
+                </>
+              }
+            >
+              <div className="truncate">
                 {ICONE_PRAZO[p.tipo]} {tituloCurto(p.titulo)}
-                {p.detalhe && <span className="muted"> · {p.detalhe}</span>}
-              </span>
-              <span className="pz-d">
-                {p.urgencia !== "futuro" && (
-                  <span className={"badge " + CLASSE_URGENCIA[p.urgencia]}>{ROTULO_URGENCIA[p.urgencia]}</span>
-                )}
-                <b>{p.iso.slice(8)}/{p.iso.slice(5, 7)}</b>
-              </span>
-            </div>
+                {p.detalhe && <span className="text-muted"> · {p.detalhe}</span>}
+              </div>
+            </Linha>
           ))}
-          {!linhasPrazo.length && <div className="mini muted">sem prazos com data</div>}
-        </div>
-        <div className="panel">
-          <h4>Projetos por status<span className="act"><button className="btn ghost sm" onClick={() => irParaAmbiente("projetos", "pipeline")}>pipeline →</button></span></h4>
+          {!linhasPrazo.length && <Vazio emLinha>sem prazos com data</Vazio>}
+        </Painel>
+
+        <Painel
+          titulo="Projetos por status"
+          acoes={<Botao variante="fantasma" tamanho="pequeno" onClick={() => irParaAmbiente("projetos", "pipeline")}>pipeline →</Botao>}
+        >
           {colunas.map((s) => {
             const n = projetos.filter((p) => p.status === s.id).length;
             return (
               <div key={s.id}>
-                <div className="stagerow"><span>{s.rotulo}</span><b>{n}</b></div>
-                <div className="bar"><span style={{ width: `${(n / maiorColuna) * 100}%` }} /></div>
+                <div className="mb-0.5 mt-2 flex justify-between text-xs text-muted"><span>{s.rotulo}</span><b className="tabular-nums">{n}</b></div>
+                <Barra pct={(n / maiorColuna) * 100} />
               </div>
             );
           })}
-        </div>
-        <div className="panel">
-          <h4>Tarefas da equipe</h4>
+        </Painel>
+
+        <Painel titulo="Tarefas da equipe">
           {tarefasOrdenadas.slice(0, 6).map((t) => {
             const vencida = Boolean(t.prazo) && (t.prazo as string) < hoje;
             return (
-              <div className="mini tarefa-rapida" key={t.id}>
-                <span className="pz" onClick={() => abrirEdicao("tarefa", t.id)} title="abrir a tarefa">
-                  <span className="dot" style={{ width: 18, height: 18, fontSize: 9, marginRight: 6 }}>{nomeEquipe(t.respId)[0] || "?"}</span>
+              <Linha
+                key={t.id} compacta
+                direita={
+                  <>
+                    {t.prazo && (vencida
+                      ? <Badge tom="ur-vencido">{formatarData(t.prazo)}</Badge>
+                      : <span className={ESTILO_AUXILIAR}>{formatarData(t.prazo)}</span>)}
+                    <Botao variante="quieto" tamanho="mini" title="marcar como concluída"
+                      onClick={() => { alternarTarefaConcluida(t); toast("Tarefa concluída"); }}>✓</Botao>
+                    {vencida && (
+                      <Botao variante="quieto" tamanho="mini" title="adiar 7 dias a partir de hoje"
+                        onClick={() => { adiarTarefa(t, 7); toast("Prazo adiado 7 dias"); }}>+7d</Botao>
+                    )}
+                  </>
+                }
+              >
+                <span className="flex cursor-pointer items-center gap-1.5" title="abrir a tarefa" onClick={() => abrirEdicao("tarefa", t.id)}>
+                  <Avatar pequeno iniciais={nomeEquipe(t.respId)[0] || "?"} />
                   {t.titulo}
                 </span>
-                <span className="acoes-rapidas">
-                  {t.prazo && <span className={vencida ? "badge ur-vencido" : "muted"}>{formatarData(t.prazo)}</span>}
-                  <button className="btn sm quiet" title="marcar como concluída" onClick={() => { alternarTarefaConcluida(t); toast("Tarefa concluída"); }}>✓</button>
-                  {vencida && <button className="btn sm quiet" title="adiar 7 dias a partir de hoje" onClick={() => { adiarTarefa(t, 7); toast("Prazo adiado 7 dias"); }}>+7d</button>}
-                </span>
-              </div>
+              </Linha>
             );
           })}
           {tarefasOrdenadas.length > 6 && (
-            <div className="mini pz muted" onClick={() => irParaAmbiente("gestao", "quadro")}>+ {tarefasOrdenadas.length - 6} tarefa(s) no quadro →</div>
+            <Linha compacta className="text-muted" aoClicar={() => irParaAmbiente("gestao", "quadro")}>
+              + {tarefasOrdenadas.length - 6} tarefa(s) no quadro →
+            </Linha>
           )}
-        </div>
-        <div className="panel">
-          <h4>Alertas</h4>
+        </Painel>
+
+        <Painel titulo="Alertas">
           {vencidos.length > 0 && (
-            <div className="mini">
-              <span>⚠️ <b>{vencidos.length} prazo(s) vencido(s)</b> sem resolução</span>
-              <span className="badge ur-vencido">venceu</span>
-            </div>
+            <Linha compacta direita={<Badge tom="ur-vencido">venceu</Badge>}>
+              ⚠️ <b>{vencidos.length} prazo(s) vencido(s)</b> sem resolução
+            </Linha>
           )}
           {alertasEditais.slice(0, 8).map(({ e, a }) => (
-            <div className="mini pz" key={"al" + e.id + a.titulo} onClick={() => abrirDetalhe("edital", e.id)}>
-              <span>⚑ {e.curto || e.nome}: {a.titulo}</span>
-              <span className="badge ur-d7">{a.quando || "alerta"}</span>
-            </div>
+            <Linha key={"al" + e.id + a.titulo} compacta aoClicar={() => abrirDetalhe("edital", e.id)}
+              direita={<Badge tom="ur-d7">{a.quando || "alerta"}</Badge>}>
+              ⚑ {e.curto || e.nome}: {a.titulo}
+            </Linha>
           ))}
           {alertasEditais.length > 8 && (
-            <div className="mini pz muted" onClick={() => irParaAmbiente("cadastros", "editais")}>+ {alertasEditais.length - 8} alerta(s) em Cadastros → Editais → Alertas</div>
+            <Linha compacta className="text-muted" aoClicar={() => irParaAmbiente("cadastros", "editais")}>
+              + {alertasEditais.length - 8} alerta(s) em Cadastros → Editais → Alertas
+            </Linha>
           )}
           {artistasComPendencia.length > 0 && (
-            <div className="mini pz" onClick={() => irParaAmbiente("painel", "pendencias")}>
-              <span>❓ {artistasComPendencia.length} artista(s) com pendências ou perguntas em aberto</span>
-              <span className="badge st-prev">ver</span>
-            </div>
+            <Linha compacta aoClicar={() => irParaAmbiente("painel", "pendencias")} direita={<Badge tom="st-prev">ver</Badge>}>
+              ❓ {artistasComPendencia.length} artista(s) com pendências ou perguntas em aberto
+            </Linha>
           )}
           {artistasComDocPendente.map((a) => (
-            <div className="mini pz" key={a.id} onClick={() => abrirDetalhe("artista", a.id, "docs")}>
-              <span>📄 {a.nome}: documentos pendentes</span>
-              <span className="badge st-prev">pend.</span>
-            </div>
+            <Linha key={a.id} compacta aoClicar={() => abrirDetalhe("artista", a.id, "docs")} direita={<Badge tom="st-prev">pend.</Badge>}>
+              📄 {a.nome}: documentos pendentes
+            </Linha>
           ))}
           {!vencidos.length && !artistasComDocPendente.length && !alertasEditais.length && !artistasComPendencia.length && (
-            <div className="mini muted">✓ nada urgente por aqui</div>
+            <Vazio emLinha>✓ nada urgente por aqui</Vazio>
           )}
-        </div>
-      </div>
+        </Painel>
+      </Grade>
     </>
   );
 }

@@ -1,9 +1,11 @@
 /* Modal de criar/editar regra. Cobra a fonte (a não ser "experiência") e,
    quando a regra nasce de uma lição de julgamento, aponta a lição de volta. */
 import { useState } from "react";
-import { Modal, RodapeModal } from "../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../components/Modal";
 import { BotaoExcluir } from "../../components/BotaoExcluir";
 import { toast } from "../../components/Toast";
+import { Botao } from "../../components/ui/Botao";
+import { AreaTexto, Campo, Entrada, Linhas, Selecao } from "../../components/ui/Campo";
 import { obterEstado } from "../../store/central";
 import { excluirRegra, salvarJulgamento, salvarRegra } from "../../store/mutacoes";
 import { entidades } from "../../lib/contexto/consultas";
@@ -78,65 +80,60 @@ export function ModalRegra({ pedido, aoFechar }: { pedido: PedidoModalRegra; aoF
   const seletorEntidade = () => {
     if (regra.escopo.tipo === "geral") return null;
     if (regra.escopo.tipo === "mecanismo") {
-      return <input value={regra.escopo.id} placeholder="ex.: rouanet, iss, pnab"
+      return <Entrada value={regra.escopo.id} placeholder="ex.: rouanet, iss, pnab"
         onChange={(e) => mudar({ escopo: { ...regra.escopo, id: e.target.value } })} />;
     }
     const lista = entidades(regra.escopo.tipo as TipoFicha);
     return (
-      <select value={regra.escopo.id}
+      <Selecao value={regra.escopo.id}
         onChange={(e) => mudar({ escopo: { ...regra.escopo, id: e.target.value } })}>
         {!regra.escopo.id && <option value="">—</option>}
         {lista.map((x) => <option key={x.id} value={x.id}>{x.nome}</option>)}
-      </select>
+      </Selecao>
     );
   };
 
   return (
     <Modal titulo={editando ? "Editar regra" : "Nova regra"} aoFechar={aoFechar}>
-      <div className="field">
-        <label>Regra (uma linha)</label>
-        <textarea rows={3} value={regra.texto} onChange={(e) => mudar({ texto: e.target.value })} />
-      </div>
-      <div className="field">
-        <label>Escopo</label>
-        <div className="linha2">
-          <select value={regra.escopo.tipo}
+      <Campo rotulo="Regra (uma linha)">
+        <AreaTexto rows={3} value={regra.texto} onChange={(e) => mudar({ texto: e.target.value })} />
+      </Campo>
+      <Campo rotulo="Escopo">
+        <Linhas colunas={2} className="gap-y-2">
+          <Selecao value={regra.escopo.tipo}
             onChange={(e) => mudar({ escopo: { tipo: e.target.value as Regra["escopo"]["tipo"], id: "" } })}>
             {["geral", "artista", "projeto", "edital", "mecanismo"].map((t) => <option key={t}>{t}</option>)}
-          </select>
-          <span>{seletorEntidade()}</span>
-        </div>
-      </div>
-      <div className="field">
-        <label>Tipo</label>
-        <select value={regra.tipoRegra} onChange={(e) => mudar({ tipoRegra: e.target.value as TipoRegra })}>
+          </Selecao>
+          {seletorEntidade()}
+        </Linhas>
+      </Campo>
+      <Campo rotulo="Tipo">
+        <Selecao value={regra.tipoRegra} onChange={(e) => mudar({ tipoRegra: e.target.value as TipoRegra })}>
           {Object.entries(ROTULO_TIPO_REGRA).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-        </select>
-      </div>
-      <div className="field">
-        <label>Fonte</label>
-        <div className="linha2">
-          <select value={regra.fonte.tipo}
+        </Selecao>
+      </Campo>
+      <Campo rotulo="Fonte">
+        <Linhas colunas={2} className="gap-y-2">
+          <Selecao value={regra.fonte.tipo}
             onChange={(e) => mudar({ fonte: { ...regra.fonte, tipo: e.target.value as TipoFonte } })}>
             {Object.entries(ROTULO_FONTE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-          </select>
-          <input value={regra.fonte.ref} placeholder="edital + item, norma, id do julgamento, ou 'experiência'"
+          </Selecao>
+          <Entrada value={regra.fonte.ref} placeholder="edital + item, norma, id do julgamento, ou 'experiência'"
             onChange={(e) => mudar({ fonte: { ...regra.fonte, ref: e.target.value } })} />
-        </div>
-      </div>
-      <div className="field">
-        <label>Status</label>
-        <select value={regra.status} onChange={(e) => mudar({ status: e.target.value })}>
+        </Linhas>
+      </Campo>
+      <Campo rotulo="Status">
+        <Selecao value={regra.status} onChange={(e) => mudar({ status: e.target.value })}>
           <option value="vigente">vigente</option>
           <option value="duvida">a confirmar</option>
-        </select>
-      </div>
+        </Selecao>
+      </Campo>
       <RodapeModal>
         {editando && <BotaoExcluir aoConfirmar={excluir} />}
-        <span className="sp">
-          <button className="btn quiet" onClick={aoFechar}>Cancelar</button>
-          <button className="btn primary" onClick={salvar}>Salvar</button>
-        </span>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
+          <Botao onClick={salvar}>Salvar</Botao>
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

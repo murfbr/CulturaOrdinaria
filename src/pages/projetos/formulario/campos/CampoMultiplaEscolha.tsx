@@ -1,6 +1,11 @@
-/* Campo de múltipla escolha (tipo "chk"): checkboxes, grupos com cabeçalho e
-   caixa de filtro nas listas longas (como as 78 áreas socioeconômicas). */
+/* Campo de múltipla escolha (tipo "chk"): caixas em grade, grupos com
+   cabeçalho e caixa de filtro nas listas longas (como as 78 áreas
+   socioeconômicas). */
 import { useState } from "react";
+import { Entrada } from "../../../../components/ui/Campo";
+import { Rotulo } from "../../../../components/ui/Rotulo";
+import { cx } from "../../../../utils/classes";
+import { ESTILO_CAIXA, ESTILO_OPCAO, LARGURA_CAMPO } from "./estilos";
 import type { PropsCampo } from "../tipos";
 
 export function CampoMultiplaEscolha({ r, c, alterar }: PropsCampo) {
@@ -20,18 +25,19 @@ export function CampoMultiplaEscolha({ r, c, alterar }: PropsCampo) {
   return (
     <>
       {Boolean(c.filter) && (
-        <input type="text" className="filtro medio" placeholder="filtrar opções…" value={filtro}
+        <Entrada type="text" className={cx("mb-2", LARGURA_CAMPO.medio)} placeholder="filtrar opções…" value={filtro}
           onChange={(e) => setFiltro(e.target.value)} />
       )}
-      <div className="opts chk">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-x-3 gap-y-0.5">
         {grupos.map((g, gi) => (
-          <span style={{ display: "contents" }} key={gi}>
-            {g.g && <div className="grp-h">{g.g}</div>}
+          <span className="contents" key={gi}>
+            {g.g && <Rotulo className="col-span-full mt-2">{g.g}</Rotulo>}
             {g.op.map((o) => {
               const escondida = Boolean(filtroAtivo) && !o.toLowerCase().includes(filtroAtivo);
+              const marcada = selecionados.includes(o);
               return (
-                <label className={"opt" + (selecionados.includes(o) ? " sel" : "")} key={o} hidden={escondida}>
-                  <input type="checkbox" checked={selecionados.includes(o)} onChange={(e) => alternar(o, e.target.checked)} />
+                <label className={cx(escondida ? "hidden" : "flex", ESTILO_OPCAO, "px-2", marcada ? "bg-accent-soft" : "hover:bg-sand")} key={o}>
+                  <input type="checkbox" className={ESTILO_CAIXA} checked={marcada} onChange={(e) => alternar(o, e.target.checked)} />
                   <span>{o}</span>
                 </label>
               );

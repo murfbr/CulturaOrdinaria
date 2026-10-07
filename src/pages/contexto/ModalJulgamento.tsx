@@ -1,9 +1,11 @@
 /* Modal de criar/editar julgamento: edital, projeto, ano/resultado/nota,
    resumo e as listas (fortes, fracos, lições — uma por linha). */
 import { useState } from "react";
-import { Modal, RodapeModal } from "../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../components/Modal";
 import { BotaoExcluir } from "../../components/BotaoExcluir";
 import { toast } from "../../components/Toast";
+import { Botao } from "../../components/ui/Botao";
+import { AreaTexto, Campo, Entrada, Linhas, Selecao } from "../../components/ui/Campo";
 import { excluirJulgamento, salvarJulgamento } from "../../store/mutacoes";
 import { definirJulgamentoAberto } from "../../store/navegacao";
 import { entidades } from "../../lib/contexto/consultas";
@@ -49,36 +51,35 @@ export function ModalJulgamento({ inicial, aoFechar }: { inicial: Julgamento | n
   }
 
   const seletor = (valor: string, aoMudar: (v: string) => void, lista: { id: string; nome: string }[], vazio?: string) => (
-    <select value={valor} onChange={(e) => aoMudar(e.target.value)}>
+    <Selecao value={valor} onChange={(e) => aoMudar(e.target.value)}>
       {vazio != null && <option value="">{vazio}</option>}
       {lista.map((x) => <option key={x.id} value={x.id}>{x.nome}</option>)}
-    </select>
+    </Selecao>
   );
 
   return (
     <Modal titulo={j.id ? "Editar julgamento" : "Novo julgamento"} aoFechar={aoFechar}>
-      <div className="field"><label>Edital</label>{seletor(j.edital, (v) => mudar({ edital: v }), entidades("edital"), "escolha")}</div>
-      <div className="field"><label>Projeto</label>{seletor(j.projeto, (v) => mudar({ projeto: v }), entidades("projeto"), "sem projeto")}</div>
-      <div className="linha3">
-        <div className="field"><label>Ano</label><input value={j.ano} onChange={(e) => mudar({ ano: e.target.value })} /></div>
-        <div className="field">
-          <label>Resultado</label>
-          <select value={j.resultado} onChange={(e) => mudar({ resultado: e.target.value as Julgamento["resultado"] })}>
+      <Campo rotulo="Edital">{seletor(j.edital, (v) => mudar({ edital: v }), entidades("edital"), "escolha")}</Campo>
+      <Campo rotulo="Projeto">{seletor(j.projeto, (v) => mudar({ projeto: v }), entidades("projeto"), "sem projeto")}</Campo>
+      <Linhas colunas={3}>
+        <Campo rotulo="Ano"><Entrada value={j.ano} onChange={(e) => mudar({ ano: e.target.value })} /></Campo>
+        <Campo rotulo="Resultado">
+          <Selecao value={j.resultado} onChange={(e) => mudar({ resultado: e.target.value as Julgamento["resultado"] })}>
             {Object.entries(ROTULO_RESULTADO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-          </select>
-        </div>
-        <div className="field"><label>Nota</label><input value={j.nota} onChange={(e) => mudar({ nota: e.target.value })} /></div>
-      </div>
-      <div className="field"><label>O que aconteceu</label><textarea rows={3} value={j.resumo} onChange={(e) => mudar({ resumo: e.target.value })} /></div>
-      <div className="field"><label>Pontos fortes (um por linha)</label><textarea rows={3} value={fortes} onChange={(e) => setFortes(e.target.value)} /></div>
-      <div className="field"><label>Pontos fracos (um por linha)</label><textarea rows={3} value={fracos} onChange={(e) => setFracos(e.target.value)} /></div>
-      <div className="field"><label>Lições (uma por linha)</label><textarea rows={3} value={licoes} onChange={(e) => setLicoes(e.target.value)} /></div>
+          </Selecao>
+        </Campo>
+        <Campo rotulo="Nota"><Entrada value={j.nota} onChange={(e) => mudar({ nota: e.target.value })} /></Campo>
+      </Linhas>
+      <Campo rotulo="O que aconteceu"><AreaTexto rows={3} value={j.resumo} onChange={(e) => mudar({ resumo: e.target.value })} /></Campo>
+      <Campo rotulo="Pontos fortes (um por linha)"><AreaTexto rows={3} value={fortes} onChange={(e) => setFortes(e.target.value)} /></Campo>
+      <Campo rotulo="Pontos fracos (um por linha)"><AreaTexto rows={3} value={fracos} onChange={(e) => setFracos(e.target.value)} /></Campo>
+      <Campo rotulo="Lições (uma por linha)"><AreaTexto rows={3} value={licoes} onChange={(e) => setLicoes(e.target.value)} /></Campo>
       <RodapeModal>
         {j.id && <BotaoExcluir aoConfirmar={excluir} />}
-        <span className="sp">
-          <button className="btn quiet" onClick={aoFechar}>Cancelar</button>
-          <button className="btn primary" onClick={salvar}>Salvar</button>
-        </span>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
+          <Botao onClick={salvar}>Salvar</Botao>
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

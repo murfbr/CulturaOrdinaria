@@ -1,5 +1,6 @@
 /* Elenco / colaboradores: tabela de músicos e técnicos que entram nos editais —
-   busca, filtros por função e documentos, colunas ordenáveis. */
+   busca, filtros por função e documentos, colunas ordenáveis. A linha inteira
+   abre a edição; o botão "editar" da última coluna faz o mesmo. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
@@ -7,6 +8,11 @@ import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import {
   BarraFiltros, CampoBusca, SeletorFiltro, ThOrdenavel, ordenarLinhas, type OrdemTabela,
 } from "../../components/Filtros";
+import { Botao } from "../../components/ui/Botao";
+import { Badge } from "../../components/ui/Badge";
+import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_APAGADO } from "../../components/ui/estilos";
 import { comparar } from "../../utils";
 
 export function Elenco() {
@@ -27,7 +33,7 @@ export function Elenco() {
   return (
     <>
       <CabecalhoSecao titulo="Elenco / Colaboradores" sub="músicos e técnicos que entram nos editais — bio e documentos">
-        <button className="btn" onClick={() => abrirNovo("elenco")}>+ Colaborador</button>
+        <Botao onClick={() => abrirNovo("elenco")}>+ Colaborador</Botao>
       </CabecalhoSecao>
 
       <BarraFiltros mostrando={elenco.length} total={painel.elenco.length}>
@@ -37,39 +43,39 @@ export function Elenco() {
           opcoes={[{ valor: "ok", rotulo: "docs ok" }, { valor: "pend", rotulo: "docs pendentes" }]} />
       </BarraFiltros>
 
-      <div className="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <ThOrdenavel campo="nome" ordem={ordem} aoOrdenar={setOrdem}>Nome</ThOrdenavel>
-              <ThOrdenavel campo="funcao" ordem={ordem} aoOrdenar={setOrdem}>Função</ThOrdenavel>
-              <th>Minibiografia</th>
-              <ThOrdenavel campo="docsStatus" ordem={ordem} aoOrdenar={setOrdem}>Documentos</ThOrdenavel>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {elenco.map((p) => (
-              <tr key={p.id}>
-                <td>
-                  <b>{p.nome}</b>
-                  {p.nomeCompleto && <div className="muted" style={{ fontSize: 11.5 }}>{p.nomeCompleto}</div>}
-                  {p.email && <div className="muted" style={{ fontSize: 11 }}>✉ {p.email}</div>}
-                </td>
-                <td>{p.funcao}</td>
-                <td className="muted">{p.bio}</td>
-                <td>
-                  <span className={"badge " + (p.docsStatus === "ok" ? "pill-ok" : "pill-pend")}>
-                    {p.docsStatus === "ok" ? "docs ok" : "docs pend."}
-                  </span>
-                </td>
-                <td><span className="lnk" onClick={() => abrirEdicao("elenco", p.id)}>editar</span></td>
-              </tr>
-            ))}
-            {!elenco.length && <tr><td colSpan={5} className="muted">Ninguém com esses filtros.</td></tr>}
-          </tbody>
-        </table>
-      </div>
+      <Tabela>
+        <thead>
+          <tr>
+            <ThOrdenavel campo="nome" ordem={ordem} aoOrdenar={setOrdem}>Nome</ThOrdenavel>
+            <ThOrdenavel campo="funcao" ordem={ordem} aoOrdenar={setOrdem}>Função</ThOrdenavel>
+            <Th>Minibiografia</Th>
+            <ThOrdenavel campo="docsStatus" ordem={ordem} aoOrdenar={setOrdem}>Documentos</ThOrdenavel>
+            <Th />
+          </tr>
+        </thead>
+        <tbody>
+          {elenco.map((p) => (
+            <Tr key={p.id} aoClicar={() => abrirEdicao("elenco", p.id)}>
+              <Td>
+                <b>{p.nome}</b>
+                {p.nomeCompleto && <div className={ESTILO_APAGADO}>{p.nomeCompleto}</div>}
+                {p.email && <div className={ESTILO_APAGADO}>✉ {p.email}</div>}
+              </Td>
+              <Td>{p.funcao}</Td>
+              <Td className="text-muted">{p.bio}</Td>
+              <Td>
+                <Badge tom={p.docsStatus === "ok" ? "ok" : "aviso"}>
+                  {p.docsStatus === "ok" ? "docs ok" : "docs pend."}
+                </Badge>
+              </Td>
+              <Td className="text-right">
+                <Botao variante="quieto" tamanho="mini" onClick={(e) => { e.stopPropagation(); abrirEdicao("elenco", p.id); }}>editar</Botao>
+              </Td>
+            </Tr>
+          ))}
+          {!elenco.length && <tr><Td colSpan={5}><Vazio emLinha>Ninguém com esses filtros.</Vazio></Td></tr>}
+        </tbody>
+      </Tabela>
     </>
   );
 }

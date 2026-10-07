@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 import { Banco, type LinhaLog } from "../services/banco";
 import { usarCentral } from "../store/central";
 import { rotuloColecao } from "./layout/ModalGravacoes";
+import { Dica } from "./ui/Dica";
+import { Painel } from "./ui/Painel";
+import { Tabela, Td, Th } from "./ui/Tabela";
+import { Vazio } from "./ui/Vazio";
 
 const ACAO: Record<LinhaLog["acao"], string> = { novo: "criou", edicao: "editou", exclusao: "excluiu" };
 
@@ -49,36 +53,35 @@ export function Historico({ ids }: { ids: string[] }) {
   };
 
   if (Banco.modo === "local") {
-    return <div className="vazio-msg">O histórico só existe no site online: no modo local nada é registrado.</div>;
+    return <Vazio>O histórico só existe no site online: no modo local nada é registrado.</Vazio>;
   }
 
   return (
-    <div className="panel">
-      <h4>Histórico de alterações</h4>
-      <p className="hint" style={{ marginTop: 0 }}>
+    <Painel titulo="Histórico de alterações">
+      <Dica className="mb-3">
         Registrado desde 27/09/2026; cada linha fica 90 dias. Mostra quem estava logado e quais campos mudaram
         (o conteúdo antigo fica nos backups do Drive).
-      </p>
-      {erro && <p className="aviso-linha">⚠ Não deu para ler o histórico agora ({erro}).</p>}
-      {!erro && linhas === null && <p className="muted">carregando…</p>}
-      {linhas && !linhas.length && <p className="muted">Nenhuma alteração registrada ainda.</p>}
+      </Dica>
+      {erro && <p className="m-0 text-xs text-warn-ink">⚠ Não deu para ler o histórico agora ({erro}).</p>}
+      {!erro && linhas === null && <p className="m-0 text-sm text-muted">carregando…</p>}
+      {linhas && !linhas.length && <Vazio emLinha>Nenhuma alteração registrada ainda.</Vazio>}
       {linhas && linhas.length > 0 && (
-        <table className="tab-historico">
-          <thead><tr><th>Quando</th><th>Quem</th><th>O quê</th></tr></thead>
+        <Tabela simples>
+          <thead><tr><Th>Quando</Th><Th>Quem</Th><Th>O quê</Th></tr></thead>
           <tbody>
             {linhas.map((l) => (
               <tr key={l.id}>
-                <td className="nowrap">{dataHora(l.quando)}</td>
-                <td>{quem(l.quem)}</td>
-                <td>
-                  {ACAO[l.acao] || l.acao} <span className="muted">{rotuloColecao(l.colecao).toLowerCase()}</span>
+                <Td className="whitespace-nowrap">{dataHora(l.quando)}</Td>
+                <Td>{quem(l.quem)}</Td>
+                <Td>
+                  {ACAO[l.acao] || l.acao} <span className="text-muted">{rotuloColecao(l.colecao).toLowerCase()}</span>
                   {l.campos.length > 0 && <span>: {l.campos.map((c) => CAMPO[c] || c).join(", ")}</span>}
-                </td>
+                </Td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Tabela>
       )}
-    </div>
+    </Painel>
   );
 }

@@ -1,12 +1,20 @@
-/* Um campo da plataforma no editor: cabeçalho com rótulo, obrigatório, código,
-   status (rascunho → revisado → colado), copiar e nota — e o corpo delegado ao
-   componente do tipo (campos/*). */
+/* Um campo da plataforma no editor: cartão com a borda esquerda na cor do
+   status, cabeçalho com rótulo, obrigatório, código, status (rascunho →
+   revisado → colado), copiar e nota — e o corpo delegado ao componente do
+   tipo (campos/*). */
 import { useState } from "react";
 import { statusEfetivo, textoDe } from "../../../lib/simulador/motor";
 import { conceitoDoCampo, indiceMemo, sugestoesPara } from "../../../lib/textos";
 import { usarCentral } from "../../../store/central";
 import { ModalReaproveitar } from "./ModalReaproveitar";
 import { copiarComAviso, toast } from "../../../components/Toast";
+import { Badge } from "../../../components/ui/Badge";
+import { Botao } from "../../../components/ui/Botao";
+import { ESTILO_CONTROLE_DISCRETO } from "../../../components/ui/Campo";
+import { Chip } from "../../../components/ui/Chip";
+import { Dica } from "../../../components/ui/Dica";
+import { ESTILO_MONO } from "../../../components/ui/estilos";
+import { cx } from "../../../utils/classes";
 import { ROTULO_STATUS_CAMPO, type StatusCampo } from "../../../types";
 import type { PropsCampo } from "./tipos";
 import { CampoTexto } from "./campos/CampoTexto";
@@ -19,6 +27,11 @@ import { CampoDocumentos } from "./campos/CampoDocumentos";
 import { CampoAnexo } from "./campos/CampoAnexo";
 import { PlanilhaOrcamento } from "../orcamento/PlanilhaOrcamento";
 import { ResumoOrcamento } from "../orcamento/ResumoOrcamento";
+
+/** Cor da borda esquerda do cartão, pelo status da resposta. */
+const BORDA_STATUS: Record<string, string> = {
+  vazio: "border-l-vazio", rasc: "border-l-gold", rev: "border-l-rev", col: "border-l-ok",
+};
 
 /** O componente de corpo de cada tipo de campo do motor. */
 function CorpoDoCampo(props: PropsCampo) {
@@ -65,35 +78,36 @@ export function Campo({ r, c, alterar }: PropsCampo) {
   }
 
   return (
-    <div className="campo" data-st={st}>
-      <div className="campo-h">
-        <label htmlFor={"f-" + c.n}>{c.l}</label>
-        {c.req ? <span className="req">obrigatório</span> : null}
-        {c.n.startsWith("doc__") ? null : <span className="mono">{c.cod || c.n}</span>}
-        {c.limiteTexto && <span className="chip">{c.limiteTexto}</span>}
-        <span className="tools">
-          <button type="button" className="st" data-v={st} title="clique para mudar o status" onClick={girarStatus}>
-            {ROTULO_STATUS_CAMPO[st]}
+    <div className={cx("mb-2.5 rounded-xl border border-l-4 border-line bg-card px-3.5 py-3", BORDA_STATUS[st])}>
+      <div className="mb-1.5 flex flex-wrap items-baseline gap-2.5">
+        <label htmlFor={"f-" + c.n} className="text-sm font-semibold">{c.l}</label>
+        {c.req ? <span className="text-xs text-gold">obrigatório</span> : null}
+        {c.n.startsWith("doc__") ? null : <span className={ESTILO_MONO}>{c.cod || c.n}</span>}
+        {c.limiteTexto && <Chip>{c.limiteTexto}</Chip>}
+        <span className="ml-auto flex items-center gap-1">
+          <button type="button" className="cursor-pointer border-0 bg-transparent p-0" title="clique para mudar o status" onClick={girarStatus}>
+            <Badge tom={st === "vazio" ? "neutro" : st} clicavel>{ROTULO_STATUS_CAMPO[st]}</Badge>
           </button>
-          <button type="button" className="btn sm quiet"
-            onClick={() => void copiarComAviso(textoDe(c, r.valores[c.n], r), "Campo copiado")}>Copiar</button>
-          <button type="button" className="btn sm quiet" onClick={alternarNota}>Nota</button>
+          <Botao variante="quieto" tamanho="pequeno"
+            onClick={() => void copiarComAviso(textoDe(c, r.valores[c.n], r), "Campo copiado")}>Copiar</Botao>
+          <Botao variante="quieto" tamanho="pequeno" onClick={alternarNota}>Nota</Botao>
           {sugestoes.length > 0 && (
-            <button type="button" className="btn sm quiet reap-btn" title="textos já escritos com o mesmo conceito em outros projetos"
-              onClick={() => setReaproveitar(true)}>Reaproveitar ({sugestoes.length})</button>
+            <Botao variante="quieto" tamanho="pequeno" title="textos já escritos com o mesmo conceito em outros projetos"
+              onClick={() => setReaproveitar(true)}>Reaproveitar ({sugestoes.length})</Botao>
           )}
         </span>
       </div>
-      {c.dica && <p className="instr">{c.dica}</p>}
+      {c.dica && <Dica className="mb-2 max-w-[75ch]">{c.dica}</Dica>}
       <CorpoDoCampo r={r} c={c} alterar={alterar} />
       {reaproveitar && (
         <ModalReaproveitar c={c} r={r} conceito={conceito} sugestoes={sugestoes} artistaIds={artistaIds}
           alterar={alterar} aoFechar={() => setReaproveitar(false)} />
       )}
       {r.notas[c.n] != null && (
-        <div className="nota">
-          <b>Nota:</b>
-          <input type="text" value={r.notas[c.n]} placeholder="anotação interna sobre este campo"
+        <div className="mt-2 flex items-start gap-2 rounded-md bg-sand px-2.5 py-1.5 text-sm text-muted">
+          <b className="flex-none pt-1 font-semibold text-ink">Nota:</b>
+          <input type="text" className={cx("w-full", ESTILO_CONTROLE_DISCRETO)} value={r.notas[c.n]}
+            placeholder="anotação interna sobre este campo"
             onChange={(e) => alterar((copia) => { copia.notas[c.n] = e.target.value; })} />
         </div>
       )}

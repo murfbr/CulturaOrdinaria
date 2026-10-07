@@ -1,9 +1,20 @@
 /* Julgamentos: cada projeto já avaliado — o que o parecer disse na leitura do
    julgador, pontos fortes e fracos, e as lições. Cada lição pode "virar regra",
-   com este julgamento como fonte. */
+   com este julgamento como fonte. Lista lateral à esquerda, o registro aberto
+   à direita. */
 import { usarCentral } from "../../store/central";
 import { abrirFichaContexto, definirJulgamentoAberto, usarNavegacao } from "../../store/navegacao";
 import { julgamentosOrdenados, nomeDaEntidade } from "../../lib/contexto/consultas";
+import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Grade } from "../../components/ui/Grade";
+import { Linha } from "../../components/ui/Linha";
+import { Painel } from "../../components/ui/Painel";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_LINK, ESTILO_MONO } from "../../components/ui/estilos";
+import { ItemMarcado } from "./ItemMarcado";
+import { GrupoLista, ItemLista, ListaLateral } from "./ListaLateral";
 import type { PedidoModalRegra } from "./ModalRegra";
 import { clonar } from "../../utils";
 import { ROTULO_RESULTADO, type Julgamento } from "../../types";
@@ -20,104 +31,99 @@ export function TelaJulgamentos({ aoAbrirRegra, aoAbrirJulgamento }: Props) {
   const selecionado = (nav.julgamentoAberto && julgamentos[nav.julgamentoAberto]) || lista[0];
 
   const cabecalho = (
-    <div className="shead">
-      <div>
-        <h2>Julgamentos</h2>
-        <p className="sub">Cada projeto já avaliado: o que o parecer disse, na leitura do julgador, e as lições que viraram regra. Registre também inscrições sem resultado, para comparar depois.</p>
-      </div>
-      <div className="acts">
-        <button className="btn primary" onClick={() => aoAbrirJulgamento("novo")}>+ novo julgamento</button>
-      </div>
-    </div>
+    <CabecalhoSecao
+      grande
+      titulo="Julgamentos"
+      sub="Cada projeto já avaliado: o que o parecer disse, na leitura do julgador, e as lições que viraram regra. Registre também inscrições sem resultado, para comparar depois."
+    >
+      <Botao onClick={() => aoAbrirJulgamento("novo")}>+ novo julgamento</Botao>
+    </CabecalhoSecao>
   );
 
   if (!selecionado) {
-    return <>{cabecalho}<p className="vazio">Nenhum julgamento registrado ainda.</p></>;
+    return <>{cabecalho}<Vazio>Nenhum julgamento registrado ainda.</Vazio></>;
   }
   const j = selecionado;
 
   const ListaItens = ({ itens }: { itens: string[] }) =>
     itens.length
-      ? <ul className="itens">{itens.map((a, i) => <li key={i}><span className="k">·</span><span>{a}</span></li>)}</ul>
-      : <p className="vazio">nada registrado</p>;
+      ? <div className="max-w-texto">{itens.map((a, i) => <ItemMarcado marca="·" key={i}>{a}</ItemMarcado>)}</div>
+      : <Vazio emLinha>nada registrado</Vazio>;
 
   const linkFicha = (id: string, texto: string) => (
-    <a href="#" onClick={(e) => { e.preventDefault(); abrirFichaContexto(id); }}>{texto}</a>
+    <a href="#" className={ESTILO_LINK} onClick={(e) => { e.preventDefault(); abrirFichaContexto(id); }}>{texto}</a>
+  );
+  const resultado = (x: Julgamento, mini?: boolean) => (
+    <Badge caixaAlta mini={mini} tom={x.resultado}>{ROTULO_RESULTADO[x.resultado] || x.resultado}</Badge>
   );
 
   return (
     <>
       {cabecalho}
-      <div className="duas">
-        <aside className="lista">
-          <div className="eyebrow">registros</div>
+      <Grade colunas="lateral">
+        <ListaLateral className="md:mt-gutter">
+          <GrupoLista>registros</GrupoLista>
           {lista.map((x) => (
-            <button key={x.id} className={x.id === j.id ? "on" : ""}
+            <ItemLista key={x.id} ativo={x.id === j.id}
               onClick={() => { definirJulgamentoAberto(x.id); window.scrollTo({ top: 0 }); }}>
-              <span className={"res " + x.resultado} style={{ fontSize: 10 }}>{ROTULO_RESULTADO[x.resultado] || x.resultado}</span>
-              {nomeDaEntidade(x.edital).split(" (")[0]}{x.projeto ? " · " + nomeDaEntidade(x.projeto) : ""}
-            </button>
+              <span className="flex items-center gap-2">
+                {resultado(x, true)}
+                <span className="min-w-0">{nomeDaEntidade(x.edital).split(" (")[0]}{x.projeto ? " · " + nomeDaEntidade(x.projeto) : ""}</span>
+              </span>
+            </ItemLista>
           ))}
-        </aside>
+        </ListaLateral>
 
-        <div>
-          <div className="julg-h">
-            <h2>{linkFicha(j.edital, nomeDaEntidade(j.edital))}</h2>
-            <span className={"res " + j.resultado}>{ROTULO_RESULTADO[j.resultado] || j.resultado}</span>
-            <span className="acts">
-              <button className="btn sm quiet" onClick={() => aoAbrirJulgamento(clonar(j))}>editar</button>
-            </span>
-          </div>
-          <p className="julg-meta">
-            {j.projeto && <>projeto {linkFicha(j.projeto, nomeDaEntidade(j.projeto))} · </>}
-            {j.ano}{j.nota && <> · nota {j.nota}</>} · <span className="mono">{j.id}</span>
-          </p>
+        <div className="min-w-0">
+          <CabecalhoSecao
+            grande
+            titulo={<>{linkFicha(j.edital, nomeDaEntidade(j.edital))} {resultado(j)}</>}
+            sub={<>
+              {j.projeto && <>projeto {linkFicha(j.projeto, nomeDaEntidade(j.projeto))} · </>}
+              {j.ano}{j.nota && <> · nota {j.nota}</>} · <code className={ESTILO_MONO}>{j.id}</code>
+            </>}
+          >
+            <Botao variante="quieto" tamanho="pequeno" onClick={() => aoAbrirJulgamento(clonar(j))}>editar</Botao>
+          </CabecalhoSecao>
 
-          <div className="bloco">
-            <div className="bloco-h"><h4>O que aconteceu</h4></div>
-            <p className="texto">{j.resumo || <span className="vazio">sem resumo</span>}</p>
-          </div>
+          <Painel titulo="O que aconteceu">
+            {j.resumo ? <p className="m-0 max-w-texto whitespace-pre-wrap">{j.resumo}</p> : <Vazio emLinha>sem resumo</Vazio>}
+          </Painel>
 
-          <div className="ff">
-            <div className="bloco">
-              <div className="bloco-h"><h4>Pontos fortes</h4><span className="q">na leitura do julgador</span></div>
+          <Grade colunas={2}>
+            <Painel titulo="Pontos fortes" sub={<span className="italic">na leitura do julgador</span>}>
               <ListaItens itens={j.fortes || []} />
-            </div>
-            <div className="bloco">
-              <div className="bloco-h"><h4>Pontos fracos</h4><span className="q">o que foi criticado ou ficou frágil</span></div>
+            </Painel>
+            <Painel titulo="Pontos fracos" sub={<span className="italic">o que foi criticado ou ficou frágil</span>}>
               <ListaItens itens={j.fracos || []} />
-            </div>
-          </div>
+            </Painel>
+          </Grade>
 
-          <div className="bloco" style={{ marginTop: 12 }}>
-            <div className="bloco-h">
-              <h4>Lições</h4>
-              <span className="q">cada lição pode virar uma regra, com este julgamento como fonte</span>
-            </div>
+          <Painel titulo="Lições" sub={<span className="italic">cada lição pode virar uma regra, com este julgamento como fonte</span>}>
             {(j.licoes || []).map((licao, i) => (
-              <div className="licao" key={i}>
-                <span>{licao.texto}</span>
-                <span className="virou">
-                  {licao.regra && regras[licao.regra] ? (
-                    <>virou regra <span className="mono">{licao.regra}</span>{" "}
-                      <button className="btn sm quiet" onClick={() => aoAbrirRegra({ regra: clonar(regras[licao.regra]) })}>ver</button>
-                    </>
-                  ) : (
-                    <button className="btn sm quiet" onClick={() => aoAbrirRegra({
-                      contexto: {
-                        tipo: "edital", id: j.edital, texto: licao.texto,
-                        fonte: { tipo: "julgamento", ref: j.id },
-                        julgamentoId: j.id, licao: i,
-                      },
-                    })}>virar regra</button>
-                  )}
-                </span>
-              </div>
+              <Linha topo key={i} direita={
+                licao.regra && regras[licao.regra] ? (
+                  <span className="whitespace-nowrap text-xs text-faint">
+                    virou regra <code className={ESTILO_MONO}>{licao.regra}</code>{" "}
+                    <Botao variante="quieto" tamanho="mini" onClick={() => aoAbrirRegra({ regra: clonar(regras[licao.regra]) })}>ver</Botao>
+                  </span>
+                ) : (
+                  <Botao variante="quieto" tamanho="mini" onClick={() => aoAbrirRegra({
+                    contexto: {
+                      tipo: "edital", id: j.edital, texto: licao.texto,
+                      fonte: { tipo: "julgamento", ref: j.id },
+                      julgamentoId: j.id, licao: i,
+                    },
+                  })}>virar regra</Botao>
+                )
+              }>
+                <span className="text-base">{licao.texto}</span>
+              </Linha>
             ))}
-            {!(j.licoes || []).length && <p className="vazio">nenhuma lição</p>}
-          </div>
+            {!(j.licoes || []).length && <Vazio emLinha>nenhuma lição</Vazio>}
+          </Painel>
         </div>
-      </div>
+      </Grade>
     </>
   );
 }

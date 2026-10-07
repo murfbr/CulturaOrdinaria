@@ -1,7 +1,17 @@
 /* Tela Geral do Contexto: o que mora aqui, contagens do que já está
    registrado e as regras gerais (valem para todo texto). */
+import type { ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { regrasDe, textoFonte } from "../../lib/contexto/consultas";
+import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Grade } from "../../components/ui/Grade";
+import { Linha } from "../../components/ui/Linha";
+import { Painel } from "../../components/ui/Painel";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_AUXILIAR } from "../../components/ui/estilos";
+import { cx } from "../../utils/classes";
 import { ROTULO_TIPO_REGRA } from "../../types";
 import type { PedidoModalRegra } from "./ModalRegra";
 
@@ -14,50 +24,56 @@ export function Geral({ aoAbrirRegra }: { aoAbrirRegra: (p: PedidoModalRegra) =>
 
   return (
     <>
-      <div className="shead">
-        <div>
-          <h2>Contexto e regras</h2>
-          <p className="sub">O que sabemos sobre cada artista, projeto e edital, e o que o texto pode ou não ter. Nada de cadastro: isso é de Cadastros e Projetos, apontado pelo mesmo id. As mesmas fichas aparecem na aba Contexto de cada artista, edital e projeto.</p>
-        </div>
-      </div>
+      <CabecalhoSecao
+        grande
+        titulo="Contexto e regras"
+        sub="O que sabemos sobre cada artista, projeto e edital, e o que o texto pode ou não ter. Nada de cadastro: isso é de Cadastros e Projetos, apontado pelo mesmo id. As mesmas fichas aparecem na aba Contexto de cada artista, edital e projeto."
+      />
 
-      <div className="hero">
-        <div className="pan">
-          <h3>O que mora aqui</h3>
-          <p>Conhecimento de escrita e de julgamento: como falar de cada artista, projeto e edital; quais argumentos funcionam; o que o julgador pesa de verdade; o que o texto não pode ter; e o que os pareceres anteriores ensinaram.</p>
-          <p>Regra sem fonte não entra. Cada lição de um julgamento pode virar regra, e a regra aponta o julgamento como fonte.</p>
-        </div>
-        <div className="pan">
-          <h3>O que já está registrado</h3>
-          <div className="contagem">
-            <span><b>{contagemFichas("artista")}</b>fichas de artista</span>
-            <span><b>{contagemFichas("projeto")}</b>de projeto</span>
-            <span><b>{contagemFichas("edital")}</b>de edital</span>
-            <span><b>{listaRegras.length}</b>regras</span>
-            <span><b>{listaJulg.length}</b>julgamentos</span>
+      <Grade colunas={2} className="md:grid-cols-[1.2fr_1fr]">
+        <Painel titulo="O que mora aqui">
+          <p className="m-0 mb-2.5 max-w-texto">Conhecimento de escrita e de julgamento: como falar de cada artista, projeto e edital; quais argumentos funcionam; o que o julgador pesa de verdade; o que o texto não pode ter; e o que os pareceres anteriores ensinaram.</p>
+          <p className="m-0 max-w-texto">Regra sem fonte não entra. Cada lição de um julgamento pode virar regra, e a regra aponta o julgamento como fonte.</p>
+        </Painel>
+        <Painel titulo="O que já está registrado">
+          <div className="flex flex-wrap gap-x-5 gap-y-1">
+            <Contagem n={contagemFichas("artista")}>fichas de artista</Contagem>
+            <Contagem n={contagemFichas("projeto")}>de projeto</Contagem>
+            <Contagem n={contagemFichas("edital")}>de edital</Contagem>
+            <Contagem n={listaRegras.length}>regras</Contagem>
+            <Contagem n={listaJulg.length}>julgamentos</Contagem>
           </div>
-          <p style={{ marginTop: 14, fontSize: 13.5, color: "var(--ink2)" }}>
-            Regras <span className="duvida">a confirmar</span>: {listaRegras.filter((r) => r.status === "duvida").length}.
+          <p className={cx("m-0 mt-3.5", ESTILO_AUXILIAR)}>
+            Regras <Badge tom="aviso" mini>a confirmar</Badge>: {listaRegras.filter((r) => r.status === "duvida").length}.
             São as de fonte incerta; a próxima leitura dos materiais deve fechar ou derrubar cada uma.
           </p>
-        </div>
-      </div>
+        </Painel>
+      </Grade>
 
-      <div className="pan">
-        <h3>Regras gerais, valem para todo texto</h3>
-        <ul className="regras-geral">
-          {gerais.map((r) => (
-            <li key={r.id}>
-              <span className={"tp " + r.tipoRegra}>{ROTULO_TIPO_REGRA[r.tipoRegra]}</span>
-              <span>{r.texto}</span>
-              <span className="fonte">{textoFonte(r.fonte)}</span>
-            </li>
-          ))}
-          {!gerais.length && <li className="vazio">nenhuma ainda</li>}
-        </ul>
-        <button className="btn sm" style={{ marginTop: 10 }}
-          onClick={() => aoAbrirRegra({ contexto: { tipo: "geral" } })}>+ regra geral</button>
-      </div>
+      <Painel titulo="Regras gerais, valem para todo texto">
+        {gerais.map((r) => (
+          <Linha topo key={r.id} direita={<span className="whitespace-nowrap text-xs text-faint">{textoFonte(r.fonte)}</span>}>
+            <div className="flex items-start gap-2.5">
+              <Badge caixaAlta tom={r.tipoRegra}>{ROTULO_TIPO_REGRA[r.tipoRegra]}</Badge>
+              <span className="text-base">{r.texto}</span>
+            </div>
+          </Linha>
+        ))}
+        {!gerais.length && <Vazio emLinha>nenhuma ainda</Vazio>}
+        <Botao variante="fantasma" tamanho="pequeno" className="mt-2.5" onClick={() => aoAbrirRegra({ contexto: { tipo: "geral" } })}>
+          + regra geral
+        </Botao>
+      </Painel>
     </>
+  );
+}
+
+/** Número grande com o rótulo ao lado (o que já está registrado). */
+function Contagem({ n, children }: { n: number; children: ReactNode }) {
+  return (
+    <span className={ESTILO_AUXILIAR}>
+      <b className="mr-1 text-2xl text-ink tabular-nums">{n}</b>
+      {children}
+    </span>
   );
 }

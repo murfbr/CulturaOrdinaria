@@ -43,7 +43,7 @@ export function Toast() {
   return (
     <div
       className={cx(
-        "fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-lg bg-ink px-4 py-2 text-sm text-white transition-opacity duration-[180ms] motion-reduce:transition-none",
+        "fixed bottom-6 left-1/2 z-toast -translate-x-1/2 rounded-lg bg-ink px-4 py-2 text-sm text-white transition-opacity duration-[180ms] motion-reduce:transition-none",
         ligado ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
       )}
       role="status" aria-live="polite"

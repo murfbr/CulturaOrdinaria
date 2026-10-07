@@ -2,8 +2,12 @@
    ou Livre, os artistas (em lista, o primeiro é o principal), o responsável e
    o status de partida. Criado, o projeto abre direto. */
 import { useMemo, useState } from "react";
-import { Modal, RodapeModal } from "../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../components/Modal";
 import { toast } from "../../components/Toast";
+import { Botao } from "../../components/ui/Botao";
+import { Campo, Entrada, Linhas, Marcacao, Selecao } from "../../components/ui/Campo";
+import { Chip } from "../../components/ui/Chip";
+import { ESTILO_LINK } from "../../components/ui/estilos";
 import { usarCentral } from "../../store/central";
 import { criarProjeto } from "../../store/mutacoes";
 import { abrirProjeto } from "../../store/navegacao";
@@ -84,9 +88,8 @@ export function ModalNovoProjeto({ aoFechar, editalId, artistaId }: Props) {
 
   return (
     <Modal titulo="Novo projeto" aoFechar={aoFechar} largo>
-      <div className="field">
-        <label htmlFor="np-form">Formulário (já traz o edital)</label>
-        <select id="np-form" value={escolha} onChange={(e) => setEscolha(e.target.value)}>
+      <Campo rotulo="Formulário (já traz o edital)" htmlFor="np-form">
+        <Selecao id="np-form" value={escolha} onChange={(e) => setEscolha(e.target.value)}>
           <option value="">escolha um dos formulários mapeados, ou Livre</option>
           <option value="livre|">Livre: sem formulário, só a seção Geral</option>
           {grupos.map((g) => (
@@ -96,79 +99,73 @@ export function ModalNovoProjeto({ aoFechar, editalId, artistaId }: Props) {
               ))}
             </optgroup>
           ))}
-        </select>
-      </div>
+        </Selecao>
+      </Campo>
 
       {livre && (
-        <div className="field">
-          <label htmlFor="np-edital">Edital (opcional, para projeto Livre)</label>
-          <select id="np-edital" value={editalLivre} onChange={(e) => setEditalLivre(e.target.value)}>
+        <Campo rotulo="Edital (opcional, para projeto Livre)" htmlFor="np-edital">
+          <Selecao id="np-edital" value={editalLivre} onChange={(e) => setEditalLivre(e.target.value)}>
             <option value="">sem edital</option>
             {[...painel.editais].sort((a, b) => comparar(nomeCurto(a), nomeCurto(b))).map((e) => (
               <option key={e.id} value={e.id}>{nomeCurto(e)}</option>
             ))}
-          </select>
-        </div>
+          </Selecao>
+        </Campo>
       )}
 
-      <div className="field">
-        <label htmlFor="np-nome">Nome do projeto</label>
-        <input id="np-nome" value={nome} placeholder="ex.: Circuito Blocos da Cidade · Rouanet 2027" onChange={(e) => setNome(e.target.value)} />
-      </div>
+      <Campo rotulo="Nome do projeto" htmlFor="np-nome">
+        <Entrada id="np-nome" value={nome} placeholder="ex.: Circuito Blocos da Cidade · Rouanet 2027" onChange={(e) => setNome(e.target.value)} />
+      </Campo>
 
-      <div className="field">
-        <label>Artistas {artistas.length > 0 && <span className="muted">(na ordem: o primeiro é o principal)</span>}</label>
+      <Campo rotulo={<>Artistas {artistas.length > 0 && <span className="font-normal text-faint">(na ordem: o primeiro é o principal)</span>}</>}>
         {artistas.length > 0 && (
-          <div style={{ marginBottom: 6 }}>
+          <div className="mb-1.5">
             {artistas.map((id, i) => (
-              <span className="chip" key={id}>{i + 1}. {painel.artistas.find((a) => a.id === id)?.nome}</span>
+              <Chip key={id}>{i + 1}. {painel.artistas.find((a) => a.id === id)?.nome}</Chip>
             ))}
           </div>
         )}
-        <div className="multi-grade">
+        <div className="grid max-h-[180px] grid-cols-1 gap-x-3 gap-y-1 overflow-auto py-1 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
           {[...painel.artistas].sort((a, b) => comparar(a.nome, b.nome)).map((a) => (
-            <label key={a.id}>
-              <input type="checkbox" checked={artistas.includes(a.id)} onChange={() => alternarArtista(a.id)} />
+            <Marcacao key={a.id} marcado={artistas.includes(a.id)} aoMudar={() => alternarArtista(a.id)} className="text-ink">
               {a.nome}
-            </label>
+            </Marcacao>
           ))}
         </div>
-      </div>
+      </Campo>
 
-      <div className="linha2">
-        <div className="field">
-          <label htmlFor="np-resp">Responsável</label>
-          <select id="np-resp" value={resp} onChange={(e) => setResp(e.target.value)}>
+      <Linhas colunas={2}>
+        <Campo rotulo="Responsável" htmlFor="np-resp">
+          <Selecao id="np-resp" value={resp} onChange={(e) => setResp(e.target.value)}>
             <option value="">ninguém ainda</option>
             {painel.equipe.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="np-status">Status de partida</label>
-          <select id="np-status" value={status} onChange={(e) => setStatus(e.target.value as StatusProjeto)}>
+          </Selecao>
+        </Campo>
+        <Campo rotulo="Status de partida" htmlFor="np-status">
+          <Selecao id="np-status" value={status} onChange={(e) => setStatus(e.target.value as StatusProjeto)}>
             {STATUS_PROJETO.map((s) => <option key={s.id} value={s.id}>{s.rotulo}</option>)}
-          </select>
-        </div>
-      </div>
+          </Selecao>
+        </Campo>
+      </Linhas>
 
       {parecidos.length > 0 && (
-        <div className="aviso-duplicado">
+        <div className="my-2.5 flex flex-col gap-1 rounded-lg border border-gold bg-warn-soft px-3 py-2.5 text-sm">
           <b>Já existe projeto deste artista neste edital:</b>
           {parecidos.map((p) => (
             <div key={p.id}>
-              <a className="lnk" onClick={() => { aoFechar(); abrirProjeto(p.id); }}>{p.nome}</a>
-              <span className="muted"> · {ROTULO_STATUS_PROJETO[p.status] || p.status}</span>
+              <a className={ESTILO_LINK} onClick={() => { aoFechar(); abrirProjeto(p.id); }}>{p.nome}</a>
+              <span className="text-muted"> · {ROTULO_STATUS_PROJETO[p.status] || p.status}</span>
             </div>
           ))}
-          <span className="muted">Se for a mesma inscrição, abra o existente. Crie outro só se for uma proposta diferente.</span>
+          <span className="text-muted">Se for a mesma inscrição, abra o existente. Crie outro só se for uma proposta diferente.</span>
         </div>
       )}
 
       <RodapeModal>
-        <span className="sp">
-          <button className="btn ghost" onClick={aoFechar}>Cancelar</button>
-          <button className="btn" disabled={!pronto} onClick={criar}>{parecidos.length ? "Criar mesmo assim" : "Criar projeto"}</button>
-        </span>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
+          <Botao disabled={!pronto} onClick={criar}>{parecidos.length ? "Criar mesmo assim" : "Criar projeto"}</Botao>
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

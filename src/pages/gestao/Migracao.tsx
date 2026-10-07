@@ -3,13 +3,28 @@
    de enriquecimento (editais do Mapa, formulários, pendências dos artistas,
    fichas). Em quatro passos, com backup obrigatório e prévia antes de gravar.
    Serve também para aplicar um pacote de enriquecimento depois da migração. */
-import { useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { usarCentral } from "../../store/central";
 import { exportarTudo } from "../../store/importarExportar";
 import { aplicarMigracao, planejarMigracao } from "../../store/migracao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { toast } from "../../components/Toast";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Dica } from "../../components/ui/Dica";
+import { GradeKpis, Kpi } from "../../components/ui/Kpi";
+import { Painel } from "../../components/ui/Painel";
+import { ESTILO_MONO } from "../../components/ui/estilos";
 import type { DadosV3, Enriquecimento, RelatorioMigracao } from "../../lib/migracao/v3";
+
+/** Lista do relatório da prévia (o que vai mudar, avisos). */
+function ListaRelatorio({ linhas, prefixo = "" }: { linhas: string[]; prefixo?: string }) {
+  return (
+    <ul className="mb-3 mt-1.5 list-disc pl-[18px] text-sm text-muted">
+      {linhas.map((l, i) => <li key={i} className="my-0.5">{prefixo}{l}</li>)}
+    </ul>
+  );
+}
 
 export function Migracao() {
   const { legado, painel } = usarCentral();
@@ -18,6 +33,7 @@ export function Migracao() {
   const [erro, setErro] = useState("");
   const [plano, setPlano] = useState<{ dados: DadosV3; relatorio: RelatorioMigracao } | null>(null);
   const [feito, setFeito] = useState<RelatorioMigracao | null>(null);
+  const arquivoRef = useRef<HTMLInputElement>(null);
   const pendente = legado.candidaturas.length > 0 || legado.projetosV2 > 0;
 
   function lerPacote(e: ChangeEvent<HTMLInputElement>) {
@@ -53,70 +69,65 @@ export function Migracao() {
     <>
       <CabecalhoSecao titulo="Migração v3" sub="do modelo com candidaturas para o modelo em que cada projeto é uma candidatura" />
 
-      <div className="panel">
-        <h4>Situação do banco</h4>
+      <Painel titulo="Situação do banco">
         {pendente ? (
-          <p style={{ margin: 0 }}>
+          <p className="m-0">
             Ainda há dados no formato antigo: <b>{legado.candidaturas.length}</b> candidatura(s) e{" "}
             <b>{legado.projetosV2}</b> projeto(s) sem status. Hoje são {painel.projetos.length} projeto(s) no banco.
           </p>
         ) : (
-          <p style={{ margin: 0 }}>✓ Nada no formato antigo. Esta tela ainda serve para aplicar um pacote de enriquecimento.</p>
+          <p className="m-0">✓ Nada no formato antigo. Esta tela ainda serve para aplicar um pacote de enriquecimento.</p>
         )}
-      </div>
+      </Painel>
 
-      <div className="panel">
-        <h4>1. Backup completo <span className="act">{backupFeito && <span className="badge st-ok">baixado</span>}</span></h4>
-        <p className="hint" style={{ marginTop: 0 }}>Baixa o pacote .json com tudo o que está no banco agora. É o caminho de volta, se algo sair errado.</p>
-        <button className="btn" onClick={() => { exportarTudo(); setBackupFeito(true); }}>⤓ Baixar backup</button>
-      </div>
+      <Painel titulo="1. Backup completo" acoes={backupFeito ? <Badge tom="ok">baixado</Badge> : undefined}>
+        <Dica className="mb-3">Baixa o pacote .json com tudo o que está no banco agora. É o caminho de volta, se algo sair errado.</Dica>
+        <Botao onClick={() => { exportarTudo(); setBackupFeito(true); }}>⤓ Baixar backup</Botao>
+      </Painel>
 
-      <div className="panel">
-        <h4>2. Pacote de enriquecimento (opcional) <span className="act">{enr && <span className="badge st-ok">carregado</span>}</span></h4>
-        <p className="hint" style={{ marginTop: 0 }}>
-          O arquivo <span className="mono-mini">central-v3-enriquecimento.json</span> traz os editais do Mapa, os formulários
+      <Painel titulo="2. Pacote de enriquecimento (opcional)" acoes={enr ? <Badge tom="ok">carregado</Badge> : undefined}>
+        <Dica className="mb-3">
+          O arquivo <span className={ESTILO_MONO}>central-v3-enriquecimento.json</span> traz os editais do Mapa, os formulários
           mapeados, as pendências e perguntas dos artistas, as fichas novas e os registros que só existiam no artefato.
           Sem ele, a migração só converte candidaturas em projetos.
-        </p>
-        <label className="btn ghost" style={{ display: "inline-block" }}>
-          Escolher arquivo…
-          <input type="file" accept="application/json,.json" hidden onChange={lerPacote} />
-        </label>
-        {enr && <p className="hint">{enr.descricao || "Pacote"} · gerado em {enr.gerado}</p>}
-        {erro && <p className="erro-import">{erro}</p>}
-      </div>
+        </Dica>
+        <Botao variante="fantasma" onClick={() => arquivoRef.current?.click()}>Escolher arquivo…</Botao>
+        <input ref={arquivoRef} type="file" accept="application/json,.json" hidden onChange={lerPacote} />
+        {enr && <Dica className="mt-2">{enr.descricao || "Pacote"} · gerado em {enr.gerado}</Dica>}
+        {erro && <p className="m-0 mt-2 text-sm font-semibold text-no">{erro}</p>}
+      </Painel>
 
-      <div className="panel">
-        <h4>3. Prévia</h4>
-        <button className="btn" disabled={!backupFeito} onClick={() => { setFeito(null); setPlano(planejarMigracao(enr)); }}>
-          Ver o que vai mudar
-        </button>
-        {!backupFeito && <span className="hint" style={{ marginLeft: 10 }}>baixe o backup antes</span>}
+      <Painel titulo="3. Prévia">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Botao disabled={!backupFeito} onClick={() => { setFeito(null); setPlano(planejarMigracao(enr)); }}>
+            Ver o que vai mudar
+          </Botao>
+          {!backupFeito && <Dica>baixe o backup antes</Dica>}
+        </div>
         {plano && (
           <>
-            <div className="kpis" style={{ marginTop: 12 }}>
-              {contagem(plano.dados).map(([n, r]) => <div className="kpi" key={r}><div className="n">{n}</div><div className="l">{r}</div></div>)}
-            </div>
-            <ul className="import-lista">{plano.relatorio.feito.map((l, i) => <li key={i}>{l}</li>)}</ul>
+            <GradeKpis className="mt-3">
+              {contagem(plano.dados).map(([n, r]) => <Kpi key={r} n={n} rotulo={r} />)}
+            </GradeKpis>
+            <ListaRelatorio linhas={plano.relatorio.feito} />
             {plano.relatorio.avisos.length > 0 && (
               <>
-                <p className="hint"><b>Avisos</b> (não aplicados, precisam de olho):</p>
-                <ul className="import-lista">{plano.relatorio.avisos.map((l, i) => <li key={i}>⚠ {l}</li>)}</ul>
+                <Dica><b>Avisos</b> (não aplicados, precisam de olho):</Dica>
+                <ListaRelatorio linhas={plano.relatorio.avisos} prefixo="⚠ " />
               </>
             )}
           </>
         )}
-      </div>
+      </Painel>
 
-      <div className="panel">
-        <h4>4. Migrar</h4>
-        <p className="hint" style={{ marginTop: 0 }}>
+      <Painel titulo="4. Migrar">
+        <Dica className="mb-3">
           Grava a prévia no banco. Os projetos e candidaturas antigos (e as fichas que mudam de id) vão antes para a
-          coleção <span className="mono-mini">backup_v2</span>. Nada é apagado sem cópia.
-        </p>
-        <button className="btn" disabled={!plano} onClick={migrar}>Migrar agora</button>
-        {feito && <p className="hint">✓ Migração gravada. {feito.feito.length} ação(ões), {feito.avisos.length} aviso(s). Confira Projetos e Cadastros.</p>}
-      </div>
+          coleção <span className={ESTILO_MONO}>backup_v2</span>. Nada é apagado sem cópia.
+        </Dica>
+        <Botao disabled={!plano} onClick={migrar}>Migrar agora</Botao>
+        {feito && <Dica className="mt-2">✓ Migração gravada. {feito.feito.length} ação(ões), {feito.avisos.length} aviso(s). Confira Projetos e Cadastros.</Dica>}
+      </Painel>
     </>
   );
 }

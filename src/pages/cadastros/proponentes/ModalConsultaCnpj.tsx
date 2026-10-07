@@ -4,8 +4,13 @@
    "Aplicar". As consultas vão uma de cada vez, com pausa, para não esbarrar
    no limite do serviço. */
 import { useEffect, useState } from "react";
-import { Modal, RodapeModal } from "../../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { toast } from "../../../components/Toast";
+import { Badge } from "../../../components/ui/Badge";
+import { Botao } from "../../../components/ui/Botao";
+import { Dica } from "../../../components/ui/Dica";
+import { Tabela, Td } from "../../../components/ui/Tabela";
+import { ESTILO_AUXILIAR, ESTILO_LINK } from "../../../components/ui/estilos";
 import { salvarRegistro } from "../../../store/mutacoes";
 import { consultarCnpj, mudancasPelaReceita, type DadosCnpj, type MudancaCampo } from "../../../lib/cnpj";
 import type { Proponente } from "../../../types";
@@ -76,60 +81,62 @@ export function ModalConsultaCnpj({ alvos, aoFechar }: { alvos: Proponente[]; ao
 
   return (
     <Modal titulo="Consultar CNPJ na Receita" aoFechar={aoFechar} largo>
-      <p className="hint" style={{ marginTop: 0 }}>
+      <Dica emModal className="mb-3">
         Base pública da Receita (via BrasilAPI): só dados da empresa, sem sócios, endereço ou contato.
         Confira as mudanças e desmarque o que não quiser gravar.
-      </p>
-      <div className="cnpj-lista">
+      </Dica>
+      <div className="flex max-h-[56vh] flex-col gap-3 overflow-auto">
         {alvos.map((p) => {
           const r = res[p.id];
           return (
-            <div key={p.id} className="cnpj-item">
-              <div className="cnpj-cab">
+            <div key={p.id} className="rounded-lg border border-line bg-white p-2.5">
+              <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-sm">
                 {r?.estado === "ok" && r.mudancas.length > 0 && (
-                  <input type="checkbox" checked={marcados.has(p.id)} onChange={() => alternar(p.id)} aria-label={"aplicar em " + p.nome} />
+                  <input type="checkbox" className="accent-accent" checked={marcados.has(p.id)} onChange={() => alternar(p.id)} aria-label={"aplicar em " + p.nome} />
                 )}
-                <b>{p.nome}</b> <span className="muted">· {p.cnpj}</span>
-                {r?.estado === "esperando" && <span className="muted"> · na fila</span>}
-                {r?.estado === "consultando" && <span className="muted"> · consultando…</span>}
+                <b>{p.nome}</b> <span className="text-muted">· {p.cnpj}</span>
+                {r?.estado === "esperando" && <span className="text-muted">· na fila</span>}
+                {r?.estado === "consultando" && <span className="text-muted">· consultando…</span>}
                 {r?.estado === "ok" && (
-                  <span className={r.dados.situacao.toUpperCase() === "ATIVA" ? "badge st-ok" : "badge st-closed"} style={{ marginLeft: 6 }}>
+                  <Badge tom={r.dados.situacao.toUpperCase() === "ATIVA" ? "st-ok" : "st-closed"}>
                     {r.dados.situacao || "situação ?"}
-                  </span>
+                  </Badge>
                 )}
               </div>
-              {r?.estado === "erro" && <div className="aviso-linha">⚠ {r.erro}</div>}
-              {r?.estado === "ok" && !r.mudancas.length && <div className="muted">O cadastro já bate com a Receita.</div>}
+              {r?.estado === "erro" && <div className="text-xs text-warn-ink">⚠ {r.erro}</div>}
+              {r?.estado === "ok" && !r.mudancas.length && <div className={ESTILO_AUXILIAR}>O cadastro já bate com a Receita.</div>}
               {r?.estado === "ok" && r.mudancas.length > 0 && (
-                <table className="cnpj-mud">
+                <Tabela simples>
                   <tbody>
                     {r.mudancas.map((m) => (
                       <tr key={m.campo}>
-                        <td className="muted nowrap">{m.rotulo}</td>
-                        <td>{m.antes ? <s className="muted">{mostrar(m.campo, m.antes)}</s> : <span className="muted">vazio</span>}</td>
-                        <td>{mostrar(m.campo, m.depois)}</td>
+                        <Td className="whitespace-nowrap text-muted">{m.rotulo}</Td>
+                        <Td className="break-words">
+                          {m.antes ? <s className="text-muted">{mostrar(m.campo, m.antes)}</s> : <span className="text-muted">vazio</span>}
+                        </Td>
+                        <Td className="break-words">{mostrar(m.campo, m.depois)}</Td>
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </Tabela>
               )}
             </div>
           );
         })}
       </div>
       {terminou && algumErro && (
-        <p className="hint">
+        <Dica emModal className="mt-3">
           Se a consulta automática falhar, dá para ver o cartão CNPJ no site da Receita
-          (<a href={RECEITA} target="_blank" rel="noreferrer">comprovante de inscrição</a>) e preencher à mão no card.
-        </p>
+          (<a className={ESTILO_LINK} href={RECEITA} target="_blank" rel="noreferrer">comprovante de inscrição</a>) e preencher à mão no cadastro.
+        </Dica>
       )}
       <RodapeModal>
-        <span className="sp">
-          <button className="btn ghost" onClick={aoFechar}>Fechar</button>
-          <button className="btn" disabled={!terminou || !marcados.size} onClick={aplicar}>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Fechar</Botao>
+          <Botao disabled={!terminou || !marcados.size} onClick={aplicar}>
             {terminou ? `Aplicar em ${marcados.size} proponente(s)` : "consultando…"}
-          </button>
-        </span>
+          </Botao>
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

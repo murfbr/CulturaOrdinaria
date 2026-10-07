@@ -1,12 +1,39 @@
 /* Cronograma: lista de prazos por mês, derivada dos editais com data,
-   mais os previstos sem data exata. */
+   mais os previstos sem data exata. Cada prazo é um Evento (componente
+   local): dia grande à esquerda, título e projetos, etiquetas à direita. */
+import type { ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { Badge } from "../../components/ui/Badge";
+import { Rotulo } from "../../components/ui/Rotulo";
+import { ESTILO_AUXILIAR } from "../../components/ui/estilos";
 import { eventosAgenda } from "../../lib/agenda";
 import { abrirDetalhe } from "../../store/navegacao";
 import { CLASSE_URGENCIA, ROTULO_URGENCIA, urgenciaDe } from "../../lib/prazos";
 import { STATUS_EDITAL } from "../../types";
 import { MESES } from "../../utils";
+
+/** Um prazo do cronograma: dia e mês à esquerda, título e subtítulo, etiquetas à direita. Clicável inteiro. */
+function Evento({ dia, mes, titulo, sub, etiquetas, aoClicar }: {
+  dia: string; mes: string; titulo: string; sub: string; etiquetas: ReactNode; aoClicar: () => void;
+}) {
+  return (
+    <div
+      className="mb-2 flex cursor-pointer items-center gap-3.5 rounded-[10px] border border-line bg-card px-3.5 py-2.5 shadow-card hover:border-accent"
+      onClick={aoClicar}
+    >
+      <div className="w-[46px] flex-none text-center">
+        <div className="text-xl font-bold leading-none">{dia}</div>
+        <Rotulo>{mes}</Rotulo>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="font-semibold">{titulo}</div>
+        <div className={ESTILO_AUXILIAR}>{sub}</div>
+      </div>
+      <div className="flex flex-none flex-wrap items-center justify-end gap-1.5">{etiquetas}</div>
+    </div>
+  );
+}
 
 export function Cronograma() {
   const { painel } = usarCentral();
@@ -20,8 +47,8 @@ export function Cronograma() {
       {meses.map((chave) => {
         const [ano, mes] = chave.split("-");
         return (
-          <div className="month" key={chave}>
-            <div className="mh">{MESES[Number(mes) - 1]} {ano}</div>
+          <div key={chave}>
+            <Rotulo className="mb-2 mt-4">{MESES[Number(mes) - 1]} {ano}</Rotulo>
             {eventos.filter((e) => e.iso.slice(0, 7) === chave).map((e, i) => {
               const st = STATUS_EDITAL[e.status] || STATUS_EDITAL.open;
               const sub = e.projetos.length
@@ -30,34 +57,34 @@ export function Cronograma() {
               // Urgência só para o que ainda está em jogo (não-encerrado, até 7 dias ou vencido).
               const urgencia = e.status !== "closed" ? urgenciaDe(e.iso) : "futuro";
               return (
-                <div className="ev" key={i} style={{ cursor: "pointer" }} onClick={() => abrirDetalhe("edital", e.editalId)}>
-                  <div className="d">
-                    <div className="dd">{e.iso.slice(8)}</div>
-                    <div className="mm">{MESES[Number(mes) - 1].slice(0, 3)}</div>
-                  </div>
-                  <div className="body"><div className="t">{e.titulo}</div><div className="s">{sub}</div></div>
-                  {urgencia !== "futuro" && (
-                    <span className={"tag badge " + CLASSE_URGENCIA[urgencia]}>{ROTULO_URGENCIA[urgencia]}</span>
-                  )}
-                  <span className={"tag badge " + st.classe}>{st.rotulo}</span>
-                </div>
+                <Evento
+                  key={i}
+                  dia={e.iso.slice(8)} mes={MESES[Number(mes) - 1].slice(0, 3)}
+                  titulo={e.titulo} sub={sub}
+                  aoClicar={() => abrirDetalhe("edital", e.editalId)}
+                  etiquetas={
+                    <>
+                      {urgencia !== "futuro" && <Badge tom={CLASSE_URGENCIA[urgencia]}>{ROTULO_URGENCIA[urgencia]}</Badge>}
+                      <Badge tom={st.classe}>{st.rotulo}</Badge>
+                    </>
+                  }
+                />
               );
             })}
           </div>
         );
       })}
       {previstosSemData.length > 0 && (
-        <div className="month">
-          <div className="mh">Sem data exata (previstos)</div>
+        <div>
+          <Rotulo className="mb-2 mt-4">Sem data exata (previstos)</Rotulo>
           {previstosSemData.map((e) => (
-            <div className="ev" key={e.id} style={{ cursor: "pointer" }} onClick={() => abrirDetalhe("edital", e.id)}>
-              <div className="d">
-                <div className="dd">—</div>
-                <div className="mm">{(e.prazo.match(/[a-z]{3}/i) || [""])[0]}</div>
-              </div>
-              <div className="body"><div className="t">{e.nome}</div><div className="s">{e.prazo}</div></div>
-              <span className="tag badge st-prev">Previsto</span>
-            </div>
+            <Evento
+              key={e.id}
+              dia="—" mes={(e.prazo.match(/[a-z]{3}/i) || [""])[0]}
+              titulo={e.nome} sub={e.prazo}
+              aoClicar={() => abrirDetalhe("edital", e.id)}
+              etiquetas={<Badge tom="st-prev">Previsto</Badge>}
+            />
           ))}
         </div>
       )}

@@ -1,8 +1,9 @@
-/* Ficha do projeto, em página: cabeçalho com status, artistas, edital e
-   formulário; abas Geral (dados, proponente, anotações, documentos, produção,
-   tarefas), Formulário (as respostas no formulário do edital), Transferência
-   (copiar para a plataforma oficial), Contexto (fichas e regras ligadas) e
-   Histórico (quem mudou o quê, do log de alterações). */
+/* Ficha do projeto, em página: CabecalhoFicha com o nome editável, artistas,
+   edital e formulário, o status em pílula (◀ ▶) e as ações; abas Geral
+   (dados, proponente, anotações, documentos, produção, tarefas), Formulário
+   (as respostas no formulário do edital), Transferência (copiar para a
+   plataforma oficial), Contexto (fichas e regras ligadas) e Histórico (quem
+   mudou o quê, do log de alterações). */
 import { useState, type ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { arquivarProjeto, duplicarProjeto, moverProjeto, definirStatusProjeto, salvarRegistro } from "../../store/mutacoes";
@@ -11,8 +12,15 @@ import { abrirEdicao } from "../../store/edicao";
 import { editalDoProjeto, nomeCurto } from "../../lib/nomes";
 import { normalizarRascunho } from "../../lib/simulador/motor";
 import { toast } from "../../components/Toast";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { CabecalhoFicha, type SubAba } from "../../components/ui/CabecalhoFicha";
+import { ESTILO_CONTROLE_DISCRETO } from "../../components/ui/Campo";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_LINK } from "../../components/ui/estilos";
 import { STATUS_PROJETO, type Projeto, type StatusProjeto } from "../../types";
 import { clonar } from "../../utils";
+import { cx } from "../../utils/classes";
 import { GeralProjeto } from "./GeralProjeto";
 import { FormularioRascunho } from "./formulario/Formulario";
 import { Transferencia } from "./Transferencia";
@@ -25,6 +33,11 @@ const lerEtapas = (): Record<string, number> => {
   try { return JSON.parse(localStorage.getItem(CHAVE_ETAPA) || "{}"); } catch { return {}; }
 };
 
+/** Link do subtítulo (artista, edital, formulário): abre a ficha. */
+const link = (texto: ReactNode, abrir: () => void) => (
+  <a href="#" className={ESTILO_LINK} onClick={(e) => { e.preventDefault(); abrir(); }}>{texto}</a>
+);
+
 export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
   const { painel, rascunhos, formularios } = usarCentral();
   const [etapas, setEtapas] = useState<Record<string, number>>(lerEtapas);
@@ -34,6 +47,7 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
   const rascunho = p.rascunhoId ? rascunhos[p.rascunhoId] : undefined;
   const temFormulario = p.formId !== "livre";
   const aba = !temFormulario && (sub === "formulario" || sub === "transferencia") ? "geral" : sub;
+  const statusAtual = STATUS_PROJETO.find((s) => s.id === p.status);
 
   function irEtapa(ei: number) {
     const novo = { ...etapas, [p.id]: ei };
@@ -44,7 +58,7 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
   let corpo;
   if (aba === "formulario" || aba === "transferencia") {
     if (!rascunho) {
-      corpo = <div className="vazio-msg">Este projeto ainda não tem as respostas do formulário. Abra a aba Geral e escolha o formulário de novo para criar.</div>;
+      corpo = <Vazio>Este projeto ainda não tem as respostas do formulário. Abra a aba Geral e escolha o formulário de novo para criar.</Vazio>;
     } else if (aba === "formulario") {
       corpo = <FormularioRascunho projeto={p} rascunho={normalizarRascunho(clonar(rascunho))} etapaAberta={etapas[p.id] || 0} aoMudarEtapa={irEtapa} />;
     } else {
@@ -58,65 +72,71 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
     corpo = <GeralProjeto p={p} />;
   }
 
-  const abas: [string, string, boolean][] = [
+  const abas: SubAba[] = ([
     ["geral", "Geral", true],
     ["formulario", "Formulário", temFormulario],
     ["transferencia", "Transferência", temFormulario],
     ["contexto", "Contexto", true],
     ["historico", "Histórico", true],
-  ];
+  ] as [string, string, boolean][]).filter(([, , ok]) => ok).map(([id, rotulo]) => ({ id, rotulo }));
+
+  const artistas = p.artistaIds
+    .map((id) => {
+      const a = painel.artistas.find((x) => x.id === id);
+      return a ? <span key={id}>{link(a.nome, () => abrirDetalhe("artista", id))}</span> : null;
+    })
+    .reduce<ReactNode[]>((acc, el, i) => (i ? [...acc, ", ", el] : [el]), []);
 
   return (
     <>
-      <button className="voltar" onClick={fecharDetalhe}>← Projetos</button>
-      <div className="proj-h">
-        <div className="proj-h-l">
-          <input type="text" className="nome" value={p.nome} aria-label="nome do projeto"
+      <CabecalhoFicha
+        rotuloVoltar="Projetos"
+        aoVoltar={fecharDetalhe}
+        avatar={(p.nome.trim()[0] || "?").toUpperCase()}
+        titulo={
+          <input type="text" className={cx(ESTILO_CONTROLE_DISCRETO, "w-full text-xl font-semibold")} value={p.nome} aria-label="nome do projeto"
             onChange={(e) => salvarRegistro("projetos", { ...clonar(p), nome: e.target.value }, false)} />
-          <div className="proj-sub">
-            {p.artistaIds.length
-              ? p.artistaIds.map((id) => {
-                const a = painel.artistas.find((x) => x.id === id);
-                return a ? <a key={id} href="#" onClick={(e) => { e.preventDefault(); abrirDetalhe("artista", id); }}>{a.nome}</a> : null;
-              }).reduce<ReactNode[]>((acc, el, i) => (i ? [...acc, ", ", el] : [el]), [])
-              : <span className="muted">sem artista</span>}
+        }
+        sub={
+          <>
+            {p.artistaIds.length ? artistas : <span className="text-faint">sem artista</span>}
             {" · "}
-            {edital
-              ? <a href="#" onClick={(e) => { e.preventDefault(); abrirDetalhe("edital", edital.id); }}>{nomeCurto(edital)}</a>
-              : <span className="muted">sem edital</span>}
+            {edital ? link(nomeCurto(edital), () => abrirDetalhe("edital", edital.id)) : <span className="text-faint">sem edital</span>}
             {" · "}
             {temFormulario
-              ? <a href="#" onClick={(e) => { e.preventDefault(); abrirDetalhe("formulario", p.formId); }}>
-                formulário {form?.nome || p.formId}{form?.origem === "documento" ? " (dos documentos)" : ""}
-              </a>
+              ? link(<>formulário {form?.nome || p.formId}{form?.origem === "documento" ? " (dos documentos)" : ""}</>, () => abrirDetalhe("formulario", p.formId))
               : <span>Livre</span>}
-            {p.grupo && <> · <span className="muted">parte de {p.grupo}</span></>}
-            {p.arquivado && <> · <span className="badge st-closed">arquivado</span></>}
-          </div>
-        </div>
-        <div className="proj-status">
-          <button className="btn sm" title="status anterior" onClick={() => moverProjeto(p, -1)}>◀</button>
-          <select className={"sel-status " + (STATUS_PROJETO.find((s) => s.id === p.status)?.classe || "")} value={p.status}
-            onChange={(e) => definirStatusProjeto(p, e.target.value as StatusProjeto)}>
-            {STATUS_PROJETO.map((s) => <option key={s.id} value={s.id}>{s.rotulo}</option>)}
-          </select>
-          <button className="btn sm" title="próximo status" onClick={() => moverProjeto(p, 1)}>▶</button>
-        </div>
-        <div className="acts">
-          <button className="btn sm" onClick={() => abrirEdicao("projeto", p.id)}>Editar dados</button>
-          <button className="btn sm" onClick={() => { const id = duplicarProjeto(p); toast("Projeto duplicado"); abrirProjeto(id); }}>Duplicar</button>
-          <button className="btn sm" onClick={() => { arquivarProjeto(p, !p.arquivado); toast(p.arquivado ? "Projeto reaberto" : "Projeto arquivado"); }}>
-            {p.arquivado ? "Reabrir" : "Arquivar"}
-          </button>
-          <button className="btn sm quiet danger" onClick={() => exclusao.pedir(p)}>Excluir</button>
-        </div>
-      </div>
-
-      <div className="mesa-tabs">
-        {abas.filter(([, , ok]) => ok).map(([k, rotulo]) => (
-          <button key={k} className={aba === k ? "on" : ""} onClick={() => mudarSubAba(k)}>{rotulo}</button>
-        ))}
-      </div>
+            {p.grupo && <> · <span className="text-faint">parte de {p.grupo}</span></>}
+            {p.arquivado && <> · <Badge tom="st-closed">arquivado</Badge></>}
+          </>
+        }
+        acoes={
+          <>
+            <span className="flex items-center gap-1">
+              <Botao variante="fantasma" tamanho="pequeno" title="status anterior" onClick={() => moverProjeto(p, -1)}>◀</Botao>
+              {/* A pílula do status é um Badge com o select dentro: a cor vem da tabela do Badge. */}
+              <Badge tom={statusAtual?.classe} className="cursor-pointer">
+                <select className="cursor-pointer appearance-none border-0 bg-transparent p-0 font-sans text-xs font-bold text-current outline-none"
+                  value={p.status} aria-label="status do projeto"
+                  onChange={(e) => definirStatusProjeto(p, e.target.value as StatusProjeto)}>
+                  {STATUS_PROJETO.map((s) => <option key={s.id} value={s.id}>{s.rotulo}</option>)}
+                </select>
+                ▾
+              </Badge>
+              <Botao variante="fantasma" tamanho="pequeno" title="próximo status" onClick={() => moverProjeto(p, 1)}>▶</Botao>
+            </span>
+            <Botao variante="fantasma" tamanho="pequeno" onClick={() => abrirEdicao("projeto", p.id)}>Editar dados</Botao>
+            <Botao variante="fantasma" tamanho="pequeno" onClick={() => { const id = duplicarProjeto(p); toast("Projeto duplicado"); abrirProjeto(id); }}>Duplicar</Botao>
+            <Botao variante="fantasma" tamanho="pequeno" onClick={() => { arquivarProjeto(p, !p.arquivado); toast(p.arquivado ? "Projeto reaberto" : "Projeto arquivado"); }}>
+              {p.arquivado ? "Reabrir" : "Arquivar"}
+            </Botao>
+            <Botao variante="apagar" tamanho="pequeno" onClick={() => exclusao.pedir(p)}>Excluir</Botao>
+          </>
+        }
+        abas={abas}
+        abaAtiva={aba}
+        aoTrocarAba={mudarSubAba}
+      />
 
       {corpo}
       {exclusao.modal}

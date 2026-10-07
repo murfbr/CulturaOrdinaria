@@ -1,5 +1,6 @@
-/* Lixeira: tudo o que foi excluído nos últimos 30 dias, com restaurar,
-   excluir de vez e esvaziar. Ao abrir a tela, itens além dos 30 dias caem. */
+/* Lixeira: tudo o que foi excluído nos últimos 30 dias, em tabela, com
+   restaurar, excluir de vez e esvaziar. Ao abrir a tela, itens além dos
+   30 dias caem. */
 import { useEffect, useState } from "react";
 import { usarCentral } from "../../store/central";
 import {
@@ -7,6 +8,10 @@ import {
 } from "../../store/mutacoes";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { toast } from "../../components/Toast";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Tabela, Td, Th } from "../../components/ui/Tabela";
+import { Vazio } from "../../components/ui/Vazio";
 import { ROTULO_COLECAO, type ItemLixeira } from "../../types";
 import { relativo } from "../../utils";
 
@@ -55,8 +60,9 @@ export function Lixeira() {
     <>
       <CabecalhoSecao titulo="Lixeira" sub="o que foi excluído fica aqui por 30 dias — dá para restaurar ou apagar de vez">
         {itens.length > 0 && (
-          <button
-            className={"btn sm " + (confirmando === "__esvaziar" ? "perigo" : "ghost")}
+          <Botao
+            tamanho="pequeno"
+            variante={confirmando === "__esvaziar" ? "perigo" : "fantasma"}
             onClick={() => {
               if (confirmando !== "__esvaziar") { setConfirmando("__esvaziar"); return; }
               esvaziarLixeira();
@@ -65,36 +71,48 @@ export function Lixeira() {
             }}
           >
             {confirmando === "__esvaziar" ? "Confirmar: apagar tudo de vez" : "Esvaziar lixeira"}
-          </button>
+          </Botao>
         )}
       </CabecalhoSecao>
 
       {!itens.length && (
-        <div className="vazio-msg">
-          ✓ Lixeira vazia. Tudo o que for excluído no site cai aqui, com 30 dias para restaurar.
-        </div>
+        <Vazio>✓ Lixeira vazia. Tudo o que for excluído no site cai aqui, com 30 dias para restaurar.</Vazio>
       )}
 
-      {itens.map(([chave, item]) => (
-        <div className="lix-item" key={chave}>
-          <span className="badge b-type">{ROTULO_ORIGEM[item._de] || item._de}</span>
-          <span className="t" title={item.id}>{nomeDoItem(item)}</span>
-          <span className="quando" title={quando(item._apagadoEm)}>
-            {relativo(item._apagadoEm)}{item._apagadoPor ? " · " + item._apagadoPor : ""}
-          </span>
-          <button className="btn sm" onClick={() => restaurar(chave)}>Restaurar</button>
-          <button
-            className={"btn sm " + (confirmando === chave ? "perigo" : "ghost")}
-            onClick={() => {
-              if (confirmando !== chave) { setConfirmando(chave); return; }
-              excluirDeVez(chave);
-              setConfirmando(null);
-            }}
-          >
-            {confirmando === chave ? "Confirmar" : "Excluir de vez"}
-          </button>
-        </div>
-      ))}
+      {itens.length > 0 && (
+        <Tabela>
+          <thead>
+            <tr><Th>Tipo</Th><Th>Item</Th><Th>Excluído</Th><Th /></tr>
+          </thead>
+          <tbody>
+            {itens.map(([chave, item]) => (
+              <tr key={chave}>
+                <Td className="whitespace-nowrap"><Badge mini tom="tipo">{ROTULO_ORIGEM[item._de] || item._de}</Badge></Td>
+                <Td className="font-semibold" title={item.id}>{nomeDoItem(item)}</Td>
+                <Td className="whitespace-nowrap text-muted" title={quando(item._apagadoEm)}>
+                  {relativo(item._apagadoEm)}{item._apagadoPor ? " · " + item._apagadoPor : ""}
+                </Td>
+                <Td className="whitespace-nowrap text-right">
+                  <span className="inline-flex gap-1.5">
+                    <Botao tamanho="pequeno" onClick={() => restaurar(chave)}>Restaurar</Botao>
+                    <Botao
+                      tamanho="pequeno"
+                      variante={confirmando === chave ? "perigo" : "fantasma"}
+                      onClick={() => {
+                        if (confirmando !== chave) { setConfirmando(chave); return; }
+                        excluirDeVez(chave);
+                        setConfirmando(null);
+                      }}
+                    >
+                      {confirmando === chave ? "Confirmar" : "Excluir de vez"}
+                    </Botao>
+                  </span>
+                </Td>
+              </tr>
+            ))}
+          </tbody>
+        </Tabela>
+      )}
     </>
   );
 }

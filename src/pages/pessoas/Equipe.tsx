@@ -1,10 +1,17 @@
-/* Equipe do coletivo: cards com funções e e-mail (que alimenta os convites) —
-   busca e ordenação. */
+/* Equipe do coletivo: tabela com funções e e-mail (que alimenta os convites) —
+   busca e ordenação. A linha inteira abre a edição; o botão "editar" da
+   última coluna faz o mesmo. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../components/Filtros";
+import { Botao } from "../../components/ui/Botao";
+import { Chip } from "../../components/ui/Chip";
+import { Avatar } from "../../components/ui/Avatar";
+import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
+import { Vazio } from "../../components/ui/Vazio";
+import { ESTILO_APAGADO } from "../../components/ui/estilos";
 import { comparar } from "../../utils";
 
 export function Equipe() {
@@ -19,7 +26,7 @@ export function Equipe() {
   return (
     <>
       <CabecalhoSecao titulo="Equipe do coletivo" sub="pessoas a quem você designa tarefas; o e-mail alimenta os convites de reunião">
-        <button className="btn" onClick={() => abrirNovo("equipe")}>+ Pessoa</button>
+        <Botao onClick={() => abrirNovo("equipe")}>+ Pessoa</Botao>
       </CabecalhoSecao>
 
       <BarraFiltros mostrando={equipe.length} total={painel.equipe.length}>
@@ -28,27 +35,41 @@ export function Equipe() {
           opcoes={[{ valor: "nome", rotulo: "nome A→Z" }]} />
       </BarraFiltros>
 
-      <div className="grid g3">
-        {equipe.map((p) => (
-          <div className="card" style={{ padding: 14 }} key={p.id}>
-            <button className="edit" onClick={() => abrirEdicao("equipe", p.id)}>editar</button>
-            <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-              <span className="dot" style={{ width: 34, height: 34, fontSize: 13 }}>{p.nome[0]}</span>
-              <div>
-                <h3 style={{ margin: 0, fontSize: 14 }}>{p.nome}</h3>
-                {p.nomeCompleto && <div className="muted" style={{ fontSize: 11.5 }}>{p.nomeCompleto}</div>}
-                <div style={{ marginTop: 4 }}>
-                  {(p.funcoes || []).map((f) => <span className="chip" key={f}>{f}</span>)}
+      <Tabela>
+        <thead>
+          <tr>
+            <Th>Nome</Th>
+            <Th>Funções</Th>
+            <Th>E-mail</Th>
+            <Th />
+          </tr>
+        </thead>
+        <tbody>
+          {equipe.map((p) => (
+            <Tr key={p.id} aoClicar={() => abrirEdicao("equipe", p.id)}>
+              <Td>
+                <div className="flex items-center gap-2.5">
+                  <Avatar iniciais={p.nome.slice(0, 1)} />
+                  <div className="min-w-0">
+                    <b>{p.nome}</b>
+                    {p.nomeCompleto && <div className={ESTILO_APAGADO}>{p.nomeCompleto}</div>}
+                  </div>
                 </div>
+              </Td>
+              <Td>{(p.funcoes || []).map((f) => <Chip key={f}>{f}</Chip>)}</Td>
+              <Td>
                 {p.email
-                  ? <div className="muted" style={{ fontSize: 11.5, marginTop: 5 }}>✉ {p.email}</div>
-                  : <div style={{ fontSize: 11, marginTop: 5, color: "var(--faint)" }}>sem e-mail — add p/ convites</div>}
-              </div>
-            </div>
-          </div>
-        ))}
-        {!equipe.length && <p className="muted">Ninguém com essa busca.</p>}
-      </div>
+                  ? <span className="text-muted">✉ {p.email}</span>
+                  : <span className={ESTILO_APAGADO}>sem e-mail — add p/ convites</span>}
+              </Td>
+              <Td className="text-right">
+                <Botao variante="quieto" tamanho="mini" onClick={(e) => { e.stopPropagation(); abrirEdicao("equipe", p.id); }}>editar</Botao>
+              </Td>
+            </Tr>
+          ))}
+          {!equipe.length && <tr><Td colSpan={4}><Vazio emLinha>Ninguém com essa busca.</Vazio></Td></tr>}
+        </tbody>
+      </Tabela>
     </>
   );
 }

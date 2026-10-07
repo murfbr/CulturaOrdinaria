@@ -2,8 +2,12 @@
    escrita com o Claude), o validador confere a estrutura e a definição vai
    para o banco — formulário novo entra para todo mundo, sem deploy. */
 import { useState } from "react";
-import { Modal, RodapeModal } from "../../../components/Modal";
+import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { toast } from "../../../components/Toast";
+import { Botao } from "../../../components/ui/Botao";
+import { AreaTexto } from "../../../components/ui/Campo";
+import { Dica } from "../../../components/ui/Dica";
+import { ESTILO_MONO } from "../../../components/ui/estilos";
 import { salvarFormulario } from "../../../store/mutacoes";
 import { formularioDe, nomePlataforma } from "../../../data";
 import { validarFormulario, type ValidacaoFormulario } from "../../../lib/simulador/validarFormulario";
@@ -24,53 +28,53 @@ export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) 
 
   return (
     <Modal titulo="Importar formulário" aoFechar={aoFechar} largo>
-      <p className="hint" style={{ marginTop: 0 }}>
+      <Dica emModal className="mb-3">
         Cole a definição JSON de um formulário (etapas → blocos → campos). O site confere a
         estrutura antes de gravar; importado, ele aparece para todo mundo na hora, sem precisar
-        de nova versão do site. Para reimportar um formulário existente, use o mesmo <span className="mono">id</span>.
-        Diga a origem em <span className="mono">"origem"</span>: "chrome" (extraído da plataforma) ou "documento".
-      </p>
-      <textarea
-        className="bloco-edt" rows={10} value={texto}
+        de nova versão do site. Para reimportar um formulário existente, use o mesmo <span className={ESTILO_MONO}>id</span>.
+        Diga a origem em <span className={ESTILO_MONO}>"origem"</span>: "chrome" (extraído da plataforma) ou "documento".
+      </Dica>
+      <AreaTexto
+        rows={10} value={texto}
         placeholder='{ "id": "dc-140", "nome": "…", "plataforma": "dc", "etapas": [ { "id": "e1", "nome": "…", "blocos": [ { "t": "…", "campos": [ … ] } ] } ] }'
         onChange={(e) => { setTexto(e.target.value); setResultado(null); }}
       />
 
       {resultado && (
-        <>
+        <div className="mt-2.5 flex flex-col gap-2">
           {pronto && resultado.resumo && (
-            <p className="hint">
+            <Dica emModal>
               ✓ <b>{resultado.resumo.nome}</b> · {nomePlataforma(resultado.resumo.plataforma)} ·{" "}
               {resultado.resumo.etapas} etapa(s) · {resultado.resumo.campos} campo(s) ·{" "}
-              id <span className="mono">{resultado.resumo.id}</span>
-            </p>
+              id <span className={ESTILO_MONO}>{resultado.resumo.id}</span>
+            </Dica>
           )}
           {pronto && existente && (
-            <p className="hint">
+            <Dica emModal>
               <b>Atenção:</b> já existe um formulário com esse id ("{existente.nome}") — importar vai
               sobrescrevê-lo, e os projetos que o usam passam a usar a nova definição.
-            </p>
+            </Dica>
           )}
           {resultado.erros.length > 0 && (
-            <ul className="import-lista">
-              {resultado.erros.map((e, i) => <li key={i} className="erro-import">{e}</li>)}
+            <ul className="mx-0 my-0 list-disc pl-[18px] text-sm">
+              {resultado.erros.map((e, i) => <li key={i} className="my-0.5 font-semibold text-no">{e}</li>)}
             </ul>
           )}
           {resultado.avisos.length > 0 && (
-            <ul className="import-lista">
-              {resultado.avisos.map((a, i) => <li key={i}>⚠ {a}</li>)}
+            <ul className="mx-0 my-0 list-disc pl-[18px] text-sm text-muted">
+              {resultado.avisos.map((a, i) => <li key={i} className="my-0.5">⚠ {a}</li>)}
             </ul>
           )}
-        </>
+        </div>
       )}
 
       <RodapeModal>
-        <span className="sp">
-          <button className="btn ghost" onClick={aoFechar}>Cancelar</button>
+        <AcoesModal>
+          <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
           {pronto
-            ? <button className="btn" onClick={importar}>{existente ? "Sobrescrever formulário" : "Importar formulário"}</button>
-            : <button className="btn" disabled={!texto.trim()} onClick={() => setResultado(validarFormulario(texto))}>Conferir</button>}
-        </span>
+            ? <Botao onClick={importar}>{existente ? "Sobrescrever formulário" : "Importar formulário"}</Botao>
+            : <Botao disabled={!texto.trim()} onClick={() => setResultado(validarFormulario(texto))}>Conferir</Botao>}
+        </AcoesModal>
       </RodapeModal>
     </Modal>
   );

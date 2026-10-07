@@ -7,6 +7,11 @@ import { girarStatusTarefa, porId, soltarTarefaEmPessoa, soltarTarefaEmStatus } 
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../components/Filtros";
+import { Avatar } from "../../components/ui/Avatar";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Marcacao } from "../../components/ui/Campo";
+import { CartaoQuadro, Coluna, Quadro } from "../../components/ui/Quadro";
 import { usarArrasto, type Arrasto } from "../../lib/arrastar";
 import { badgeTarefa, nomeEquipe, rotuloOrigem } from "../../lib/nomes";
 import { ROTULO_TAREFA, STATUS_TAREFA, type StatusTarefa, type Tarefa } from "../../types";
@@ -17,31 +22,30 @@ function CartaoTarefa({ t, mostrarStatus, arrasto, coluna }: {
 }) {
   const b = badgeTarefa(t);
   return (
-    <div
-      className={"kcard"
-        + (arrasto.arrastando === t.id ? " arrastando" : "")
-        + (arrasto.antesDe === t.id && arrasto.arrastando !== t.id ? " antes-daqui" : "")}
+    <CartaoQuadro
+      arrastando={arrasto.arrastando === t.id}
+      antesDaqui={arrasto.antesDe === t.id && arrasto.arrastando !== t.id}
       onClick={() => abrirEdicao("tarefa", t.id)}
       {...arrasto.propsCartao(t.id, coluna)}>
-      <p className="edt" style={{ fontWeight: 600 }}>{t.titulo}</p>
-      <p className="prj">{rotuloOrigem(t.origem)}</p>
-      {t.obs && <p className="prj" style={{ color: "var(--faint)", fontStyle: "italic" }}>{t.obs}</p>}
-      <div className="meta">
+      <p className="m-0 mb-1 text-sm font-bold leading-tight">{t.titulo}</p>
+      <p className="m-0 mb-2 text-xs text-muted">{rotuloOrigem(t.origem)}</p>
+      {t.obs && <p className="m-0 mb-2 text-xs italic text-faint">{t.obs}</p>}
+      <div className="flex flex-wrap items-center gap-1.5 text-2xs text-faint">
         {mostrarStatus
-          ? <span className={"badge " + b.classe} style={{ fontSize: 10 }}>{b.rotulo}</span>
-          : <span className="dot">{nomeEquipe(t.respId)[0] || "?"}</span>}
-        {t.prazo && <span className="prazo">⏱ {formatarData(t.prazo)}</span>}
-        <span className="navb">
-          <button title="voltar status" onClick={(e) => { e.stopPropagation(); girarStatusTarefa(t, -1); }}>◀</button>
-          <button title="avançar status" onClick={(e) => { e.stopPropagation(); girarStatusTarefa(t, 1); }}>▶</button>
+          ? <Badge mini tom={b.classe}>{b.rotulo}</Badge>
+          : <Avatar pequeno iniciais={nomeEquipe(t.respId)[0] || "?"} />}
+        {t.prazo && <span className="font-semibold text-warn">⏱ {formatarData(t.prazo)}</span>}
+        <span className="ml-auto flex gap-0.5">
+          <Botao variante="quieto" tamanho="mini" title="voltar status" onClick={(e) => { e.stopPropagation(); girarStatusTarefa(t, -1); }}>◀</Botao>
+          <Botao variante="quieto" tamanho="mini" title="avançar status" onClick={(e) => { e.stopPropagation(); girarStatusTarefa(t, 1); }}>▶</Botao>
         </span>
       </div>
-    </div>
+    </CartaoQuadro>
   );
 }
 
-const ColunaVazia = ({ arrastando }: { arrastando: boolean }) =>
-  <div className="col-vazia">{arrastando ? "solte aqui" : "—"}</div>;
+/** Texto da coluna sem cartão: convite para soltar durante o arrasto. */
+const textoVazia = (arrastando: boolean) => (arrastando ? "solte aqui" : "—");
 
 export function QuadroTarefas() {
   const { painel } = usarCentral();
@@ -64,69 +68,63 @@ export function QuadroTarefas() {
   let quadro;
   if (visao === "status") {
     quadro = (
-      <div className="kanban">
+      <Quadro>
         {STATUS_TAREFA.map((k) => {
           const ts = visiveis.filter((t) => t.status === k);
           return (
-            <div className={"col" + (arrasto.alvo === k ? " col-alvo" : "")} style={{ flexBasis: 300 }} key={k}
+            <Coluna key={k} larga titulo={ROTULO_TAREFA[k]} n={ts.length} alvo={arrasto.alvo === k}
+              vazia={!ts.length ? textoVazia(!!arrasto.arrastando) : undefined}
               {...arrasto.propsColuna(k)}>
-              <div className="col-h">{ROTULO_TAREFA[k]}<span className="cnt">{ts.length}</span></div>
               {ts.map((t) => <CartaoTarefa t={t} mostrarStatus={false} arrasto={arrasto} coluna={k} key={t.id} />)}
-              {!ts.length && <ColunaVazia arrastando={!!arrasto.arrastando} />}
-            </div>
+            </Coluna>
           );
         })}
-      </div>
+      </Quadro>
     );
   } else {
     const comTarefa = painel.equipe.filter((e) => visiveis.some((t) => t.respId === e.id));
     const semResponsavel = visiveis.filter((t) => !t.respId || !porId("equipe", t.respId));
     quadro = (
-      <div className="kanban">
+      <Quadro>
         {comTarefa.map((pessoa) => {
           const ts = visiveis.filter((t) => t.respId === pessoa.id);
           const abertas = ts.filter((t) => t.status !== "feito").length;
           return (
-            <div className={"col" + (arrasto.alvo === pessoa.id ? " col-alvo" : "")} style={{ flexBasis: 280 }} key={pessoa.id}
+            <Coluna key={pessoa.id} larga
+              titulo={<><Avatar iniciais={pessoa.nome[0]} />{pessoa.nome}</>}
+              n={abertas + "/" + ts.length}
+              alvo={arrasto.alvo === pessoa.id}
+              vazia={!ts.length ? textoVazia(!!arrasto.arrastando) : undefined}
               {...arrasto.propsColuna(pessoa.id)}>
-              <div className="col-h">
-                <span className="dot" style={{ marginRight: 6 }}>{pessoa.nome[0]}</span>
-                {pessoa.nome}<span className="cnt">{abertas}/{ts.length}</span>
-              </div>
               {ts.map((t) => <CartaoTarefa t={t} mostrarStatus={true} arrasto={arrasto} coluna={pessoa.id} key={t.id} />)}
-              {!ts.length && <ColunaVazia arrastando={!!arrasto.arrastando} />}
-            </div>
+            </Coluna>
           );
         })}
         {(semResponsavel.length > 0 || arrasto.arrastando) && (
-          <div className={"col" + (arrasto.alvo === "" ? " col-alvo" : "")} style={{ flexBasis: 280 }}
+          <Coluna larga titulo="Sem responsável" n={semResponsavel.length} alvo={arrasto.alvo === ""}
+            vazia={!semResponsavel.length ? textoVazia(!!arrasto.arrastando) : undefined}
             {...arrasto.propsColuna("")}>
-            <div className="col-h">Sem responsável<span className="cnt">{semResponsavel.length}</span></div>
             {semResponsavel.map((t) => <CartaoTarefa t={t} mostrarStatus={true} arrasto={arrasto} coluna="" key={t.id} />)}
-            {!semResponsavel.length && <ColunaVazia arrastando={!!arrasto.arrastando} />}
-          </div>
+          </Coluna>
         )}
-      </div>
+      </Quadro>
     );
   }
 
   return (
     <>
       <CabecalhoSecao titulo="Tarefas" sub="designadas à equipe; nascem em projetos, editais e reuniões — arraste os cartões entre as colunas">
-        <button className="btn ghost sm" onClick={() => setVisao(visao === "pessoa" ? "status" : "pessoa")}>
+        <Botao variante="fantasma" tamanho="pequeno" onClick={() => setVisao(visao === "pessoa" ? "status" : "pessoa")}>
           Ver por: <b>{visao}</b> ⇄
-        </button>
-        <button className="btn" onClick={() => abrirNovo("tarefa")}>+ Tarefa</button>
+        </Botao>
+        <Botao onClick={() => abrirNovo("tarefa")}>+ Tarefa</Botao>
       </CabecalhoSecao>
 
       <BarraFiltros mostrando={visiveis.length} total={painel.tarefas.length}>
         <CampoBusca valor={busca} aoMudar={setBusca} placeholder="buscar título, vínculo ou obs…" />
         <SeletorFiltro valor={filtroResp} aoMudar={setFiltroResp} rotuloTodos="qualquer responsável"
           opcoes={painel.equipe.map((p) => ({ valor: p.id, rotulo: p.nome }))} />
-        <label className="chk">
-          <input type="checkbox" checked={esconderFeitas} onChange={(e) => setEsconderFeitas(e.target.checked)} />
-          esconder concluídas
-        </label>
+        <Marcacao marcado={esconderFeitas} aoMudar={setEsconderFeitas}>esconder concluídas</Marcacao>
       </BarraFiltros>
 
       {quadro}

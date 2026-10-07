@@ -1,11 +1,17 @@
-/* Reuniões: destaque da próxima, cards de todas (com busca, filtro de status
-   e ordenação), e o link de convite do Google Agenda. */
+/* Reuniões: destaque da próxima, tabela de todas (com busca, filtro de status
+   e ordenação; a linha abre a ficha), e o link de convite do Google Agenda. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe } from "../../store/navegacao";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../components/Filtros";
+import { Badge } from "../../components/ui/Badge";
+import { Botao } from "../../components/ui/Botao";
+import { Chip } from "../../components/ui/Chip";
+import { Painel } from "../../components/ui/Painel";
+import { Tabela, Td, Th, Tr } from "../../components/ui/Tabela";
+import { Vazio } from "../../components/ui/Vazio";
 import { emailsConvite, linkGoogleAgenda, nomesParticipantes } from "../../lib/agenda";
 import { comparar, formatarData } from "../../utils";
 
@@ -30,7 +36,7 @@ export function Reunioes() {
   return (
     <>
       <CabecalhoSecao titulo="Reuniões" sub="monte a pauta antes, preencha a ata depois; encaminhamentos viram tarefas">
-        <button className="btn" onClick={() => abrirNovo("reuniao")}>+ Nova reunião</button>
+        <Botao onClick={() => abrirNovo("reuniao")}>+ Nova reunião</Botao>
       </CabecalhoSecao>
 
       <BarraFiltros mostrando={reunioes.length} total={painel.reunioes.length}>
@@ -46,50 +52,66 @@ export function Reunioes() {
       </BarraFiltros>
 
       {proxima && (
-        <div className="panel" style={{ borderLeft: "3px solid var(--accent)" }}>
-          <h4>Próxima reunião</h4>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            <b style={{ fontSize: 15 }}>{proxima.titulo}</b>
-            <span className="badge b-type">
+        <Painel titulo="Próxima reunião" className="border-l-4 border-l-accent">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <b className="text-base">{proxima.titulo}</b>
+            <Badge tom="tipo">
               {formatarData(proxima.proxima || proxima.data)}{proxima.hora ? " · " + proxima.hora : ""}
-            </span>
-            {proxima.recorrencia && proxima.recorrencia !== "Avulsa" && <span className="badge st-prev">{proxima.recorrencia}</span>}
-            <a className="btn sm" style={{ textDecoration: "none", marginLeft: "auto" }}
-              href={linkGoogleAgenda({ ...proxima, data: proxima.proxima || proxima.data }, emailsConvite(proxima))}
-              target="_blank" rel="noopener noreferrer">
+            </Badge>
+            {proxima.recorrencia && proxima.recorrencia !== "Avulsa" && <Badge tom="st-prev">{proxima.recorrencia}</Badge>}
+            <Botao variante="fantasma" tamanho="pequeno" className="ml-auto"
+              href={linkGoogleAgenda({ ...proxima, data: proxima.proxima || proxima.data }, emailsConvite(proxima))}>
               📅 Adicionar ao Google Agenda
-            </a>
+            </Botao>
           </div>
-        </div>
+        </Painel>
       )}
 
-      <div className="grid g2">
-        {reunioes.map((r) => {
-          const encaminhamentos = painel.tarefas.filter((t) => t.origem === "reuniao:" + r.id).length;
-          return (
-            <div className="card click" key={r.id} onClick={() => abrirDetalhe("reuniao", r.id)}>
-              <button className="edit" onClick={(e) => { e.stopPropagation(); abrirEdicao("reuniao", r.id); }}>editar</button>
-              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
-                <span className={"badge " + (r.status === "realizada" ? "st-closed" : "st-open")}>
-                  {r.status === "realizada" ? "Realizada" : "Agendada"}
-                </span>
-                {r.recorrencia && r.recorrencia !== "Avulsa" && <span className="badge st-prev">{r.recorrencia}</span>}
-              </div>
-              <h3>{r.titulo}</h3>
-              <p className="role">{formatarData(r.data)}{r.hora ? " · " + r.hora : ""}{r.local ? " · " + r.local : ""}</p>
-              {nomesParticipantes(r).length > 0 && (
-                <div style={{ marginTop: 6 }}>{nomesParticipantes(r).map((n) => <span className="chip" key={n}>{n}</span>)}</div>
-              )}
-              <div className="foot">{(r.pauta || []).length} de pauta · {encaminhamentos} encaminhamento(s) <span className="arrow">abrir →</span></div>
-            </div>
-          );
-        })}
-        {!reunioes.length && (
-          <p className="muted">
-            {painel.reunioes.length ? "Nenhuma reunião com esses filtros." : 'Nenhuma reunião ainda. Crie a primeira em "+ Nova reunião".'}
-          </p>
-        )}
-      </div>
+      {reunioes.length > 0 ? (
+        <Tabela>
+          <thead>
+            <tr>
+              <Th>Reunião</Th><Th>Quando</Th><Th>Local</Th><Th>Participantes</Th><Th>Pauta</Th><Th>Status</Th><Th />
+            </tr>
+          </thead>
+          <tbody>
+            {reunioes.map((r) => {
+              const encaminhamentos = painel.tarefas.filter((t) => t.origem === "reuniao:" + r.id).length;
+              const participantes = nomesParticipantes(r);
+              return (
+                <Tr key={r.id} aoClicar={() => abrirDetalhe("reuniao", r.id)}>
+                  <Td>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <b>{r.titulo}</b>
+                      {r.recorrencia && r.recorrencia !== "Avulsa" && <Badge mini tom="st-prev">{r.recorrencia}</Badge>}
+                    </div>
+                  </Td>
+                  <Td className="whitespace-nowrap">{formatarData(r.data)}{r.hora ? " · " + r.hora : ""}</Td>
+                  <Td>{r.local}</Td>
+                  <Td>{participantes.map((n) => <Chip key={n}>{n}</Chip>)}</Td>
+                  <Td className="whitespace-nowrap text-muted">
+                    {(r.pauta || []).length} de pauta · {encaminhamentos} encaminhamento(s)
+                  </Td>
+                  <Td>
+                    <Badge tom={r.status === "realizada" ? "st-closed" : "st-open"}>
+                      {r.status === "realizada" ? "Realizada" : "Agendada"}
+                    </Badge>
+                  </Td>
+                  <Td className="text-right">
+                    <Botao variante="quieto" tamanho="mini" onClick={(e) => { e.stopPropagation(); abrirEdicao("reuniao", r.id); }}>
+                      editar
+                    </Botao>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </tbody>
+        </Tabela>
+      ) : (
+        <Vazio>
+          {painel.reunioes.length ? "Nenhuma reunião com esses filtros." : 'Nenhuma reunião ainda. Crie a primeira em "+ Nova reunião".'}
+        </Vazio>
+      )}
     </>
   );
 }
