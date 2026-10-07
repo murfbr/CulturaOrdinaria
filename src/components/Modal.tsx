@@ -3,17 +3,22 @@
    letra de cartaz. Todos os modais (edição de registro, regra, julgamento,
    confirmação de import) usam este componente. */
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { cx } from "../utils/classes";
 
-/** Fundo escuro que cobre a tela; fecha no clique fora do conteúdo. */
+/** Fundo escuro que cobre a tela; fecha no clique fora do conteúdo.
+    Vai para o <body> por portal: dentro da barra lateral (sticky) ou de qualquer
+    outro bloco com contexto de empilhamento próprio, o z-index do overlay não
+    valeria contra o resto da página e os cartões ficavam por cima do modal. */
 export function Overlay({ aoFechar, children }: { aoFechar: () => void; children: ReactNode }) {
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-modal flex items-start justify-center overflow-auto bg-overlay px-3 py-6 md:px-4 md:py-10"
       onClick={(e) => { if (e.target === e.currentTarget) aoFechar(); }}
     >
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 }
 

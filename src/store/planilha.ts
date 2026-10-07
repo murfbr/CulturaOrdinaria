@@ -147,7 +147,8 @@ function paraDataIso(t: string): string {
 
 /* ══════════ exportação ══════════ */
 
-function celulaExportada(r: Registro, c: ColunaCsv): string {
+/** Uma célula da planilha: relações pelo nome, listas com " | ", rótulo do valor fechado. */
+export function celulaExportada(r: Registro, c: ColunaCsv): string {
   const v = r[c.campo];
   if (c.refLista) {
     return (Array.isArray(v) ? (v as string[]) : [])

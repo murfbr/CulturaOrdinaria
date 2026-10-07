@@ -3,16 +3,21 @@
    - Pacote .json da Central: contagem do que vem dentro + escolha entre
      mesclar (não apaga nada) e substituir.
    - Planilha .csv (daqui, do Excel ou do Google): escolha da coleção, mapeamento
-     coluna → campo com exemplo, e mesclar ou só adicionar. */
+     coluna → campo com exemplo, e mesclar ou só adicionar.
+   Antes de tudo a pessoa diz o que vai importar e pode abrir o guia (campos e
+   modelo). O que foi colado passa por prepararColado (completa envelope e ids)
+   e conferirPacote (avisos campo a campo) antes da prévia. */
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { AcoesModal, Modal, RodapeModal } from "../Modal";
 import { toast } from "../Toast";
 import { Botao } from "../ui/Botao";
-import { AreaTexto, Campo, ESTILO_CONTROLE } from "../ui/Campo";
+import { AreaTexto, Campo, ESTILO_CONTROLE, Selecao } from "../ui/Campo";
 import { Dica } from "../ui/Dica";
 import { Tabela, Td, Th } from "../ui/Tabela";
 import { cx } from "../../utils/classes";
+import { GuiaImportacao } from "./GuiaImportacao";
 import { analisarPacote, type ModoPainel, type ResumoPacote } from "../../store/importarExportar";
+import { conferirPacote, prepararColado, type Escolha } from "../../store/modelosImportacao";
 import {
   COLUNAS_CSV, detectarColecao, importarCsv, mapeamentoInicial,
   type AlvoColuna, type ResultadoCsv,
@@ -55,20 +60,27 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
   const [csv, setCsv] = useState<EstadoCsv | null>(null);
   const [modoCsv, setModoCsv] = useState<"mesclar" | "adicionar">("mesclar");
   const [resultado, setResultado] = useState<ResultadoCsv | null>(null);
+  const [escolha, setEscolha] = useState<Escolha>("pacote");
+  const [avisos, setAvisos] = useState<string[]>([]);
 
   function analisar(texto: string) {
     setErro("");
     const t = texto.trim();
     if (!t) { setErro("O arquivo está vazio."); return; }
     if (t[0] === "{" || t[0] === "[") {
-      try { setResumo(analisarPacote(JSON.parse(t))); }
-      catch (e) { setErro((e as Error).message); }
+      try {
+        const preparo = prepararColado(JSON.parse(t), escolha);
+        setResumo(analisarPacote(preparo.pacote));
+        setAvisos([...preparo.avisos, ...conferirPacote(preparo.pacote)]);
+      } catch (e) {
+        setErro(e instanceof SyntaxError ? "Isso não é um JSON válido: confira vírgulas, aspas e chaves." : (e as Error).message);
+      }
       return;
     }
     const linhas = lerCsv(t);
     if (linhas.length < 2) { setErro("A planilha precisa de uma linha de cabeçalho e ao menos uma de dados."); return; }
     const cabecalho = linhas[0];
-    const colecao = detectarColecao(cabecalho);
+    const colecao = escolha === "pacote" ? detectarColecao(cabecalho) : escolha;
     setCsv({ colecao, cabecalho, linhas: linhas.slice(1), mapeamento: mapeamentoInicial(colecao, cabecalho) });
   }
 
@@ -107,10 +119,16 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
     <Modal titulo="Importar dados" aoFechar={aoFechar} largo>
       {!resumo && !csv && !resultado && (
         <>
+          <Campo rotulo="O que você vai importar" className="mb-3">
+            <Selecao value={escolha} onChange={(e) => setEscolha(e.target.value as Escolha)}>
+              <option value="pacote">Pacote da Central (.json completo ou de uma coleção)</option>
+              {COLECOES_PAINEL.map((c) => <option key={c} value={c}>{ROTULO_COLECAO[c]}</option>)}
+            </Selecao>
+          </Campo>
+          <GuiaImportacao escolha={escolha} />
           <Dica emModal className="mb-3">
-            Aceita o pacote <b>.json</b> da Central (backup completo ou de uma coleção) e planilhas{" "}
-            <b>.csv</b> — as exportadas daqui ou as suas do Excel/Google Planilhas.
-            Nada é gravado antes da prévia.
+            Aceita <b>.json</b> (o pacote da Central ou só a lista de registros da coleção escolhida) e planilhas{" "}
+            <b>.csv</b> (as exportadas daqui ou as suas do Excel/Google Planilhas). Nada é gravado antes da prévia.
           </Dica>
           <Botao onClick={() => arquivoRef.current?.click()}>Escolher arquivo…</Botao>
           <input ref={arquivoRef} type="file" className="hidden"
@@ -146,6 +164,12 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
               </li>
             )}
           </Lista>
+          {avisos.length > 0 && (
+            <>
+              <Dica emModal>Avisos da conferência (não impedem a importação):</Dica>
+              <Lista>{avisos.map((a, i) => <li key={i}>{a}</li>)}</Lista>
+            </>
+          )}
           {(resumo.painel || resumo.rascunhos || resumo.contexto) && (
             <Campo rotulo="Como aplicar">
               <Opcao marcada={modo === "mesclar"} aoEscolher={() => setModo("mesclar")}>
@@ -161,7 +185,7 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
           )}
           <Erro texto={erro} />
           <RodapeModal>
-            <Botao variante="fantasma" onClick={() => { setResumo(null); setErro(""); }}>← Voltar</Botao>
+            <Botao variante="fantasma" onClick={() => { setResumo(null); setAvisos([]); setErro(""); }}>← Voltar</Botao>
             <AcoesModal>
               <Botao variante="fantasma" onClick={aoFechar}>Cancelar</Botao>
               <Botao onClick={aplicarJson}>Importar</Botao>

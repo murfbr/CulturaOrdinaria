@@ -1,13 +1,17 @@
 /* Importar formulário: cola a definição JSON (extraída da plataforma, ou
    escrita com o Claude), o validador confere a estrutura e a definição vai
-   para o banco — formulário novo entra para todo mundo, sem deploy. */
-import { useState } from "react";
+   para o banco — formulário novo entra para todo mundo, sem deploy.
+   "Ver modelo" mostra os tipos de campo e uma definição de exemplo. */
+import { useMemo, useState } from "react";
 import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { toast } from "../../../components/Toast";
+import { BlocoModelo } from "../../../components/ferramentas/GuiaImportacao";
 import { Botao } from "../../../components/ui/Botao";
 import { AreaTexto } from "../../../components/ui/Campo";
 import { Dica } from "../../../components/ui/Dica";
 import { ESTILO_MONO } from "../../../components/ui/estilos";
+import { Tabela, Td, Th } from "../../../components/ui/Tabela";
+import { modeloFormulario, TIPOS_CAMPO_FORMULARIO } from "../../../store/modelosImportacao";
 import { salvarFormulario } from "../../../store/mutacoes";
 import { formularioDe, nomePlataforma } from "../../../data";
 import { validarFormulario, type ValidacaoFormulario } from "../../../lib/simulador/validarFormulario";
@@ -15,6 +19,8 @@ import { validarFormulario, type ValidacaoFormulario } from "../../../lib/simula
 export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) {
   const [texto, setTexto] = useState("");
   const [resultado, setResultado] = useState<ValidacaoFormulario | null>(null);
+  const [modelo, setModelo] = useState(false);
+  const exemplo = useMemo(modeloFormulario, []);
 
   const pronto = Boolean(resultado?.formulario && !resultado.erros.length);
   const existente = resultado?.formulario ? formularioDe(resultado.formulario.id) : undefined;
@@ -34,6 +40,29 @@ export function ModalImportarFormulario({ aoFechar }: { aoFechar: () => void }) 
         de nova versão do site. Para reimportar um formulário existente, use o mesmo <span className={ESTILO_MONO}>id</span>.
         Diga a origem em <span className={ESTILO_MONO}>"origem"</span>: "chrome" (extraído da plataforma) ou "documento".
       </Dica>
+      <Botao variante="fantasma" tamanho="pequeno" className="mb-3" onClick={() => setModelo(!modelo)}>
+        {modelo ? "Fechar o modelo" : "Ver modelo e tipos de campo"}
+      </Botao>
+      {modelo && (
+        <div className="mb-3 rounded-md border border-line bg-bg px-3.5 py-2.5">
+          <Tabela simples className="max-h-[200px] overflow-y-auto">
+            <thead>
+              <tr><Th>t</Th><Th quebra>Tipo de campo</Th></tr>
+            </thead>
+            <tbody>
+              {Object.entries(TIPOS_CAMPO_FORMULARIO).map(([t, d]) => (
+                <tr key={t}><Td><span className={ESTILO_MONO}>{t}</span></Td><Td className="text-muted">{d}</Td></tr>
+              ))}
+            </tbody>
+          </Tabela>
+          <BlocoModelo titulo="Modelo de formulário" texto={exemplo} arquivo="modelo-formulario.json"
+            acoes={(
+              <Botao variante="fantasma" tamanho="pequeno" onClick={() => { setTexto(exemplo); setResultado(null); }}>
+                Usar no campo
+              </Botao>
+            )} />
+        </div>
+      )}
       <AreaTexto
         rows={10} value={texto}
         placeholder='{ "id": "dc-140", "nome": "…", "plataforma": "dc", "etapas": [ { "id": "e1", "nome": "…", "blocos": [ { "t": "…", "campos": [ … ] } ] } ] }'
