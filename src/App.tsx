@@ -1,14 +1,14 @@
-/* Casca do site: gate de login (modo nuvem), cabeçalho, abas e a troca entre
-   os três grandes roteadores (Painel-família, Projetos e Contexto). O conteúdo
-   em si vive em src/pages/. */
+/* Casca do site: gate de login (modo nuvem), barra lateral, cabeçalho da
+   página e a troca entre os três grandes roteadores (Painel-família,
+   Projetos e Contexto). O conteúdo em si vive em src/pages/. */
 import { useEffect } from "react";
 import { Banco } from "./services/banco";
 import { firebaseAtivo } from "./services/firebase";
 import { usarSessao } from "./services/sessao";
 import { iniciarDados, usarCentral } from "./store/central";
 import { usarNavegacao } from "./store/navegacao";
-import { Cabecalho } from "./components/layout/Cabecalho";
-import { BarraAbas } from "./components/layout/BarraAbas";
+import { BarraLateral } from "./components/layout/BarraLateral";
+import { CabecalhoPagina } from "./components/layout/CabecalhoPagina";
 import { Toast } from "./components/Toast";
 import { BuscaGlobal } from "./components/BuscaGlobal";
 import { FormularioRegistro } from "./forms/FormularioRegistro";
@@ -26,7 +26,7 @@ export default function App() {
 
   // Modo nuvem: só entra (e só conecta no banco) depois do login.
   if (firebaseAtivo) {
-    if (sessao.carregando) return <div className="flex min-h-[60vh] items-center justify-center text-base text-muted">abrindo a Central…</div>;
+    if (sessao.carregando) return <div className="flex min-h-[60vh] items-center justify-center text-lg text-muted">abrindo a Central…</div>;
     if (!sessao.usuario) return <Login />;
   }
   // Página própria de projeto (/<slug>/): mesmo login e mesmo banco, casca própria.
@@ -43,21 +43,22 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
   useEffect(() => { iniciarDados(); }, []);
 
   return (
-    <>
-      <Cabecalho emailUsuario={emailUsuario} />
-      <BarraAbas />
-
-      {!central.pronto && Banco.modo === "nuvem" ? (
-        <div className="flex min-h-[60vh] items-center justify-center text-base text-muted">carregando os dados do coletivo…</div>
-      ) : (
-        <main className="mx-auto max-w-site px-gutter pb-16">
-          {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
-        </main>
-      )}
+    <div className="min-h-screen md:grid md:grid-cols-[232px_minmax(0,1fr)]">
+      <BarraLateral emailUsuario={emailUsuario} />
+      <div className="min-w-0 px-gutter pb-14 md:px-principal">
+        <CabecalhoPagina />
+        {!central.pronto && Banco.modo === "nuvem" ? (
+          <div className="flex min-h-[60vh] items-center justify-center text-lg text-muted">carregando os dados do coletivo…</div>
+        ) : (
+          <main className="mx-auto max-w-site">
+            {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
+          </main>
+        )}
+      </div>
 
       <FormularioRegistro />
       <BuscaGlobal />
       <Toast />
-    </>
+    </div>
   );
 }

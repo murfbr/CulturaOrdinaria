@@ -62,7 +62,7 @@ export function Historico({ ids }: { ids: string[] }) {
         Registrado desde 27/09/2026; cada linha fica 90 dias. Mostra quem estava logado e quais campos mudaram
         (o conteúdo antigo fica nos backups do Drive).
       </Dica>
-      {erro && <p className="m-0 text-xs text-warn-ink">⚠ Não deu para ler o histórico agora ({erro}).</p>}
+      {erro && <p className="m-0 text-xs text-warn">⚠ Não deu para ler o histórico agora ({erro}).</p>}
       {!erro && linhas === null && <p className="m-0 text-sm text-muted">carregando…</p>}
       {linhas && !linhas.length && <Vazio emLinha>Nenhuma alteração registrada ainda.</Vazio>}
       {linhas && linhas.length > 0 && (

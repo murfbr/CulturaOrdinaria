@@ -41,7 +41,7 @@ export function ModalGravacoes({ aoFechar }: { aoFechar: () => void }) {
 
       {falhas.length > 0 && (
         <>
-          <p className="mb-3 mt-0 rounded-lg border border-gold bg-warn-soft px-3 py-2.5 text-sm text-warn-ink">
+          <p className="mb-3 mt-0 rounded-lg border border-gold bg-warn-soft px-3 py-2.5 text-sm text-warn">
             O banco recusou {falhas.length} registro(s). Eles estão guardados <b>só neste navegador</b>: não limpe os dados
             do site nem troque de navegador até resolver. Tentar de novo não resolve sozinho; baixe um backup
             (Exportar) e mande para quem cuida do código.

@@ -90,7 +90,7 @@ export function CampoDoFormulario({ campo: c, valor: v, definir, opcoesOrigem }:
         <div className="flex flex-wrap gap-x-3.5 gap-y-1.5 py-1">
           {lista.map((o) => (
             <label key={o.id} className="inline-flex items-center gap-[5px] text-sm font-medium text-ink">
-              <input type="checkbox" className="w-auto accent-accent" checked={selecionados.includes(o.id)}
+              <input type="checkbox" className="w-auto accent-ink" checked={selecionados.includes(o.id)}
                 onChange={(e) => definir(e.target.checked
                   ? [...selecionados, o.id]
                   : selecionados.filter((x) => x !== o.id))} />

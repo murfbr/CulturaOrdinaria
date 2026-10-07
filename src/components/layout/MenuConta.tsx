@@ -17,7 +17,7 @@ export function usarStatusBanco(): StatusSalvamento {
 
 /** Cor da bolinha do status: cinza (local), verde (sincronizado), dourado (sincronizando), laranja (erro). */
 const COR_STATUS: Record<StatusSalvamento["classe"], string> = {
-  "": "bg-brand-faint", ok: "bg-ok", sv: "bg-gold", er: "bg-accent",
+  "": "bg-faint", ok: "bg-ok", sv: "bg-gold", er: "bg-accent",
 };
 
 type ModalAberto = "" | "exportar" | "importar" | "gravacoes";
@@ -26,7 +26,7 @@ function Item({ sub, children, ...resto }: { sub?: ReactNode; children: ReactNod
   return (
     <button
       type="button"
-      className="flex w-full cursor-pointer flex-col items-start rounded-md border-0 bg-transparent px-2.5 py-2 text-left text-sm font-medium text-ink hover:bg-accent-soft hover:text-accent-ink"
+      className="flex w-full cursor-pointer flex-col items-start rounded-md border-0 bg-transparent px-2.5 py-2 text-left text-sm font-medium text-ink hover:bg-accent-soft hover:text-accent"
       {...resto}
     >
       {children}
@@ -59,8 +59,8 @@ export function MenuConta({ emailUsuario }: { emailUsuario: string | null }) {
       <button
         type="button"
         className={cx(
-          "flex cursor-pointer items-center gap-2 rounded-lg border border-solid border-brand-line bg-brand-hover px-2.5 py-1.5 text-xs font-semibold text-brand-soft transition-colors hover:border-white/45 hover:text-white",
-          problema && "text-accent-light",
+          "flex cursor-pointer items-center gap-2 rounded-lg border border-solid border-line-strong bg-bg-hover px-2.5 py-1.5 text-xs font-semibold text-muted transition-colors hover:border-on-fill/45 hover:text-on-fill",
+          problema && "text-accent-soft",
         )}
         onClick={() => setAberto((v) => !v)} title={status.texto} aria-expanded={aberto}
       >
@@ -70,7 +70,7 @@ export function MenuConta({ emailUsuario }: { emailUsuario: string | null }) {
       </button>
 
       {aberto && (
-        <div className="absolute right-0 top-full z-menu mt-1 w-72 rounded-xl border border-line bg-card p-1 text-ink shadow-menu">
+        <div className="absolute right-0 top-full z-menu mt-1 w-72 rounded-xl border border-line bg-card p-1 text-ink shadow-hard-sm">
           <div className="px-2.5 py-2 text-xs text-muted">
             <div className="flex items-center gap-1.5">
               <span className={cx("inline-block size-2 rounded-full", COR_STATUS[status.classe])} />

@@ -1,42 +1,44 @@
-/* Etiqueta pequena e arredondada: tipo, status, esfera, urgência. O tom pode
-   ser um nome daqui ou a `classe` que as tabelas de status já carregam
-   (STATUS_PROJETO, STATUS_EDITAL, ESFERAS, CLASSE_URGENCIA): tudo resolve
-   nesta tabela, que é o único lugar com as cores das etiquetas. */
+/* Selo: etiqueta retangular em mono e caixa alta (tipo, status, esfera,
+   urgência). O tom pode ser um nome daqui ou a `classe` que as tabelas de
+   status já carregam (STATUS_PROJETO, STATUS_EDITAL, ESFERAS,
+   CLASSE_URGENCIA): tudo resolve nesta tabela, o único lugar com as cores
+   dos selos. Regra da identidade: vermelho só para "estou aqui", ligação e
+   reprovado; prazo é âmbar; esferas são cheias com texto claro. */
 import type { HTMLAttributes } from "react";
 import { cx } from "../../utils/classes";
 
 const TONS: Record<string, string> = {
-  neutro: "bg-sand text-muted",
-  tipo: "bg-sand text-[#6E5B44]",
-  ok: "bg-ok-soft text-ok-ink",
-  aviso: "bg-warn-soft text-warn-ink",
-  erro: "bg-no-soft text-no-ink",
-  info: "bg-rev-soft text-rev",
-  marca: "bg-accent text-white",
+  neutro: "bg-bg-sunk text-muted",
+  tipo: "bg-bg-sunk text-ink",
+  ok: "bg-ok-soft text-ok",
+  aviso: "bg-warn-soft text-warn",
+  erro: "bg-accent-soft text-accent",
+  info: "bg-est-soft text-est",
+  marca: "bg-accent text-on-fill",
   // esferas
-  fed: "bg-fed text-white", est: "bg-est text-white", mun: "bg-mun text-white", priv: "bg-priv text-white",
-  "e-fed": "bg-fed text-white", "e-est": "bg-est text-white", "e-mun": "bg-mun text-white", "e-priv": "bg-priv text-white",
+  fed: "bg-fed text-on-fill", est: "bg-est text-on-fill", mun: "bg-mun text-on-fill", priv: "bg-priv text-on-fill",
+  "e-fed": "bg-fed text-on-fill", "e-est": "bg-est text-on-fill", "e-mun": "bg-mun text-on-fill", "e-priv": "bg-priv text-on-fill",
   // status de edital e de pendência
-  "st-open": "bg-ok-soft text-ok-ink", "st-prev": "bg-warn-soft text-warn-ink", "st-closed": "bg-sand text-muted",
-  "st-ok": "bg-ok-soft text-ok-ink", "st-no": "bg-no-soft text-no-ink",
-  "pill-ok": "bg-ok-soft text-ok-ink", "pill-pend": "bg-warn-soft text-warn-ink",
+  "st-open": "bg-ok-soft text-ok", "st-prev": "bg-warn-soft text-warn", "st-closed": "bg-bg-sunk text-muted",
+  "st-ok": "bg-ok-soft text-ok", "st-no": "bg-accent-soft text-accent",
+  "pill-ok": "bg-ok-soft text-ok", "pill-pend": "bg-warn-soft text-warn",
   // confiança do mapeamento de um formulário
-  "conf-alta": "bg-ok-soft text-ok-ink", "conf-media": "bg-warn-soft text-warn-ink", "conf-baixa": "bg-no-soft text-no-ink",
-  // urgência de prazos
-  "ur-vencido": "bg-no text-white", "ur-hoje": "bg-accent text-white", "ur-d3": "bg-warn-soft text-warn-ink",
-  "ur-d7": "bg-accent-soft text-accent-ink", "ur-futuro": "bg-transparent text-muted",
+  "conf-alta": "bg-ok-soft text-ok", "conf-media": "bg-warn-soft text-warn", "conf-baixa": "bg-accent-soft text-accent",
+  // urgência de prazos: âmbar, não vermelho
+  "ur-vencido": "bg-warn text-on-fill", "ur-hoje": "bg-warn text-on-fill", "ur-d3": "bg-warn-soft text-warn",
+  "ur-d7": "bg-warn-soft text-warn", "ur-futuro": "bg-ok-soft text-ok",
   // status de projeto
-  "sp-prospeccao": "bg-sand text-[#6E5B44]", "sp-preparacao": "bg-warn-soft text-warn-ink",
-  "sp-inscrito": "bg-inscrito-soft text-inscrito", "sp-aguardando": "bg-aguardando-soft text-aguardando",
-  "sp-aprovado": "bg-ok-soft text-ok-ink", "sp-captando": "bg-captando-soft text-captando",
-  "sp-execucao": "bg-dica-soft text-dica", "sp-prestacao": "bg-obrig-soft text-obrig",
-  "sp-concluido": "bg-sand text-muted", "sp-nao": "bg-no-soft text-no-ink",
+  "sp-prospeccao": "bg-bg-sunk text-ink", "sp-preparacao": "bg-warn-soft text-warn",
+  "sp-inscrito": "bg-est-soft text-est", "sp-aguardando": "bg-fed-soft text-fed",
+  "sp-aprovado": "bg-ok-soft text-ok", "sp-captando": "bg-ok-soft text-ok",
+  "sp-execucao": "bg-ok-soft text-ok", "sp-prestacao": "bg-priv-soft text-priv",
+  "sp-concluido": "bg-bg-sunk text-muted", "sp-nao": "bg-accent-soft text-accent",
   // resultado do formulário e tipos de regra
-  aprovado: "bg-dica-soft text-dica", reprovado: "bg-proib-soft text-proib", aguardando: "bg-warn-soft text-warn-ink", parcial: "bg-prior-soft text-prior",
-  proibicao: "bg-proib-soft text-proib", obrigatorio: "bg-obrig-soft text-obrig", prioridade: "bg-prior-soft text-prior",
-  estilo: "bg-estilo-soft text-estilo", dica: "bg-dica-soft text-dica",
-  // status das respostas do formulário
-  rasc: "bg-warn-soft text-gold", rev: "bg-rev-soft text-rev", col: "bg-ok-soft text-ok",
+  aprovado: "bg-ok-soft text-ok", reprovado: "bg-accent-soft text-accent", aguardando: "bg-warn-soft text-warn", parcial: "bg-est-soft text-est",
+  proibicao: "bg-accent-soft text-accent", obrigatorio: "bg-priv-soft text-priv", prioridade: "bg-est-soft text-est",
+  estilo: "bg-fed-soft text-fed", dica: "bg-ok-soft text-ok",
+  // status das respostas do formulário: rascunho âmbar, revisado violeta, colado verde
+  rasc: "bg-warn-soft text-warn", rev: "bg-fed-soft text-fed", col: "bg-ok-soft text-ok",
 };
 
 export type TomBadge = keyof typeof TONS | (string & {});
@@ -44,21 +46,20 @@ export type TomBadge = keyof typeof TONS | (string & {});
 interface Props extends HTMLAttributes<HTMLSpanElement> {
   tom?: TomBadge;
   mini?: boolean;
-  /** Caixa alta e espaçada (tipos de regra, resultado). */
+  /** Sem efeito desde a identidade de 07/10 (todo selo é caixa alta); fica para quem já passa. */
   caixaAlta?: boolean;
   /** Reage ao clique (muda o cursor e escurece no hover). */
   clicavel?: boolean;
-  /** Apagada (opção não escolhida num grupo de etiquetas clicáveis). */
+  /** Apagada (opção não escolhida num grupo de selos clicáveis). */
   apagada?: boolean;
 }
 
-export function Badge({ tom = "neutro", mini, caixaAlta, clicavel, apagada, className, ...resto }: Props) {
+export function Badge({ tom = "neutro", mini, caixaAlta: _caixaAlta, clicavel, apagada, className, ...resto }: Props) {
   return (
     <span
       className={cx(
-        "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-[3px] font-bold tracking-[.2px]",
-        mini ? "text-3xs" : "text-2xs",
-        caixaAlta && "uppercase tracking-[.04em]",
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-sm font-mono font-medium uppercase",
+        mini ? "px-1 py-0 text-3xs" : "px-1.5 py-px text-2xs",
         clicavel && "cursor-pointer hover:brightness-95",
         apagada && "opacity-40 hover:opacity-75",
         TONS[tom] || TONS.neutro,

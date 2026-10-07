@@ -89,10 +89,10 @@ export function ModalConsultaCnpj({ alvos, aoFechar }: { alvos: Proponente[]; ao
         {alvos.map((p) => {
           const r = res[p.id];
           return (
-            <div key={p.id} className="rounded-lg border border-line bg-white p-2.5">
+            <div key={p.id} className="rounded-lg border border-line bg-card p-2.5">
               <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-sm">
                 {r?.estado === "ok" && r.mudancas.length > 0 && (
-                  <input type="checkbox" className="accent-accent" checked={marcados.has(p.id)} onChange={() => alternar(p.id)} aria-label={"aplicar em " + p.nome} />
+                  <input type="checkbox" className="accent-ink" checked={marcados.has(p.id)} onChange={() => alternar(p.id)} aria-label={"aplicar em " + p.nome} />
                 )}
                 <b>{p.nome}</b> <span className="text-muted">· {p.cnpj}</span>
                 {r?.estado === "esperando" && <span className="text-muted">· na fila</span>}
@@ -103,7 +103,7 @@ export function ModalConsultaCnpj({ alvos, aoFechar }: { alvos: Proponente[]; ao
                   </Badge>
                 )}
               </div>
-              {r?.estado === "erro" && <div className="text-xs text-warn-ink">⚠ {r.erro}</div>}
+              {r?.estado === "erro" && <div className="text-xs text-warn">⚠ {r.erro}</div>}
               {r?.estado === "ok" && !r.mudancas.length && <div className={ESTILO_AUXILIAR}>O cadastro já bate com a Receita.</div>}
               {r?.estado === "ok" && r.mudancas.length > 0 && (
                 <Tabela simples>

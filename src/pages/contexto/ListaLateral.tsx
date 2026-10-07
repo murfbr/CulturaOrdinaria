@@ -35,10 +35,10 @@ interface PropsItem {
 
 export function ItemLista({ ativo, apagado, direita, onClick, children }: PropsItem) {
   const estado = ativo
-    ? "bg-accent-soft font-semibold text-accent-ink"
+    ? "bg-accent-soft font-semibold text-accent"
     : apagado
-      ? "bg-transparent italic text-faint hover:bg-sand hover:text-ink"
-      : "bg-transparent text-muted hover:bg-sand hover:text-ink";
+      ? "bg-transparent italic text-faint hover:bg-bg-sunk hover:text-ink"
+      : "bg-transparent text-muted hover:bg-bg-sunk hover:text-ink";
   return (
     <button
       type="button"

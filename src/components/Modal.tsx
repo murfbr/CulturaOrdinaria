@@ -1,6 +1,7 @@
-/* Modal padrão do site: overlay que fecha no clique fora + caixa com título.
-   Todos os modais (edição de registro, regra, julgamento, confirmação de
-   import) usam este componente. */
+/* Modal padrão do site: overlay que fecha no clique fora + caixa com moldura
+   preta, sombra dura deslocada (o único lugar do site com sombra) e título em
+   letra de cartaz. Todos os modais (edição de registro, regra, julgamento,
+   confirmação de import) usam este componente. */
 import type { ReactNode } from "react";
 import { cx } from "../utils/classes";
 
@@ -8,7 +9,7 @@ import { cx } from "../utils/classes";
 export function Overlay({ aoFechar, children }: { aoFechar: () => void; children: ReactNode }) {
   return (
     <div
-      className="fixed inset-0 z-modal flex items-start justify-center overflow-auto bg-ink/45 px-3 py-6 md:px-4 md:py-10"
+      className="fixed inset-0 z-modal flex items-start justify-center overflow-auto bg-overlay px-3 py-6 md:px-4 md:py-10"
       onClick={(e) => { if (e.target === e.currentTarget) aoFechar(); }}
     >
       {children}
@@ -19,7 +20,7 @@ export function Overlay({ aoFechar, children }: { aoFechar: () => void; children
 interface Props {
   titulo: ReactNode;
   aoFechar: () => void;
-  /** Largura maior (680px em vez de 520px). */
+  /** Largura maior (780px em vez de 560px). */
   largo?: boolean;
   children: ReactNode;
 }
@@ -27,8 +28,8 @@ interface Props {
 export function Modal({ titulo, aoFechar, largo, children }: Props) {
   return (
     <Overlay aoFechar={aoFechar}>
-      <div className={cx("w-full rounded-2xl bg-white p-5 shadow-modal md:px-[22px]", largo ? "max-w-[680px]" : "max-w-[520px]")}>
-        <h3 className="m-0 mb-3.5 text-lg font-bold">{titulo}</h3>
+      <div className={cx("w-full border-rule border-solid border-ink bg-card p-6 shadow-hard md:px-8", largo ? "max-w-[780px]" : "max-w-[560px]")}>
+        <h3 className="m-0 mb-4 font-display text-5xl font-normal">{titulo}</h3>
         {children}
       </div>
     </Overlay>
@@ -37,7 +38,7 @@ export function Modal({ titulo, aoFechar, largo, children }: Props) {
 
 /** Rodapé padrão do modal: excluir à esquerda, e as ações dentro de <AcoesModal> à direita. */
 export function RodapeModal({ children }: { children: ReactNode }) {
-  return <div className="mt-4 flex items-center gap-2">{children}</div>;
+  return <div className="mt-5 flex items-center gap-2">{children}</div>;
 }
 
 /** Grupo de botões alinhado à direita do rodapé. */

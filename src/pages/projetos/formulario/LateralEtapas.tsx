@@ -34,7 +34,7 @@ function ItemLateral({ ativo, stepper, interno, agrupada, onClick, children }: {
       className={cx(
         "flex w-full cursor-pointer items-center gap-2 border-0 py-[7px] text-left text-sm",
         agrupada ? "pl-4 pr-2" : "px-2",
-        ativo ? "bg-accent-soft font-semibold text-accent-ink" : "bg-transparent text-muted hover:bg-sand hover:text-ink",
+        ativo ? "bg-accent-soft font-semibold text-accent" : "bg-transparent text-muted hover:bg-bg-sunk hover:text-ink",
         traco,
       )}
     >

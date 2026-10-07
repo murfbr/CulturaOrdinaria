@@ -30,7 +30,7 @@ import { ResumoOrcamento } from "../orcamento/ResumoOrcamento";
 
 /** Cor da borda esquerda do cartão, pelo status da resposta. */
 const BORDA_STATUS: Record<string, string> = {
-  vazio: "border-l-vazio", rasc: "border-l-gold", rev: "border-l-rev", col: "border-l-ok",
+  vazio: "border-l-line-strong", rasc: "border-l-gold", rev: "border-l-fed", col: "border-l-ok",
 };
 
 /** O componente de corpo de cada tipo de campo do motor. */
@@ -104,7 +104,7 @@ export function Campo({ r, c, alterar }: PropsCampo) {
           alterar={alterar} aoFechar={() => setReaproveitar(false)} />
       )}
       {r.notas[c.n] != null && (
-        <div className="mt-2 flex items-start gap-2 rounded-md bg-sand px-2.5 py-1.5 text-sm text-muted">
+        <div className="mt-2 flex items-start gap-2 rounded-md bg-bg-sunk px-2.5 py-1.5 text-sm text-muted">
           <b className="flex-none pt-1 font-semibold text-ink">Nota:</b>
           <input type="text" className={cx("w-full", ESTILO_CONTROLE_DISCRETO)} value={r.notas[c.n]}
             placeholder="anotação interna sobre este campo"

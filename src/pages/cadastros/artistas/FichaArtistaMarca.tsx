@@ -72,7 +72,7 @@ export function FichaArtistaMarca({ d, alterarDet }: PropsAcervo) {
         </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-2.5">
           {Array.from({ length: Math.min(d.fotos || 0, 12) }).map((_, i) => (
-            <div key={i} className="flex aspect-[4/3] items-end rounded-lg bg-gradient-to-br from-mun to-priv p-2 text-2xs font-semibold text-white even:from-est even:to-fed [&:nth-child(3n)]:from-accent [&:nth-child(3n)]:to-gold">
+            <div key={i} className="flex aspect-[4/3] items-end rounded-lg bg-gradient-to-br from-mun to-priv p-2 text-2xs font-semibold text-on-fill even:from-est even:to-fed [&:nth-child(3n)]:from-accent [&:nth-child(3n)]:to-gold">
               Foto {i + 1}
             </div>
           ))}

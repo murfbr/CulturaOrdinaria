@@ -38,11 +38,11 @@ export function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg p-5">
-      <form className="w-full max-w-[380px] rounded-[14px] border border-line bg-card px-[30px] py-7 shadow-card" onSubmit={aoEnviar}>
-        <h1 className="m-0 mb-0.5 text-xl font-bold tracking-[-.2px]">Central do Coletivo</h1>
+      <form className="w-full max-w-[400px] border-rule border-solid border-ink bg-card px-8 py-7 shadow-hard" onSubmit={aoEnviar}>
+        <h1 className="m-0 mb-0.5 font-display text-5xl font-normal">Central do Coletivo</h1>
         <p className="m-0 mb-[18px] text-sm text-muted">captação, escrita e contexto dos projetos culturais</p>
-        {erro && <div className="mb-2.5 rounded-lg bg-no-soft px-2.5 py-2 text-sm text-no-ink">{erro}</div>}
-        {avisoOk && <div className="mb-2.5 rounded-lg bg-ok-soft px-2.5 py-2 text-sm text-ok-ink">{avisoOk}</div>}
+        {erro && <div className="mb-2.5 rounded-lg bg-no-soft px-2.5 py-2 text-sm text-no">{erro}</div>}
+        {avisoOk && <div className="mb-2.5 rounded-lg bg-ok-soft px-2.5 py-2 text-sm text-ok">{avisoOk}</div>}
         <Campo rotulo="E-mail" htmlFor="login-email">
           <Entrada id="login-email" type="email" autoComplete="email" value={email}
             onChange={(e) => setEmail(e.target.value)} autoFocus />

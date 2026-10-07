@@ -38,7 +38,7 @@ export function FichaEditalGeral({ e }: { e: Edital }) {
                   {passou && <Badge className="ml-1.5">data já passou</Badge>}
                 </div>
                 <div className="mt-0.5">{a.texto}</div>
-                {a.fazer && <div className="mt-0.5 text-accent-ink"><b>Fazer:</b> {a.fazer}</div>}
+                {a.fazer && <div className="mt-0.5 text-accent"><b>Fazer:</b> {a.fazer}</div>}
               </Linha>
             );
           })}

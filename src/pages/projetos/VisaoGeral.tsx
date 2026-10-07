@@ -192,9 +192,9 @@ export function VisaoGeral() {
 
       <div className="mb-[18px] flex flex-wrap gap-4 text-xs text-muted">
         <Legenda cor="bg-gold">rascunho</Legenda>
-        <Legenda cor="bg-rev">revisado</Legenda>
+        <Legenda cor="bg-fed">revisado</Legenda>
         <Legenda cor="bg-ok">colado na plataforma</Legenda>
-        <Legenda cor="bg-vazio">vazio</Legenda>
+        <Legenda cor="bg-line-strong">vazio</Legenda>
       </div>
 
       {corpo}

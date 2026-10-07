@@ -1,7 +1,8 @@
-/* Branding da Central do Coletivo: a única fonte de cores, fontes, tamanhos,
-   larguras e camadas. As telas usam as classes geradas daqui (bg-card,
-   text-muted, text-sm, max-w-site, z-toast...). O que se repete em aparência
-   vira bloco em src/components/ui/; a tela só compõe. Cada página própria de
+/* Branding da Central do Coletivo (identidade de 07/10/2026): a única fonte
+   de cores, fontes, tamanhos, raios, bordas, sombras, larguras e camadas.
+   As telas usam as classes geradas daqui (bg-card, text-muted, text-sm,
+   rounded-md, max-w-site, z-toast...). O que se repete em aparência vira
+   bloco em src/components/ui/; a tela só compõe. Cada página própria de
    outra empresa tem o config dela na pasta dela (ver src/paginas). */
 export default {
   theme: {
@@ -12,74 +13,83 @@ export default {
       black: "#000000",
 
       // texto
-      ink: "#221E1B",
-      muted: "#6E655D",
-      faint: "#9A9089",
+      ink: { DEFAULT: "#1F1A1E", hover: "#3A3038" },
+      muted: "#574D59",
+      faint: "#6E6270",
+      // texto sobre fundo cheio (botão preto, item ativo do menu)
+      "on-fill": "#F4EEE4",
 
       // superfícies
-      bg: "#F6F2EC",
-      card: "#FFFFFF",
-      sand: "#F0EAE1",
-      line: { DEFAULT: "#E7DFD5", strong: "#D5CBBE" },
+      bg: { DEFAULT: "#F4EEE4", sunk: "#EDE5D8", hover: "#E2D8C8" },
+      card: "#FBF7F0",
+      field: "#FFFDF9",
+      overlay: "rgba(31, 26, 30, 0.5)",
 
-      // marca (o cabeçalho escuro e o que fica sobre ele)
-      brand: { DEFAULT: "#1F2A33", soft: "#AEB8C0", faint: "#7E8A93", line: "rgba(255,255,255,.2)", hover: "rgba(255,255,255,.08)" },
-      accent: { DEFAULT: "#E4572E", soft: "#FBE7DF", ink: "#B8431F", light: "#FFB9A3" },
-      gold: "#D9A441",
+      // linhas e detalhes
+      line: { DEFAULT: "#D9CFC0", strong: "#8A7E88" },
+      shade: "#C9BDAC",
+      gold: "#D98B1F",
 
-      // estados
-      ok: { DEFAULT: "#2E9E5B", soft: "#E1F1E7", ink: "#1E6E3E" },
-      no: { DEFAULT: "#C0392B", soft: "#F7E4E1", ink: "#992217" },
-      warn: { DEFAULT: "#E08A1E", soft: "#FBEED8", ink: "#8A5A12" },
+      // marca e estados (o vermelho diz "estou aqui", ligação e reprovado)
+      accent: { DEFAULT: "#B3261E", soft: "#FBE7DF" },
+      ok: { DEFAULT: "#006C4D", soft: "#D5EFE2" },
+      warn: { DEFAULT: "#8A5A12", soft: "#FFEBD2" },
+      no: { DEFAULT: "#B3261E", soft: "#FBE7DF" },
 
       // esferas dos editais
-      fed: "#5B6CB4",
-      est: "#2E9E8E",
-      mun: "#C87A2B",
-      priv: "#8E5AA6",
-
-      // formulário do projeto e contexto
-      code: { DEFAULT: "#4A5A8A", soft: "#EEF1F8" },
-      vazio: "#B8B0A8",
-      rev: { DEFAULT: "#2E7DB8", soft: "#DCEBF6" },
-      proib: { DEFAULT: "#B3261E", soft: "#F9E3E1" },
-      obrig: { DEFAULT: "#7B2D4E", soft: "#F3E3EA" },
-      prior: { DEFAULT: "#1F6B8C", soft: "#DDEBF2" },
-      estilo: { DEFAULT: "#5B5F9E", soft: "#E5E6F4" },
-      dica: { DEFAULT: "#4E7A44", soft: "#E2EEDF" },
-
-      // status dos projetos que não cabem nos estados acima
-      inscrito: { DEFAULT: "#1F5F8C", soft: "#DCEBF6" },
-      aguardando: { DEFAULT: "#4A4E8C", soft: "#E5E6F4" },
-      captando: { DEFAULT: "#146B55", soft: "#D6F0E8" },
+      fed: { DEFAULT: "#6E519D", soft: "#EBE4FA" },
+      est: { DEFAULT: "#1F6B8C", soft: "#DDEBF2" },
+      mun: { DEFAULT: "#8C541F", soft: "#F3E8DC" },
+      priv: { DEFAULT: "#884B75", soft: "#F3E3EA" },
     },
     fontFamily: {
-      sans: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
-      mono: ["ui-monospace", "Menlo", "Consolas", "monospace"],
+      sans: ["IBM Plex Sans", "ui-sans-serif", "system-ui", "Helvetica", "Arial", "sans-serif"],
+      mono: ["IBM Plex Mono", "ui-monospace", "Menlo", "monospace"],
+      // "letra de cartaz": títulos de página, de seção, de ficha e de modal, e a marca
+      display: ["Alfa Slab One", "Rockwell", "Georgia", "serif"],
     },
-    // base = corpo do site (14px). O resto desce e sobe a partir dele.
-    // Uso: 3xs/2xs só em etiquetas e contadores; xs em dicas e rótulos; sm em
-    // texto auxiliar e controles; base no corpo; lg a 4xl em títulos.
+    // Uso: 3xs rótulo mono em caixa alta (eyebrow); 2xs selo; xs legenda;
+    // sm texto auxiliar; base corpo; lg controles e menu; xl leitura corrida;
+    // 2xl título de cartão; 3xl marca; 4xl título de seção; 5xl número grande
+    // e título de ficha ou modal; 6xl título de página.
     fontSize: {
-      "3xs": "10px",
-      "2xs": "11px",
-      xs: "12px",
-      sm: "13px",
-      base: "14px",
-      lg: "16px",
-      xl: "18px",
-      "2xl": "20px",
-      "3xl": "24px",
-      "4xl": "28px",
+      "3xs": ["10.5px", { lineHeight: "14px", letterSpacing: "0.12em" }],
+      "2xs": ["10.5px", { lineHeight: "14px", letterSpacing: "0.04em" }],
+      xs: ["12px", { lineHeight: "16px" }],
+      sm: ["12.5px", { lineHeight: "18px" }],
+      base: ["13.5px", { lineHeight: "1.5" }],
+      lg: ["14px", { lineHeight: "20px" }],
+      xl: ["15px", { lineHeight: "1.65" }],
+      "2xl": ["16px", { lineHeight: "20px" }],
+      "3xl": ["18px", { lineHeight: "19px" }],
+      "4xl": ["22px", { lineHeight: "26px" }],
+      "5xl": ["26px", { lineHeight: "30px" }],
+      "6xl": ["34px", { lineHeight: "36px" }],
+    },
+    // Cantos retos: sm 2 (selos), md 4 (tudo o mais), pill (chips e KPIs).
+    // lg, xl e 2xl existem só para absorver usos antigos; código novo não os usa.
+    borderRadius: {
+      none: "0",
+      sm: "2px",
+      DEFAULT: "4px",
+      md: "4px",
+      lg: "4px",
+      xl: "4px",
+      "2xl": "4px",
+      pill: "999px",
+      full: "9999px",
     },
     extend: {
-      // Raios: md 6 (chips, botões pequenos), lg 8 (botões, campos), xl 12
-      // (painéis, cartões), 2xl 16 (modal). São os padrões do Tailwind; não
-      // usar valor arbitrário.
+      borderWidth: {
+        hair: "1px",
+        rule: "2px",
+        stamp: "3px",
+      },
+      // Sombra só no modal (dura, deslocada). Nada mais tem sombra.
       boxShadow: {
-        card: "0 1px 2px rgba(34,30,27,.05), 0 4px 14px rgba(34,30,27,.05)",
-        menu: "0 8px 24px rgba(0,0,0,.12)",
-        modal: "0 20px 60px rgba(0,0,0,.3)",
+        hard: "5px 5px 0 #C9BDAC",
+        "hard-sm": "3px 3px 0 #C9BDAC",
+        foco: "0 0 0 2px #F4EEE4, 0 0 0 4px #1F1A1E",
       },
       maxWidth: {
         site: "1200px",
@@ -87,6 +97,8 @@ export default {
       },
       spacing: {
         gutter: "18px",
+        lateral: "232px",
+        principal: "36px",
       },
       zIndex: {
         abas: "5",

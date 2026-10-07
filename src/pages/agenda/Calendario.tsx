@@ -23,7 +23,7 @@ function Celula({ vazia, dia, marcadores = [] }: { vazia?: boolean; dia?: number
     <div className={cx("min-h-20 rounded-lg border p-1.5", vazia ? "border-transparent" : "border-line bg-card")}>
       {!vazia && <div className="text-xs font-semibold text-faint">{dia}</div>}
       {marcadores.map((t, k) => (
-        <div key={k} className="mt-1 rounded-md bg-accent px-1.5 py-0.5 text-3xs font-semibold leading-tight text-white">{t}</div>
+        <div key={k} className="mt-1 rounded-md bg-accent px-1.5 py-0.5 text-3xs font-semibold leading-tight text-on-fill">{t}</div>
       ))}
     </div>
   );

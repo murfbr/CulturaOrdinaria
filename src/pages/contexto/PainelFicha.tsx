@@ -154,8 +154,8 @@ export function PainelFicha({ id, aoAbrirRegra, semCabecalho }: {
         <div className="grid max-w-texto gap-x-gutter gap-y-1.5 text-base md:grid-cols-2">
           {f.vocabulario.map((v, i) => (
             <Fragment key={i}>
-              <span className="text-dica">{v.usar}</span>
-              <span className="text-proib line-through">{v.evitar}</span>
+              <span className="text-ok">{v.usar}</span>
+              <span className="text-accent line-through">{v.evitar}</span>
             </Fragment>
           ))}
         </div>

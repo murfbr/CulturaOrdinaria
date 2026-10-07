@@ -15,8 +15,8 @@ export function CampoOpcaoUnica({ r, c, alterar }: PropsCampo) {
           className={cx(
             "flex", ESTILO_OPCAO,
             emLinha
-              ? cx("border px-3", o === v ? "border-accent bg-accent-soft" : "border-line-strong hover:bg-sand")
-              : cx("px-2", o === v ? "bg-accent-soft" : "hover:bg-sand"),
+              ? cx("border px-3", o === v ? "border-accent bg-accent-soft" : "border-line-strong hover:bg-bg-sunk")
+              : cx("px-2", o === v ? "bg-accent-soft" : "hover:bg-bg-sunk"),
           )}
         >
           <input type="radio" className={ESTILO_CAIXA} name={c.n} value={o} checked={o === v}

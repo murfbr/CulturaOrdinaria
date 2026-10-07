@@ -1,12 +1,12 @@
 /* As poucas classes nomeadas que um elemento solto precisa quando não vale
-   um bloco: link de texto, trecho em monoespaçado, texto auxiliar. Tudo o
+   um bloco: ligação de texto, trecho em monoespaçado, texto auxiliar. Tudo o
    mais que se repete é componente nesta pasta. */
 
-/** Link de ação em texto (abre ficha, "ver", "editar"). */
+/** Ligação de ação em texto (abre ficha, "ver", "editar"): vermelho, negrito. */
 export const ESTILO_LINK = "cursor-pointer font-semibold text-accent hover:underline";
 
-/** Identificador técnico (id, chave de campo) em monoespaçado. */
-export const ESTILO_MONO = "rounded bg-code-soft px-[5px] py-px font-mono text-xs text-code select-all";
+/** Identificador técnico (id, chave de campo) em mono, numa etiqueta neutra. */
+export const ESTILO_MONO = "rounded-sm bg-bg-sunk px-1.5 py-px font-mono text-xs text-ink select-all";
 
 /** Texto auxiliar: a segunda linha, o detalhe, o "quando". */
 export const ESTILO_AUXILIAR = "text-sm text-muted";

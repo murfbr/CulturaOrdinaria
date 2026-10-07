@@ -104,7 +104,7 @@ export function GeralProjetoAlertas({ p }: { p: Projeto }) {
           <Linha topo apagada={passou} key={i}>
             <div><b>{a.titulo}</b>{a.quando && <span className="text-muted"> · {a.quando}</span>}{passou && <span className="text-muted"> · data já passou</span>}</div>
             <div className="mt-0.5">{a.texto}</div>
-            {a.fazer && <div className="mt-0.5 text-accent-ink"><b>Fazer:</b> {a.fazer}</div>}
+            {a.fazer && <div className="mt-0.5 text-accent"><b>Fazer:</b> {a.fazer}</div>}
           </Linha>
         );
       })}
@@ -167,7 +167,7 @@ export function GeralProjetoProponente({ p }: { p: Projeto }) {
         </div>
       </div>
       {avisos.length > 0 && (
-        <div className="mt-3 flex flex-col gap-1 rounded-md border border-gold bg-warn-soft px-3 py-2 text-sm text-warn-ink">
+        <div className="mt-3 flex flex-col gap-1 rounded-md border border-gold bg-warn-soft px-3 py-2 text-sm text-warn">
           {avisos.map((a) => <div key={a}>⚠ {a}</div>)}
         </div>
       )}

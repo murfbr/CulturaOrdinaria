@@ -31,7 +31,7 @@ export function BlocoEditavel({ titulo, dica, valor, aoSalvar, children }: Props
       {editando ? (
         <>
           <textarea
-            className="w-full resize-y rounded-lg border border-line bg-white px-[11px] py-[9px] text-sm leading-[1.55] text-ink outline-none focus:border-accent"
+            className="w-full resize-y rounded-md border border-line-strong bg-field px-3 py-2 text-base text-ink outline-none focus:border-ink"
             autoFocus value={texto}
             rows={Math.max(4, valor.split("\n").length + 2)}
             onChange={(e) => setTexto(e.target.value)} />

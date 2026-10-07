@@ -31,7 +31,7 @@ interface EstadoCsv {
 function Opcao({ marcada, aoEscolher, children }: { marcada: boolean; aoEscolher: () => void; children: ReactNode }) {
   return (
     <label className="my-1.5 flex cursor-pointer items-start gap-2 text-sm font-normal text-muted [&_b]:text-ink">
-      <input type="radio" className="mt-0.5 w-auto flex-none accent-accent" checked={marcada} onChange={aoEscolher} />
+      <input type="radio" className="mt-0.5 w-auto flex-none accent-ink" checked={marcada} onChange={aoEscolher} />
       <span>{children}</span>
     </label>
   );

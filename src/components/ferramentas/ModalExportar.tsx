@@ -17,7 +17,7 @@ export function ModalExportar({ aoFechar }: { aoFechar: () => void }) {
 
   return (
     <Modal titulo="Exportar dados" aoFechar={aoFechar} largo>
-      <div className="flex items-center justify-between gap-3.5 rounded-[10px] border border-line bg-bg px-3.5 py-3">
+      <div className="flex items-center justify-between gap-3.5 rounded-md border border-line bg-bg px-3.5 py-3">
         <div>
           <b>Backup completo (.json)</b>
           <Dica emModal className="mt-0.5">

@@ -1,20 +1,22 @@
-/* Números de resumo: uma fileira de cartões pequenos com o número grande e o
-   rótulo embaixo. */
+/* Números de resumo: pílulas com o número num círculo preto e o rótulo ao lado. */
 import type { ReactNode } from "react";
 import { cx } from "../../utils/classes";
 
 export function GradeKpis({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cx("mb-3.5 flex flex-wrap gap-2.5", className)}>{children}</div>;
+  return <div className={cx("mb-4 flex flex-wrap gap-3", className)}>{children}</div>;
 }
 
 export function Kpi({ n, rotulo, aoClicar, title }: { n: ReactNode; rotulo: ReactNode; aoClicar?: () => void; title?: string }) {
   return (
     <div
-      className={cx("min-w-[118px] rounded-[10px] border border-line bg-card px-3.5 py-2.5 shadow-card", aoClicar && "cursor-pointer hover:border-accent")}
+      className={cx(
+        "inline-flex items-center gap-2.5 rounded-pill border border-line bg-card py-1.5 pl-1.5 pr-4",
+        aoClicar && "cursor-pointer hover:border-ink",
+      )}
       onClick={aoClicar} title={title}
     >
-      <div className="text-2xl font-bold tracking-[-.3px] tabular-nums">{n}</div>
-      <div className="text-xs text-muted">{rotulo}</div>
+      <span className="flex h-8 min-w-8 items-center justify-center rounded-full bg-ink px-1.5 text-lg font-semibold text-on-fill tabular-nums">{n}</span>
+      <span className="text-lg text-ink">{rotulo}</span>
     </div>
   );
 }

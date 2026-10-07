@@ -19,11 +19,11 @@ function Evento({ dia, mes, titulo, sub, etiquetas, aoClicar }: {
 }) {
   return (
     <div
-      className="mb-2 flex cursor-pointer items-center gap-3.5 rounded-[10px] border border-line bg-card px-3.5 py-2.5 shadow-card hover:border-accent"
+      className="mb-2 flex cursor-pointer items-center gap-3.5 rounded-md border border-line bg-card px-3.5 py-2.5 hover:border-accent"
       onClick={aoClicar}
     >
       <div className="w-[46px] flex-none text-center">
-        <div className="text-xl font-bold leading-none">{dia}</div>
+        <div className="font-mono text-4xl font-medium leading-none">{dia}</div>
         <Rotulo>{mes}</Rotulo>
       </div>
       <div className="min-w-0 flex-1">

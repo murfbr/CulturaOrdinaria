@@ -1,12 +1,13 @@
-/* Tabela da Central: caixa com borda e rolagem horizontal no celular; Th e Td
-   com o visual padrão; Tr clicável quando a linha abre uma ficha. A página
-   monta thead/tbody como quiser. `simples` tira a caixa (tabela dentro de
-   painel ou de modal). */
+/* Tabela da Central: caixa de cartão com fio e rolagem horizontal no celular;
+   cabeçalho em mono caixa alta fechado por uma régua preta; Td com o visual
+   padrão; Tr clicável quando a linha abre uma ficha. A página monta
+   thead/tbody como quiser. `simples` tira a caixa (tabela dentro de painel
+   ou de modal). */
 import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from "react";
 import { cx } from "../../utils/classes";
 
-export const ESTILO_TH = "bg-sand px-3 py-2.5 text-left text-2xs font-bold uppercase tracking-[.4px] whitespace-nowrap";
-export const ESTILO_TD = "border-t border-line px-3 py-[11px] align-top";
+export const ESTILO_TH = "border-b-rule border-ink px-3 py-2 text-left font-mono text-3xs font-medium uppercase whitespace-nowrap";
+export const ESTILO_TD = "border-t border-line px-3 py-2.5 align-top";
 
 interface PropsTabela extends HTMLAttributes<HTMLDivElement> {
   simples?: boolean;
@@ -16,8 +17,8 @@ interface PropsTabela extends HTMLAttributes<HTMLDivElement> {
 
 export function Tabela({ simples, minima, className, children, ...resto }: PropsTabela) {
   return (
-    <div className={cx("overflow-x-auto", !simples && "rounded-xl border border-line bg-card shadow-card", className)} {...resto}>
-      <table className={cx("w-full border-collapse text-sm", !simples && "[&_tbody_tr:hover]:bg-bg/60", minima)}>{children}</table>
+    <div className={cx("overflow-x-auto", !simples && "rounded-md border border-line bg-card", className)} {...resto}>
+      <table className={cx("w-full border-collapse text-sm", !simples && "[&_tbody_tr:hover]:bg-bg-sunk/50", minima)}>{children}</table>
     </div>
   );
 }
@@ -30,7 +31,7 @@ interface PropsTh extends ThHTMLAttributes<HTMLTableCellElement> {
 }
 
 export function Th({ numerico, quebra, className, ...resto }: PropsTh) {
-  return <th className={cx(ESTILO_TH, "text-muted", numerico && "text-right", quebra && "whitespace-normal text-3xs", className)} {...resto} />;
+  return <th className={cx(ESTILO_TH, "text-muted", numerico && "text-right", quebra && "whitespace-normal", className)} {...resto} />;
 }
 
 interface PropsTd extends TdHTMLAttributes<HTMLTableCellElement> {

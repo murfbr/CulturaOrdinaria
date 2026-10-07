@@ -72,7 +72,7 @@ export function Geral({ aoAbrirRegra }: { aoAbrirRegra: (p: PedidoModalRegra) =>
 function Contagem({ n, children }: { n: number; children: ReactNode }) {
   return (
     <span className={ESTILO_AUXILIAR}>
-      <b className="mr-1 text-2xl text-ink tabular-nums">{n}</b>
+      <b className="mr-1 font-display text-4xl font-normal text-ink tabular-nums">{n}</b>
       {children}
     </span>
   );

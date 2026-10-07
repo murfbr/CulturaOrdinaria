@@ -94,7 +94,7 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
         aoVoltar={fecharDetalhe}
         avatar={(p.nome.trim()[0] || "?").toUpperCase()}
         titulo={
-          <input type="text" className={cx(ESTILO_CONTROLE_DISCRETO, "w-full text-xl font-semibold")} value={p.nome} aria-label="nome do projeto"
+          <input type="text" className={cx(ESTILO_CONTROLE_DISCRETO, "w-full font-display text-5xl font-normal")} value={p.nome} aria-label="nome do projeto"
             onChange={(e) => salvarRegistro("projetos", { ...clonar(p), nome: e.target.value }, false)} />
         }
         sub={

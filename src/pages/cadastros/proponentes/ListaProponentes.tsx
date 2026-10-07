@@ -83,7 +83,7 @@ export function ListaProponentes() {
               <div key={p.id}>
                 <a className={ESTILO_LINK} onClick={() => abrirProjeto(p.id)}>{p.nome}</a>
                 <span className="text-muted"> · {e ? nomeCurto(e) : "sem edital"} · {ROTULO_STATUS_PROJETO[p.status]}</span>
-                {avisos.map((a) => <div key={a} className="text-xs text-warn-ink">⚠ {a}</div>)}
+                {avisos.map((a) => <div key={a} className="text-xs text-warn">⚠ {a}</div>)}
               </div>
             );
           })}

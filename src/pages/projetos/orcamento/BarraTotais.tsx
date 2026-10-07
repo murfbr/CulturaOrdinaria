@@ -13,7 +13,7 @@ export function BarraTotais({ r }: { r: Rascunho }) {
     <GradeKpis>
       <Kpi n={<span className="font-mono">{BRL(v.vp)}</span>} rotulo="Valor do projeto" />
       <Kpi n={<span className="font-mono">{BRL(v.total)}</span>} rotulo="Custos vinculados" />
-      <Kpi n={<span className={cx("font-mono", v.estourou ? "text-no" : "text-accent-ink")}>{BRL(v.vp + v.total)}</span>} rotulo="Custo total" />
+      <Kpi n={<span className={cx("font-mono", v.estourou ? "text-no" : "text-accent")}>{BRL(v.vp + v.total)}</span>} rotulo="Custo total" />
     </GradeKpis>
   );
 }

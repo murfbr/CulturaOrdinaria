@@ -36,7 +36,7 @@ function LinhaPeso({ nome, pct, valor, cor = "accent", total }: {
   nome: string; pct: number; valor: number; cor?: "accent" | "gold"; total?: boolean;
 }) {
   return (
-    <Linha compacta className={cx("px-3", total && "bg-sand font-semibold")}
+    <Linha compacta className={cx("px-3", total && "bg-bg-sunk font-semibold")}
       direita={<>
         {total
           ? <span className="hidden w-[120px] md:inline-block" />

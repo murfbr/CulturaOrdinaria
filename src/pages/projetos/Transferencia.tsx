@@ -27,7 +27,7 @@ const listaTransferivel = (r: Rascunho): CampoAchatado[] =>
   campos(r.form).filter((c) => c.t !== "orcresumo" && visivel(c, r.valores) && temValor(r.valores[c.n]));
 
 /** Cor da bolinha de status na lista (rascunho é o padrão, dourado). */
-const COR_PONTO: Record<string, string> = { col: "bg-ok", rev: "bg-rev" };
+const COR_PONTO: Record<string, string> = { col: "bg-ok", rev: "bg-fed" };
 
 export function Transferencia({ projeto, rascunho: r }: { projeto: Projeto; rascunho: Rascunho }) {
   const f = formularioDe(r.form);
@@ -80,7 +80,7 @@ export function Transferencia({ projeto, rascunho: r }: { projeto: Projeto; rasc
       <button key={c.n} type="button" onClick={() => setIndice(k)}
         className={cx(
           "flex w-full cursor-pointer items-center gap-2 rounded-md border-0 px-2 py-[7px] text-left text-sm",
-          k === i ? "bg-accent-soft font-semibold text-accent-ink" : "bg-transparent text-muted hover:bg-sand hover:text-ink",
+          k === i ? "bg-accent-soft font-semibold text-accent" : "bg-transparent text-muted hover:bg-bg-sunk hover:text-ink",
         )}>
         <i className={cx("size-2 flex-none rounded-full", COR_PONTO[stc] || "bg-gold")} />
         <span className="min-w-0 flex-1">{c.l}</span>
@@ -103,10 +103,10 @@ export function Transferencia({ projeto, rascunho: r }: { projeto: Projeto; rasc
         <Barra className="max-w-[320px] flex-1" trechos={[{ pct: lista.length ? (100 * colados) / lista.length : 0, cor: "ok" }]} />
       </div>
       <Grade colunas="lateral" className="md:grid-cols-[300px_1fr]">
-        <div className="max-h-[70vh] overflow-auto rounded-xl border border-line bg-card p-2 shadow-card">{itensLista}</div>
+        <div className="max-h-[70vh] overflow-auto rounded-xl border border-line bg-card p-2 ">{itensLista}</div>
         <Painel>
           <Rotulo>{atual.etapa.nome} · {atual.bloco.t} · campo {i + 1} de {lista.length}</Rotulo>
-          <h3 className="my-1 text-xl font-semibold">{atual.l}</h3>
+          <h3 className="my-1 font-display text-4xl font-normal">{atual.l}</h3>
           <p className="m-0 mb-3.5 text-sm text-muted">
             {atual.n.startsWith("doc__")
               ? <>Na plataforma, procure o campo "{atual.l}"{instrucaoTipo}</>
@@ -114,7 +114,7 @@ export function Transferencia({ projeto, rascunho: r }: { projeto: Projeto; rasc
           </p>
           <div className="max-w-[72ch] whitespace-pre-wrap break-words rounded-md border border-line bg-bg px-[18px] py-4 text-[15px] leading-[1.65]">{valorTexto}</div>
           {r.notas[atual.n] && (
-            <div className="mt-2 flex max-w-[72ch] items-start gap-2 rounded-md bg-sand px-2.5 py-1.5 text-sm text-muted">
+            <div className="mt-2 flex max-w-[72ch] items-start gap-2 rounded-md bg-bg-sunk px-2.5 py-1.5 text-sm text-muted">
               <b className="flex-none text-ink">Nota:</b><span>{r.notas[atual.n]}</span>
             </div>
           )}

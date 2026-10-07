@@ -49,7 +49,7 @@ export function BuscaGlobal() {
 
   return (
     <Overlay aoFechar={() => setAberta(false)}>
-      <div className="w-full max-w-[580px] overflow-hidden rounded-xl border border-line bg-card shadow-modal" role="dialog" aria-label="Busca global">
+      <div className="w-full max-w-[580px] overflow-hidden border-rule border-solid border-ink bg-card shadow-hard" role="dialog" aria-label="Busca global">
         <input
           ref={caixa} type="search" value={termo}
           className="w-full border-0 border-b border-solid border-line bg-transparent px-4 py-3.5 text-lg text-ink outline-none"

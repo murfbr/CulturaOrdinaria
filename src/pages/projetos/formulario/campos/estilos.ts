@@ -15,7 +15,7 @@ export const LARGURA_CAMPO: Record<string, string> = {
 export const ESTILO_OPCAO = "cursor-pointer items-start gap-2 rounded-md py-[5px] text-sm";
 
 /** A bolinha ou caixinha dentro da opção. */
-export const ESTILO_CAIXA = "mt-[3px] accent-accent";
+export const ESTILO_CAIXA = "mt-[3px] accent-ink";
 
 /** Item do checklist de documentos (marca o que já está pronto). */
 export const ESTILO_DOCUMENTO = "mb-1 flex cursor-pointer items-start gap-2 rounded-md border border-line bg-bg px-2 py-[7px] text-sm";

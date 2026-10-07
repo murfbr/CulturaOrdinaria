@@ -36,7 +36,7 @@ export function CampoMultiplaEscolha({ r, c, alterar }: PropsCampo) {
               const escondida = Boolean(filtroAtivo) && !o.toLowerCase().includes(filtroAtivo);
               const marcada = selecionados.includes(o);
               return (
-                <label className={cx(escondida ? "hidden" : "flex", ESTILO_OPCAO, "px-2", marcada ? "bg-accent-soft" : "hover:bg-sand")} key={o}>
+                <label className={cx(escondida ? "hidden" : "flex", ESTILO_OPCAO, "px-2", marcada ? "bg-accent-soft" : "hover:bg-bg-sunk")} key={o}>
                   <input type="checkbox" className={ESTILO_CAIXA} checked={marcada} onChange={(e) => alternar(o, e.target.checked)} />
                   <span>{o}</span>
                 </label>

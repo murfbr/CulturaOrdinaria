@@ -8,7 +8,7 @@ import { ESTILO_TH } from "./ui/Tabela";
 
 /** Visual dos controles da barra: menores e mais leves que os do formulário. */
 const ESTILO_FILTRO =
-  "max-w-[230px] rounded-[7px] border border-line bg-card px-[9px] py-1.5 text-sm text-ink outline-none focus:border-accent";
+  "max-w-[230px] rounded-md border border-line-strong bg-field px-2.5 py-1.5 text-sm text-ink outline-none focus:border-ink";
 
 export function BarraFiltros({ mostrando, total, children }: {
   mostrando: number; total: number; children?: ReactNode;

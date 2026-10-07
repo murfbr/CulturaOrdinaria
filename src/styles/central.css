@@ -1,7 +1,8 @@
 /* Tailwind da Central. O branding está em tailwind.config.js na raiz; aqui só
    a ligação, o reset padrão (preflight) e a base do body. Só procura classes
    em src/, fora src/paginas (as páginas próprias de projeto, cada uma com o
-   Tailwind dela).
+   Tailwind dela). As fontes (IBM Plex Sans, IBM Plex Mono, Alfa Slab One)
+   entram pelo link do Google Fonts no index.html.
 
    A camada "legado" continua declarada porque as páginas próprias (Samba,
    forró) põem a base delas nela; a Central não tem mais CSS antigo. */
@@ -22,6 +23,11 @@
 
 @layer base {
   body {
-    @apply font-sans text-base leading-normal bg-bg text-ink antialiased;
+    @apply font-sans text-base bg-bg text-ink antialiased;
+  }
+  /* Foco visível igual em tudo: anel preto sobre o creme, sem contorno azul. */
+  :focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 2px #F4EEE4, 0 0 0 4px #1F1A1E;
   }
 }

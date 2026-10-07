@@ -12,7 +12,7 @@ import { MenuConta } from "./MenuConta";
 
 /** Contador vermelho ao lado do nome do ambiente. */
 function Marcador({ children, title }: { children: React.ReactNode; title?: string }) {
-  return <span className="ml-1.5 rounded-full bg-accent px-1.5 py-px align-[1px] text-3xs font-bold text-white" title={title}>{children}</span>;
+  return <span className="ml-1.5 rounded-full bg-accent px-1.5 py-px align-[1px] text-3xs font-bold text-on-fill" title={title}>{children}</span>;
 }
 
 export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
@@ -26,7 +26,7 @@ export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
       key={a.id} type="button"
       className={cx(
         "cursor-pointer whitespace-nowrap rounded-lg border-0 px-3 py-1.5 text-sm font-semibold transition-colors",
-        a.id === nav.amb ? "bg-white/[.14] text-white" : "bg-transparent text-brand-soft hover:bg-brand-hover hover:text-white",
+        a.id === nav.amb ? "bg-card/[.14] text-on-fill" : "bg-transparent text-muted hover:bg-bg-hover hover:text-on-fill",
       )}
       onClick={() => irParaAmbiente(a.id)}
     >
@@ -37,17 +37,17 @@ export function Cabecalho({ emailUsuario }: { emailUsuario: string | null }) {
   ));
 
   return (
-    <header className="bg-brand text-white">
+    <header className="bg-ink text-on-fill">
       <div className="mx-auto flex max-w-site items-center gap-2 px-gutter py-2">
         <h1 className="m-0 mr-2 whitespace-nowrap text-lg font-bold tracking-[-.2px]">Central do Coletivo</h1>
         <nav className="hidden min-w-0 flex-1 gap-0.5 md:flex">{ambientes}</nav>
         <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
-            className="cursor-pointer rounded-lg border border-solid border-brand-line bg-brand-hover px-[11px] py-1.5 text-xs font-semibold text-brand-soft transition-colors hover:border-white/45 hover:text-white"
+            className="cursor-pointer rounded-lg border border-solid border-line-strong bg-bg-hover px-[11px] py-1.5 text-xs font-semibold text-muted transition-colors hover:border-on-fill/45 hover:text-on-fill"
             onClick={abrirBusca} title="Buscar em tudo (Ctrl+K)"
           >
-            🔍 buscar <span className="ml-1 hidden rounded border border-solid border-white/25 px-[5px] py-px text-3xs font-bold uppercase tracking-[.4px] opacity-80 sm:inline">ctrl K</span>
+            🔍 buscar <span className="ml-1 hidden rounded border border-solid border-on-fill/25 px-[5px] py-px text-3xs font-bold uppercase tracking-[.4px] opacity-80 sm:inline">ctrl K</span>
           </button>
           <MenuConta emailUsuario={emailUsuario} />
         </div>

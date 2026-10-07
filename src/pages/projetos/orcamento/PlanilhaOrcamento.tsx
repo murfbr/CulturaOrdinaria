@@ -101,7 +101,7 @@ export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Altera
           ))}
         </tbody>
         <tfoot>
-          <tr className="bg-sand font-semibold">
+          <tr className="bg-bg-sunk font-semibold">
             <Td colSpan={9}>{o.linhas.length} {o.linhas.length === 1 ? "linha" : "linhas"}</Td>
             <Td className={ESTILO_TOTAL}>{BRL(totalItens(o))}</Td>
             <Td colSpan={4}></Td>
@@ -149,7 +149,7 @@ export function PlanilhaOrcamento({ r, alterar }: { r: Rascunho; alterar: Altera
           </div>
         )}
         {v.estourou && (
-          <p className="mb-0 mt-2 rounded-md bg-warn-soft px-2.5 py-2 text-sm text-warn-ink">
+          <p className="mb-0 mt-2 rounded-md bg-warn-soft px-2.5 py-2 text-sm text-warn">
             <b>Acima do limite:</b> a remuneração de captação daria {BRL(v.captBruto)}, mas o Salic trava
             em R$ 150.000,00. Os totais já consideram o limite.
           </p>

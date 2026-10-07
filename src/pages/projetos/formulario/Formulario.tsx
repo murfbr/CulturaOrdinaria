@@ -109,7 +109,7 @@ export function FormularioRascunho({ projeto, rascunho: r, etapaAberta, aoMudarE
                 {b.campos.map((c, ci) => {
                   if (c.t === "info") {
                     return (
-                      <div className="mb-2.5 rounded-xl bg-accent-soft px-3.5 py-3 text-sm text-accent-ink" key={ci}
+                      <div className="mb-2.5 rounded-xl bg-accent-soft px-3.5 py-3 text-sm text-accent" key={ci}
                         dangerouslySetInnerHTML={{ __html: c.html || c.l || "" }} />
                     );
                   }

@@ -27,7 +27,7 @@ export function BarraAbas() {
             >
               {rotulo}
               {id === "migracao" && pendente && (
-                <span className="ml-1.5 rounded-full bg-accent px-1.5 py-px align-[1px] text-3xs font-bold text-white">!</span>
+                <span className="ml-1.5 rounded-full bg-accent px-1.5 py-px align-[1px] text-3xs font-bold text-on-fill">!</span>
               )}
             </button>
           ))}
