@@ -3,9 +3,10 @@
    expandida com histórico e detalhes. Os filtros valem enquanto a página está
    aberta, como o S.f do artefato. */
 import { Fragment, useState } from "react";
-import { clonar } from "../../../utils";
-import { dataBr, porNome, temTipo, ultimoContato } from "../calculo";
+import { baixarArquivo, clonar } from "../../../utils";
+import { dataBr, hojeIso, porNome, temTipo, ultimoContato } from "../calculo";
 import { gravar } from "../dados";
+import { planilhaDe } from "../importar/tabela";
 import { classeStatus, normalizar, opcoes, rotulo } from "../listas";
 import type { Base, Cadastro } from "../tipos";
 import { Vazio } from "../ui/Bloco";
@@ -15,7 +16,9 @@ import { ACOES, BARRA, LINK, SUB } from "../ui/classes";
 import { NUM, Tabela, Td, Th } from "../ui/Tabela";
 import { Revisar, SelecaoStatus, Tag } from "../ui/Tag";
 import { DetalheCadastro } from "./DetalheCadastro";
+import { colunasCadastro } from "./importacaoCadastro";
 import { ModalCadastro } from "./ModalCadastro";
+import { ModalImportarCadastros } from "./ModalImportarCadastros";
 
 interface Filtros { busca: string; tipo: string; status: string; nucleo: string; revisar: boolean }
 const LIMPO: Filtros = { busca: "", tipo: "", status: "", nucleo: "", revisar: false };
@@ -48,6 +51,7 @@ export function Pessoas({ base }: { base: Base }) {
   const [f, setF] = useState<Filtros>(filtrosLembrados);
   const [abertos, setAbertos] = useState<string[]>(abertosLembrados);
   const [modal, setModal] = useState<{ id: string | null } | null>(null);
+  const [importando, setImportando] = useState(false);
   const p = base.pagina;
 
   const mudarF = (parte: Partial<Filtros>) => { filtrosLembrados = { ...filtrosLembrados, ...parte }; setF(filtrosLembrados); };
@@ -62,6 +66,9 @@ export function Pessoas({ base }: { base: Base }) {
   const rev = lista.filter((d) => d.revisar).length;
   const select = ESTILO_CONTROLE_BASE + " cdf:w-auto cdf:flex-[0_1_190px]";
 
+  /** A planilha do que está na tela, no formato da importação (volta por ela). */
+  const baixar = () => baixarArquivo("cadastros-caminhos-do-forro-" + hojeIso() + ".csv", planilhaDe(colunasCadastro(base), lista), "text/csv");
+
   return (
     <>
       <div className={BARRA}>
@@ -75,7 +82,9 @@ export function Pessoas({ base }: { base: Base }) {
           <Opcoes lista={opcoes(p, "nucleos", "Todos os núcleos")} /><option value="_sem">Sem núcleo</option>
         </select>
         <Check rotulo="Só a revisar" checked={f.revisar} onChange={(e) => mudarF({ revisar: e.target.checked })} />
-        <Botao variante="primario" className="cdf:md:ml-auto" onClick={() => setModal({ id: null })}>Novo cadastro</Botao>
+        <Botao className="cdf:md:ml-auto" onClick={() => setImportando(true)}>Importar cadastros</Botao>
+        <Botao onClick={baixar} disabled={!lista.length} title="Baixa os cadastros da tela numa planilha com as colunas da importação">Baixar planilha</Botao>
+        <Botao variante="primario" onClick={() => setModal({ id: null })}>Novo cadastro</Botao>
       </div>
       <div className="cdf:mb-4 cdf:flex cdf:flex-wrap cdf:items-center cdf:gap-1.5 cdf:text-sm cdf:text-fraco">
         <span>Atalhos:</span>
@@ -150,6 +159,7 @@ export function Pessoas({ base }: { base: Base }) {
       )}
 
       {modal && <ModalCadastro base={base} id={modal.id} aoFechar={() => setModal(null)} />}
+      {importando && <ModalImportarCadastros base={base} aoFechar={() => setImportando(false)} />}
     </>
   );
 }

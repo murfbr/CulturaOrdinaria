@@ -1,23 +1,26 @@
-/* Importar o plano de ação por GTs: escolhe a planilha (.xlsx ou .csv), vê
-   a prévia do que entra, do que muda e do que sobra, e só então grava. Nada
-   é gravado antes do botão. A leitura e a comparação são de plano.ts; aqui
-   ficam a tela e a gravação (pelo Banco, com autoria e log como qualquer
-   edição).
+/* Importar o plano de ação por GTs: guia das colunas com modelo, a planilha
+   (.xlsx ou .csv) ou o texto colado, a prévia do que entra, do que muda e do
+   que sobra, e só então grava. Nada é gravado antes do botão. A leitura e a
+   comparação são de plano.ts; a entrada e o guia são os blocos de importar/;
+   aqui ficam a tela e a gravação (pelo Banco, com autoria e log como
+   qualquer edição).
 
    As duas escolhas perigosas (apagar o que está fora da planilha e, nos
    conflitos, valer a planilha) ficam presas ao que estava na tela quando
    foram marcadas: se a lista mudar (outra planilha, alguém editando a base
    enquanto a prévia está aberta), a marca cai e é preciso confirmar de novo. */
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "../../../components/Toast";
-import { decodificarTexto, lerCsv } from "../../../lib/csv";
 import { alterarPagina, apagar, gravar } from "../dados";
+import { EntradaTabela } from "../importar/EntradaTabela";
+import { GuiaColunas } from "../importar/GuiaColunas";
+import { CODIGO, DETALHE_ITEM, Detalhe, ERRO, ITEM, Numero, plural } from "../importar/Previa";
 import type { Base, TarefaFestival } from "../tipos";
-import { Check, Entrada, Grupo } from "../ui/Campo";
+import { Check, Grupo } from "../ui/Campo";
 import { NOTA } from "../ui/classes";
 import { LINHA_INTEIRA, Modal } from "../ui/Modal";
+import { colunasDoPlano, modeloPlano } from "./guiaPlano";
 import { ROTULO_CAMPO, lerPlano, mostrarCelula, mostrarValor, prepararImportacao, type Plano, type Preparo } from "./plano";
-import { lerXlsx, type Aba } from "./xlsx";
 
 interface Props { base: Base; aoFechar: () => void }
 
@@ -53,34 +56,10 @@ function aplicarImportacao(pr: Preparo, apagarFora: TarefaFestival[]) {
   apagarFora.forEach((t) => apagar("tarefas", t.id));
 }
 
-const plural = (n: number, um: string, varios: string) => n + " " + (n === 1 ? um : varios);
-
-function Numero({ valor, rotulo }: { valor: number; rotulo: string }) {
-  return (
-    <div className="cdf:rounded-[10px] cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie-2 cdf:px-3 cdf:py-2.5">
-      <div className="cdf:font-display cdf:text-[30px] cdf:font-black cdf:leading-none cdf:text-primaria cdf:tabular-nums">{valor}</div>
-      <div className="cdf:mt-1 cdf:text-[13px] cdf:text-tinta-2">{rotulo}</div>
-    </div>
-  );
-}
-
-/** Lista que abre e fecha ("Ver as 34 tarefas"). */
-function Detalhe({ resumo, children }: { resumo: string; children: ReactNode }) {
-  return (
-    <details className="cdf:mt-1.5 cdf:text-sm">
-      <summary className="cdf:cursor-pointer cdf:font-bold cdf:text-link">{resumo}</summary>
-      <ul className="cdf:m-0 cdf:mt-1.5 cdf:max-h-[180px] cdf:list-none cdf:overflow-y-auto cdf:rounded-lg cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie cdf:p-0">{children}</ul>
-    </details>
-  );
-}
-const ITEM = "cdf:border-0 cdf:border-b cdf:border-solid cdf:border-linha cdf:px-2.5 cdf:py-1.5 cdf:last:border-b-0";
-const CODIGO = "cdf:mr-1.5 cdf:font-bold cdf:tabular-nums cdf:text-tinta-2";
-
 export function ModalImportarPlano({ base, aoFechar }: Props) {
   const [arquivo, setArquivo] = useState("");
   const [plano, setPlano] = useState<Plano | null>(null);
   const [erro, setErro] = useState("");
-  const [lendo, setLendo] = useState(false);
   // Cada marca guarda a lista que estava na tela quando foi feita (ver o comentário do arquivo).
   const [marcaPlanilhaVence, setMarcaPlanilhaVence] = useState<string | null>(null);
   const [marcaApagar, setMarcaApagar] = useState<string | null>(null);
@@ -94,21 +73,6 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
   const pr = useMemo(() => (plano ? prepararImportacao(base, plano, { planilhaVenceConflito: planilhaVence }) : null), [base, plano, planilhaVence]);
   const chaveFora = pr ? pr.fora.map((t) => t.id).join("|") : "";
   const apagaFora = !!pr && pr.fora.length > 0 && marcaApagar === chaveFora;
-
-  async function escolher(f: File | undefined) {
-    if (!f) return;
-    setPlano(null); setErro(""); setArquivo(f.name); setMarcaPlanilhaVence(null); setMarcaApagar(null);
-    setLendo(true);
-    try {
-      const buf = await f.arrayBuffer();
-      const abas: Aba[] = /\.csv$/i.test(f.name) ? [{ nome: f.name, linhas: lerCsv(decodificarTexto(buf)) }] : await lerXlsx(buf);
-      setPlano(lerPlano(abas));
-    } catch (e) {
-      setErro(e instanceof Error && e.message ? e.message : "Não consegui ler a planilha.");
-    } finally {
-      setLendo(false);
-    }
-  }
 
   const mudaNucleos = !!pr && (pr.nucleosNovos.length > 0 || pr.nucleosAtualizados.some((n) => n.escopo != null || n.responsavel != null || n.membros));
   const mudaStatus = !!pr && pr.statusNovos.length + pr.statusRenomeados.length > 0;
@@ -133,26 +97,20 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
 
   return (
     <Modal titulo="Importar plano de ação" aoFechar={aoFechar} aoSalvar={importar} rotuloSalvar={rotulo} bloqueado={!temOQueFazer}>
-      <Grupo rotulo="Planilha do plano de ação (.xlsx ou .csv)" className={LINHA_INTEIRA}>
-        <Entrada
-          type="file" accept=".xlsx,.csv" aria-label="Planilha do plano de ação" className="cdf:cursor-pointer cdf:py-1.5"
-          // Limpar antes de abrir faz o navegador avisar mesmo quando se escolhe de novo o mesmo arquivo (já corrigido).
-          onClick={(e) => { e.currentTarget.value = ""; }}
-          onChange={(e) => { void escolher(e.target.files?.[0]); }}
-        />
-        <p className={NOTA + " cdf:mt-1.5"}>
-          A tabela precisa das colunas ID e Tarefa; as outras (Grupo de Trabalho, Frente, Responsável, Prazo, Prioridade, Status, Dependência, Entrega, Observações) entram quando existem.
-          A tarefa é reconhecida pelo ID: importar de novo atualiza, não duplica, e não desfaz o que a equipe mudou aqui.
-        </p>
-      </Grupo>
-
-      {lendo && <p className={NOTA + " " + LINHA_INTEIRA}>Lendo {arquivo}…</p>}
-      {erro && <p role="alert" className={LINHA_INTEIRA + " cdf:m-0 cdf:rounded-lg cdf:bg-rec-bg cdf:px-3 cdf:py-2.5 cdf:font-bold cdf:text-rec"}>{erro}</p>}
+      <GuiaColunas
+        colunas={colunasDoPlano(base)} modelo={modeloPlano(base)} arquivo="modelo-plano-de-acao.csv"
+        nota="Só ID e Tarefa são obrigatórias; as outras entram quando existem. A tarefa é reconhecida pelo ID: importar de novo atualiza, não duplica, e não desfaz o que a equipe mudou aqui. A ordem das colunas e a linha em que o cabeçalho está não importam."
+      />
+      <EntradaTabela
+        aoLer={(abas, nome) => { setErro(""); setArquivo(nome); setMarcaPlanilhaVence(null); setMarcaApagar(null); setPlano(lerPlano(abas)); }}
+        aoFalhar={(m) => { setPlano(null); setErro(m); }}
+      />
+      {erro && <p role="alert" className={LINHA_INTEIRA + " " + ERRO}>{erro}</p>}
 
       {plano && pr && (
         <>
           <p className={LINHA_INTEIRA + " cdf:m-0"}>
-            <strong>{arquivo}</strong>, aba {plano.aba}: {plural(plano.linhas.length, "tarefa", "tarefas")} em {plural(plano.gts.length, "grupo de trabalho", "grupos de trabalho")}. Nada foi gravado ainda.
+            <strong>{arquivo}</strong>{plano.aba !== arquivo && <>, aba {plano.aba}</>}: {plural(plano.linhas.length, "tarefa", "tarefas")} em {plural(plano.gts.length, "grupo de trabalho", "grupos de trabalho")}. Nada foi gravado ainda.
           </p>
 
           <div className={LINHA_INTEIRA + " cdf:grid cdf:grid-cols-2 cdf:gap-2 cdf:md:grid-cols-4"}>
@@ -168,7 +126,7 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
                 {pr.atualizadas.map((m) => (
                   <li key={m.tarefa.id} className={ITEM}>
                     <span className={CODIGO}>{m.tarefa.codigo}</span>{m.tarefa.titulo}
-                    <span className="cdf:block cdf:text-[13px] cdf:text-fraco">muda: {m.campos.map((c) => ROTULO_CAMPO[c]).join(", ")}</span>
+                    <span className={DETALHE_ITEM}>muda: {m.campos.map((c) => ROTULO_CAMPO[c]).join(", ")}</span>
                   </li>
                 ))}
               </Detalhe>
@@ -201,7 +159,7 @@ export function ModalImportarPlano({ base, aoFechar }: Props) {
                 {pr.conflitos.map((c) => (
                   <li key={c.codigo + c.campo} className={ITEM}>
                     <span className={CODIGO}>{c.codigo}</span>{ROTULO_CAMPO[c.campo]}
-                    <span className="cdf:block cdf:text-[13px] cdf:text-fraco">Central: {mostrarValor(base, c.campo, c.naCentral)} · Planilha: {mostrarCelula(c.campo, c.naPlanilha)}</span>
+                    <span className={DETALHE_ITEM}>Central: {mostrarValor(base, c.campo, c.naCentral)} · Planilha: {mostrarCelula(c.campo, c.naPlanilha)}</span>
                   </li>
                 ))}
               </Detalhe>
