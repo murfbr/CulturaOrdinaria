@@ -793,3 +793,18 @@ td.num{font-variant-numeric:tabular-nums;text-align:right}
 .reap-acoes{display:flex;gap:6px;align-items:center}
 .reap-acoes .sp{flex:1}
 .textos-grupo{margin-bottom:16px}
+
+/* ── melhorias 28/09: gravações recusadas, histórico, consulta de CNPJ ── */
+.brand .status-link{background:none;border:0;padding:0;font:inherit;color:#FFB9A3;text-decoration:underline;cursor:pointer}
+.brand .status-link:hover{color:#fff}
+.aviso-gravacao{border:1px solid #e0b24a;background:#fff8e6;border-radius:8px;padding:10px 12px;margin:0 0 12px;font-size:13px}
+.tab-gravacoes,.tab-historico,.cnpj-mud{width:100%;border-collapse:collapse;font-size:12.5px}
+.tab-gravacoes th,.tab-historico th{text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);padding:5px 8px 5px 0}
+.tab-gravacoes td,.tab-historico td,.cnpj-mud td{border-bottom:1px solid var(--line);padding:6px 8px 6px 0;vertical-align:top}
+.lista-gravacoes{margin:6px 0 0;padding-left:18px;font-size:12.5px}
+.nowrap{white-space:nowrap}
+.prop-card .prop-receita{margin-top:8px}
+.cnpj-lista{display:flex;flex-direction:column;gap:12px;max-height:56vh;overflow:auto}
+.cnpj-item{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff}
+.cnpj-cab{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.cnpj-mud td:nth-child(2),.cnpj-mud td:nth-child(3){word-break:break-word}

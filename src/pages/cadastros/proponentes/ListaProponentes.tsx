@@ -1,7 +1,8 @@
 /* Proponentes (Cadastros): quem assina as inscrições. Um card por proponente,
    com perfil, CNPJ, idade do CNPJ e os projetos que assina (com os avisos de
    cada um). "Criar a partir dos projetos" lê os nomes já escritos nos
-   projetos e monta o cadastro, com prévia antes de gravar. */
+   projetos e monta o cadastro, com prévia antes de gravar. "Consultar CNPJ"
+   completa abertura, CNAE, sede e perfil pela base pública da Receita. */
 import { useMemo, useState } from "react";
 import { usarCentral } from "../../../store/central";
 import { abrirProjeto } from "../../../store/navegacao";
@@ -15,12 +16,15 @@ import { anosDeCnpj, avisosProponente, idadeLegivel, planoDosProjetos } from "..
 import { nomeCurto, editalDoProjeto } from "../../../lib/nomes";
 import { ROTULO_STATUS_PROJETO, type Proponente } from "../../../types";
 import { comparar, uid } from "../../../utils";
+import { cnaeEhCultural, cnaesDoTexto, soDigitos } from "../../../lib/cnpj";
+import { ModalConsultaCnpj } from "./ModalConsultaCnpj";
 
 export function ListaProponentes() {
   const { painel } = usarCentral();
   const [busca, setBusca] = useState("");
   const [perfil, setPerfil] = useState("");
   const [verPlano, setVerPlano] = useState(false);
+  const [consultar, setConsultar] = useState<Proponente[] | null>(null);
 
   const plano = useMemo(() => planoDosProjetos(painel, () => uid("pr")), [painel]);
   const semCadastro = plano.vinculos.length;
@@ -31,6 +35,7 @@ export function ListaProponentes() {
       && (!termo || [x.nome, x.perfil, x.cnpj, x.cnae, x.municipio, x.representante, x.obs].join(" ").toLowerCase().includes(termo)))
     .sort((a, b) => comparar(a.nome, b.nome));
   const perfis = [...new Set(painel.proponentes.map((x) => x.perfil).filter(Boolean))].sort(comparar);
+  const comCnpj = painel.proponentes.filter((x) => soDigitos(x.cnpj).length === 14).sort((a, b) => comparar(a.nome, b.nome));
 
   const cartao = (pr: Proponente) => {
     const projetos = painel.projetos.filter((p) => p.proponenteId === pr.id && !p.arquivado);
@@ -48,8 +53,18 @@ export function ListaProponentes() {
           <div className="kv"><span>Abertura do CNPJ:</span> <b className="muted">falta</b></div>
         )}
         {pr.cnae && <div className="kv"><span>CNAE:</span> <b className="corta">{pr.cnae}</b></div>}
+        {pr.cnae && cnaesDoTexto(pr.cnae).length > 0 && (
+          <div className="kv"><span>CNAE cultural:</span> {cnaesDoTexto(pr.cnae).some(cnaeEhCultural)
+            ? <b>sim</b>
+            : <b className="muted" title="nenhum código de artes, espetáculos, audiovisual, eventos ou ensino de cultura entre os registrados">não identificado</b>}</div>
+        )}
         {pr.municipio && <div className="kv"><span>Sede:</span> <b>{pr.municipio}</b></div>}
         {pr.representante && <div className="kv"><span>Assina:</span> <b>{pr.representante}</b></div>}
+        {soDigitos(pr.cnpj).length === 14 && (
+          <button className="btn sm ghost prop-receita" onClick={(e) => { e.stopPropagation(); setConsultar([pr]); }}>
+            consultar CNPJ na Receita
+          </button>
+        )}
         <div className="prop-projs" onClick={(e) => e.stopPropagation()}>
           {projetos.map((p) => {
             const avisos = avisosProponente(p, painel);
@@ -74,6 +89,11 @@ export function ListaProponentes() {
         {semCadastro > 0 && (
           <button className="btn ghost" onClick={() => setVerPlano(true)}>Criar a partir dos projetos ({semCadastro})</button>
         )}
+        {comCnpj.length > 0 && (
+          <button className="btn ghost" onClick={() => setConsultar(comCnpj)} title="abertura, CNAE, sede e perfil pela base pública da Receita">
+            Consultar CNPJs ({comCnpj.length})
+          </button>
+        )}
         <button className="btn" onClick={() => abrirNovo("proponente")}>+ Novo proponente</button>
       </CabecalhoSecao>
 
@@ -89,6 +109,8 @@ export function ListaProponentes() {
           {semCadastro > 0 && " Os projetos já têm nomes de proponente escritos: use \"Criar a partir dos projetos\" para montar o cadastro de uma vez."}
         </p>
       )}
+
+      {consultar && <ModalConsultaCnpj alvos={consultar} aoFechar={() => setConsultar(null)} />}
 
       {verPlano && (
         <Modal titulo="Criar proponentes a partir dos projetos" aoFechar={() => setVerPlano(false)} largo>

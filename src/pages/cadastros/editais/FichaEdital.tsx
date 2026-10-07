@@ -17,10 +17,11 @@ import {
 } from "../../../types";
 import { url } from "../../../utils";
 import { alertaVencido, prazoEncerrado } from "../../../lib/prazos";
+import { Historico } from "../../../components/Historico";
 
 const SUB_ABAS: [string, string][] = [
   ["geral", "Geral"], ["criterios", "Critérios"], ["formulario", "Formulário"], ["docs", "Documentos"],
-  ["contexto", "Contexto"], ["projetos", "Projetos"], ["notas", "Notas e lacunas"],
+  ["contexto", "Contexto"], ["projetos", "Projetos"], ["notas", "Notas e lacunas"], ["historico", "Histórico"],
 ];
 
 const rotuloConceito = (lista: [string, string][], k: string) => lista.find(([x]) => x === k)?.[1] || k;
@@ -239,6 +240,8 @@ export function FichaEdital({ id, sub }: { id: string; sub: string }) {
         {!projetos.length && <p className="muted" style={{ margin: 0 }}>Nenhum projeto neste edital ainda.</p>}
       </div>
     );
+  } else if (aba === "historico") {
+    corpo = <Historico ids={[e.id]} />;
   } else {
     const lac = e.lacunas || [];
     corpo = (

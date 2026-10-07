@@ -8,6 +8,7 @@ import { toast } from "../components/Toast";
 import { clonar, uid } from "../utils";
 import { obterEstado } from "./central";
 import { normalizarProjeto, rascunhoVazio } from "../lib/migracao/v3";
+import { normalizarFicha, normalizarJulgamento } from "../lib/contexto/normalizar";
 import {
   STATUS_PROJETO, STATUS_TAREFA,
   type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist, type ItemLixeira,
@@ -430,13 +431,13 @@ export function excluirFormulario(id: string) {
 /* ══════════ Contexto ══════════ */
 
 export function salvarFicha(f: Ficha) {
-  Banco.gravar("fichas", f.id, { ...clonar(f), atualizado: new Date().toISOString() });
+  Banco.gravar("fichas", f.id, { ...normalizarFicha(clonar(f)), atualizado: new Date().toISOString() });
 }
 export function salvarRegra(r: Regra) {
   Banco.gravar("regras", r.id, { ...clonar(r), atualizado: new Date().toISOString() });
 }
 export function excluirRegra(id: string) { emLoteDeExclusao(() => moverParaLixeira("regras", id)); }
 export function salvarJulgamento(j: Julgamento) {
-  Banco.gravar("julgamentos", j.id, { ...clonar(j), atualizado: new Date().toISOString() });
+  Banco.gravar("julgamentos", j.id, { ...normalizarJulgamento(clonar(j)), atualizado: new Date().toISOString() });
 }
 export function excluirJulgamento(id: string) { emLoteDeExclusao(() => moverParaLixeira("julgamentos", id)); }

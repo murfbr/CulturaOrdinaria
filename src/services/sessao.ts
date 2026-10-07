@@ -24,6 +24,8 @@ if (firebaseAtivo && auth) {
     sessao = { carregando: false, usuario };
     Banco.definirAutor(usuario?.email || "");
     assinantes.forEach((f) => f());
+    // Faxina do log de alterações (faz o papel do TTL): depois que o site já carregou.
+    if (usuario) setTimeout(() => { void Banco.limparLogVencido(); }, 20000);
   });
 }
 

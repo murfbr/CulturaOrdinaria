@@ -17,6 +17,7 @@ import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../l
 import { formularioDe, SALIC_DADOS, registroDe } from "../data";
 import { campos as camposDe, normalizarRascunho, novoRascunho } from "../lib/simulador/motor";
 import { linhaVazia } from "../lib/simulador/orcamento";
+import { normalizarFicha, normalizarJulgamento, tupla } from "../lib/contexto/normalizar";
 
 type RegistroPainel = DadosPainel[keyof DadosPainel][number];
 type Documento = Record<string, unknown> & { id: string };
@@ -51,8 +52,6 @@ export function exportarTudo() {
 
 /* ── conversão de tuplas (formato v1 do artefato) → objetos nomeados ── */
 
-const tupla = <T,>(v: unknown, nomes: string[]): T =>
-  Array.isArray(v) ? (Object.fromEntries(nomes.map((n, i) => [n, (v as unknown[])[i] ?? ""])) as T) : (v as T);
 
 function converterPainelImportado(p: Record<string, unknown>): DadosPainel {
   const d = clonar(p) as unknown as DadosPainel & { candidaturas?: unknown[] };
@@ -76,13 +75,8 @@ const painelEhV2 = (p?: Record<string, unknown>) =>
 
 function converterContextoImportado(c: Record<string, unknown>) {
   const d = clonar(c) as { fichas?: Record<string, Ficha>; regras?: Record<string, Regra>; julg?: Record<string, Julgamento> };
-  Object.values(d.fichas || {}).forEach((f) => {
-    if (f.vocabulario) f.vocabulario = (f.vocabulario as unknown as unknown[]).map((t) => tupla(t, ["usar", "evitar"]));
-    if (f.usados) f.usados = (f.usados as unknown as unknown[]).map((t) => tupla(t, ["texto", "onde", "quando"]));
-  });
-  Object.values(d.julg || {}).forEach((j) => {
-    if (j.licoes) j.licoes = (j.licoes as unknown as unknown[]).map((t) => tupla(t, ["texto", "regra"]));
-  });
+  for (const [id, f] of Object.entries(d.fichas || {})) d.fichas![id] = normalizarFicha(f);
+  for (const [id, j] of Object.entries(d.julg || {})) d.julg![id] = normalizarJulgamento(j);
   return d;
 }
 
@@ -223,7 +217,7 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
     const colecoes = COLECOES_PAINEL.filter((c) => Array.isArray(painelBruto?.[c]));
     const antigo = painelEhV2(painelBruto);
     const resumo: ResumoPacote = {
-      formato: "Pacote da Central (v" + (j.versao || 1) + ")" + (antigo ? " · será convertido para o v3 (candidaturas viram projetos)" : ""),
+      formato: "Pacote da Central (v" + (j.versao || 1) + ")" + (antigo ? " · parece formato antigo: Mesclar e Substituir convertem para o v3 (candidaturas viram projetos); Atualizar só os campos não converte" : ""),
       aplicar: (modo) => {
         const ctxBruto = j.contexto ? converterContextoImportado(j.contexto as Record<string, unknown>) : null;
         const rascunhos = (j.rascunhos || {}) as Record<string, Rascunho>;
