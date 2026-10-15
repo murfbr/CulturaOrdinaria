@@ -1,16 +1,20 @@
 /* Cronograma: lista de prazos por mês, derivada dos editais com data,
-   mais os previstos sem data exata. Cada prazo é um Evento (componente
-   local): dia grande à esquerda, título e projetos, etiquetas à direita. */
-import type { ReactNode } from "react";
+   mais os previstos sem data exata. Abre do mês atual para frente; os prazos
+   de meses passados já encerrados ficam atrás do botão "Mostrar anteriores".
+   Cada prazo é um Evento (componente local): dia grande à esquerda, título e
+   projetos, etiquetas à direita. */
+import { useState, type ReactNode } from "react";
 import { usarCentral } from "../../store/central";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { Badge } from "../../components/ui/Badge";
 import { Rotulo } from "../../components/ui/Rotulo";
 import { ESTILO_AUXILIAR } from "../../components/ui/estilos";
-import { eventosAgenda } from "../../lib/agenda";
+import { eventosAgenda, type EventoAgenda } from "../../lib/agenda";
+import { Dica } from "../../components/ui/Dica";
 import { abrirDetalhe } from "../../store/navegacao";
-import { CLASSE_URGENCIA, ROTULO_URGENCIA, urgenciaDe } from "../../lib/prazos";
-import { STATUS_EDITAL } from "../../types";
+import { CLASSE_URGENCIA, ROTULO_URGENCIA, hojeIso, statusEfetivo, urgenciaDe } from "../../lib/prazos";
+import { Botao } from "../../components/ui/Botao";
+import { STATUS_EDITAL, type Edital } from "../../types";
 import { MESES } from "../../utils";
 
 /** Um prazo do cronograma: dia e mês à esquerda, título e subtítulo, etiquetas à direita. Clicável inteiro. */
@@ -35,15 +39,34 @@ function Evento({ dia, mes, titulo, sub, etiquetas, aoClicar }: {
   );
 }
 
+/** Prazo de mês passado cujo edital já encerrou (pela regra que deduz
+    "Aberto" com prazo vencido como encerrado): fica atrás do botão. */
+function anterior(e: EventoAgenda, editais: Edital[], mesAtual: string): boolean {
+  if (e.iso >= mesAtual) return false;
+  const edital = editais.find((x) => x.id === e.editalId);
+  const st = edital ? statusEfetivo(edital) : e.status;
+  return st === "closed" || st === "norma";
+}
+
 export function Cronograma() {
   const { painel } = usarCentral();
-  const eventos = eventosAgenda(painel.editais, painel.projetos);
+  const [mostrarAnteriores, setMostrarAnteriores] = useState(false);
+  const mesAtual = hojeIso().slice(0, 7);
+  const todos = eventosAgenda(painel.editais, painel.projetos);
+  const anteriores = todos.filter((e) => anterior(e, painel.editais, mesAtual)).length;
+  const eventos = mostrarAnteriores ? todos : todos.filter((e) => !anterior(e, painel.editais, mesAtual));
   const meses = [...new Set(eventos.map((e) => e.iso.slice(0, 7)))].sort();
   const previstosSemData = painel.editais.filter((e) => !e.prazoIso && e.status === "prev");
 
   return (
     <>
       <CabecalhoSecao titulo="Cronograma" sub="prazos derivados dos editais e dos projetos" />
+      {anteriores > 0 && (
+        <Botao variante="quieto" tamanho="pequeno" onClick={() => setMostrarAnteriores(!mostrarAnteriores)}>
+          {mostrarAnteriores ? "Esconder anteriores" : `Mostrar ${anteriores} prazo${anteriores > 1 ? "s" : ""} anterior${anteriores > 1 ? "es" : ""}`}
+        </Botao>
+      )}
+      {!eventos.length && <Dica className="mt-2">Nenhum prazo deste mês em diante.</Dica>}
       {meses.map((chave) => {
         const [ano, mes] = chave.split("-");
         return (
