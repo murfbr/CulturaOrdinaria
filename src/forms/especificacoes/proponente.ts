@@ -11,7 +11,7 @@ export const proponente: EntidadeSpec = {
     { chave: "nome", rotulo: "Nome (pessoa, empresa ou coletivo)" },
     { chave: "perfil", rotulo: "Perfil jurídico", tipo: "select", fonte: PERFIS_JURIDICOS.filter(Boolean) },
     { chave: "situacao", rotulo: "Situação", tipo: "opts", fonte: SITUACAO_PROPONENTE },
-    { chave: "cnpj", rotulo: "CNPJ (só de empresa ou MEI)" },
+    { chave: "cnpj", rotulo: "CNPJ (só de empresa ou MEI)", tipo: "cnpj" },
     { chave: "abertura", rotulo: "Data de abertura do CNPJ", tipo: "date" },
     { chave: "cnae", rotulo: "CNAE principal (e secundários que importam)" },
     { chave: "municipio", rotulo: "Município da sede" },

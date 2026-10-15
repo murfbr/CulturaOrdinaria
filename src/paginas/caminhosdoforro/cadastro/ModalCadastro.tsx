@@ -3,6 +3,7 @@
    anotações, a revisar. Excluir só quando nada aponta para o registro. */
 import { useState } from "react";
 import { toast } from "../../../components/Toast";
+import { avisoDocumento } from "../../../lib/cpfCnpj";
 import { clonar } from "../../../utils";
 import { auditoria, referenciasDoCadastro } from "../calculo";
 import { apagar, gravar, novoId } from "../dados";
@@ -30,6 +31,7 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
   });
   const [arquivo, setArquivo] = useState(d.cartaArquivo?.tipo === "link" ? d.cartaArquivo.url || "" : "");
   const p = base.pagina;
+  const avisoDoc = avisoDocumento(d.documento, "documento");
   const mudar = (parte: Partial<Cadastro>) => setD((a) => ({ ...a, ...parte }));
   const mudarContato = (parte: Partial<Cadastro["contato"]>) => setD((a) => ({ ...a, contato: { ...a.contato, ...parte } }));
 
@@ -65,7 +67,10 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       <Campo rotulo="Pessoa de contato"><Entrada value={d.contato.nome} onChange={(e) => mudarContato({ nome: e.target.value })} /></Campo>
       <Campo rotulo="Telefone"><Entrada type="tel" value={d.contato.telefone} onChange={(e) => mudarContato({ telefone: e.target.value })} /></Campo>
       <Campo rotulo="E-mail"><Entrada type="email" value={d.contato.email} onChange={(e) => mudarContato({ email: e.target.value })} /></Campo>
-      <Campo rotulo="CPF ou CNPJ"><Entrada value={d.documento} onChange={(e) => mudar({ documento: e.target.value })} /></Campo>
+      <Campo rotulo="CPF ou CNPJ">
+        <Entrada value={d.documento} onChange={(e) => mudar({ documento: e.target.value })} aria-invalid={avisoDoc ? true : undefined} />
+        {avisoDoc && <span className="cdf:mt-1 cdf:block cdf:text-[13px] cdf:text-erro">{avisoDoc}</span>}
+      </Campo>
       <Campo rotulo="Carta de anuência" className={LINHA_INTEIRA}>
         <Selecao value={d.carta || ""} onChange={(e) => mudar({ carta: e.target.value || null })}><Opcoes lista={opcoes(p, "cartaAnuencia", "Sem informação")} /></Selecao>
       </Campo>

@@ -8,7 +8,7 @@ export const equipe: EntidadeSpec = {
     { chave: "nomeCompleto", rotulo: "Nome completo" },
     { chave: "email", rotulo: "E-mail (p/ convites de reunião)" },
     { chave: "rg", rotulo: "RG" },
-    { chave: "cpf", rotulo: "CPF" },
+    { chave: "cpf", rotulo: "CPF", tipo: "cpf" },
     { chave: "nascimento", rotulo: "Data de nascimento", tipo: "date" },
     { chave: "funcoes", rotulo: "Funções (vírgula)", tipo: "csv" },
   ],

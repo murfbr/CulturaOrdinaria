@@ -5,6 +5,7 @@ import type { CampoSpec } from "./tipos";
 import { usarCentral } from "../store/central";
 import type { ColecaoPainel } from "../types";
 import { AreaTexto, Entrada, Selecao } from "../components/ui/Campo";
+import { avisoDocumento } from "../lib/cpfCnpj";
 
 interface Props {
   campo: CampoSpec;
@@ -32,6 +33,17 @@ export function CampoDoFormulario({ campo: c, valor: v, definir, opcoesOrigem }:
         <Entrada id={id} type="number" min={0} value={v === "" || v == null ? "" : String(v)}
           onChange={(e) => definir(e.target.value === "" ? "" : Number(e.target.value))} />
       );
+
+    case "cpf":
+    case "cnpj": {
+      const aviso = avisoDocumento(String(v ?? ""), c.tipo);
+      return (
+        <>
+          <Entrada id={id} value={String(v ?? "")} onChange={(e) => definir(e.target.value)} aria-invalid={aviso ? true : undefined} />
+          {aviso && <span className="mt-1 block text-sm text-warn">{aviso}</span>}
+        </>
+      );
+    }
 
     case "select":
       return (

@@ -9,7 +9,7 @@ export const elenco: EntidadeSpec = {
     { chave: "funcao", rotulo: "Função" },
     { chave: "email", rotulo: "E-mail" },
     { chave: "rg", rotulo: "RG" },
-    { chave: "cpf", rotulo: "CPF" },
+    { chave: "cpf", rotulo: "CPF", tipo: "cpf" },
     { chave: "nascimento", rotulo: "Data de nascimento", tipo: "date" },
     { chave: "bio", rotulo: "Minibio", tipo: "textarea" },
     { chave: "docsStatus", rotulo: "Documentos", tipo: "opts", fonte: [["ok", "ok"], ["pend", "pendente"]] },

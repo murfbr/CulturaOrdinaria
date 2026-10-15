@@ -9,7 +9,7 @@ export const artista: EntidadeSpec = {
     { chave: "nome", rotulo: "Nome" },
     { chave: "tipo", rotulo: "Tipo", tipo: "select", fonte: ["Bloco de carnaval", "Roda de samba", "Grupo musical", "Artista individual", "Coletivo", "Grupo / afoxé"] },
     { chave: "formalizacao", rotulo: "Formalização própria", tipo: "select", fonte: ["", "Sem CNPJ nem MEI", "MEI", "CNPJ próprio", "Associação (CNPJ)", "A confirmar"] },
-    { chave: "cnpj", rotulo: "CNPJ / MEI (número, se houver)" },
+    { chave: "cnpj", rotulo: "CNPJ / MEI (número, se houver)", tipo: "cnpj" },
     { chave: "liga", rotulo: "Liga ou associação de carnaval" },
     { chave: "mun", rotulo: "Sede (município)" },
     { chave: "bio", rotulo: "Bio", tipo: "textarea" },

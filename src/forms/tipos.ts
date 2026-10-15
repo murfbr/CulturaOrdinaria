@@ -8,6 +8,8 @@ export type TipoCampoRegistro =
   | "textarea"
   | "date"
   | "numero"     // número (vazio = sem valor)
+  | "cpf"        // texto com conferência dos dígitos do CPF (aviso, não bloqueia)
+  | "cnpj"       // idem para CNPJ (aceita o formato alfanumérico)
   | "select"     // opções fixas (o valor É o rótulo)
   | "opts"       // pares [valor, rótulo]
   | "ref"        // aponta um registro de outra coleção
