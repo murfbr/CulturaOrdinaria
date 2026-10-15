@@ -10,6 +10,7 @@ import { usarNavegacao } from "./store/navegacao";
 import { BarraLateral } from "./components/layout/BarraLateral";
 import { CabecalhoPagina } from "./components/layout/CabecalhoPagina";
 import { Toast } from "./components/Toast";
+import { LimiteDeErro } from "./components/LimiteDeErro";
 import { BuscaGlobal } from "./components/BuscaGlobal";
 import { FormularioRegistro } from "./forms/FormularioRegistro";
 import { Login } from "./pages/Login";
@@ -51,7 +52,9 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
           <div className="flex min-h-[60vh] items-center justify-center text-lg text-muted">carregando os dados do coletivo…</div>
         ) : (
           <main className="mx-auto max-w-site">
-            {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
+            <LimiteDeErro rota={[nav.amb, nav.aba, nav.detalhe?.tipo, nav.detalhe?.id, nav.detalhe?.sub, nav.fichaAberta, nav.julgamentoAberto].join("/")}>
+              {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
+            </LimiteDeErro>
           </main>
         )}
       </div>

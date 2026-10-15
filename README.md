@@ -1,12 +1,16 @@
 # Central do Coletivo
 
-Site de gestão do coletivo cultural. Sete ambientes: **Painel** (resumo e
-pendências), **Cadastros** (artistas, editais do Mapa dos Editais e os
-formulários mapeados), **Agenda**, **Pessoas**, **Gestão** (reuniões, tarefas,
-lixeira), **Projetos** (o lugar de trabalho: cada projeto é uma candidatura,
-com o formulário do edital, a transferência para a plataforma oficial e o
-pipeline por status) e **Contexto** de escrita (fichas, regras e julgamentos)
-para redigir propostas com IA.
+Site de gestão do coletivo cultural. Sete ambientes: **Painel** (resumo,
+pendências e revisão das fichas dos artistas), **Cadastros** (artistas,
+proponentes, editais do Mapa dos Editais e os formulários mapeados),
+**Agenda** (cronograma e calendário), **Pessoas** (elenco, equipe e contatos
+externos), **Gestão** (reuniões, tarefas, lixeira e migração), **Projetos**
+(o lugar de trabalho: cada projeto é uma candidatura, com o formulário do
+edital, a transferência para a plataforma oficial, o pipeline por status e o
+banco de textos) e **Contexto** de escrita (fichas, regras e julgamentos)
+para redigir propostas com IA. Fora da Central, no mesmo login e no mesmo
+banco, ficam as **páginas próprias** de projeto: `/sambadeponta/` (a festa
+Ponta de Lança) e `/caminhosdoforro/` (o festival).
 
 > **Versão 3 (set/2026).** O conceito de candidatura saiu: cada projeto já é
 > uma candidatura, nasce ligado a um formulário mapeado (e ao edital dele) ou
@@ -14,8 +18,10 @@ para redigir propostas com IA.
 > virou a aba Formulário de cada projeto. Para migrar um banco antigo, veja
 > [docs/MIGRACAO-V3.md](docs/MIGRACAO-V3.md).
 
-É a versão site do artefato "Central do Coletivo", com os mesmos dados, o mesmo
-visual e os mesmos nomes de campos — agora com **React + TypeScript + Firebase**.
+Nasceu como versão site do artefato "Central do Coletivo", com os mesmos dados
+e os mesmos nomes de campos, em **React + TypeScript + Firebase**. Desde
+out/2026 o visual é próprio, em Tailwind (barra lateral, um `tailwind.config.js`
+por identidade: o da Central na raiz, o de cada página própria na pasta dela).
 
 ## Rodar localmente
 
@@ -51,6 +57,10 @@ sem internet e sincroniza quando ela volta).
 2. Em **Settings → Environment Variables**, cadastre as mesmas `VITE_FIREBASE_*` do `.env`.
 3. Deploy. (Build: `npm run build`, output: `dist` — a Vercel detecta sozinha.)
 
+Cada página própria tem um `index.html` na raiz do repositório
+(`sambadeponta/`, `caminhosdoforro/`) só para a prévia de link (Open Graph);
+o site em si é o mesmo bundle.
+
 ## Estrutura de dados (Firestore)
 
 Coleções planas, uma por entidade — cada registro é um documento cujo campos
@@ -59,24 +69,26 @@ usam **os mesmos nomes do artefato**:
 | Coleção        | O que é                                           |
 | -------------- | ------------------------------------------------- |
 | `artistas`     | blocos, rodas e grupos do portfólio               |
-| `projetos`     | cada projeto é uma candidatura (→ `artistaIds[]`, `editalId`, `formId`, `rascunhoId`, `status`) |
+| `proponentes`  | quem assina a inscrição (PF, MEI, PJ, coletivo representado): perfil, CNPJ, abertura, situação. O projeto aponta `proponenteId`; "Consultar CNPJs" busca os dados na Receita |
+| `projetos`     | cada projeto é uma candidatura (→ `artistaIds[]`, `editalId`, `formId`, `rascunhoId`, `proponenteId`, `status`) |
 | `editais`      | editais e fontes, com os campos do Mapa dos Editais (critérios, linhas, lacunas, alertas, campos do formulário) |
 | `candidaturas` | só no formato antigo (v2): a migração v3 converte em projetos e esvazia |
 | `tarefas`      | tarefas da equipe (→ `respId`, `origem`; `edicaoId` e `fase` quando é de uma edição de página própria) |
 | `equipe`       | pessoas do coletivo (contém CPF/RG — ver LGPD)    |
-| `elenco`       | músicos e técnicos que entram nos editais         |
+| `elenco`       | músicos e técnicos que entram nos editais (contém CPF/RG — ver LGPD) |
 | `contatos`     | contatos externos (tipo Fornecedor: quem a festa contrata) |
 | `reunioes`     | reuniões, pauta e ata                             |
 | `rascunhos`    | respostas de cada projeto no formulário dele (`valores`, `status`, `notas`; `ref` = id do projeto) |
 | `formularios`  | definições dos formulários, com `origem` ("chrome" = extraído da plataforma; "documento" = reconstruído do espelho/regulamento), importáveis em Cadastros → Formulários sem deploy |
 | `backup_v2`    | cópia dos projetos e candidaturas do formato antigo, gravada pela migração v3 |
 | `lixeira`      | excluídos com 30 dias para restaurar (chave `colecao__id`, com `_de`/`_apagadoEm`/`_apagadoPor`/`_lote`) |
+| `log_alteracoes` | quem mudou o quê, uma linha por gravação, 90 dias; alimenta a aba Histórico de cada registro (ver [docs/AUTORIA-E-LOG.md](docs/AUTORIA-E-LOG.md)) |
 | `versoes`      | fotografias automáticas dos rascunhos (fora do espelho; lidas sob demanda no modal Versões) |
 | `fichas`       | Contexto: conhecimento de escrita (id = id do Painel) |
 | `regras`       | Contexto: regras com fonte obrigatória            |
 | `julgamentos`  | Contexto: pareceres e lições                      |
 | `presets`      | presets do sistema, lidos por todo mundo no login: `festa` (fases, categorias de custo, naturezas de máquina, formatos de peça) e `paginas` (registro das páginas próprias: slug, projeto, tipo, título) |
-| `paginas`      | páginas próprias de projeto, uma por slug (`paginas/sambadeponta` é a festa Ponta de Lança); subcoleção `edicoes`, uma edição por documento. Só a página lê |
+| `paginas`      | páginas próprias de projeto, uma por slug. `paginas/sambadeponta` tem a subcoleção `edicoes`; `paginas/caminhosdoforro` tem `cadastro`, `espacos`, `cotas`, `patrocinios`, `parceiros`, `orcamento_itens`, `slots`, `tarefas`, `arquivos` e `comentarios`. Só a página lê |
 
 Detalhes que diferem do artefato (por limitação do Firestore, que não aceita
 array dentro de array): as tuplas viraram arrays de objetos —
@@ -86,30 +98,50 @@ array dentro de array): as tuplas viraram arrays de objetos —
 `licoes: [{texto, regra}]`. O importador converte os dois sentidos: o `.json`
 exportado do artefato entra direto pelo botão **Importar**.
 
-Campos de manutenção: `_ord` (posição na listagem) e `atualizado` (ISO da última
-gravação, usado no último-ganha da sincronização).
+Campos de manutenção: `_ord` (posição na listagem), `atualizado` (ISO da última
+gravação, usado no último-ganha da sincronização) e `atualizadoPor` (e-mail de
+quem gravou por último).
+
+### Importar, exportar e histórico
+
+**Exportar** baixa um `.json` com as coleções da Central (as páginas próprias
+ainda ficam fora; o forró tem o botão próprio em Configuração → Dados na base).
+**Importar** aceita o pacote completo, o formato antigo (v2 e o do artefato) e
+também um JSON sem envelope com uma coleção só; antes de gravar mostra a
+conferência (o que entra, o que muda) e a prévia por portal. O **Guia de
+importação** mostra, por coleção, os campos aceitos (a mesma lista do modal de
+edição) e um modelo para copiar, em JSON e CSV. Gravações recusadas pelo banco
+ficam visíveis no menu da conta, e cada registro tem a aba **Histórico**, lida
+de `log_alteracoes`.
 
 ### Páginas próprias de projeto
 
-Um projeto pode ter uma página de gestão própria, em `/<slug>/` (a primeira é
-`/sambadeponta/`, a festa Ponta de Lança). Mesmo login e mesmo banco, casca
-própria, tudo em `src/pages/<slug>/`; o slug entra em `src/pages/paginasProprias.ts`
-e o registro em `presets/paginas`. O que a Central já tem, a página usa e não
-repete: as tarefas de cada edição são documentos de `tarefas` (origem `proj:<id>`,
-campos `edicaoId` e `fase`) e aparecem no quadro, no Resumo e na ficha do projeto;
-os fornecedores são `contatos` do tipo Fornecedor, e a linha de custo aponta
-`contatoId`; o nome da festa é o nome do projeto. Os totais por edição (previsto,
-contratado, pago, realizado, receita, resultado) a página grava no projeto
-(`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições e o
-cartão, a próxima edição; o detalhe nunca sai da página. O que só a página usa fica em
-`paginas/<slug>` (festa) e `paginas/<slug>/edicoes` (uma edição por documento).
-A primeira abertura semeia esses documentos a partir do JSON do artefato original.
-As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar a
-subcoleção.
+Um projeto pode ter uma página de gestão própria, em `/<slug>/`. Mesmo login e
+mesmo banco, casca própria, tudo em `src/paginas/<slug>/` (com `tailwind.config.js`
+e `estilos.css` próprios); o slug entra em `src/pages/paginasProprias.ts` e o
+registro em `presets/paginas`.
+
+- **Ponta de Lança** (`/sambadeponta/`): edições da festa, orçamento e fases.
+  O que a Central já tem, a página usa e não repete: as tarefas de cada edição
+  são documentos de `tarefas` (origem `proj:<id>`, campos `edicaoId` e `fase`)
+  e aparecem no quadro, no Resumo e na ficha do projeto; os fornecedores são
+  `contatos` do tipo Fornecedor, e a linha de custo aponta `contatoId`; o nome
+  da festa é o nome do projeto. Os totais por edição a página grava no projeto
+  (`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições
+  e o cartão, a próxima edição. O detalhe fica em `paginas/sambadeponta` e na
+  subcoleção `edicoes`. A primeira abertura semeia esses documentos a partir
+  do JSON do artefato original.
+- **Caminhos do Forró** (`/caminhosdoforro/`): página independente do festival
+  (cadastro geral, patrocínios e cotas, orçamento com simulador, programação,
+  tarefas por GT, arquivos, configuração). Todos os dados ficam nas
+  subcoleções de `paginas/caminhosdoforro`; nada entra nas coleções da Central.
+
+As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar as
+subcoleções.
 
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 
-Na página do festival (`/caminhosdoforro/`), a aba Tarefas é o plano de ação da
+Na página do festival, a aba Tarefas é o plano de ação da
 equipe. Cada tarefa (documento de `paginas/caminhosdoforro/tarefas`) tem, além
 de título, núcleo, responsável, prazo, status e anotações, os campos do plano:
 `codigo` (o ID, "ART-001"), `frente`, `prioridade` (crítica, alta, média ou
@@ -125,55 +157,69 @@ da última importação (`planilha`, o texto das células, e `importado`, o que 
 gravado a partir dele), então só entra o que mudou na planilha, coluna que não
 veio não mexe em nada, e o que mudou dos dois lados aparece como conflito (vale
 a Central, a não ser que se escolha a planilha). **Baixar planilha** devolve as
-tarefas no mesmo formato.
+tarefas no mesmo formato. O cadastro geral tem o mesmo importar por tela, com
+as colunas da própria lista.
 O código está em `src/paginas/caminhosdoforro/tarefas/` (`xlsx.ts` lê o arquivo,
-`plano.ts` compara, `ModalImportarPlano.tsx` mostra e grava).
+`plano.ts` compara, `ModalImportarPlano.tsx` mostra e grava) e em
+`src/paginas/caminhosdoforro/importar/`.
 
 ## Mapa do código
 
 Estrutura padrão de projeto React: `components` (UI compartilhada), `pages`
-(uma tela por arquivo), `forms` (especificações de formulário por entidade),
+(uma tela por arquivo, as telas da Central), `paginas` (as páginas próprias,
+uma pasta por slug), `forms` (especificações de formulário por entidade),
 `services` (integrações), `store` (estado global), `lib` (regras de negócio
 puras), `types`, `utils`, `data` e `styles`.
 
 ```
 src/
-  main.tsx / App.tsx       ← entrada e casca (login, aviso, layout, roteadores)
+  main.tsx / App.tsx       ← entrada e casca (login, aviso, layout, roteadores, limite de erro)
   components/
-    Modal.tsx              ← modal padrão (usado por todos os modais do site)
-    BotaoExcluir.tsx       ← exclusão com confirmação em dois cliques
+    ui/                    ← blocos visuais em Tailwind (Botao, Painel, Badge, Tabela, Modal...)
+    layout/                ← BarraLateral, CabecalhoPagina, BarraAbas, BarraFerramentas, MenuConta, ModalGravacoes
+    ferramentas/           ← ModalExportar, ModalImportar, GuiaImportacao
+    Modal.tsx, BotaoExcluir.tsx, ModalExclusao.tsx, BlocoEditavel.tsx, Filtros.tsx
     BuscaGlobal.tsx        ← paleta de busca em tudo (Ctrl+K)
+    Historico.tsx          ← aba Histórico (log de alterações) de um registro
+    LimiteDeErro.tsx       ← um erro de tela derruba só a tela, não a casca
     CabecalhoSecao.tsx, Toast.tsx
-    layout/                ← Cabecalho, BarraAbas, BarraFerramentas
   forms/
-    especificacoes/        ← um arquivo por entidade (artista.ts, edital.ts...)
+    especificacoes/        ← um arquivo por entidade (artista.ts, edital.ts, proponente.ts...)
     FormularioRegistro.tsx ← o modal Novo/Editar que desenha qualquer entidade
     CampoDoFormulario.tsx  ← render de um campo da especificação
   pages/
-    Login.tsx, RoteadorPainel.tsx
-    painel/                ← Resumo, Pendencias
+    Login.tsx, RoteadorPainel.tsx, paginasProprias.ts
+    painel/                ← Resumo, Pendencias, RevisaoArtistas
     cadastros/
       artistas/            ← ListaArtistas, FichaArtista (Geral com pendências, Marca, Contexto, Projetos)
+      proponentes/         ← ListaProponentes, ModalConsultaCnpj
       editais/             ← ListaEditais, Panoramas (o que pontua, campos, lacunas, alertas), FichaEdital
       formularios/         ← ListaFormularios (com as plataformas), FichaFormulario, ModalImportarFormulario
     agenda/                ← Cronograma, Calendario
     pessoas/               ← Elenco, Equipe, Contatos
     gestao/                ← Reunioes, FichaReuniao, QuadroTarefas, Lixeira, Migracao
-    projetos/              ← Projetos (roteador), VisaoGeral, Pipeline, FichaProjeto, GeralProjeto,
+    projetos/              ← Projetos (roteador), VisaoGeral, Pipeline, BancoTextos, FichaProjeto,
+                             GeralProjeto (+ Dados, Documentos, Interno, Tarefas), EdicoesDoProjeto,
                              ContextoProjeto, ModalNovoProjeto, Transferencia
-      formulario/          ← Formulario, LateralEtapas, Campo
+      formulario/          ← Formulario, LateralEtapas, Campo, Contador, ModalVersoes, ModalReaproveitar
         campos/            ← um componente por tipo de campo (texto, rádio, docs...)
-      orcamento/           ← PlanilhaOrcamento, ResumoOrcamento, BarraTotais
+      orcamento/           ← PlanilhaOrcamento, LinhaPlanilha, ResumoOrcamento, BarraTotais
     contexto/              ← Contexto, Geral, Fichas, Regras, ModalRegra,
                              Julgamentos, ModalJulgamento, Trocar, RegrasParaRascunho
+  paginas/
+    sambadeponta/          ← página da festa: casca, menu, edição/, festa/, calculo, dados, semente
+    caminhosdoforro/       ← página do festival: casca, cadastro/, patrocinios/, orcamento/,
+                             programacao/, tarefas/, arquivos/, importar/, configuracao/, ui/ próprio
   services/
     firebase.ts            ← conexão (env) — sem env = modo local
-    banco.ts               ← camada de armazenamento (Firestore ⇄ localStorage)
+    banco.ts               ← camada de armazenamento (Firestore ⇄ localStorage), autor e log
     sessao.ts              ← login e-mail/senha
   store/
     central.ts             ← estado global (usarCentral) + semeadura
     mutacoes.ts            ← salvar/excluir registros, rascunhos e docs do Contexto
     importarExportar.ts    ← pacote .json (v3; v2 e o do artefato são convertidos na hora)
+    modelosImportacao.ts   ← campos e modelo por coleção (guia de importação, JSON sem envelope)
+    planilha.ts            ← exportação em CSV
     migracao.ts            ← migração v2 → v3 no banco ao vivo, com backup
     vinculos.ts            ← impacto de excluir (o que vai junto)
     navegacao.ts           ← navegação + endereço na URL (#/ambiente/aba/tipo/id)
@@ -187,19 +233,24 @@ src/
     contexto/              ← consultas de fichas/regras + bloco "Trocar com o Claude"
     busca.ts               ← índice e filtro da busca global
     prazos.ts              ← urgência de prazos (editais, tarefas, reuniões)
-    nomes.ts, agenda.ts, documentos.ts
-  types/                   ← entidades documentadas (painel, simulador, contexto)
+    proponentes.ts         ← ler o proponente escrito nos projetos e propor cadastros
+    cnpj.ts                ← consulta de CNPJ na Receita
+    textos.ts              ← índice do banco de textos
+    nomes.ts, agenda.ts, documentos.ts, csv.ts, arrastar.ts
+  types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto)
   data/                    ← catálogos estáticos (Salic, plataformas) + sementes de migração;
                              as definições de formulário vivem no banco (coleção formularios)
-  utils/                   ← ids, datas, dinheiro, clipboard, download
-  styles/estilos.css       ← CSS portado 1:1 do artefato
+  utils/                   ← ids, datas, dinheiro, clipboard, download, classes
+  styles/central.css       ← entrada do Tailwind da Central (tokens em tailwind.config.js)
 ```
 
 ## LGPD
 
-A regra do coletivo (r24 no Contexto) é que CPF, RG e dados bancários ficam
+A regra do coletivo (r24 no Contexto) diz que CPF, RG e dados bancários ficam
 fora da Central: vivem no Drive e só entram no formulário oficial do edital.
-Os campos `rg`, `cpf` e `nascimento` ainda existem em `equipe` e `elenco` por
-compatibilidade, mas saíram das Pendências e da exportação em planilha, e a
-semente do repositório não traz esses dados. Se o repositório for público,
-lembre que o histórico do Git guarda as versões antigas da semente.
+Desde out/2026 os formulários de Elenco e Equipe voltaram a ter `rg` e `cpf`,
+porque são a base das fichas técnicas dos editais; esses campos entram na
+exportação `.json` e na planilha CSV, e as regras do Firestore liberam a leitura
+para qualquer conta logada. A redação nova da r24 ainda está pendente. A semente
+do repositório não traz esses dados. Se o repositório for público, lembre que o
+histórico do Git guarda as versões antigas da semente.

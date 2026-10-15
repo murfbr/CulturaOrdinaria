@@ -48,14 +48,19 @@ export const prazoEncerrado = (e: Edital, hoje = hojeIso()): boolean =>
 export const statusEfetivo = (e: Edital, hoje = hojeIso()): StatusEdital =>
   prazoEncerrado(e, hoje) ? "closed" : e.status;
 
+/** "1/2 do valor", "3/4 das vagas": fração, não data. Só pesa sobre d/m sem ano. */
+const FRACAO_DEPOIS = /^\s*(do|da|dos|das|de)\b/i;
+
 /** Última data de um alerta: `ate`, ou a maior data dd/mm(/aaaa) escrita em `quando`. */
 export function dataDoAlerta(a: AlertaEdital, e?: Edital): string {
   if (a.ate) return a.ate;
   const anoBase = (e?.prazoIso || hojeIso()).slice(0, 4);
+  const texto = a.quando || "";
   let maior = "";
-  for (const m of (a.quando || "").matchAll(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/g)) {
+  for (const m of texto.matchAll(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/g)) {
     const dia = Number(m[1]); const mes = Number(m[2]);
     if (!dia || dia > 31 || !mes || mes > 12) continue;
+    if (!m[3] && FRACAO_DEPOIS.test(texto.slice((m.index ?? 0) + m[0].length))) continue;
     const ano = m[3] ? (m[3].length === 2 ? "20" + m[3] : m[3]) : anoBase;
     const iso = ano + "-" + String(mes).padStart(2, "0") + "-" + String(dia).padStart(2, "0");
     if (iso > maior) maior = iso;

@@ -91,13 +91,14 @@ export const chaveNome = (s: string) => semAcento(s).toLowerCase()
 const A_CONFIRMAR = /\(\s*a confirmar\s*\)|\ba confirmar\b/i;
 const CNPJ = /\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/;
 
-/** Nome limpo, situação e apelidos (o que vem entre parênteses costuma ser o nome fantasia). */
+/** Nome limpo, situação e chaves de junção: a razão social com e sem o parêntese.
+    O que vem entre parênteses (nome fantasia) não junta sozinho: proponentes
+    diferentes podem usar o mesmo nome fantasia. */
 function lerNome(bruto: string): { nome: string; aConfirmar: boolean; chaves: string[] } {
   const aConfirmar = A_CONFIRMAR.test(bruto);
   const nome = bruto.replace(A_CONFIRMAR, "").replace(/\s+/g, " ").trim();
-  const entre = [...nome.matchAll(/\(([^)]+)\)/g)].map((m) => m[1]);
   const fora = nome.replace(/\([^)]*\)/g, " ").trim();
-  const chaves = [chaveNome(nome), chaveNome(fora), ...entre.map(chaveNome)].filter((k) => k.length > 2);
+  const chaves = [chaveNome(nome), chaveNome(fora)].filter((k) => k.length > 2);
   return { nome, aConfirmar, chaves: [...new Set(chaves)] };
 }
 
@@ -113,8 +114,8 @@ const maisCompleto = (a: string, b: string) =>
 
 /**
  * Lê o proponente escrito em cada projeto (sem vínculo com o cadastro) e
- * propõe: cadastros novos (um por nome, juntando variações e nome fantasia
- * entre parênteses) e o vínculo de cada projeto. Não grava nada.
+ * propõe: cadastros novos (um por razão social, juntando as grafias com e sem
+ * o nome fantasia entre parênteses) e o vínculo de cada projeto. Não grava nada.
  */
 export function planoDosProjetos(painel: DadosPainel, novoId: () => string): PlanoProponentes {
   const plano: PlanoProponentes = { novos: [], vinculos: [] };
@@ -125,6 +126,8 @@ export function planoDosProjetos(painel: DadosPainel, novoId: () => string): Pla
     const bruto = (p.proponente?.nome || "").trim();
     if (!bruto || p.proponenteId) continue;
     const { nome, aConfirmar, chaves } = lerNome(bruto);
+    // Só "(a confirmar)", sem nome: não há proponente para cadastrar nem vincular.
+    if (!nome) continue;
     const obs = p.proponente?.obs || "";
     const cnpj = (obs.match(CNPJ) || [""])[0];
     let alvo = chaves.map((k) => porChave.get(k)).find(Boolean);

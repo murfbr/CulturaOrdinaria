@@ -21,7 +21,7 @@
       "codigos": "campo[571389], específicos do edital",
       "limites": "variam por edital (ICMS sem limite; Mobilidade 5000; 86 usa 800)",
       "anexos": "só na plataforma",
-      "armadilhas": "Cloudflare derruba a sessão com pedidos rápidos; rótulo de rádio sem os colchetes do name; bug de rótulo no endereço.",
+      "armadilhas": "Cloudflare derruba a sessão com pedidos rápidos; rótulo de rádio sem os colchetes do name; bug de rótulo no endereço; o botão Cadastrar abre uma confirmação do navegador antes de gravar; o envio da proposta é pelo link submeter-projeto.php.",
       "url": ""
     },
     {

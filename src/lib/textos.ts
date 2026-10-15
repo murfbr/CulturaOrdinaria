@@ -75,15 +75,21 @@ export function indiceDeTextos(painel: DadosPainel, rascunhos: Record<string, Ra
     if (!f) continue;
     const projeto = projetoDe(r);
     if (projeto?.arquivado) continue;
-    for (const c of camposDeTexto(f)) {
-      const v = r.valores?.[c.n];
-      if (typeof v !== "string" || v.trim().length < MINIMO) continue;
-      const conceito = conceitoDoCampo(c);
-      if (!conceito) continue;
-      saida.push({
-        conceito, texto: v, rascunhoId: r.id, campo: c.n, campoRotulo: c.l || c.n,
-        limite: c.max, status: r.status?.[c.n] || "rasc", projeto, formNome: f.nome, atualizado: r.atualizado || "",
-      });
+    // Formulário malformado (etapa sem blocos, bloco sem campos...) derruba só
+    // este rascunho, não o índice inteiro nem a aba Formulário dos outros projetos.
+    try {
+      for (const c of camposDeTexto(f)) {
+        const v = r.valores?.[c.n];
+        if (typeof v !== "string" || v.trim().length < MINIMO) continue;
+        const conceito = conceitoDoCampo(c);
+        if (!conceito) continue;
+        saida.push({
+          conceito, texto: v, rascunhoId: r.id, campo: c.n, campoRotulo: c.l || c.n,
+          limite: c.max, status: r.status?.[c.n] || "rasc", projeto, formNome: f.nome, atualizado: r.atualizado || "",
+        });
+      }
+    } catch (e) {
+      console.warn("índice de textos: rascunho " + r.id + " pulado (formulário " + r.form + " malformado)", e);
     }
   }
   return saida;
