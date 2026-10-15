@@ -25,6 +25,7 @@ import { FichaReuniao } from "./gestao/FichaReuniao";
 import { QuadroTarefas } from "./gestao/QuadroTarefas";
 import { Lixeira } from "./gestao/Lixeira";
 import { Migracao } from "./gestao/Migracao";
+import { PaginasExtras } from "./gestao/PaginasExtras";
 import type { ColecaoPainel } from "../types";
 
 const COLECAO_DO_DETALHE: Record<string, ColecaoPainel> = {
@@ -74,6 +75,7 @@ export function RoteadorPainel() {
     case "quadro": return <QuadroTarefas />;
     case "lixeira": return <Lixeira />;
     case "migracao": return <Migracao />;
+    case "paginas-extras": return <PaginasExtras />;
     default: return <Resumo />;
   }
 }

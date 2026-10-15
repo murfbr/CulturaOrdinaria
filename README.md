@@ -139,6 +139,16 @@ registro em `presets/paginas`.
 As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar as
 subcoleções.
 
+**Como nasce uma página nova.** Quem vai gerir o evento monta um protótipo no
+Claude da própria conta, seguindo [docs/diretrizes-pagina-de-evento.md](docs/diretrizes-pagina-de-evento.md):
+a pessoa anexa o arquivo no chat e vai construindo aos poucos, e o roteiro faz o
+protótipo nascer com os campos da Central e com dois botões, "Baixar a base em
+JSON" e "Ficha de entrega". Ela envia o link do artefato, o JSON e a ficha; a
+equipe técnica verifica e transforma em página com a skill `pagina-propria`
+(`.claude/skills/pagina-propria/`, carregada pelo Claude Code ao abrir o
+repositório: passo 0 de verificação, estrutura no banco, pasta fazendo igual o
+forró, os cinco toques fora da pasta, semente, teste e fechamento).
+
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 
 Na página do festival, a aba Tarefas é o plano de ação da
