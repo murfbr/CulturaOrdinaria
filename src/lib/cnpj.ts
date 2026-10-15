@@ -1,8 +1,11 @@
-/* Consulta pública de CNPJ (dados abertos da Receita, via BrasilAPI) para
-   completar o cadastro de Proponentes: data de abertura, CNAE, sede, perfil
-   (MEI ou empresa, com ou sem fins lucrativos) e situação cadastral.
-   Só dados de empresa: sem sócios, endereço, telefone ou e-mail. A consulta
-   parte do navegador de quem clica; nada é gravado sem a prévia. */
+/* Consulta pública de CNPJ (dados abertos da Receita) para completar o
+   cadastro de Proponentes: data de abertura, CNAE, sede, perfil (MEI ou
+   empresa, com ou sem fins lucrativos) e situação cadastral.
+   Duas fontes com o mesmo JSON: a BrasilAPI e o Minha Receita (a BrasilAPI
+   espelha o Minha Receita). Tenta a primeira e, se ela estiver fora do ar ou
+   não responder, tenta a segunda. Só dados de empresa: sem sócios, endereço,
+   telefone ou e-mail. A consulta parte do navegador de quem clica; nada é
+   gravado sem a prévia. */
 import type { Proponente } from "../types";
 
 export interface CnaeInfo { codigo: string; descricao: string }
@@ -36,10 +39,12 @@ const tituloCidade = (s: string) => (s || "").toLowerCase()
   .replace(/(^|[\s-])(\p{L})/gu, (_m, a: string, b: string) => a + b.toUpperCase())
   .replace(/\b(De|Da|Do|Das|Dos|E)\b/g, (x) => x.toLowerCase());
 
-/** A razão social de MEI traz o CPF do titular no fim ("NOME 12345678901"):
-    tira qualquer número com cara de CPF antes de levar para a Central (r24). */
+/** A razão social de MEI traz o CPF do titular no fim ("NOME 12345678901")
+    ou, nos registros mais novos, a raiz do CNPJ na frente ("59.928.108 NOME"):
+    tira os dois antes de levar para a Central (r24). */
 export const semCpf = (s: string) => (s || "")
   .replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "")
+  .replace(/^\s*\d{2}\.?\d{3}\.?\d{3}\b/, "")
   .replace(/\s+/g, " ").trim();
 
 /** Converte a resposta da BrasilAPI (campos da base aberta da Receita). */
@@ -64,20 +69,86 @@ export function mapearBrasilApi(j: Record<string, unknown>): DadosCnpj {
   };
 }
 
-/** Consulta o CNPJ. `buscar` pode ser trocado nos testes. */
+export const FONTES_CNPJ = [
+  { nome: "BrasilAPI", url: (d: string) => `https://brasilapi.com.br/api/cnpj/v1/${d}` },
+  { nome: "Minha Receita", url: (d: string) => `https://minhareceita.org/${d}` },
+];
+
+/** Tempo máximo de espera por fonte; passou, tenta a próxima. */
+const ESPERA_MS = 8000;
+
+/** Erro que vale tentar a fonte seguinte (fora do ar, lenta, sem rede). Não
+    encontrado e limite de consultas são respostas da base, não da fonte. */
+class FonteIndisponivel extends Error {}
+
+/* ── Log no console ──
+   Cada tentativa que falha vira um `console.warn("[consulta CNPJ] ...")` com
+   um objeto: cnpj, fonte, url, status, tempo em ms e o começo do corpo da
+   resposta (ou o nome do erro de rede: TimeoutError é o tempo esgotado,
+   TypeError é sem rede ou CORS). Quando todas falham, um `console.error`
+   resume as tentativas. Filtre o console por "consulta CNPJ". */
+const ROTULO = "[consulta CNPJ]";
+
+interface Tentativa {
+  cnpj: string;
+  fonte: string;
+  url: string;
+  status: number | null;
+  ms: number;
+  /** começo do corpo da resposta, ou "<nome do erro>: <mensagem>" */
+  detalhe: string;
+}
+
+const trecho = (s: string) => (s || "").replace(/\s+/g, " ").trim().slice(0, 300);
+
+async function consultarNaFonte(cnpj: string, fonte: string, url: string, buscar: typeof fetch): Promise<DadosCnpj> {
+  const inicio = performance.now();
+  const ms = () => Math.round(performance.now() - inicio);
+  let r: Response;
+  try {
+    r = await buscar(url, { signal: AbortSignal.timeout(ESPERA_MS) });
+  } catch (e) {
+    const err = e as Error;
+    const t: Tentativa = { cnpj, fonte, url, status: null, ms: ms(), detalhe: `${err?.name || "Error"}: ${err?.message || String(e)}` };
+    console.warn(ROTULO, `${fonte} não respondeu`, t);
+    throw new FonteIndisponivel(err?.name === "TimeoutError" ? `não respondeu em ${ESPERA_MS / 1000} s` : "não respondeu");
+  }
+  if (!r.ok) {
+    const corpo = await r.text().catch(() => "");
+    const t: Tentativa = { cnpj, fonte, url, status: r.status, ms: ms(), detalhe: trecho(corpo) || "(corpo vazio)" };
+    console.warn(ROTULO, `${fonte} devolveu ${r.status}`, t);
+    if (r.status === 404) throw new Error("CNPJ não encontrado na base da Receita");
+    if (r.status === 429) throw new Error("muitas consultas seguidas; tente de novo em um minuto");
+    throw new FonteIndisponivel(`erro ${r.status}`);
+  }
+  const texto = await r.text();
+  try {
+    return mapearBrasilApi(JSON.parse(texto));
+  } catch (e) {
+    const t: Tentativa = { cnpj, fonte, url, status: r.status, ms: ms(), detalhe: trecho(texto) || "(corpo vazio)" };
+    console.warn(ROTULO, `${fonte} respondeu ${r.status}, mas o corpo não é o JSON esperado`, t, e);
+    throw new FonteIndisponivel("resposta inesperada");
+  }
+}
+
+/** Consulta o CNPJ nas fontes, em ordem, até uma responder. `buscar` pode ser
+    trocado nos testes. */
 export async function consultarCnpj(cnpj: string, buscar: typeof fetch = fetch): Promise<DadosCnpj> {
   const d = soDigitos(cnpj);
   if (d.length !== 14) throw new Error("o CNPJ precisa ter 14 dígitos");
-  let r: Response;
-  try {
-    r = await buscar(`https://brasilapi.com.br/api/cnpj/v1/${d}`);
-  } catch {
-    throw new Error("a consulta não respondeu (sem internet ou serviço fora do ar)");
+  const falhas: string[] = [];
+  for (const fonte of FONTES_CNPJ) {
+    try {
+      const dados = await consultarNaFonte(d, fonte.nome, fonte.url(d), buscar);
+      if (falhas.length) console.info(ROTULO, `${d}: ${fonte.nome} respondeu depois de falhar em ${falhas.join(", ")}`);
+      return dados;
+    } catch (e) {
+      if (!(e instanceof FonteIndisponivel)) throw e;
+      falhas.push(`${fonte.nome} ${e.message}`);
+    }
   }
-  if (r.status === 404) throw new Error("CNPJ não encontrado na base da Receita");
-  if (r.status === 429) throw new Error("muitas consultas seguidas; tente de novo em um minuto");
-  if (!r.ok) throw new Error(`consulta indisponível agora (erro ${r.status})`);
-  return mapearBrasilApi(await r.json());
+  console.error(ROTULO, `${d}: todas as fontes falharam (${falhas.join("; ")}); os avisos acima têm status, tempo e corpo de cada tentativa`);
+  throw new Error(`consulta indisponível agora (${falhas.join("; ")})`);
 }
 
 /* ── CNAE ligado a cultura ──

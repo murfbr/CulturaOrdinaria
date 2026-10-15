@@ -1,8 +1,8 @@
-/* Consulta os CNPJs na base pública da Receita e mostra, proponente por
-   proponente, o que mudaria no cadastro (abertura, CNAE, sede, perfil e uma
-   linha de observação com situação e razão social). Nada é gravado antes de
-   "Aplicar". As consultas vão uma de cada vez, com pausa, para não esbarrar
-   no limite do serviço. */
+/* Consulta os CNPJs na base pública da Receita (BrasilAPI, e Minha Receita
+   quando a primeira falha) e mostra, proponente por proponente, o que mudaria
+   no cadastro (abertura, CNAE, sede, perfil e uma linha de observação com
+   situação e razão social). Nada é gravado antes de "Aplicar". As consultas
+   vão uma de cada vez, com pausa, para não esbarrar no limite do serviço. */
 import { useEffect, useState } from "react";
 import { AcoesModal, Modal, RodapeModal } from "../../../components/Modal";
 import { toast } from "../../../components/Toast";
@@ -82,8 +82,8 @@ export function ModalConsultaCnpj({ alvos, aoFechar }: { alvos: Proponente[]; ao
   return (
     <Modal titulo="Consultar CNPJ na Receita" aoFechar={aoFechar} largo>
       <Dica emModal className="mb-3">
-        Base pública da Receita (via BrasilAPI): só dados da empresa, sem sócios, endereço ou contato.
-        Confira as mudanças e desmarque o que não quiser gravar.
+        Base pública da Receita, pela BrasilAPI ou, se ela estiver fora do ar, pelo Minha Receita: só dados da empresa,
+        sem sócios, endereço ou contato. Confira as mudanças e desmarque o que não quiser gravar.
       </Dica>
       <div className="flex max-h-[56vh] flex-col gap-3 overflow-auto">
         {alvos.map((p) => {
@@ -126,7 +126,7 @@ export function ModalConsultaCnpj({ alvos, aoFechar }: { alvos: Proponente[]; ao
       </div>
       {terminou && algumErro && (
         <Dica emModal className="mt-3">
-          Se a consulta automática falhar, dá para ver o cartão CNPJ no site da Receita
+          As duas fontes falharam para algum CNPJ. Dá para fechar e tentar de novo daqui a pouco, ou ver o cartão CNPJ no site da Receita
           (<a className={ESTILO_LINK} href={RECEITA} target="_blank" rel="noreferrer">comprovante de inscrição</a>) e preencher à mão no cadastro.
         </Dica>
       )}
