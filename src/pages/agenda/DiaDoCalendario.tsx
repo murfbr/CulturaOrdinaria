@@ -1,7 +1,8 @@
 /* Painel do dia do Calendário: o que o dia selecionado tem, na ordem de
    importância. Prazos de edital em destaque (no molde do Cronograma: nome,
    projetos ligados, urgência e status), reuniões com hora e tarefas com
-   responsável. Cada linha abre a ficha ou a edição sem sair da aba. */
+   responsável, cada bloco com a régua na cor do tipo (a mesma da grade:
+   vermelho, azul, verde). Cada linha abre a ficha ou a edição sem sair da aba. */
 import { Painel } from "../../components/ui/Painel";
 import { Badge } from "../../components/ui/Badge";
 import { Rotulo } from "../../components/ui/Rotulo";
@@ -46,7 +47,7 @@ export function DiaDoCalendario({ iso, itens }: { iso: string; itens?: ItensDoDi
       })}
 
       {itens?.reunioes.map((r) => (
-        <div key={r.id} className={LINHA} title="abrir a ficha da reunião" onClick={() => abrirDetalhe("reuniao", r.id)}>
+        <div key={r.id} className={cx(LINHA, "border-l-stamp border-l-est")} title="abrir a ficha da reunião" onClick={() => abrirDetalhe("reuniao", r.id)}>
           <span className="font-mono text-xs text-muted">{r.hora || "—:—"}</span>
           <span className={cx("min-w-0 flex-1 truncate font-semibold", r.status === "realizada" && "text-faint line-through")}>
             {r.titulo || "Reunião"}
@@ -56,7 +57,7 @@ export function DiaDoCalendario({ iso, itens }: { iso: string; itens?: ItensDoDi
       ))}
 
       {itens?.tarefas.map((t) => (
-        <div key={t.id} className={LINHA} title="editar a tarefa" onClick={() => abrirEdicao("tarefa", t.id)}>
+        <div key={t.id} className={cx(LINHA, "border-l-stamp border-l-ok")} title="editar a tarefa" onClick={() => abrirEdicao("tarefa", t.id)}>
           <span className="min-w-0 flex-1 text-sm font-semibold leading-tight">{t.titulo}</span>
           {t.respId && <Avatar pequeno iniciais={nomeEquipe(t.respId)[0] || "?"} title={nomeEquipe(t.respId)} />}
         </div>

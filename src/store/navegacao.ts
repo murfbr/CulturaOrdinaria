@@ -18,7 +18,7 @@ export interface Ambiente {
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
   { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"], ["pessoas", "Pessoas"]] },
-  { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["cronograma", "Cronograma"], ["calendario", "Calendário"]] },
+  { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["calendario", "Calendário"], ["cronograma", "Cronograma"]] },
   { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"], ["paginas-extras", "Páginas Extras"]] },
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },

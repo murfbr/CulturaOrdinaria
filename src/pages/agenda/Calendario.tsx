@@ -1,9 +1,10 @@
-/* Calendário: grade do mês com os prazos de editais em destaque e a contagem
-   de tarefas e reuniões por dia, mais a célula da semana (rótulo e os focos da
-   aba Semana) à esquerda de cada linha. Clicar num dia abre o painel do dia ao
-   lado da grade (DiaDoCalendario), sem sair da aba; o marcador do edital abre a
-   ficha direto; a célula da semana é o único atalho para a aba Semana. Três
-   filtros por tipo, lembrados no navegador. A grade rola de lado no celular. */
+/* Calendário: grade do mês com tudo listado no dia, uma cor por tipo: prazo
+   de edital em vermelho cheio (destaque), reunião em azul e tarefa em verde,
+   mais a célula da semana (rótulo e os focos da aba Semana) à esquerda de cada
+   linha. Clicar num dia abre o painel do dia ao lado da grade (DiaDoCalendario),
+   sem sair da aba; o marcador do edital abre a ficha direto; a célula da semana
+   é o único atalho para a aba Semana. Três filtros por tipo, lembrados no
+   navegador, que também são a legenda das cores. A grade rola de lado no celular. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe, abrirSemana } from "../../store/navegacao";
@@ -20,7 +21,13 @@ import { DiaDoCalendario } from "./DiaDoCalendario";
 import type { Semana } from "../../types";
 import { MESES } from "../../utils";
 
-const FILTROS: [TipoItem, string][] = [["editais", "Editais"], ["tarefas", "Tarefas"], ["reunioes", "Reuniões"]];
+/** Cor de cada tipo: o marcador na célula e o quadradinho da legenda ao lado do filtro. */
+const COR_TIPO: Record<TipoItem, { marcador: string; legenda: string }> = {
+  editais: { marcador: "bg-accent text-on-fill hover:bg-ink", legenda: "bg-accent" },
+  reunioes: { marcador: "bg-est-soft text-est", legenda: "bg-est" },
+  tarefas: { marcador: "bg-ok-soft text-ok", legenda: "bg-ok" },
+};
+const FILTROS: [TipoItem, string][] = [["editais", "Editais"], ["reunioes", "Reuniões"], ["tarefas", "Tarefas"]];
 const CHAVE_FILTROS = "central-calendario-filtros";
 
 function carregarFiltros(): Record<TipoItem, boolean> {
@@ -33,16 +40,6 @@ function mesesDoCalendario(dias: string[], mesAtual: string): string[] {
   const conjunto = new Set(dias.map((d) => d.slice(0, 7)));
   conjunto.add(mesAtual);
   return [...conjunto].sort();
-}
-
-/** "2 tarefas · 1 reunião"; vazio quando o dia não tem nenhuma. */
-function contagens(itens?: ItensDoDia): string {
-  if (!itens) return "";
-  const partes: string[] = [];
-  const t = itens.tarefas.length, r = itens.reunioes.length;
-  if (t) partes.push(t === 1 ? "1 tarefa" : `${t} tarefas`);
-  if (r) partes.push(r === 1 ? "1 reunião" : `${r} reuniões`);
-  return partes.join(" · ");
 }
 
 /** Célula da semana, à esquerda da linha: o intervalo e os focos da aba Semana. Clique abre a semana. */
@@ -59,19 +56,16 @@ function CelulaSemana({ segunda, doc }: { segunda: string; doc?: Semana }) {
   );
 }
 
-/** Um dia da grade: número no alto, um marcador laranja por prazo de edital (clique abre a
-    ficha) e as tarefas e reuniões: a contagem quando os editais estão ligados, os nomes em
-    fonte pequena quando estão desligados (`nomes`). Clique na célula seleciona o dia.
-    `vazia` é o espaço antes do dia 1 e depois do último. */
-function Celula({ vazia, iso, itens, hoje, selecionado, nomes, aoSelecionar }: {
-  vazia?: boolean; iso: string; itens?: ItensDoDia; hoje: string; selecionado: boolean; nomes: boolean; aoSelecionar: () => void;
+const MARCADOR = "mt-1 truncate rounded-md px-1.5 py-0.5 text-3xs font-semibold leading-tight";
+
+/** Um dia da grade: número no alto e um marcador por item, na cor do tipo: prazo de
+    edital (clique abre a ficha), reunião com hora e tarefa. Clique na célula seleciona
+    o dia. `vazia` é o espaço antes do dia 1 e depois do último. */
+function Celula({ vazia, iso, itens, hoje, selecionado, aoSelecionar }: {
+  vazia?: boolean; iso: string; itens?: ItensDoDia; hoje: string; selecionado: boolean; aoSelecionar: () => void;
 }) {
   if (vazia) return <div className="min-h-20 rounded-lg border border-transparent p-1.5" />;
   const ehHoje = iso === hoje;
-  const resumo = nomes ? "" : contagens(itens);
-  const linhas = nomes && itens
-    ? [...itens.reunioes.map((r) => (r.hora ? r.hora + " " : "") + (r.titulo || "Reunião")), ...itens.tarefas.map((t) => t.titulo)]
-    : [];
   return (
     <div
       className={cx(
@@ -82,14 +76,18 @@ function Celula({ vazia, iso, itens, hoje, selecionado, nomes, aoSelecionar }: {
       title="ver o dia" onClick={aoSelecionar}>
       <div className={cx("text-xs font-semibold", ehHoje ? "text-accent" : "text-faint")}>{Number(iso.slice(8))}</div>
       {(itens?.editais || []).map((e) => (
-        <div key={e.editalId} title="abrir a ficha do edital"
-          className="mt-1 rounded-md bg-accent px-1.5 py-0.5 text-3xs font-semibold leading-tight text-on-fill hover:bg-ink"
+        <div key={e.editalId} title="abrir a ficha do edital" className={cx(MARCADOR, COR_TIPO.editais.marcador)}
           onClick={(ev) => { ev.stopPropagation(); abrirDetalhe("edital", e.editalId); }}>
           {tituloCurto(e.titulo)}
         </div>
       ))}
-      {resumo && <div className="mt-1 text-2xs leading-tight text-muted">{resumo}</div>}
-      {linhas.map((l, k) => <div key={k} className="mt-1 truncate text-2xs leading-tight text-muted" title={l}>{l}</div>)}
+      {(itens?.reunioes || []).map((r) => {
+        const texto = (r.hora ? r.hora + " " : "") + (r.titulo || "Reunião");
+        return <div key={r.id} className={cx(MARCADOR, COR_TIPO.reunioes.marcador)} title={texto}>{texto}</div>;
+      })}
+      {(itens?.tarefas || []).map((t) => (
+        <div key={t.id} className={cx(MARCADOR, COR_TIPO.tarefas.marcador)} title={t.titulo}>{t.titulo}</div>
+      ))}
     </div>
   );
 }
@@ -134,18 +132,19 @@ export function Calendario() {
       const foraDoMes = iso.slice(0, 7) !== meses[i];
       celulas.push(
         <Celula key={iso} vazia={foraDoMes} iso={iso} itens={itensDe(iso)} hoje={hoje}
-          selecionado={iso === diaAberto} nomes={!filtros.editais} aoSelecionar={() => setDiaAberto(iso)} />,
+          selecionado={iso === diaAberto} aoSelecionar={() => setDiaAberto(iso)} />,
       );
     }
   }
 
   return (
     <>
-      <CabecalhoSecao titulo="Calendário" sub="visão de mês — prazos dos editais em destaque, tarefas e reuniões no dia" />
+      <CabecalhoSecao titulo="Calendário" sub="visão de mês — prazos dos editais, reuniões e tarefas no dia, uma cor por tipo" />
       <CabecalhoSecao titulo={`${MESES[mes - 1]} ${ano}`}>
         {FILTROS.map(([tipo, rotulo]) => (
           <label key={tipo} className="mr-1 flex cursor-pointer items-center gap-1.5 text-sm">
             <CaixaMarcar marcado={filtros[tipo]} aoMudar={() => alternarFiltro(tipo)} title={filtros[tipo] ? "esconder" : "mostrar"} />
+            <span className={cx("inline-block size-2.5 rounded-sm", COR_TIPO[tipo].legenda)} />
             {rotulo}
           </label>
         ))}
@@ -162,7 +161,7 @@ export function Calendario() {
         </div>
         <DiaDoCalendario iso={diaAberto} itens={itensDe(diaAberto)} />
       </div>
-      <Dica className="mt-2">Clique no dia para ver o que ele tem ao lado; no marcador laranja, abre a ficha do edital; na célula da semana, abre a aba Semana. As tarefas são as em aberto com prazo no dia.</Dica>
+      <Dica className="mt-2">Clique no dia para ver o que ele tem ao lado; no marcador vermelho, abre a ficha do edital; na célula da semana, abre a aba Semana. As tarefas são as em aberto com prazo no dia.</Dica>
     </>
   );
 }
