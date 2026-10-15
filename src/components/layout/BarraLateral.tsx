@@ -1,4 +1,4 @@
-/* Barra lateral do site: a marca em selo, a busca, os sete ambientes em
+/* Barra lateral do site: a marca em selo, a busca, os seis ambientes em
    grupos (Painel; Trabalho; Escrita) com o item ativo em vermelho, e no
    rodapé o status do banco, Exportar, Importar, o que ainda não chegou ao
    banco (quando há problema) e Sair. O botão Agenda mostra quantos prazos
@@ -23,7 +23,7 @@ import { ModalGravacoes } from "./ModalGravacoes";
 /** Os grupos do menu, por id de ambiente. O que não está aqui vai solto no topo. */
 const GRUPOS: { rotulo: string; ids: string[] }[] = [
   { rotulo: "", ids: ["painel"] },
-  { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "pessoas", "gestao"] },
+  { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "gestao"] },
   { rotulo: "Escrita", ids: ["contexto"] },
 ];
 

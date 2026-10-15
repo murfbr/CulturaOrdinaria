@@ -1,17 +1,17 @@
-/* Contatos externos: patrocinadores, órgãos e responsáveis por editais —
+/* Contatos externos (Cadastros → Pessoas): patrocinadores, órgãos e responsáveis por editais —
    com busca, filtro por tipo e colunas ordenáveis. A linha inteira abre a
    edição; o botão "editar" da última coluna faz o mesmo. */
 import { useState } from "react";
-import { usarCentral } from "../../store/central";
-import { abrirEdicao, abrirNovo } from "../../store/edicao";
-import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { usarCentral } from "../../../store/central";
+import { abrirEdicao, abrirNovo } from "../../../store/edicao";
+import { CabecalhoSecao } from "../../../components/CabecalhoSecao";
 import {
   BarraFiltros, CampoBusca, SeletorFiltro, ThOrdenavel, ordenarLinhas, type OrdemTabela,
-} from "../../components/Filtros";
-import { Botao } from "../../components/ui/Botao";
-import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
-import { Vazio } from "../../components/ui/Vazio";
-import { comparar } from "../../utils";
+} from "../../../components/Filtros";
+import { Botao } from "../../../components/ui/Botao";
+import { Tabela, Th, Td, Tr } from "../../../components/ui/Tabela";
+import { Vazio } from "../../../components/ui/Vazio";
+import { comparar } from "../../../utils";
 
 export function Contatos() {
   const { painel } = usarCentral();

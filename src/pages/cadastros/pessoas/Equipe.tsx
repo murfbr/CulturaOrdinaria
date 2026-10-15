@@ -1,18 +1,18 @@
-/* Equipe do coletivo: tabela com funções e e-mail (que alimenta os convites) —
+/* Equipe do coletivo (Cadastros → Pessoas): tabela com funções e e-mail (que alimenta os convites) —
    busca e ordenação. A linha inteira abre a edição; o botão "editar" da
    última coluna faz o mesmo. */
 import { useState } from "react";
-import { usarCentral } from "../../store/central";
-import { abrirEdicao, abrirNovo } from "../../store/edicao";
-import { CabecalhoSecao } from "../../components/CabecalhoSecao";
-import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../components/Filtros";
-import { Botao } from "../../components/ui/Botao";
-import { Chip } from "../../components/ui/Chip";
-import { Avatar } from "../../components/ui/Avatar";
-import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
-import { Vazio } from "../../components/ui/Vazio";
-import { ESTILO_APAGADO } from "../../components/ui/estilos";
-import { comparar } from "../../utils";
+import { usarCentral } from "../../../store/central";
+import { abrirEdicao, abrirNovo } from "../../../store/edicao";
+import { CabecalhoSecao } from "../../../components/CabecalhoSecao";
+import { BarraFiltros, CampoBusca, SeletorFiltro } from "../../../components/Filtros";
+import { Botao } from "../../../components/ui/Botao";
+import { Chip } from "../../../components/ui/Chip";
+import { Avatar } from "../../../components/ui/Avatar";
+import { Tabela, Th, Td, Tr } from "../../../components/ui/Tabela";
+import { Vazio } from "../../../components/ui/Vazio";
+import { ESTILO_APAGADO } from "../../../components/ui/estilos";
+import { comparar } from "../../../utils";
 
 export function Equipe() {
   const { painel } = usarCentral();

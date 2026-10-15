@@ -1,19 +1,19 @@
-/* Elenco / colaboradores: tabela de músicos e técnicos que entram nos editais —
+/* Elenco / colaboradores (Cadastros → Pessoas): tabela de músicos e técnicos que entram nos editais —
    busca, filtros por função e documentos, colunas ordenáveis. A linha inteira
    abre a edição; o botão "editar" da última coluna faz o mesmo. */
 import { useState } from "react";
-import { usarCentral } from "../../store/central";
-import { abrirEdicao, abrirNovo } from "../../store/edicao";
-import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { usarCentral } from "../../../store/central";
+import { abrirEdicao, abrirNovo } from "../../../store/edicao";
+import { CabecalhoSecao } from "../../../components/CabecalhoSecao";
 import {
   BarraFiltros, CampoBusca, SeletorFiltro, ThOrdenavel, ordenarLinhas, type OrdemTabela,
-} from "../../components/Filtros";
-import { Botao } from "../../components/ui/Botao";
-import { Badge } from "../../components/ui/Badge";
-import { Tabela, Th, Td, Tr } from "../../components/ui/Tabela";
-import { Vazio } from "../../components/ui/Vazio";
-import { ESTILO_APAGADO } from "../../components/ui/estilos";
-import { comparar } from "../../utils";
+} from "../../../components/Filtros";
+import { Botao } from "../../../components/ui/Botao";
+import { Badge } from "../../../components/ui/Badge";
+import { Tabela, Th, Td, Tr } from "../../../components/ui/Tabela";
+import { Vazio } from "../../../components/ui/Vazio";
+import { ESTILO_APAGADO } from "../../../components/ui/estilos";
+import { comparar } from "../../../utils";
 
 export function Elenco() {
   const { painel } = usarCentral();

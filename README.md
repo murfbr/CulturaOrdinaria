@@ -1,10 +1,11 @@
 # Central do Coletivo
 
-Site de gestão do coletivo cultural. Sete ambientes: **Painel** (resumo,
+Site de gestão do coletivo cultural. Seis ambientes: **Painel** (resumo,
 pendências e revisão das fichas dos artistas), **Cadastros** (artistas,
-proponentes, editais do Mapa dos Editais e os formulários mapeados),
-**Agenda** (cronograma e calendário), **Pessoas** (elenco, equipe e contatos
-externos), **Gestão** (reuniões, tarefas, lixeira e migração), **Projetos**
+proponentes, editais do Mapa dos Editais, os formulários mapeados e a aba
+Pessoas com elenco, equipe e contatos externos), **Agenda** (cronograma e
+calendário),
+**Gestão** (reuniões, tarefas, lixeira e migração), **Projetos**
 (o lugar de trabalho: cada projeto é uma candidatura, com o formulário do
 edital, a transferência para a plataforma oficial, o pipeline por status e o
 banco de textos) e **Contexto** de escrita (fichas, regras e julgamentos)
@@ -205,8 +206,8 @@ src/
       proponentes/         ← ListaProponentes, ModalConsultaCnpj
       editais/             ← ListaEditais, Panoramas (o que pontua, campos, lacunas, alertas), FichaEdital
       formularios/         ← ListaFormularios (com as plataformas), FichaFormulario, ModalImportarFormulario
+      pessoas/             ← Pessoas (sub-abas), Elenco, Equipe, Contatos (eram o ambiente Pessoas até 15/10/2026)
     agenda/                ← Cronograma, Calendario
-    pessoas/               ← Elenco, Equipe, Contatos
     gestao/                ← Reunioes, FichaReuniao, QuadroTarefas, Lixeira, Migracao
     projetos/              ← Projetos (roteador), VisaoGeral, Pipeline, BancoTextos, FichaProjeto,
                              GeralProjeto (+ Dados, Documentos, Interno, Tarefas), EdicoesDoProjeto,

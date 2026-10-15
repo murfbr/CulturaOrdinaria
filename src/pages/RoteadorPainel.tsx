@@ -1,5 +1,5 @@
 /* Roteia o conteúdo dos ambientes de gestão (Painel, Cadastros, Agenda,
-   Pessoas, Gestão): ou uma ficha de detalhe aberta, ou a tela da aba.
+   Gestão): ou uma ficha de detalhe aberta, ou a tela da aba.
    Projetos e Contexto têm roteadores próprios (ver App). */
 import { useEffect } from "react";
 import { usarCentral } from "../store/central";
@@ -17,9 +17,7 @@ import { RevisaoArtistas } from "./painel/RevisaoArtistas";
 import { FichaFormulario } from "./cadastros/formularios/FichaFormulario";
 import { Cronograma } from "./agenda/Cronograma";
 import { Calendario } from "./agenda/Calendario";
-import { Elenco } from "./pessoas/Elenco";
-import { Equipe } from "./pessoas/Equipe";
-import { Contatos } from "./pessoas/Contatos";
+import { Pessoas } from "./cadastros/pessoas/Pessoas";
 import { Reunioes } from "./gestao/Reunioes";
 import { FichaReuniao } from "./gestao/FichaReuniao";
 import { QuadroTarefas } from "./gestao/QuadroTarefas";
@@ -68,9 +66,7 @@ export function RoteadorPainel() {
     case "revisao": return <RevisaoArtistas />;
     case "cronograma": return <Cronograma />;
     case "calendario": return <Calendario />;
-    case "elenco": return <Elenco />;
-    case "equipe": return <Equipe />;
-    case "contatos": return <Contatos />;
+    case "pessoas": return <Pessoas />;
     case "reunioes": return <Reunioes />;
     case "quadro": return <QuadroTarefas />;
     case "lixeira": return <Lixeira />;
