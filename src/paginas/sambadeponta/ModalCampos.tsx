@@ -1,7 +1,7 @@
 /* Modal genérico de campos, o `form()` do artefato: recebe a lista de campos
    e os valores atuais, devolve o objeto preenchido no Aplicar. Excluir é
    opcional. Cada tela usa `usarModalCampos()` e chama `abrir(pedido)`. */
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { num } from "./calculo";
 
 export type TipoCampo = "texto" | "numero" | "data" | "select" | "textarea";
@@ -58,8 +58,14 @@ export function ModalCampos({ pedido, aoFechar }: { pedido: PedidoModal; aoFecha
     pedido.aoAplicar(saida);
   }
 
+  // Clique fora = apertou e soltou no fundo; seleção que termina no fundo não fecha.
+  const apertouNoFundo = useRef(false);
   return (
-    <div className="sdp-modalbg" onClick={(e) => { if (e.target === e.currentTarget) aoFechar(); }}>
+    <div
+      className="sdp-modalbg"
+      onMouseDown={(e) => { apertouNoFundo.current = e.target === e.currentTarget; }}
+      onClick={(e) => { if (apertouNoFundo.current && e.target === e.currentTarget) aoFechar(); }}
+    >
       <div className="sdp-modal" role="dialog" aria-modal="true">
         <h3>{pedido.titulo}</h3>
         <div className="form">

@@ -1,7 +1,8 @@
 /* Moldura dos modais do artefato: título, fechar, corpo em duas colunas,
    rodapé com a auditoria, Excluir (dois cliques), Cancelar e Salvar. O
-   conteúdo é um <form>: Enter salva. Esc e clique fora fecham. */
-import { useEffect, type FormEvent, type ReactNode } from "react";
+   conteúdo é um <form>: Enter salva. Esc e clique fora fecham (clique fora =
+   apertou e soltou no fundo; seleção de texto que termina no fundo não fecha). */
+import { useEffect, useRef, type FormEvent, type ReactNode } from "react";
 import { Botao } from "./Botao";
 import { BotaoArmado } from "./BotaoArmado";
 
@@ -32,11 +33,13 @@ export function Modal({ titulo, auditoria, aoFechar, aoSalvar, aoExcluir, ocupad
   }, [aoFechar]);
 
   function enviar(ev: FormEvent) { ev.preventDefault(); if (!ocupado && !bloqueado) aoSalvar(); }
+  const apertouNoFundo = useRef(false);
 
   return (
     <div
       className="cdf:fixed cdf:inset-0 cdf:z-50 cdf:flex cdf:items-center cdf:justify-center cdf:bg-[rgba(9,12,38,.55)] cdf:p-3"
-      onClick={(e) => { if (e.target === e.currentTarget) aoFechar(); }}
+      onMouseDown={(e) => { apertouNoFundo.current = e.target === e.currentTarget; }}
+      onClick={(e) => { if (apertouNoFundo.current && e.target === e.currentTarget) aoFechar(); }}
     >
       <form
         onSubmit={enviar} noValidate role="dialog" aria-modal="true" aria-labelledby="cdf-modal-titulo"
