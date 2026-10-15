@@ -1,7 +1,7 @@
 /* Agenda derivada: os prazos vêm dos editais com data, e cada reunião sabe
    gerar seu link de convite do Google Agenda. */
 import { porId } from "../store/mutacoes";
-import type { Edital, Projeto, Reuniao } from "../types";
+import type { DadosPainel, Edital, Projeto, Reuniao, Tarefa } from "../types";
 
 /** Evento de prazo derivado dos editais com data. */
 export interface EventoAgenda {
@@ -25,6 +25,44 @@ export function eventosAgenda(editais: Edital[], projetos: Projeto[]): EventoAge
     }))
     .sort((a, b) => (a.iso < b.iso ? -1 : 1));
 }
+
+/** Os três tipos de item do Calendário (e os filtros da tela). */
+export type TipoItem = "editais" | "tarefas" | "reunioes";
+
+/** O que um dia tem no Calendário: prazos de editais, tarefas e reuniões do dia. */
+export interface ItensDoDia {
+  editais: EventoAgenda[];
+  /** Tarefas com prazo no dia e ainda não feitas (as concluídas somem, como no quadro), na ordem do quadro. */
+  tarefas: Tarefa[];
+  /** Reuniões do dia, pela data ou pela próxima ocorrência das recorrentes, na ordem da hora. */
+  reunioes: Reuniao[];
+}
+
+/** Itens por data ISO, para a grade do Calendário. Só entram dias com algo. */
+export function itensPorDia(painel: DadosPainel): Record<string, ItensDoDia> {
+  const dias: Record<string, ItensDoDia> = {};
+  const dia = (iso: string) => (dias[iso] ||= { editais: [], tarefas: [], reunioes: [] });
+  for (const e of eventosAgenda(painel.editais, painel.projetos)) dia(e.iso).editais.push(e);
+  const tarefas = [...painel.tarefas].sort((a, b) => (a._ord || 0) - (b._ord || 0));
+  for (const t of tarefas) if (t.prazo && t.status !== "feito") dia(t.prazo).tarefas.push(t);
+  // Mesma regra da aba Semana: a reunião aparece na data e, se for outra, na próxima ocorrência.
+  for (const r of painel.reunioes) {
+    for (const data of new Set([r.data, r.proxima])) if (data) dia(data).reunioes.push(r);
+  }
+  for (const d of Object.values(dias)) d.reunioes.sort((a, b) => (a.hora || "").localeCompare(b.hora || ""));
+  return dias;
+}
+
+/** O dia só com os tipos ligados no filtro. */
+export const filtrarItens = (itens: ItensDoDia, ligados: Record<TipoItem, boolean>): ItensDoDia => ({
+  editais: ligados.editais ? itens.editais : [],
+  tarefas: ligados.tarefas ? itens.tarefas : [],
+  reunioes: ligados.reunioes ? itens.reunioes : [],
+});
+
+/** true quando o dia não tem nada (depois do filtro). */
+export const diaVazio = (itens?: ItensDoDia): boolean =>
+  !itens || (!itens.editais.length && !itens.tarefas.length && !itens.reunioes.length);
 
 /** Título curto de um evento (corta o que vem depois de "—" ou "("). */
 export const tituloCurto = (t: string) => t.split(/[—(]/)[0].trim();

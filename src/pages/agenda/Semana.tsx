@@ -1,4 +1,5 @@
-/* Semana: o planejamento semanal do coletivo. Três textos da semana (focos,
+/* Semana: o planejamento semanal do coletivo. A semana aberta vem da navegação
+   (URL #/agenda/semana/<segunda>; sem ela, a atual). Três textos da semana (focos,
    o que fica pronto até sexta, prazos no horizonte) e seis colunas numa grade
    de duas linhas por três (o site é de mesa): segunda a sexta mais "Durante a
    semana", com as tarefas de cada dia. Os itens são tarefas normais: as com
@@ -10,7 +11,7 @@ import { useEffect, useState, type KeyboardEvent } from "react";
 import { usarCentral } from "../../store/central";
 import { alternarTarefaConcluida, salvarRegistro, salvarSemana, soltarTarefaEmDia } from "../../store/mutacoes";
 import { abrirEdicao, abrirNovo } from "../../store/edicao";
-import { abrirDetalhe } from "../../store/navegacao";
+import { abrirDetalhe, definirSemanaAberta, usarNavegacao } from "../../store/navegacao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { Avatar } from "../../components/ui/Avatar";
 import { Botao } from "../../components/ui/Botao";
@@ -124,9 +125,12 @@ function AdicionarNoDia({ segunda, prazo }: { segunda: string; prazo: string }) 
 
 export function Semana() {
   const { painel, semanas } = usarCentral();
+  const { semanaAberta } = usarNavegacao();
   const hoje = hojeIso();
-  const [segunda, setSegunda] = useState(() => segundaDe(hoje));
   const semanaAtual = segundaDe(hoje);
+  // A semana aberta mora na navegação (e na URL): o Calendário abre uma semana, e o voltar do navegador funciona.
+  const segunda = semanaAberta || semanaAtual;
+  const setSegunda = (s: string) => definirSemanaAberta(s === semanaAtual ? null : s);
   const doc = semanas[segunda];
   const colunas = colunasDaSemana(segunda);
   const porColuna = tarefasPorColuna(painel.tarefas, segunda);

@@ -51,6 +51,8 @@ interface EstadoNavegacao {
   fichaAberta: string | null;
   /** Julgamento selecionado no Contexto. */
   julgamentoAberto: string | null;
+  /** Semana aberta na aba Semana da Agenda (segunda-feira ISO); null = a semana atual. */
+  semanaAberta: string | null;
 }
 
 const CHAVE = "central-nav-v3";
@@ -69,6 +71,8 @@ function paraHash(n: EstadoNavegacao): string {
     partes.push(n.fichaAberta);
   } else if (n.amb === "contexto" && n.aba === "julgamentos" && n.julgamentoAberto) {
     partes.push(n.julgamentoAberto);
+  } else if (n.amb === "agenda" && n.aba === "semana" && n.semanaAberta) {
+    partes.push(n.semanaAberta);
   }
   return "#/" + partes.map(encodeURIComponent).join("/");
 }
@@ -88,6 +92,11 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
   const aba = (amb.abas.find(([id]) => id === partes[1]) || amb.abas[0])[0];
   const lido: Partial<EstadoNavegacao> = { amb: amb.id, aba, detalhe: null };
   const [alvo, id, sub] = partes.slice(2);
+  // A semana vai na URL ("#/agenda/semana/2026-10-13"); sem ela, é a semana atual.
+  if (amb.id === "agenda" && aba === "semana") {
+    lido.semanaAberta = alvo && /^\d{4}-\d{2}-\d{2}$/.test(alvo) ? alvo : null;
+    return lido;
+  }
   if (!alvo) return lido;
   if (amb.id === "contexto" && aba === "fichas") lido.fichaAberta = alvo;
   else if (amb.id === "contexto" && aba === "julgamentos") lido.julgamentoAberto = alvo;
@@ -98,7 +107,9 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
 }
 
 function carregar(): EstadoNavegacao {
-  const padrao: EstadoNavegacao = { amb: "painel", aba: "resumo", detalhe: null, fichaAberta: null, julgamentoAberto: null };
+  const padrao: EstadoNavegacao = {
+    amb: "painel", aba: "resumo", detalhe: null, fichaAberta: null, julgamentoAberto: null, semanaAberta: null,
+  };
   let base = padrao;
   try {
     const salvo = JSON.parse(localStorage.getItem(CHAVE) || "{}");
@@ -241,5 +252,21 @@ export function abrirJulgamento(id: string) {
 
 export function definirJulgamentoAberto(id: string | null) {
   nav.julgamentoAberto = id;
+  publicar();
+}
+
+/** Abre a aba Semana da Agenda numa semana (segunda-feira ISO). O Calendário usa. */
+export function abrirSemana(segunda: string) {
+  nav.semanaAberta = segunda;
+  nav.amb = "agenda";
+  nav.aba = "semana";
+  nav.detalhe = null;
+  publicar();
+  window.scrollTo({ top: 0 });
+}
+
+/** Troca a semana aberta (setas da aba Semana); null volta à semana atual. */
+export function definirSemanaAberta(segunda: string | null) {
+  nav.semanaAberta = segunda;
   publicar();
 }
