@@ -65,7 +65,7 @@ export function PaginasExtras() {
         </Painel>
       )}
 
-      <Dica>Não coloque CPF, RG, dados bancários nem senha de ninguém na página.</Dica>
+      <Dica>CPF e CNPJ podem entrar na página. Não coloque RG, dados bancários nem senha de ninguém.</Dica>
     </>
   );
 }

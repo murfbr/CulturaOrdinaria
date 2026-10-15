@@ -23,7 +23,7 @@ Conferir, nesta ordem, e sem escrever código:
 5. **O que vai para presets** (lista que só preenche select e vale para mais de uma página: `presets/<tipo>`) e o que fica no documento da página (listas do evento). Enum que o código interpreta fica no código.
 6. **Os três números da ficha** batem com as fórmulas do protótipo, recalculados do JSON. Se não baterem, a fórmula da ficha está errada ou o JSON está incompleto: volta para a pessoa.
 7. **A Central recebe só totais** (`Projeto.resumoEdicoes` ou equivalente), nunca o detalhe. Se a ficha pede que a Central mostre linhas da página, é uma tela que abre o detalhe puxando da página, não dado copiado.
-8. **Nada sensível:** CPF, RG, dados bancários, senha. Se vier, sai antes da semente.
+8. **Sensível:** RG, dados bancários e senha não entram; se vier, sai antes da semente. CPF e CNPJ podem ficar na página, mas a semente não leva CPF: o repositório é público, então CPF entra no banco pela tela ou pela importação, nunca pelo arquivo de semente.
 
 Entregue ao Gustavo ou ao Antonio uma lista em três blocos: **entra como está**, **entra com ajuste** (qual), **volta para a pessoa** (o quê e por quê). Pare aí. Montar começa com o "pode fazer" deles.
 

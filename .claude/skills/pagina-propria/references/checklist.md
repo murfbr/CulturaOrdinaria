@@ -12,7 +12,7 @@ Marque em ordem. Um item pulado no passo 0 volta como retrabalho no passo 5.
 - [ ] Decidido o que vai para `presets/<tipo>` e o que fica em `paginas/<slug>`.
 - [ ] Os três números da ficha recalculados do JSON e batendo.
 - [ ] A Central recebe só totais; nenhum detalhe da página copiado para ela.
-- [ ] Nada sensível (CPF, RG, dados bancários, senha).
+- [ ] Nada de RG, dados bancários ou senha. CPF fora da semente (CNPJ pode).
 - [ ] Lista entregue em três blocos: entra como está / entra com ajuste / volta para a pessoa. **Parar e esperar o "pode fazer".**
 
 ## Antes do código (passo 1)

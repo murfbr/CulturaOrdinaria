@@ -18,7 +18,7 @@ A Central do Coletivo pode ter uma página própria para cada evento (como a do 
 
 A página só entra no ar depois dessa verificação. Se faltar algo, a gente volta a falar com você.
 
-Não coloque CPF, RG, dados bancários nem senha de ninguém na página.
+CPF e CNPJ podem entrar na página. Não coloque RG, dados bancários nem senha de ninguém.
 
 ---
 
@@ -52,7 +52,7 @@ Tudo que a pessoa pede cai numa de três caixas. Você decide em qual, sem pergu
 - Uma lista por conceito; referência entre listas pelo `id` do registro, nunca pelo nome.
 - Responsável por tarefa e fornecedor de um custo ficam como **nome em texto** no protótipo (a página de verdade vincula pelo nome exato com a equipe e os contatos que já existem). Não invente ids de pessoas do coletivo.
 - Os dados cadastrados precisam sobreviver a fechar e reabrir o artefato: guarde no armazenamento do artefato ou do navegador, o que estiver disponível.
-- Nunca peça nem guarde CPF, RG, dados bancários ou senhas.
+- CPF e CNPJ podem entrar (CNPJ é dado público; CPF só onde o cadastro precisa). Nunca peça nem guarde RG, dados bancários ou senhas.
 - Telas pequenas, uma por seção. Cada seção vai virar um arquivo de código; uma tela gigante vira um problema.
 
 ### Vocabulário da Central (campos que já existem)
