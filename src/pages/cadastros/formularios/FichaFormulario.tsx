@@ -17,6 +17,7 @@ import { Chip } from "../../../components/ui/Chip";
 import { Dado, Dados } from "../../../components/ui/Dados";
 import { Grade } from "../../../components/ui/Grade";
 import { Linha } from "../../../components/ui/Linha";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { Painel } from "../../../components/ui/Painel";
 import { Rotulo } from "../../../components/ui/Rotulo";
 import { Tabela, Td } from "../../../components/ui/Tabela";
@@ -103,7 +104,7 @@ export function FichaFormulario({ id }: { id: string }) {
           <Dados>
             {plat.url && (
               <Dado rotulo="Endereço">
-                <a className={cx(ESTILO_LINK, "break-all")} href={url(plat.url)} target="_blank" rel="noopener noreferrer">{plat.url} ↗</a>
+                <LinkArquivo className={cx(ESTILO_LINK, "break-all")} href={url(plat.url)}>{plat.url} ↗</LinkArquivo>
               </Dado>
             )}
             {([["Arquitetura", plat.arq], ["Porta de entrada", plat.porta], ["Códigos", plat.codigos], ["Limites", plat.limites], ["Anexos", plat.anexos], ["Armadilhas", plat.armadilhas]] as [string, string][])

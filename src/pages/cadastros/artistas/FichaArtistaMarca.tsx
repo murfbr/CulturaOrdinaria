@@ -4,6 +4,7 @@ import { BlocoEditavel } from "../../../components/BlocoEditavel";
 import { ESTILO_CONTROLE } from "../../../components/ui/Campo";
 import { Dado, Dados } from "../../../components/ui/Dados";
 import { Dica } from "../../../components/ui/Dica";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { Painel } from "../../../components/ui/Painel";
 import { ESTILO_LINK } from "../../../components/ui/estilos";
 import { url } from "../../../utils";
@@ -53,7 +54,7 @@ export function FichaArtistaMarca({ d, alterarDet }: PropsAcervo) {
               <Dado rotulo="Logo" forte>{m.logo}</Dado>
               <Dado rotulo="Tipografia" forte>{m.fonte}</Dado>
               <Dado rotulo="Observações">{m.obs}</Dado>
-              {m.manual && <Dado rotulo="Manual"><a className={ESTILO_LINK} href={url(m.manual)} target="_blank" rel="noopener noreferrer">abrir ↗</a></Dado>}
+              {m.manual && <Dado rotulo="Manual"><LinkArquivo className={ESTILO_LINK} href={url(m.manual)} titulo="Manual da marca">abrir ↗</LinkArquivo></Dado>}
             </Dados>
           </>
         ) : VAZIO_ACERVO}
@@ -68,7 +69,7 @@ export function FichaArtistaMarca({ d, alterarDet }: PropsAcervo) {
             onChange={(e) => alterarDet((det) => {
               det.marca = { cores: [], logo: "", fonte: "", obs: "", ...(det.marca || {}), pastaFotos: e.target.value };
             }, false)} />
-          {m?.pastaFotos && <a className={cx(ESTILO_LINK, "text-xs")} href={url(m.pastaFotos)} target="_blank" rel="noopener noreferrer">abrir ↗</a>}
+          {m?.pastaFotos && <LinkArquivo className={cx(ESTILO_LINK, "text-xs")} href={url(m.pastaFotos)}>abrir ↗</LinkArquivo>}
         </div>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-2.5">
           {Array.from({ length: Math.min(d.fotos || 0, 12) }).map((_, i) => (
@@ -91,7 +92,7 @@ export function FichaArtistaMarca({ d, alterarDet }: PropsAcervo) {
         {(d.links || []).length ? (d.links || []).map((l, i) => (
           <LinhaMarcada key={i} marca="↗" estreita>
             <b>{l.rotulo}</b>{" "}
-            <a className="break-all text-muted hover:underline" href={url(l.url)} target="_blank" rel="noopener noreferrer">{l.url}</a>
+            <LinkArquivo className="break-all text-muted hover:underline" href={url(l.url)}>{l.url}</LinkArquivo>
           </LinhaMarcada>
         )) : VAZIO_ACERVO}
       </BlocoEditavel>

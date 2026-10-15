@@ -3,6 +3,7 @@
 import { Badge } from "../../../components/ui/Badge";
 import { Chip } from "../../../components/ui/Chip";
 import { Linha } from "../../../components/ui/Linha";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { Painel } from "../../../components/ui/Painel";
 import { ESTILO_APAGADO, ESTILO_AUXILIAR, ESTILO_LINK } from "../../../components/ui/estilos";
 import { QUEM_RESOLVE, type Edital } from "../../../types";
@@ -36,7 +37,7 @@ export function FichaEditalNotas({ e }: { e: Edital }) {
           <ul className={cx("m-0 list-disc pl-5", ESTILO_AUXILIAR)}>
             {fontes.map((f, i) => (
               <li key={i} className="my-0.5 break-all">
-                {/^https?:/.test(f) ? <a className={ESTILO_LINK} href={f} target="_blank" rel="noopener noreferrer">{f}</a> : f}
+                {/^https?:/.test(f) ? <LinkArquivo className={ESTILO_LINK} href={f}>{f}</LinkArquivo> : f}
               </li>
             ))}
           </ul>

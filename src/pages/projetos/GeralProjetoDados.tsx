@@ -16,6 +16,7 @@ import { Botao } from "../../components/ui/Botao";
 import { Entrada, Selecao } from "../../components/ui/Campo";
 import { Dado, Dados } from "../../components/ui/Dados";
 import { Linha } from "../../components/ui/Linha";
+import { LinkArquivo } from "../../components/ui/LinkArquivo";
 import { Painel } from "../../components/ui/Painel";
 import { Rotulo } from "../../components/ui/Rotulo";
 import { ESTILO_LINK } from "../../components/ui/estilos";
@@ -84,7 +85,7 @@ export function GeralProjetoDados({ p }: { p: Projeto }) {
         <Dado rotulo="Nº de inscrição">{p.inscricao || TRACO}</Dado>
         <Dado rotulo="Resultado">{p.resultado || TRACO}</Dado>
         <Dado rotulo="Pasta no Drive">
-          {p.linkDrive ? <a className={ESTILO_LINK} href={url(p.linkDrive)} target="_blank" rel="noopener noreferrer">📁 abrir ↗</a> : TRACO}
+          {p.linkDrive ? <LinkArquivo className={ESTILO_LINK} href={url(p.linkDrive)}>📁 abrir ↗</LinkArquivo> : TRACO}
         </Dado>
         {pagina && <Dado rotulo="Página própria"><a className={ESTILO_LINK} href={"/" + pagina.slug + "/"}>{pagina.titulo} ↗</a></Dado>}
         {p.obs && <Dado rotulo="Observações"><span className="whitespace-pre-wrap">{p.obs}</span></Dado>}

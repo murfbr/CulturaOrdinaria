@@ -14,6 +14,7 @@ import { CartaoLista } from "../../../components/ui/CartaoLista";
 import { Dado, Dados } from "../../../components/ui/Dados";
 import { Dica } from "../../../components/ui/Dica";
 import { Grade } from "../../../components/ui/Grade";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { Pilulas } from "../../../components/ui/Pilulas";
 import { Tabela, Td, Th, Tr } from "../../../components/ui/Tabela";
 import { Vazio } from "../../../components/ui/Vazio";
@@ -149,7 +150,7 @@ export function ListaFormularios() {
               >
                 {p.url && (
                   <p className="m-0 mb-2 text-sm">
-                    <a className={ESTILO_LINK} href={url(p.url)} target="_blank" rel="noopener noreferrer">{p.url} ↗</a>
+                    <LinkArquivo className={ESTILO_LINK} href={url(p.url)}>{p.url} ↗</LinkArquivo>
                   </p>
                 )}
                 <Dados>

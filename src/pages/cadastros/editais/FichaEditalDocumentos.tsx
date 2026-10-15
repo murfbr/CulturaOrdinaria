@@ -4,6 +4,7 @@ import { Badge } from "../../../components/ui/Badge";
 import { Dados } from "../../../components/ui/Dados";
 import { Dica } from "../../../components/ui/Dica";
 import { Linha } from "../../../components/ui/Linha";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { Painel } from "../../../components/ui/Painel";
 import { Vazio } from "../../../components/ui/Vazio";
 import { ESTILO_APAGADO, ESTILO_LINK } from "../../../components/ui/estilos";
@@ -26,7 +27,7 @@ export function FichaEditalDocumentos({ e }: { e: Edital }) {
       <Painel titulo="Acervo no Drive">
         <Dados>
           <DadoEdital rotulo="Pasta do edital">
-            {e.linkDrive ? <a className={ESTILO_LINK} href={url(e.linkDrive)} target="_blank" rel="noopener noreferrer">📁 abrir ↗</a> : null}
+            {e.linkDrive ? <LinkArquivo className={ESTILO_LINK} href={url(e.linkDrive)}>📁 abrir ↗</LinkArquivo> : null}
           </DadoEdital>
         </Dados>
         {arquivos.map((a, i) => (

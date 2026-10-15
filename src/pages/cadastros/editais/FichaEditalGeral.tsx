@@ -9,6 +9,7 @@ import { Linha } from "../../../components/ui/Linha";
 import { Painel } from "../../../components/ui/Painel";
 import { Tabela, Td, Th } from "../../../components/ui/Tabela";
 import { ESTILO_LINK } from "../../../components/ui/estilos";
+import { LinkArquivo } from "../../../components/ui/LinkArquivo";
 import { alertaVencido } from "../../../lib/prazos";
 import { CATEGORIAS_EDITAL, ESFERAS, type CategoriaEdital, type Edital } from "../../../types";
 import { url } from "../../../utils";
@@ -97,11 +98,11 @@ export function FichaEditalGeral({ e }: { e: Edital }) {
           <Linha compacta key={i}>
             <div className="flex gap-2.5">
               <span className="flex-none text-xs font-bold text-accent">↗</span>
-              <a className={cx(ESTILO_LINK, "break-all")} href={url(l.url)} target="_blank" rel="noopener noreferrer">{l.rotulo}</a>
+              <LinkArquivo className={cx(ESTILO_LINK, "break-all")} href={url(l.url)}>{l.rotulo}</LinkArquivo>
             </div>
           </Linha>
         )) : e.linkEdital
-          ? <a className={cx(ESTILO_LINK, "break-all")} href={url(e.linkEdital)} target="_blank" rel="noopener noreferrer">↗ {e.linkEdital}</a>
+          ? <LinkArquivo className={cx(ESTILO_LINK, "break-all")} href={url(e.linkEdital)} titulo={e.nome}>↗ {e.linkEdital}</LinkArquivo>
           : TRACO}
       </Painel>
     </>
