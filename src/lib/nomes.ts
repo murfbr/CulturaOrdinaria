@@ -2,7 +2,7 @@
    projeto?", "qual o edital dele?") e rótulos derivados. */
 import { porId } from "../store/mutacoes";
 import { rotuloOrigemSemana } from "./semana";
-import { statusProjetoDe, type Edital, type Projeto, type Tarefa } from "../types";
+import { statusProjetoDe, type Edital, type PessoaEquipe, type Projeto, type Tarefa } from "../types";
 
 /** Nomes dos artistas de um projeto, juntos ("Bloco Brasil, Simpatia"). */
 export const nomesArtistas = (p?: Projeto): string =>
@@ -11,6 +11,13 @@ export const nomesArtistas = (p?: Projeto): string =>
 /** Nome de uma pessoa da equipe. */
 export const nomeEquipe = (id?: string): string =>
   (id && porId("equipe", id)?.nome) || "—";
+
+/** Pessoa da equipe cujo e-mail de cadastro é o do login (sem diferenciar
+    maiúsculas e espaços). undefined se não casar ou no modo local (e-mail vazio). */
+export function pessoaDaSessao(equipe: PessoaEquipe[], email: string): PessoaEquipe | undefined {
+  const alvo = email.trim().toLowerCase();
+  return alvo ? equipe.find((p) => (p.email || "").trim().toLowerCase() === alvo) : undefined;
+}
 
 /** Edital de um projeto. */
 export const editalDoProjeto = (p?: Projeto): Edital | undefined => (p?.editalId ? porId("editais", p.editalId) : undefined);
