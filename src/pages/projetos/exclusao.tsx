@@ -1,5 +1,6 @@
-/* Exclusão de projeto com o modal de impacto (tarefas ligadas, formulário).
-   Um hook para as telas que excluem: `pedir(p)` abre, `modal` desenha. */
+/* Exclusão de projeto com o modal de impacto (tarefas ligadas, formulário) e
+   a palavra "excluir" digitada para confirmar. Um hook para as telas que
+   excluem: `pedir(p)` abre, `modal` desenha. */
 import { useState } from "react";
 import { ModalExclusao } from "../../components/ModalExclusao";
 import { emLoteDeExclusao } from "../../store/mutacoes";
@@ -15,6 +16,7 @@ export function usarExclusaoProjeto(aoExcluir?: () => void) {
         titulo="Projeto"
         nome={pedido.p.nome}
         impacto={pedido.impacto}
+        confirmarComTexto="excluir"
         aoFechar={() => setPedido(null)}
         aoExcluir={(destino) => {
           emLoteDeExclusao(() => pedido.impacto.excluir(destino));

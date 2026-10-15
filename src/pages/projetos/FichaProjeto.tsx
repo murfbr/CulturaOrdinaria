@@ -1,5 +1,6 @@
 /* Ficha do projeto, em página: CabecalhoFicha com o nome editável, artistas,
-   edital e formulário, o status em pílula (◀ ▶) e as ações; abas Geral
+   edital e formulário, o status em pílula (◀ ▶) e as ações (Exportar o
+   formulário em PDF ou .doc, editar, duplicar, arquivar, excluir); abas Geral
    (dados, proponente, anotações, documentos, produção, tarefas), Formulário
    (as respostas no formulário do edital), Transferência (copiar para a
    plataforma oficial), Contexto (fichas e regras ligadas) e Histórico (quem
@@ -25,6 +26,7 @@ import { GeralProjeto } from "./GeralProjeto";
 import { FormularioRascunho } from "./formulario/Formulario";
 import { Transferencia } from "./Transferencia";
 import { ContextoProjeto } from "./ContextoProjeto";
+import { ModalExportarProjeto } from "./ModalExportarProjeto";
 import { usarExclusaoProjeto } from "./exclusao";
 import { Historico } from "../../components/Historico";
 
@@ -41,6 +43,7 @@ const link = (texto: ReactNode, abrir: () => void) => (
 export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
   const { painel, rascunhos, formularios } = usarCentral();
   const [etapas, setEtapas] = useState<Record<string, number>>(lerEtapas);
+  const [exportando, setExportando] = useState(false);
   const exclusao = usarExclusaoProjeto(() => fecharDetalhe());
   const edital = editalDoProjeto(p);
   const form = p.formId !== "livre" ? formularios[p.formId] : undefined;
@@ -125,6 +128,9 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
               </Badge>
               <Botao variante="fantasma" tamanho="pequeno" title="próximo status" onClick={() => moverProjeto(p, 1)}>▶</Botao>
             </span>
+            {form && rascunho && (
+              <Botao variante="fantasma" tamanho="pequeno" title="formulário em PDF ou .doc" onClick={() => setExportando(true)}>Exportar</Botao>
+            )}
             <Botao variante="fantasma" tamanho="pequeno" onClick={() => abrirEdicao("projeto", p.id)}>Editar dados</Botao>
             <Botao variante="fantasma" tamanho="pequeno" onClick={() => { const id = duplicarProjeto(p); toast("Projeto duplicado"); abrirProjeto(id); }}>Duplicar</Botao>
             <Botao variante="fantasma" tamanho="pequeno" onClick={() => { arquivarProjeto(p, !p.arquivado); toast(p.arquivado ? "Projeto reaberto" : "Projeto arquivado"); }}>
@@ -140,6 +146,9 @@ export function FichaProjeto({ p, sub }: { p: Projeto; sub: string }) {
 
       {corpo}
       {exclusao.modal}
+      {exportando && form && rascunho && (
+        <ModalExportarProjeto projeto={p} rascunho={normalizarRascunho(clonar(rascunho))} formulario={form} aoFechar={() => setExportando(false)} />
+      )}
     </>
   );
 }
