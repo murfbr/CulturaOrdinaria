@@ -366,6 +366,19 @@ export interface Reuniao {
   atualizado?: string;
 }
 
+/** Semana de trabalho (coleção `semanas`, fora do Painel): os três textos da
+    aba Semana da Agenda. id = segunda-feira ISO. Os itens do dia são tarefas. */
+export interface Semana {
+  id: string;
+  /** Os 2 ou 3 focos que valem para a semana inteira. */
+  focos: string;
+  /** O que fica pronto até sexta. */
+  entregas: string;
+  /** Prazos no horizonte (datas que puxam a semana). */
+  prazos: string;
+  atualizado?: string;
+}
+
 /** Pessoa da equipe do coletivo (quem recebe tarefas e convites de reunião). */
 export interface PessoaEquipe {
   id: string;

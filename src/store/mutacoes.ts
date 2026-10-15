@@ -12,7 +12,7 @@ import { normalizarFicha, normalizarJulgamento } from "../lib/contexto/normaliza
 import {
   STATUS_PROJETO, STATUS_TAREFA,
   type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type ItemChecklist, type ItemLixeira,
-  type Julgamento, type Projeto, type Proponente, type Rascunho, type Regra, type StatusProjeto, type StatusTarefa, type Tarefa,
+  type Julgamento, type Projeto, type Proponente, type Rascunho, type Regra, type Semana, type StatusProjeto, type StatusTarefa, type Tarefa,
 } from "../types";
 import type { PlanoProponentes } from "../lib/proponentes";
 
@@ -350,6 +350,11 @@ export function soltarTarefaEmPessoa(id: string, respId: string, antesDeId?: str
   soltarCartao("tarefas", id, (t) => { t.respId = respId; }, antesDeId);
 }
 
+/** Solta uma tarefa na coluna de um dia da Semana ("" = Durante a semana, sem prazo). */
+export function soltarTarefaEmDia(id: string, prazo: string, antesDeId?: string) {
+  soltarCartao("tarefas", id, (t) => { t.prazo = prazo; }, antesDeId);
+}
+
 /** Concluir/reabrir uma tarefa pelo checkzinho. */
 export function alternarTarefaConcluida(t: Tarefa) {
   const copia = clonar(t);
@@ -375,6 +380,16 @@ export function girarStatusTarefa(t: Tarefa, direcao: -1 | 1) {
   const i = Math.max(0, Math.min(2, STATUS_TAREFA.indexOf(copia.status) + direcao));
   copia.status = STATUS_TAREFA[i];
   salvarRegistro("tarefas", copia);
+}
+
+/* ══════════ Semanas ══════════ */
+
+/** Grava um dos três textos da semana (id = segunda ISO); cria o documento se não existe. */
+export function salvarSemana(id: string, campo: "focos" | "entregas" | "prazos", valor: string) {
+  const atual = obterEstado().semanas[id] || { id, focos: "", entregas: "", prazos: "" };
+  if (atual[campo] === valor) return;
+  const copia: Semana = { ...clonar(atual), [campo]: valor, atualizado: new Date().toISOString() };
+  Banco.gravar("semanas", id, copia as unknown as Documento, true);
 }
 
 /* ══════════ Proponentes ══════════ */

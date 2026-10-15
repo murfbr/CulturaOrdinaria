@@ -1,6 +1,7 @@
 /* Resolvedores de nomes entre coleções do Painel ("quais artistas estão neste
    projeto?", "qual o edital dele?") e rótulos derivados. */
 import { porId } from "../store/mutacoes";
+import { rotuloOrigemSemana } from "./semana";
 import { statusProjetoDe, type Edital, type Projeto, type Tarefa } from "../types";
 
 /** Nomes dos artistas de um projeto, juntos ("Bloco Brasil, Simpatia"). */
@@ -44,6 +45,7 @@ export function rotuloOrigem(origem?: string): string {
     const r = porId("reunioes", id);
     return "Reunião · " + (r ? r.titulo || r.data : "?");
   }
+  if (tipo === "semana") return rotuloOrigemSemana(id);
   if (tipo === "cand") return "Candidatura antiga · " + id;
   return "?";
 }

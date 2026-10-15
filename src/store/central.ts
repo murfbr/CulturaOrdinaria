@@ -16,7 +16,7 @@ import { clonar } from "../utils";
 import {
   COLECOES_PAINEL, PRESET_FESTA_PADRAO, type Candidatura, type ColecaoPainel, type DadosPainel, type Ficha,
   type Formulario, type ItemLixeira, type Julgamento, type PaginaPropria, type PresetFesta, type Presets,
-  type Projeto, type Rascunho, type Regra,
+  type Projeto, type Rascunho, type Regra, type Semana,
 } from "../types";
 import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
 
@@ -44,6 +44,8 @@ export interface EstadoCentral {
   };
   /** Presets do sistema (coleção `presets`): listas editáveis sem deploy e o registro das páginas próprias. */
   presets: Presets;
+  /** Semanas de trabalho (coleção `semanas`, aba Semana da Agenda), pelo id (segunda ISO). Fora do `pronto`. */
+  semanas: Record<string, Semana>;
 }
 
 let estado: EstadoCentral = {
@@ -52,6 +54,7 @@ let estado: EstadoCentral = {
   rascunhos: {}, formularios: {}, lixeira: {}, fichas: {}, regras: {}, julgamentos: {},
   legado: { candidaturas: [], projetosV2: 0 },
   presets: {},
+  semanas: {},
 };
 
 const assinantes = new Set<() => void>();
@@ -136,6 +139,11 @@ export function iniciarDados(colecoes?: ColecaoPainel[]) {
     publicar();
   }));
   if (soAlgumas) return;
+  // Semanas de trabalho: fora do `pronto` (a Agenda abre sem elas).
+  assinaturas.push(Banco.assinar("semanas", (mapa) => {
+    estado.semanas = mapa as unknown as Record<string, Semana>;
+    publicar();
+  }));
   // Legado v2: candidaturas que ainda não viraram projeto (fora do `pronto`).
   assinaturas.push(Banco.assinar("candidaturas", (mapa) => {
     estado.legado = { ...estado.legado, candidaturas: ordenado<Candidatura>(mapa) };

@@ -16,6 +16,7 @@ import { emLoteDeExclusao, porId, salvarRegistro } from "../store/mutacoes";
 import { impactoExclusao, type ImpactoExclusao } from "../store/vinculos";
 import { clonar, uid } from "../utils";
 import type { ColecaoPainel } from "../types";
+import { rotuloOrigemSemana } from "../lib/semana";
 
 /** Monta o modal só quando algo abriu a edição (o `key` zera o estado a cada abertura). */
 export function FormularioRegistro() {
@@ -45,13 +46,16 @@ function ModalDeRegistro() {
     return base;
   });
 
-  // Opções do campo "origem" (vínculo polimórfico da tarefa).
+  // Opções do campo "origem" (vínculo polimórfico da tarefa). A semana (aba Semana da
+  // Agenda) não é lista: entra só a do valor atual, para o modal mostrar o vínculo certo.
+  const origemAtual = String(valores.origem || "");
   const opcoesOrigem = useMemo(() => [
     ["", "— sem vínculo"] as [string, string],
     ...painel.projetos.map((p) => ["proj:" + p.id, "Projeto · " + p.nome + (p.arquivado ? " (arquivado)" : "")] as [string, string]),
     ...painel.editais.map((e) => ["edital:" + e.id, "Edital · " + (e.curto || e.nome)] as [string, string]),
     ...painel.reunioes.map((r) => ["reuniao:" + r.id, "Reunião · " + (r.titulo || r.data || r.id)] as [string, string]),
-  ], [painel]);
+    ...(origemAtual.startsWith("semana:") ? [[origemAtual, rotuloOrigemSemana(origemAtual.slice(7))] as [string, string]] : []),
+  ], [painel, origemAtual]);
 
   // Exclusão em duas etapas: primeiro o impacto nos vínculos, depois o destino.
   const [impacto, setImpacto] = useState<ImpactoExclusao | null>(null);

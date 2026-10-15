@@ -17,6 +17,7 @@ import { RevisaoArtistas } from "./painel/RevisaoArtistas";
 import { FichaFormulario } from "./cadastros/formularios/FichaFormulario";
 import { Cronograma } from "./agenda/Cronograma";
 import { Calendario } from "./agenda/Calendario";
+import { Semana } from "./agenda/Semana";
 import { Pessoas } from "./cadastros/pessoas/Pessoas";
 import { Reunioes } from "./gestao/Reunioes";
 import { FichaReuniao } from "./gestao/FichaReuniao";
@@ -65,6 +66,7 @@ export function RoteadorPainel() {
     case "proponentes": return <ListaProponentes />;
     case "revisao": return <RevisaoArtistas />;
     case "cronograma": return <Cronograma />;
+    case "semana": return <Semana />;
     case "calendario": return <Calendario />;
     case "pessoas": return <Pessoas />;
     case "reunioes": return <Reunioes />;

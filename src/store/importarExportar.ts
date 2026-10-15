@@ -12,7 +12,7 @@ import { obterEstado } from "./central";
 import {
   salvarFicha, salvarJulgamento, salvarRascunho, salvarRegistro, salvarRegra,
 } from "./mutacoes";
-import { COLECOES_PAINEL, type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type Julgamento, type Rascunho, type Regra } from "../types";
+import { COLECOES_PAINEL, type ColecaoPainel, type DadosPainel, type Ficha, type Formulario, type Julgamento, type Rascunho, type Regra, type Semana } from "../types";
 import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
 import { formularioDe, SALIC_DADOS, registroDe } from "../data";
 import { campos as camposDe, normalizarRascunho, novoRascunho } from "../lib/simulador/motor";
@@ -43,9 +43,11 @@ export function exportarTudo() {
   const rascunhos = clonar(estado.rascunhos);
   Object.values(rascunhos).forEach(limparInternos);
   const formularios = clonar(estado.formularios);
+  const semanas = clonar(estado.semanas);
+  Object.values(semanas).forEach(limparInternos);
   const pacote = {
     central: "coletivo", versao: 3, exportado: new Date().toISOString(),
-    painel, rascunhos, formularios, contexto,
+    painel, rascunhos, formularios, contexto, semanas,
   };
   baixarArquivo("central-coletivo-" + new Date().toISOString().slice(0, 10) + ".json", JSON.stringify(pacote, null, 1));
 }
@@ -201,6 +203,8 @@ export interface ResumoPacote {
   candidaturasV2?: number;
   rascunhos?: number;
   formularios?: number;
+  /** Semanas de trabalho (aba Semana da Agenda). */
+  semanas?: number;
   contexto?: { fichas: number; regras: number; julgamentos: number };
   /** Executa a importação e devolve a mensagem de resultado. */
   aplicar: (modo: ModoPainel) => string;
@@ -234,6 +238,10 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
         const painel = colecoes.length && painelBruto ? converterPainelImportado(painelBruto) : null;
         // No modo "campos" o projeto pode vir parcial ({id, status}): normalizar encheria de padrões.
         if (painel && modo !== "campos") painel.projetos = (painel.projetos || []).map((p) => normalizarProjeto(p));
+        // Semanas: documento a documento, sempre o do arquivo por cima (não há mesclar campo a campo).
+        for (const [id, sem] of Object.entries((j.semanas || {}) as Record<string, Semana>)) {
+          Banco.gravar("semanas", id, { ...clonar(sem), id } as unknown as Documento, true);
+        }
         return aplicarV3(painel, rascunhos, formularios, ctxBruto, modo);
       },
     };
@@ -243,6 +251,7 @@ export function analisarPacote(j: Record<string, unknown>): ResumoPacote {
     }
     if (j.rascunhos) resumo.rascunhos = Object.keys(j.rascunhos as object).length;
     if (j.formularios) resumo.formularios = Object.keys(j.formularios as object).length;
+    if (j.semanas) resumo.semanas = Object.keys(j.semanas as object).length;
     if (j.contexto) {
       const ctx = j.contexto as Record<string, object | undefined>;
       resumo.contexto = {

@@ -157,6 +157,7 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
             {resumo.candidaturasV2 != null && <li><b>{resumo.candidaturasV2}</b> · candidatura(s) do formato antigo (cada uma vira um projeto)</li>}
             {resumo.rascunhos != null && <li><b>{resumo.rascunhos}</b> · resposta(s) de formulário</li>}
             {resumo.formularios != null && <li><b>{resumo.formularios}</b> · formulário(s)</li>}
+            {resumo.semanas != null && <li><b>{resumo.semanas}</b> · semana(s) de trabalho</li>}
             {resumo.contexto && (
               <li>
                 <b>{resumo.contexto.fichas + resumo.contexto.regras + resumo.contexto.julgamentos}</b>
@@ -170,7 +171,7 @@ export function ModalImportar({ aoFechar }: { aoFechar: () => void }) {
               <Lista>{avisos.map((a, i) => <li key={i}>{a}</li>)}</Lista>
             </>
           )}
-          {(resumo.painel || resumo.rascunhos || resumo.contexto) && (
+          {(resumo.painel || resumo.rascunhos || resumo.contexto || resumo.semanas) && (
             <Campo rotulo="Como aplicar">
               <Opcao marcada={modo === "mesclar"} aoEscolher={() => setModo("mesclar")}>
                 <b>Mesclar</b>: cada registro de mesmo id é trocado pelo do arquivo, os novos entram e nada é apagado.

@@ -1,5 +1,6 @@
 /* Quadro de colunas (kanban) com arrastar e soltar: o Pipeline dos projetos e
-   o quadro de Tarefas. Quadro rola de lado; Coluna tem régua preta no topo,
+   o quadro de Tarefas. Quadro rola de lado (a Semana usa Coluna `cheia` numa
+   grade, sem o Quadro); Coluna tem régua preta no topo,
    título, contagem e o estado "alvo" quando um cartão está sendo arrastado
    sobre ela; CartaoQuadro é o cartão, com os estados de arrasto. A lógica do
    arrasto fica na tela. */
@@ -18,14 +19,16 @@ interface PropsColuna extends HTMLAttributes<HTMLDivElement> {
   vazia?: ReactNode;
   /** Coluna mais larga (300px em vez de 236px): cartões com texto. */
   larga?: boolean;
+  /** Sem largura fixa: ocupa a célula de uma grade (a Semana, 3 por linha). */
+  cheia?: boolean;
 }
 
-export function Coluna({ titulo, n, alvo, vazia, larga, className, children, ...resto }: PropsColuna) {
+export function Coluna({ titulo, n, alvo, vazia, larga, cheia, className, children, ...resto }: PropsColuna) {
   return (
     <div
       className={cx(
         "flex-none rounded-md border-t-rule border-ink bg-bg-sunk p-2",
-        larga ? "w-[300px]" : "w-[236px]",
+        cheia ? "min-w-0" : larga ? "w-[300px]" : "w-[236px]",
         alvo && "bg-bg-hover outline-dashed outline-2 -outline-offset-2 outline-accent",
         className,
       )}
