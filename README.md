@@ -187,7 +187,7 @@ src/
   main.tsx / App.tsx       ← entrada e casca (login, aviso, layout, roteadores, limite de erro)
   components/
     ui/                    ← blocos visuais em Tailwind (Botao, Painel, Badge, Tabela, Modal...)
-    layout/                ← BarraLateral, CabecalhoPagina, BarraAbas, BarraFerramentas, MenuConta, ModalGravacoes
+    layout/                ← BarraLateral, CabecalhoPagina, ModalGravacoes
     ferramentas/           ← ModalExportar, ModalImportar, GuiaImportacao
     Modal.tsx, BotaoExcluir.tsx, ModalExclusao.tsx, BlocoEditavel.tsx, Filtros.tsx
     BuscaGlobal.tsx        ← paleta de busca em tudo (Ctrl+K)
