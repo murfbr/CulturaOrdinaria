@@ -14,10 +14,11 @@ import { TelaPainel } from "./painel/TelaPainel";
 import { TelaPatrocinios } from "./patrocinios/TelaPatrocinios";
 import { TelaProgramacao } from "./programacao/TelaProgramacao";
 import { TelaTarefas } from "./tarefas/TelaTarefas";
+import { TelaNucleo } from "./nucleos/TelaNucleo";
 import { iniciarCaminhosDoForro, usarCaminhosDoForro } from "./dados";
 import { EmBreve } from "./EmBreve";
 import { MenuLateral } from "./MenuLateral";
-import { VISTAS, type Vista } from "./vista";
+import { ehVista, nucleoDaVista, pedirAbaNucleo, vistaDosPatrocinios, type Vista } from "./vista";
 import "./estilos.css";
 
 const CHAVE_VISTA = "cf-vista";
@@ -27,7 +28,7 @@ const FONTES = "https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400
 function lerVista(): Vista {
   try {
     const v = localStorage.getItem(CHAVE_VISTA);
-    if (v && (VISTAS as readonly string[]).includes(v)) return v as Vista;
+    if (v && ehVista(v)) return v;
   } catch { /* sem localStorage: abre no cadastro */ }
   return "cadastro";
 }
@@ -65,7 +66,13 @@ export function PaginaCaminhosDoForro() {
     document.title = "Caminhos do Forró · Central do festival";
   }, []);
 
-  function irPara(nova: Vista) {
+  // "Patrocínios e apoios" mora na página do núcleo de captação (aba própria); sem esse núcleo, abre solta.
+  function irPara(pedida: Vista) {
+    let nova = pedida;
+    if (pedida === "patrocinios" && base) {
+      nova = vistaDosPatrocinios(base);
+      if (nova !== "patrocinios") pedirAbaNucleo("patrocinios");
+    }
     setVista(nova);
     try { localStorage.setItem(CHAVE_VISTA, nova); } catch { /* sem localStorage: só não lembra */ }
     window.scrollTo(0, 0);
@@ -79,12 +86,18 @@ export function PaginaCaminhosDoForro() {
     );
   }
 
+  // Núcleo apagado enquanto a vista estava guardada: volta para o painel.
+  const idNucleo = nucleoDaVista(vista);
+  const nucleoAberto = idNucleo ? base.pagina.nucleos.find((n) => n.id === idNucleo) || null : null;
+
   return (
     <div className="caminhosdoforro cdf:grid cdf:min-h-dvh cdf:grid-cols-1 cdf:md:grid-cols-[252px_minmax(0,1fr)]">
       <Filtros />
       <MenuLateral base={base} vista={vista} irPara={irPara} />
       <main className="cdf:min-w-0 cdf:max-w-[1320px] cdf:px-4 cdf:pb-[72px] cdf:pt-6 cdf:md:px-[clamp(16px,4vw,48px)] cdf:md:pt-9">
-        {vista === "config" ? <TelaConfiguracao base={base} />
+        {nucleoAberto ? <TelaNucleo key={nucleoAberto.id} base={base} nucleo={nucleoAberto} irPara={irPara} />
+          : idNucleo ? <TelaPainel base={base} irPara={irPara} />
+          : vista === "config" ? <TelaConfiguracao base={base} />
           : vista === "painel" ? <TelaPainel base={base} irPara={irPara} />
           : vista === "contexto" ? <TelaContexto base={base} />
           : vista === "apresentacoes" ? <TelaApresentacoes base={base} />

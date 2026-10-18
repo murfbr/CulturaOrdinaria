@@ -3,11 +3,11 @@
    da construção da página. */
 import type { Base } from "./tipos";
 import { CabecalhoVista } from "./ui/CabecalhoVista";
-import { DOCUMENTO_DE_TRABALHO, ETAPA_DA_VISTA, FUTURAS, TITULOS, type Vista } from "./vista";
+import { DOCUMENTO_DE_TRABALHO, ETAPA_DA_VISTA, FUTURAS, TITULOS, nucleoDaVista, type Vista, type VistaFixa } from "./vista";
 
 export function EmBreve({ vista, base }: { vista: Vista; base: Base }) {
   const futura = FUTURAS[vista];
-  const [titulo, lead] = TITULOS[vista] || [vista, ""];
+  const [titulo, lead] = (nucleoDaVista(vista) ? undefined : TITULOS[vista as VistaFixa]) || [vista, ""];
   const etapa = ETAPA_DA_VISTA[vista];
   const n = (etapa?.colecoes || []).reduce((t, c) => t + Object.keys(base[c]).length, 0);
   return (

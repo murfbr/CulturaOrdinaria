@@ -1,16 +1,17 @@
 /* Um card por núcleo: responsável, membros, tarefas abertas e atrasadas,
-   orçamento do núcleo no cenário atual e quantos cadastros ele cuida. */
+   orçamento do núcleo no cenário atual e quantos cadastros ele cuida.
+   "Abrir o núcleo" leva à página dele (painel, orçamento e tarefas do núcleo). */
 import { brl, calcularOrcamento, contasNucleo, nomeCadastro, pctTexto, rotuloCenario } from "../calculo";
 import type { Base } from "../tipos";
 import { Botao } from "../ui/Botao";
 import { SECAO } from "../ui/classes";
 import { Tag } from "../ui/Tag";
-import { pedirFiltroTarefas, type IrPara } from "../vista";
+import { vistaDeNucleo, type IrPara } from "../vista";
 
 export function Nucleos({ base, irPara }: { base: Base; irPara: IrPara }) {
   const conta = calcularOrcamento(base);
   const cadastros = Object.values(base.cadastro);
-  const verTarefas = (nucleo: string) => { pedirFiltroTarefas({ nucleo }); irPara("tarefas"); };
+  const abrir = (nucleo: string) => irPara(vistaDeNucleo(nucleo));
   return (
     <>
       <h2 className={SECAO}>Núcleos<Botao mini className="cdf:ml-auto cdf:font-sans" onClick={() => irPara("tarefas")}>Tarefas</Botao></h2>
@@ -36,7 +37,7 @@ export function Nucleos({ base, irPara }: { base: Base; irPara: IrPara }) {
                 <dt className="cdf:text-fraco">Cuida de</dt>
                 <dd className="cdf:m-0">{cuida ? cuida + (cuida === 1 ? " cadastro" : " cadastros") : <span className="cdf:text-fraco">nenhum cadastro</span>}</dd>
               </dl>
-              <div className="cdf:mt-auto cdf:pt-1"><Botao mini variante="fraco" onClick={() => verTarefas(n.id)}>Ver tarefas</Botao></div>
+              <div className="cdf:mt-auto cdf:pt-1"><Botao mini variante="fraco" onClick={() => abrir(n.id)}>Abrir o núcleo</Botao></div>
             </article>
           );
         })}

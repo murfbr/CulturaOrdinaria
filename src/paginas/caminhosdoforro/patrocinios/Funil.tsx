@@ -73,7 +73,7 @@ export function Funil({ base, irPara }: { base: Base; irPara: IrPara }) {
         <Tabela>
           <thead>
             <tr>
-              <Th>Empresa</Th><Th>Cota</Th><Th className={NUM}>Valor</Th><Th>Etapa</Th><Th>Último contato</Th><Th>Próximo passo</Th><Th>Proposta</Th>
+              <Th>Empresa</Th><Th>Cota</Th><Th className={NUM}>Valor</Th><Th>Etapa</Th><Th>Quem capta</Th><Th>Último contato</Th><Th>Próximo passo</Th><Th>Proposta</Th>
               <Th><span className="cdf:sr-only">Ações</span></Th>
             </tr>
           </thead>
@@ -88,6 +88,7 @@ export function Funil({ base, irPara }: { base: Base; irPara: IrPara }) {
                     <Opcoes lista={opcoes(p, "etapasFunil")} />
                   </SelecaoStatus>
                 </Td>
+                <Td>{x.captador ? nomeCadastro(base, x.captador) : <span className="cdf:text-fraco">equipe</span>}</Td>
                 <Td className={NUM}>{dataBr(x.ultimoContato)}</Td>
                 <Td><div className={TEXTO_LONGO}>{x.proximoPasso || ""}</div></Td>
                 <Td><LinkArquivo arquivo={x.proposta} /></Td>

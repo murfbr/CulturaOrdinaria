@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "../../../components/Toast";
 import { clonar } from "../../../utils";
 import { cx } from "../../../utils/classes";
-import { auditoria, porNome, temTipo } from "../calculo";
+import { auditoria, porNome, soEquipe } from "../calculo";
 import { apagar, gravar, novoId } from "../dados";
 import { normalizar, opcoes, rotulo } from "../listas";
 import type { Base, Horario } from "../tipos";
@@ -45,7 +45,7 @@ export function ModalHorario({ base, id, preset, aoFechar }: Props) {
 
   const marcados = d.participantes || [];
   const candidatos = Object.values(base.cadastro)
-    .filter((c) => !temTipo(c, "equipe") && (!d.espaco || cabeNoEspaco(base, d.espaco, c.id) || marcados.includes(c.id)))
+    .filter((c) => !soEquipe(c) && (!d.espaco || cabeNoEspaco(base, d.espaco, c.id) || marcados.includes(c.id)))
     .sort(porNome);
   const q = normalizar(busca.trim());
 

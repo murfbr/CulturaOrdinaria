@@ -46,6 +46,14 @@ export const porNome = (a: { nome?: string }, b: { nome?: string }) =>
 
 export const temTipo = (d: Cadastro, tipo: string) => Array.isArray(d.tipos) && d.tipos.includes(tipo);
 
+/** Só equipe (nenhum outro tipo): é quem a grade não lista. Quem é equipe e também oficineiro, DJ etc. aparece. */
+export const soEquipe = (d: Cadastro) => Array.isArray(d.tipos) && d.tipos.length > 0 && d.tipos.every((t) => t === "equipe");
+
+/** O tipo de cadastro "captador" (a lista pode guardá-lo com o id gerado do nome, "captador_a"). */
+export const ehTipoCaptador = (tipo: string) => /^captador/.test(tipo);
+export const ehCaptador = (d: Cadastro) => Array.isArray(d.tipos) && d.tipos.some(ehTipoCaptador);
+export const captadores = (base: Base): Cadastro[] => Object.values(base.cadastro).filter(ehCaptador).sort(porNome);
+
 /** Cadastros de um tipo, em ordem de nome. */
 export const cadastrosDoTipo = (base: Base, tipo: string): Cadastro[] =>
   Object.values(base.cadastro).filter((d) => temTipo(d, tipo)).sort(porNome);
@@ -83,6 +91,14 @@ export function referenciasDoCadastro(base: Base, id: string): string[] {
 }
 
 /* ══════════ núcleos e tarefas ══════════ */
+
+/** O núcleo que cuida da captação (id "captacao" ou nome com "captação"); null se não existe. */
+export const nucleoCaptacao = (base: Base): Nucleo | null =>
+  base.pagina.nucleos.find((n) => n.id === "captacao") || base.pagina.nucleos.find((n) => /capta/i.test(n.nome)) || null;
+
+/** O núcleo de comunicação (id "comunicacao" ou nome com "comunicação"); null se não existe. */
+export const nucleoComunicacao = (base: Base): Nucleo | null =>
+  base.pagina.nucleos.find((n) => n.id === "comunicacao") || base.pagina.nucleos.find((n) => /comunica/i.test(n.nome)) || null;
 
 export const nucleo = (base: Base, id: string | null | undefined): Nucleo | null =>
   base.pagina.nucleos.find((n) => n.id === id) || null;
