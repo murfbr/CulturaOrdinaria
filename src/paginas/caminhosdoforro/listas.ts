@@ -11,7 +11,7 @@ export interface MetaLista {
 }
 
 export const LISTAS_META: MetaLista[] = [
-  { nome: "tiposCadastro", titulo: "Tipos de cadastro", descricao: "Um registro pode ter mais de um tipo.", protegidos: ["equipe", "patrocinador", "parceiro_institucional", "fornecedor"] },
+  { nome: "tiposCadastro", titulo: "Tipos de cadastro", descricao: "Um registro pode ter mais de um tipo.", protegidos: ["equipe", "patrocinador", "parceiro_institucional", "fornecedor", "captador", "captador_a"] },
   { nome: "statusContato", titulo: "Status de contato", descricao: "Andamento da conversa com cada pessoa ou organização.", protegidos: ["a_contatar", "em_conversa", "confirmado", "recusou"] },
   { nome: "cartaAnuencia", titulo: "Carta de anuência", descricao: "Situação da carta de ciência e interesse.", protegidos: [] },
   { nome: "tiposEspaco", titulo: "Tipos de espaço", descricao: "", protegidos: [] },

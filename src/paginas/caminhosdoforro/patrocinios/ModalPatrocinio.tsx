@@ -1,11 +1,12 @@
 /* Novo ou editar patrocínio: empresa (do cadastro, ou cadastrar uma nova de
    dentro do modal), cota (escolher uma preenche o valor quando ele está
-   vazio ou igual ao da cota anterior), valor, etapa, último contato, próximo
-   passo, proposta por link, anotações, a revisar. */
+   vazio ou igual ao da cota anterior), valor, etapa, quem capta (pessoa do
+   tipo captador), último contato, próximo passo, proposta por link,
+   anotações, a revisar. */
 import { useRef, useState } from "react";
 import { toast } from "../../../components/Toast";
 import { clonar } from "../../../utils";
-import { auditoria, brl, cotasOrdenadas, nucleo } from "../calculo";
+import { auditoria, brl, captadores, cotasOrdenadas, nucleo } from "../calculo";
 import { apagar, criarCadastroRapido, gravar, novoId } from "../dados";
 import { opcoes } from "../listas";
 import type { Base, Patrocinio } from "../tipos";
@@ -21,8 +22,9 @@ export function ModalPatrocinio({ base, id, aoFechar }: Props) {
   const p = base.pagina;
   const [d, setD] = useState<Patrocinio>(() => existente ? clonar(existente) : {
     id: novoId("patrocinios"), empresa: "", cota: null, valor: null, etapa: p.listas.etapasFunil[0]?.id || "",
-    ultimoContato: null, proximoPasso: "", proposta: null, anotacoes: "", revisar: false,
+    ultimoContato: null, proximoPasso: "", proposta: null, captador: null, anotacoes: "", revisar: false,
   });
+  const quemCapta = captadores(base);
   const [valor, setValor] = useState(d.valor == null ? "" : String(d.valor));
   const [novoNome, setNovoNome] = useState("");
   const [proposta, setProposta] = useState(d.proposta?.tipo === "link" ? d.proposta.url || "" : "");
@@ -77,6 +79,13 @@ export function ModalPatrocinio({ base, id, aoFechar }: Props) {
       </Campo>
       <Campo rotulo="Valor (R$)"><Entrada type="number" min={0} step={1000} value={valor} onChange={(e) => setValor(e.target.value)} /></Campo>
       <Campo rotulo="Etapa"><Selecao value={d.etapa} onChange={(e) => mudar({ etapa: e.target.value })}><Opcoes lista={opcoes(p, "etapasFunil")} /></Selecao></Campo>
+      <Campo rotulo="Quem capta" className={LINHA_INTEIRA}>
+        <Selecao value={d.captador || ""} onChange={(e) => mudar({ captador: e.target.value || null })}>
+          <option value="">A equipe (sem captador)</option>
+          {quemCapta.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
+          {d.captador && !quemCapta.some((c) => c.id === d.captador) && base.cadastro[d.captador] && <option value={d.captador}>{base.cadastro[d.captador].nome}</option>}
+        </Selecao>
+      </Campo>
       <Campo rotulo="Último contato"><Entrada type="date" value={d.ultimoContato || ""} onChange={(e) => mudar({ ultimoContato: e.target.value || null })} /></Campo>
       <Campo rotulo="Próximo passo" className={LINHA_INTEIRA}><AreaTexto rows={2} value={d.proximoPasso} onChange={(e) => mudar({ proximoPasso: e.target.value })} /></Campo>
       <Campo rotulo="Proposta enviada (cole o link, do Drive por exemplo)" className={LINHA_INTEIRA}>

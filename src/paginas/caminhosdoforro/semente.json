@@ -125,6 +125,10 @@
         {
           "id": "comunidade",
           "nome": "Comunidade e turismo"
+        },
+        {
+          "id": "cultura_e_literatura",
+          "nome": "Cultura e literatura"
         }
       ],
       "dias": [
@@ -287,6 +291,10 @@
         {
           "id": "equipe",
           "nome": "Equipe"
+        },
+        {
+          "id": "captador",
+          "nome": "Captador(a)"
         }
       ],
       "tiposEspaco": [

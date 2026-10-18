@@ -4,7 +4,9 @@
    prioridade, status, só atrasadas); depois o resumo por núcleo, com a
    conta de cada status (clicar no nome filtra), e a lista ou o quadro. Os filtros valem enquanto a página
    está aberta; "Ver tarefas" de um núcleo ou de uma pessoa chega aqui com o
-   filtro pedido. */
+   filtro pedido. Dentro da página de um núcleo (`nucleoFixo`) a tela mostra
+   só as tarefas dele, sem cabeçalho, sem o filtro de núcleo e sem o resumo
+   por núcleo; o que se filtra ali não mexe nos filtros da aba Tarefas. */
 import { useState } from "react";
 import { gerarCsv } from "../../../lib/csv";
 import { baixarArquivo } from "../../../utils";
@@ -37,8 +39,9 @@ const CHAVE_DETALHES = "cf-tarefas-detalhes";
 const lembrar = (chave: string, valor: string) => { try { localStorage.setItem(chave, valor); } catch { /* só não lembra */ } };
 const lembrado = (chave: string) => { try { return localStorage.getItem(chave); } catch { return null; } };
 
-export function TelaTarefas({ base }: { base: Base }) {
+export function TelaTarefas({ base, nucleoFixo }: { base: Base; nucleoFixo?: string }) {
   const [f, setF] = useState<Filtros>(() => {
+    if (nucleoFixo) return { ...SEM_FILTRO, nucleo: nucleoFixo };
     if (filtroTarefasPedido) {
       filtrosLembrados = { ...SEM_FILTRO, nucleo: filtroTarefasPedido.nucleo || "", resp: filtroTarefasPedido.resp || "" };
       pedirFiltroTarefas(null);
@@ -53,14 +56,17 @@ export function TelaTarefas({ base }: { base: Base }) {
   const [importando, setImportando] = useState(false);
   const p = base.pagina;
   const equipe = cadastrosDoTipo(base, "equipe");
-  const mudarF = (parte: Partial<Filtros>) => { filtrosLembrados = { ...filtrosLembrados, ...parte }; setF(filtrosLembrados); };
+  const mudarF = (parte: Partial<Filtros>) => {
+    if (nucleoFixo) { setF((a) => ({ ...a, ...parte, nucleo: nucleoFixo })); return; }
+    filtrosLembrados = { ...filtrosLembrados, ...parte }; setF(filtrosLembrados);
+  };
   const mudarForma = (nova: Forma) => { setForma(nova); lembrar(CHAVE_FORMA, nova); };
   const mudarDetalhes = (sim: boolean) => { setDetalhes(sim); lembrar(CHAVE_DETALHES, sim ? "sim" : "nao"); };
   const mudarOrdem = (nova: OrdemTarefas) => { ordemLembrada = nova; setOrdem(nova); };
   const [titulo, lead] = TITULOS.tarefas!;
 
   const q = normalizar(f.busca.trim());
-  const todas = Object.values(base.tarefas);
+  const todas = Object.values(base.tarefas).filter((t) => !nucleoFixo || t.nucleo === nucleoFixo);
   const visiveis = todas.filter((t) =>
     (!f.nucleo || t.nucleo === f.nucleo)
     && (!f.resp || (f.resp === "_sem" ? !respEfetivo(base, t) : respEfetivo(base, t) === f.resp))
@@ -69,6 +75,7 @@ export function TelaTarefas({ base }: { base: Base }) {
     && (!f.atrasadas || tarefaAtrasada(t))
     && (!q || normalizar([t.codigo, t.titulo, t.frente, t.dependencia, t.entrega, t.anotacoes].join(" ")).includes(q)));
   const filtrando = visiveis.length !== todas.length;
+  const limpo = nucleoFixo ? { ...SEM_FILTRO, nucleo: nucleoFixo } : SEM_FILTRO;
   const nucleos = [...p.nucleos, ...(todas.some((t) => !t.nucleo) ? [{ id: "_sem", nome: "Sem núcleo", responsavel: null }] : [])];
   const status = p.listas.statusTarefa;
   const geral = contarTarefas(todas);
@@ -83,9 +90,9 @@ export function TelaTarefas({ base }: { base: Base }) {
 
   return (
     <>
-      <CabecalhoVista titulo={titulo} lead={lead} />
+      {!nucleoFixo && <CabecalhoVista titulo={titulo} lead={lead} />}
 
-      <div className={BARRA + " cdf:mt-[22px]"}>
+      <div className={BARRA + (nucleoFixo ? "" : " cdf:mt-[22px]")}>
         <Segmentado rotulo="Ver as tarefas em" opcoes={[["lista", "Lista"], ["quadro", "Quadro"]]} valor={forma} aoMudar={mudarForma} />
         <select aria-label="Ordem" value={ordem} onChange={(e) => mudarOrdem(e.target.value as OrdemTarefas)} className={select}><Opcoes lista={ORDENS} /></select>
         {forma === "lista" && <Check rotulo="Com detalhes" title="Mostra de quem a tarefa depende, a entrega e as observações" checked={detalhes} onChange={(e) => mudarDetalhes(e.target.checked)} />}
@@ -97,7 +104,7 @@ export function TelaTarefas({ base }: { base: Base }) {
 
       <div className={BARRA}>
         <input type="search" aria-label="Buscar" placeholder="Buscar por ID, tarefa, frente ou anotação" value={f.busca} onChange={(e) => mudarF({ busca: e.target.value })} className={ESTILO_CONTROLE_BASE + " cdf:flex-[1_1_240px]"} />
-        <select aria-label="Núcleo" value={f.nucleo} onChange={(e) => mudarF({ nucleo: e.target.value })} className={select}><Opcoes lista={opcoes(p, "nucleos", "Todos os núcleos")} /></select>
+        {!nucleoFixo && <select aria-label="Núcleo" value={f.nucleo} onChange={(e) => mudarF({ nucleo: e.target.value })} className={select}><Opcoes lista={opcoes(p, "nucleos", "Todos os núcleos")} /></select>}
         <select aria-label="Responsável" value={f.resp} onChange={(e) => mudarF({ resp: e.target.value })} className={select}>
           <option value="">Todas as pessoas</option>
           {equipe.map((d) => <option key={d.id} value={d.id}>{d.nome}</option>)}
@@ -110,6 +117,11 @@ export function TelaTarefas({ base }: { base: Base }) {
         <Check rotulo="Só atrasadas" checked={f.atrasadas} onChange={(e) => mudarF({ atrasadas: e.target.checked })} />
       </div>
 
+      {nucleoFixo ? (
+        <p className="cdf:m-0 cdf:mb-3 cdf:text-sm cdf:text-tinta-2">
+          <b>{geral.total}</b> tarefas do núcleo: {geral.abertas} abertas{geral.atrasadas ? <>, <span className="cdf:font-bold cdf:text-erro">{geral.atrasadas} atrasadas</span></> : null}, {geral.criticas} críticas em aberto, {geral.feitas} concluídas ({geral.total ? pctTexto(geral.feitas, geral.total) : "0%"}).
+        </p>
+      ) : (
       <Tabela className="cdf:mb-[18px]">
         <thead>
           <tr>
@@ -145,15 +157,16 @@ export function TelaTarefas({ base }: { base: Base }) {
           </tr>
         </tbody>
       </Tabela>
+      )}
 
       {filtrando && (
         <p className="cdf:m-0 cdf:mb-2.5 cdf:text-sm cdf:text-tinta-2">
           Mostrando {visiveis.length} de {todas.length} tarefas.{" "}
-          <button type="button" className={LINK} onClick={() => mudarF(SEM_FILTRO)}>Limpar filtros</button>
+          <button type="button" className={LINK} onClick={() => mudarF(limpo)}>Limpar filtros</button>
         </p>
       )}
 
-      {!todas.length ? <Vazio>Nenhuma tarefa ainda. Importe a planilha do plano de ação ou crie a primeira tarefa.</Vazio>
+      {!todas.length ? <Vazio>{nucleoFixo ? "Nenhuma tarefa deste núcleo ainda. Crie a primeira ou importe o plano de ação." : "Nenhuma tarefa ainda. Importe a planilha do plano de ação ou crie a primeira tarefa."}</Vazio>
         : !visiveis.length ? <Vazio>Nenhuma tarefa com esses filtros.</Vazio>
           : forma === "quadro" ? <Kanban base={base} tarefas={visiveis} ordem={ordem} abrir={(id) => setModal({ id })} />
             : <Lista base={base} tarefas={visiveis} ordem={ordem} detalhes={detalhes} abrir={(id) => setModal({ id })} />}

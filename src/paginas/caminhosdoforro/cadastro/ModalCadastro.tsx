@@ -1,5 +1,6 @@
 /* Novo ou editar cadastro: nome, tipos (um ou mais), status, núcleo que
    cuida, contato, documento, carta de anuência e o link do arquivo,
+   Instagram e seguidores (para a conta de alcance da Comunicação),
    anotações, a revisar. Excluir só quando nada aponta para o registro. */
 import { useState } from "react";
 import { toast } from "../../../components/Toast";
@@ -30,6 +31,7 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
     historico: [], anotacoes: "", revisar: false, ...preset,
   });
   const [arquivo, setArquivo] = useState(d.cartaArquivo?.tipo === "link" ? d.cartaArquivo.url || "" : "");
+  const [seguidores, setSeguidores] = useState(d.seguidores == null ? "" : String(d.seguidores));
   const p = base.pagina;
   const avisoDoc = avisoDocumento(d.documento, "documento");
   const mudar = (parte: Partial<Cadastro>) => setD((a) => ({ ...a, ...parte }));
@@ -44,6 +46,7 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       ...d, nome,
       contato: { nome: d.contato.nome.trim(), telefone: d.contato.telefone.trim(), email: d.contato.email.trim() },
       documento: d.documento.trim(), anotacoes: d.anotacoes.trim(),
+      instagram: (d.instagram || "").trim().replace(/^@/, ""), seguidores: seguidores.trim() === "" ? null : Number(seguidores),
       cartaArquivo: arquivo.trim() ? arquivoDoLink(arquivo) : (d.cartaArquivo?.tipo === "asset" ? d.cartaArquivo : null),
     });
     aoFechar();
@@ -77,6 +80,8 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       <Campo rotulo="Arquivo da carta (cole o link, do Drive por exemplo)" className={LINHA_INTEIRA}>
         <Entrada type="url" value={arquivo} onChange={(e) => setArquivo(e.target.value)} placeholder="https://…" />
       </Campo>
+      <Campo rotulo="Instagram (sem o @)"><Entrada value={d.instagram || ""} onChange={(e) => mudar({ instagram: e.target.value })} placeholder="caminhosdoforro" /></Campo>
+      <Campo rotulo="Seguidores (para o alcance somado)"><Entrada type="number" min={0} step={100} value={seguidores} onChange={(e) => setSeguidores(e.target.value)} /></Campo>
       <Campo rotulo="Anotações" className={LINHA_INTEIRA}><AreaTexto rows={4} value={d.anotacoes} onChange={(e) => mudar({ anotacoes: e.target.value })} /></Campo>
       <Check rotulo="A revisar" className={LINHA_INTEIRA} checked={d.revisar} onChange={(e) => mudar({ revisar: e.target.checked })} />
     </Modal>

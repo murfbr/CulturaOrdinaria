@@ -1,6 +1,8 @@
 /* Detalhamento do orçamento: filtros (busca, categoria, núcleo, momento,
    status), o valor do recorte e a tabela agrupada por categoria, com o
-   status trocável na linha. Os filtros valem enquanto a página está aberta. */
+   status trocável na linha. Os filtros valem enquanto a página está aberta.
+   Na página de um núcleo (`nucleoFixo`) mostra só os itens dele, sem o
+   filtro de núcleo, e o item novo já nasce classificado nesse núcleo. */
 import { Fragment, useState } from "react";
 import { clonar } from "../../../utils";
 import { MOMENTOS, brl, nomeCadastro, pctTexto, porNome, rotuloCenario, valorItem, vezesItem } from "../calculo";
@@ -18,17 +20,20 @@ import { ModalItem } from "./ModalItem";
 interface Filtros { busca: string; categoria: string; nucleo: string; momento: Momento | ""; status: string }
 let filtrosLembrados: Filtros = { busca: "", categoria: "", nucleo: "", momento: "", status: "" };
 
-export function Detalhamento({ base }: { base: Base }) {
-  const [f, setF] = useState<Filtros>(filtrosLembrados);
+export function Detalhamento({ base, nucleoFixo }: { base: Base; nucleoFixo?: string }) {
+  const [f, setF] = useState<Filtros>(() => (nucleoFixo ? { busca: "", categoria: "", nucleo: nucleoFixo, momento: "", status: "" } : filtrosLembrados));
   const [modal, setModal] = useState<{ id: string | null } | null>(null);
   const p = base.pagina;
   const cenario = p.simulador.cenario;
-  const mudarF = (parte: Partial<Filtros>) => { filtrosLembrados = { ...filtrosLembrados, ...parte }; setF(filtrosLembrados); };
+  const mudarF = (parte: Partial<Filtros>) => {
+    if (nucleoFixo) { setF((a) => ({ ...a, ...parte, nucleo: nucleoFixo })); return; }
+    filtrosLembrados = { ...filtrosLembrados, ...parte }; setF(filtrosLembrados);
+  };
   const mudarStatus = (it: ItemOrcamento, status: string) => gravar("orcamento_itens", { ...clonar(it), status });
 
   const q = normalizar(f.busca.trim());
   const so = f.momento || undefined;
-  const todos = Object.values(base.orcamento_itens);
+  const todos = Object.values(base.orcamento_itens).filter((it) => !nucleoFixo || it.nucleo === nucleoFixo);
   const visiveis = todos.filter((it) =>
     (!f.categoria || it.categoria === f.categoria) && (!f.nucleo || it.nucleo === f.nucleo) && (!f.status || it.status === f.status)
     && (!so || vezesItem(it, so) > 0)
@@ -43,17 +48,17 @@ export function Detalhamento({ base }: { base: Base }) {
       <div className={BARRA}>
         <input type="search" aria-label="Buscar" placeholder="Buscar item, fornecedor ou anotação" value={f.busca} onChange={(e) => mudarF({ busca: e.target.value })} className={ESTILO_CONTROLE_BASE + " cdf:flex-[1_1_240px]"} />
         <select aria-label="Categoria" value={f.categoria} onChange={(e) => mudarF({ categoria: e.target.value })} className={select}><Opcoes lista={opcoes(p, "categoriasOrcamento", "Todas as categorias")} /></select>
-        <select aria-label="Núcleo" value={f.nucleo} onChange={(e) => mudarF({ nucleo: e.target.value })} className={select}><Opcoes lista={opcoes(p, "nucleos", "Todos os núcleos")} /></select>
+        {!nucleoFixo && <select aria-label="Núcleo" value={f.nucleo} onChange={(e) => mudarF({ nucleo: e.target.value })} className={select}><Opcoes lista={opcoes(p, "nucleos", "Todos os núcleos")} /></select>}
         <select aria-label="Momento" value={f.momento} onChange={(e) => mudarF({ momento: e.target.value as Momento | "" })} className={select}><Opcoes lista={opcoes(p, "momentos", "Todos os momentos")} /></select>
         <select aria-label="Status" value={f.status} onChange={(e) => mudarF({ status: e.target.value })} className={select}><Opcoes lista={opcoes(p, "statusOrcamento", "Todos os status")} /></select>
         <Botao variante="primario" className="cdf:md:ml-auto" onClick={() => setModal({ id: null })}>Novo item</Botao>
       </div>
       <p className="cdf:m-0 cdf:mb-2 cdf:text-sm cdf:text-fraco">
-        {visiveis.length} de {todos.length} itens. Valor do recorte: <strong>{brl(totalRecorte)}</strong>
+        {visiveis.length} de {todos.length} itens{nucleoFixo ? " do núcleo" : ""}. Valor do recorte: <strong>{brl(totalRecorte)}</strong>
         {so ? ", só a parte de " + rotulo(p, "momentos", so) : ""} (cenário {rotuloCenario(cenario)}, sem contingência).
       </p>
       {!visiveis.length ? (
-        <Vazio>Nenhum item com esses filtros.</Vazio>
+        <Vazio>{todos.length ? "Nenhum item com esses filtros." : nucleoFixo ? "Nenhum item de orçamento classificado neste núcleo. Use “Novo item” aqui ou, no Orçamento, escolha o núcleo ao editar o item." : "Nenhum item com esses filtros."}</Vazio>
       ) : (
         <Tabela>
           <thead>

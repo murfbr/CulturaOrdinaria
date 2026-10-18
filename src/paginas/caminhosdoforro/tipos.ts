@@ -108,6 +108,9 @@ export interface Cadastro {
   anotacoes: string;
   /** Veio da carga inicial e ainda não foi conferido. */
   revisar: boolean;
+  /** Perfil no Instagram (com ou sem @) e o tamanho da comunidade, para a conta de alcance da Comunicação. */
+  instagram?: string;
+  seguidores?: number | null;
   atualizado?: string;
 }
 
@@ -149,6 +152,8 @@ export interface Patrocinio {
   ultimoContato: string | null;
   proximoPasso: string;
   proposta: Arquivo | null;
+  /** Id do cadastro (tipo captador) que cuida desta conversa; vazio = a equipe. */
+  captador?: string | null;
   anotacoes: string;
   revisar: boolean;
   atualizado?: string;

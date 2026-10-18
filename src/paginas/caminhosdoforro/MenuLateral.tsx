@@ -1,7 +1,8 @@
 /* Barra lateral do artefato: a marca (logo por link ou a tipográfica), a
-   contagem regressiva, as seções (as três da Fase 6 em cinza), Configuração e
-   "← Central" no rodapé do menu, o estado do banco e o sair. No celular vira
-   o topo da página, com as seções rolando de lado. */
+   contagem regressiva, as seções em quatro grupos com título não clicável
+   (Painel e cadastro, Produtos e ferramentas, Núcleos, Apoio), "← Central"
+   fechando o grupo Apoio, o estado do banco e o sair. No celular vira o topo
+   da página, com as seções rolando de lado e os títulos dos grupos escondidos. */
 import { useSyncExternalStore } from "react";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair, usarSessao } from "../../services/sessao";
@@ -10,7 +11,7 @@ import { textoContagem } from "./calculo";
 import { LogoTipo } from "./LogoTipo";
 import { Sol } from "./Sol";
 import type { Base } from "./tipos";
-import { NAV, type IrPara, type Vista } from "./vista";
+import { gruposDoMenu, type IrPara, type Vista } from "./vista";
 
 function usarStatusBanco(): StatusSalvamento {
   return useSyncExternalStore((cb) => Banco.aoMudarStatus(cb), () => Banco.statusAtual());
@@ -25,6 +26,9 @@ const ITEM =
 
 const LISTA = "cdf:m-0 cdf:flex cdf:list-none cdf:gap-1 cdf:p-0 cdf:md:flex-col cdf:md:gap-0.5";
 
+/** Título de grupo do menu: só no desktop, em caixa alta pequena. */
+const GRUPO = "cdf:m-0 cdf:hidden cdf:px-2.5 cdf:pb-1 cdf:pt-3 cdf:text-[11px] cdf:font-semibold cdf:uppercase cdf:tracking-[.14em] cdf:text-lateral-fraco cdf:md:block";
+
 interface Props { base: Base; vista: Vista; irPara: IrPara }
 
 export function MenuLateral({ base, vista, irPara }: Props) {
@@ -33,15 +37,16 @@ export function MenuLateral({ base, vista, irPara }: Props) {
   const { parametros } = base.pagina;
   const contagem = textoContagem(parametros.inicio);
 
-  const item = (id: Vista, nome: string, fase?: number) => (
+  const grupos = gruposDoMenu(base.pagina.nucleos);
+
+  const item = (id: Vista, nome: string) => (
     <li key={id}>
       <button
-        className={cx(ITEM, vista === id && "cdf:border-logo cdf:bg-lateral-ativo cdf:font-bold", fase ? "cdf:text-lateral-fraco" : null)}
+        className={cx(ITEM, vista === id && "cdf:border-logo cdf:bg-lateral-ativo cdf:font-bold")}
         aria-current={vista === id ? "page" : undefined}
         onClick={() => irPara(id)}
       >
         <span>{nome}</span>
-        {fase && <small className="cdf:hidden cdf:text-xs cdf:text-lateral-fraco cdf:md:inline">Fase {fase}</small>}
       </button>
     </li>
   );
@@ -68,11 +73,15 @@ export function MenuLateral({ base, vista, irPara }: Props) {
 
       {/* No celular as seções rolam de lado; no desktop o menu não rola sozinho (a barra inteira rola). */}
       <nav aria-label="Seções" className="cdf:flex cdf:gap-1 cdf:overflow-x-auto cdf:md:block cdf:md:shrink-0 cdf:md:overflow-visible">
-        <ul className={LISTA}>{NAV.map((n) => item(n.id, n.nome, n.fase))}</ul>
-        <ul className={cx(LISTA, "cdf:md:mt-3.5 cdf:md:border-t cdf:md:border-solid cdf:md:border-white/15 cdf:md:pt-3.5")}>
-          {item("config", "Configuração")}
-          <li><a className={ITEM} href="/">← Central</a></li>
-        </ul>
+        {grupos.map((g, i) => (
+          <section key={g.titulo} aria-label={g.titulo} className={cx("cdf:flex cdf:gap-1 cdf:md:block", i > 0 && "cdf:md:mt-1.5 cdf:md:border-t cdf:md:border-solid cdf:md:border-white/15")}>
+            <h2 className={GRUPO}>{g.titulo}</h2>
+            <ul className={LISTA}>
+              {g.itens.map((n) => item(n.id, n.nome))}
+              {i === grupos.length - 1 && <li><a className={ITEM} href="/">← Central</a></li>}
+            </ul>
+          </section>
+        ))}
       </nav>
 
       <div className="cdf:mt-auto cdf:hidden cdf:px-1.5 cdf:text-[12.5px] cdf:text-lateral-fraco cdf:md:block">
