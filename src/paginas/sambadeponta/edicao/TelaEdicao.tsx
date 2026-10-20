@@ -1,8 +1,9 @@
-/* Uma edição da festa: capa, orçamento, simulação (enquanto não fecha),
-   tarefas, cronograma do dia, máquinas, comunicação e fechamento. O cálculo
-   é feito uma vez aqui e passado às seções. */
+/* Uma edição da festa: capa, decisões e urgências, orçamento, simulação
+   (enquanto não fecha), tarefas, cronograma do dia, máquinas, comunicação e
+   fechamento. O cálculo é feito uma vez aqui e passado às seções. */
 import { calcular } from "../calculo";
 import { CapaEdicao } from "./CapaEdicao";
+import { Decisoes, temDecisoes } from "./Decisoes";
 import { Orcamento } from "./Orcamento";
 import { Simulacao } from "./Simulacao";
 import { Tarefas } from "./Tarefas";
@@ -17,6 +18,7 @@ export function TelaEdicao({ painel, e }: { painel: Painel; e: Edicao }) {
   return (
     <>
       <CapaEdicao painel={painel} e={e} k={k} />
+      {temDecisoes(e) && <Decisoes painel={painel} e={e} />}
       <Orcamento painel={painel} e={e} k={k} />
       {!k.fechada && <Simulacao e={e} k={k} />}
       <Tarefas painel={painel} e={e} />

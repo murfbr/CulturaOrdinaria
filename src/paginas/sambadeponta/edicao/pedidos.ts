@@ -7,7 +7,7 @@ import { ROTULO_STATUS_CUSTO, ROTULO_STATUS_EDICAO, type Calculo } from "../calc
 import { alterarEdicao } from "../dados";
 import { opcoesEquipe } from "../festa/pedidos";
 import { ROTULO_TAREFA, STATUS_TAREFA, type Contato, type PessoaEquipe, type PresetFesta } from "../../../types";
-import type { Edicao, Socio } from "../tipos";
+import type { Decisao, Edicao, OpcaoDecisao, Socio, StatusDecisao } from "../tipos";
 
 export const camposCusto = (socios: Socio[], categorias: string[], fornecedores: Contato[]): CampoModal[] => [
   { k: "item", label: "Item", full: true },
@@ -66,12 +66,55 @@ export const CAMPOS_ARQUIVO: CampoModal[] = [
 export const CAMPOS_DADOS_EDICAO: CampoModal[] = [
   { k: "nome", label: "Nome" },
   { k: "status", label: "Status", type: "select", opts: Object.entries(ROTULO_STATUS_EDICAO) },
-  { k: "data", label: "Data", type: "data" },
-  { k: "diaSemana", label: "Dia da semana" },
+  { k: "data", label: "Data (o dia da semana sai dela)", type: "data" },
   { k: "horario", label: "Horário" },
   { k: "local", label: "Local" },
   { k: "lineup", label: "Lineup", full: true },
   { k: "notas", label: "Notas gerais", type: "textarea", full: true },
+];
+
+export const ROTULO_STATUS_DECISAO: Record<StatusDecisao, string> = { aberta: "em aberto", provisoria: "provisória", decidida: "decidida" };
+
+/** Quantas opções o modal da decisão oferece (as vazias não são gravadas). */
+export const OPCOES_POR_DECISAO = 3;
+
+/** Decisão: tema, situação, o que vale agora, prazo e até três opções com prós e contras. */
+export const CAMPOS_DECISAO: CampoModal[] = [
+  { k: "tema", label: "Tema", ph: "Data, local, formato…" },
+  { k: "status", label: "Situação", type: "select", opts: Object.entries(ROTULO_STATUS_DECISAO) },
+  { k: "atual", label: "O que vale agora", ph: "ex.: 6/11 provisório", full: true },
+  { k: "prazo", label: "Decidir até", type: "data" },
+  { k: "obs", label: "Observação" },
+  ...Array.from({ length: OPCOES_POR_DECISAO }, (_, i): CampoModal[] => [
+    { k: "opcao" + i, label: "Opção " + (i + 1), full: true },
+    { k: "pros" + i, label: "A favor", type: "textarea" },
+    { k: "contras" + i, label: "Contra", type: "textarea" },
+  ]).flat(),
+];
+
+/** Decisão → valores planos do modal (opcao0, pros0, contras0...). */
+export function decisaoParaCampos(d: Decisao): Record<string, unknown> {
+  const valores: Record<string, unknown> = { tema: d.tema, status: d.status, atual: d.atual, prazo: d.prazo, obs: d.obs };
+  d.opcoes.slice(0, OPCOES_POR_DECISAO).forEach((o, i) => {
+    valores["opcao" + i] = o.texto; valores["pros" + i] = o.pros; valores["contras" + i] = o.contras;
+  });
+  return valores;
+}
+
+/** Valores do modal → decisão; opção sem texto não entra. */
+export function camposParaDecisao(base: Decisao, s: Record<string, unknown>): Decisao {
+  const txt = (k: string) => String(s[k] ?? "");
+  const opcoes: OpcaoDecisao[] = [];
+  for (let i = 0; i < OPCOES_POR_DECISAO; i++) {
+    if (txt("opcao" + i)) opcoes.push({ texto: txt("opcao" + i), pros: txt("pros" + i), contras: txt("contras" + i) });
+  }
+  return { ...base, tema: txt("tema"), status: txt("status") as StatusDecisao, atual: txt("atual"), prazo: txt("prazo"), obs: txt("obs"), opcoes };
+}
+
+export const CAMPOS_AVISO: CampoModal[] = [
+  { k: "nome", label: "Nome" },
+  { k: "papel", label: "Papel", ph: "DJ, som, produção…" },
+  { k: "obs", label: "Observação", full: true },
 ];
 
 export const CAMPOS_FECHAMENTO: CampoModal[] = [

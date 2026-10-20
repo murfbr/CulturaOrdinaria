@@ -1,7 +1,7 @@
 /* Capa da edição: data, horário, local e lineup; faixa com os números
    (fechada: receita, despesa, resultado, público; em produção: contagem,
    tarefas, custos previstos, resultado projetado); editar os dados. */
-import { N, R, ROTULO_STATUS_EDICAO, brCompleta, diasAte, hojeIso, tarefasDaEdicao, totaisPorStatus, type Calculo } from "../calculo";
+import { N, R, ROTULO_STATUS_EDICAO, brCompleta, diaDaSemana, diasAte, hojeIso, tarefasDaEdicao, totaisPorStatus, urgentesDaEdicao, type Calculo } from "../calculo";
 import { alterarEdicao } from "../dados";
 import { usarModalCampos } from "../ModalCampos";
 import { CAMPOS_DADOS_EDICAO } from "./pedidos";
@@ -14,7 +14,9 @@ export function CapaEdicao({ painel, e, k }: { painel: Painel; e: Edicao; k: Cal
   const tarefas = tarefasDaEdicao(painel, e);
   const feitas = tarefas.filter((t) => t.status === "feito").length;
   const atrasadas = tarefas.filter((t) => t.status !== "feito" && t.prazo && t.prazo < hoje).length;
+  const urgentes = urgentesDaEdicao(painel, e).filter((t) => t.status !== "feito").length;
   const totais = totaisPorStatus(e);
+  const dia = diaDaSemana(e.data);
 
   function editar() {
     modal.abrir({
@@ -29,7 +31,7 @@ export function CapaEdicao({ painel, e, k }: { painel: Painel; e: Edicao; k: Cal
         <div className="sdp-eyebrow">{painel.titulo} · {e.nome} · {ROTULO_STATUS_EDICAO[e.status]}</div>
         <h1>{e.nome}</h1>
         <div className="sub">
-          <b>{brCompleta(e.data)}{e.diaSemana ? ", " + e.diaSemana : ""}</b> · {e.horario} · {e.local}<br />{e.lineup}
+          <b>{brCompleta(e.data)}{dia ? ", " + dia : ""}</b> · {e.horario} · {e.local}<br />{e.lineup}
         </div>
         <div className="band">
           {k.fechada ? (
@@ -46,7 +48,7 @@ export function CapaEdicao({ painel, e, k }: { painel: Painel; e: Edicao; k: Cal
                 <div className="v">{dias == null ? "—" : dias >= 0 ? "D-" + dias : "D+" + (-dias)}</div>
                 <div className="foot">{dias == null ? "sem data" : dias >= 0 ? `faltam ${dias} dias` : "evento já aconteceu"}</div>
               </div>
-              <div className="sdp-cell"><div className="k">Tarefas</div><div className="v">{feitas}/{tarefas.length}</div><div className="foot">{atrasadas} atrasadas</div></div>
+              <div className="sdp-cell"><div className="k">Tarefas</div><div className="v">{feitas}/{tarefas.length}</div><div className="foot">{atrasadas} atrasadas{urgentes ? ` · ${urgentes} urgente${urgentes > 1 ? "s" : ""}` : ""}</div></div>
               <div className="sdp-cell">
                 <div className="k">Custos previstos</div>
                 <div className="v">{R(k.operacao)}</div>

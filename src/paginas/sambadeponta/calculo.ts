@@ -49,6 +49,15 @@ export const br = (iso?: string): string => { const m = partesIso(iso); return m
 /** "2026-10-03" → "03/10/2026". */
 export const brCompleta = (iso?: string): string => { const m = partesIso(iso); return m ? m[3] + "/" + m[2] + "/" + m[1] : iso || ""; };
 
+const DIAS_DA_SEMANA = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+
+/** "2026-11-06" → "sexta-feira". Sai da data, nunca digitado (o campo à mão já registrou 03/10 como sexta). */
+export function diaDaSemana(iso?: string): string {
+  const m = partesIso(iso);
+  if (!m) return "";
+  return DIAS_DA_SEMANA[new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12).getDay()];
+}
+
 /** Dias de hoje até a data (negativo = já passou); null sem data. */
 export function diasAte(iso?: string): number | null {
   if (!iso) return null;
@@ -66,6 +75,13 @@ export const rotuloFase = (painel: Painel, id: string): string =>
 /** Tarefas de uma edição (coleção `tarefas`, campo `edicaoId`). */
 export const tarefasDaEdicao = (painel: Painel, e: Edicao): Tarefa[] =>
   painel.tarefas.filter((t) => t.edicaoId === e.id);
+
+/** Tarefas fixadas como urgentes na edição, as abertas primeiro e por prazo (sem prazo no fim). Id de tarefa apagada some. */
+export function urgentesDaEdicao(painel: Painel, e: Edicao): Tarefa[] {
+  const ids = new Set(e.urgentes || []);
+  const chave = (t: Tarefa) => (t.status === "feito" ? "1" : "0") + (t.prazo || "9999");
+  return painel.tarefas.filter((t) => ids.has(t.id)).sort((a, b) => chave(a).localeCompare(chave(b)));
+}
 
 /** Contatos do tipo Fornecedor (coleção `contatos`). */
 export const fornecedores = (painel: Painel): Contato[] =>
@@ -344,7 +360,7 @@ export function criarProximaEdicao(painel: Painel): { edicao: Edicao; tarefas: T
     };
   }
   const edicao: Edicao = {
-    id: "e" + numero, paginaId: painel.pagina.id, num: n, nome: "Edição " + numero, data: "", diaSemana: "", status: "planejada",
+    id: "e" + numero, paginaId: painel.pagina.id, num: n, nome: "Edição " + numero, data: "", status: "planejada",
     horario: src ? src.horario : "", local: src ? src.local : painel.pagina.local, lineup: src ? src.lineup : "",
     receitas: { bar: null, porta: null, comida: null, sympla: null },
     sim,
@@ -368,6 +384,9 @@ export function criarProximaEdicao(painel: Painel): { edicao: Edicao; tarefas: T
     comunicacao: src ? src.comunicacao.map((r) => ({ ...r, data: "" })) : [],
     comunicacaoObs: "Peças herdadas; recalcular datas por D-x.",
     balanco: { certo: [], errado: [] }, instagram: "", acertoObs: "", arquivos: [], notas: "",
+    // Quem avisar costuma se repetir (atrações, som, produção): herda a lista, todo mundo ainda por avisar.
+    decisoes: [], urgentes: [],
+    avisos: src ? (src.avisos || []).map((a) => ({ ...a, id: uid("av"), avisado: false, obs: "" })) : [],
   };
   const tarefas: Tarefa[] = painel.pagina.checklist.map((m) => ({
     id: uid("t"), titulo: m.tarefa, respId: m.respId || "", origem: "proj:" + painel.pagina.projetoId,

@@ -51,7 +51,9 @@ export function iniciarSambaDePonta() {
     publicar();
   });
   Banco.assinar(COLECAO_EDICOES, (mapa) => {
-    edicoes = mapa as unknown as Record<string, Edicao>;
+    // Cópia rasa: no modo local o Banco devolve sempre o mesmo objeto (alterado no
+    // lugar) e, sem referência nova, a tela não redesenhava depois de gravar.
+    edicoes = { ...(mapa as unknown as Record<string, Edicao>) };
     publicar();
     sincronizarResumo();
   });
@@ -178,6 +180,14 @@ export function alternarStatusTarefa(t: Tarefa) {
 
 /** Para a lixeira, com Desfazer. */
 export const excluirTarefa = (id: string) => excluirRegistro("tarefas", id);
+
+/** Fixa a tarefa como urgência da edição, ou solta se já estava. A tarefa continua a mesma da Central. */
+export function alternarUrgente(edicaoId: string, tarefaId: string) {
+  alterarEdicao(edicaoId, (ed) => {
+    const lista = ed.urgentes || [];
+    ed.urgentes = lista.includes(tarefaId) ? lista.filter((x) => x !== tarefaId) : [...lista, tarefaId];
+  });
+}
 
 export const contatoNovo = (): Contato => ({ id: uid("k"), nome: "", tipo: "Fornecedor", ref: "", contato: "", obs: "" });
 export const salvarContato = (c: Contato) => salvarRegistro("contatos", c);

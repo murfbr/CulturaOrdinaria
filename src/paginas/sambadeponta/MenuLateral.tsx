@@ -7,7 +7,8 @@ import { sair, usarSessao } from "../../services/sessao";
 import { toast } from "../../components/Toast";
 import { ROTULO_STATUS_EDICAO, br, brCompleta } from "./calculo";
 import { novaEdicao } from "./dados";
-import type { Painel } from "./tipos";
+import { temDecisoes } from "./edicao/Decisoes";
+import type { Edicao, Painel } from "./tipos";
 import type { IrPara, Visao } from "./visao";
 
 /** [âncora, rótulo, é sub-item]. */
@@ -16,9 +17,11 @@ const LINKS_FESTA: [string, string, boolean][] = [
   ["l-checklist", "Checklist-mestre", true], ["l-fornecedores", "Fornecedores", true], ["l-ajuda", "Como usar", true],
 ];
 
-const secoesEdicao = (fechada: boolean): [string, string][] => [
-  ["e-resumo", "Resumo"], ["e-orcamento", "Orçamento"],
-  ...(fechada ? [] : [["e-simulacao", "Simulação"] as [string, string]]),
+const secoesEdicao = (e: Edicao): [string, string][] => [
+  ["e-resumo", "Resumo"],
+  ...(temDecisoes(e) ? [["e-decisoes", "Decisões e urgências"] as [string, string]] : []),
+  ["e-orcamento", "Orçamento"],
+  ...(e.status === "fechada" ? [] : [["e-simulacao", "Simulação"] as [string, string]]),
   ["e-tarefas", "Tarefas"], ["e-cronograma", "Cronograma"], ["e-maquinas", "Máquinas"],
   ["e-comunicacao", "Comunicação"], ["e-fechamento", "Fechamento"],
 ];
@@ -51,7 +54,7 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
   const status = usarStatusBanco();
   const sessao = usarSessao();
   const edicaoAberta = visao.sec === "edicao" ? painel.edicoes.find((e) => e.id === visao.id) : undefined;
-  const ancoras = edicaoAberta ? secoesEdicao(edicaoAberta.status === "fechada").map(([a]) => a) : LINKS_FESTA.map(([a]) => a);
+  const ancoras = edicaoAberta ? secoesEdicao(edicaoAberta).map(([a]) => a) : LINKS_FESTA.map(([a]) => a);
   const ativa = usarAncoraAtiva(ancoras);
   const edicoes = [...painel.edicoes].reverse();
 
@@ -91,7 +94,7 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
                 <span className={"pill " + (e.status === "execucao" ? "exec" : e.status === "planejada" ? "plan" : "")}>{ROTULO_STATUS_EDICAO[e.status]}</span>
               </span>
             </a>
-            {atual && secoesEdicao(e.status === "fechada").map(([ancora, rotulo]) => (
+            {atual && secoesEdicao(e).map(([ancora, rotulo]) => (
               <a key={ancora} href={"#" + ancora} className={"sub" + (ativa === ancora ? " active" : "")}
                 onClick={(ev) => { ev.preventDefault(); irPara({ sec: "edicao", id: e.id }, ancora); }}>
                 {rotulo}

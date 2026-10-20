@@ -247,4 +247,37 @@
 .sambadeponta nav.sdp-side .estado button{background:none;border:0;color:rgba(255,255,255,.6);padding:0;font-size:11px;text-align:left;cursor:pointer;text-decoration:underline}
 .sambadeponta .edtile.new{cursor:pointer}
 .sambadeponta .sdp-eyebrow{color:var(--dark)}
+/* Títulos em Anton: com entrelinha abaixo de 1 o Ç (EDIÇÃO, ORÇAMENTO) invadia a linha de baixo. */
+.sambadeponta .sdp-hero h1{line-height:1;padding-bottom:.14em;margin-bottom:2px}
+.sambadeponta h2{line-height:1.08;padding-bottom:.06em}
+/* Decisões e urgências */
+.sambadeponta .sechead.bloco{margin-top:30px;margin-bottom:10px;align-items:center}
+.sambadeponta .sechead.bloco .ksub{margin:0}
+.sambadeponta .sechead.bloco .actions{margin-bottom:0}
+.sambadeponta .decisao{display:flex;flex-direction:column;border-top:4px solid var(--red)}
+.sambadeponta .decisao.provisoria{border-top-color:var(--amber)}
+.sambadeponta .decisao.decidida{border-top-color:var(--ok)}
+.sambadeponta .decisao .topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sambadeponta .decisao .topo .k{margin-bottom:0}
+.sambadeponta .decisao .atual{font-size:17px;font-weight:600;color:var(--ink);margin-top:8px;line-height:1.35}
+.sambadeponta .decisao .prazo{font-size:12px;color:var(--muted);margin-top:4px}
+.sambadeponta .decisao .opcoes{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.sambadeponta .decisao .opcao{border-top:1px solid var(--line);padding-top:10px}
+.sambadeponta .decisao .opcao b{font-size:13.5px;color:var(--ink)}
+.sambadeponta .decisao .pc{position:relative;font-size:12.5px;color:var(--ink);margin-top:4px;padding-left:16px;line-height:1.45}
+.sambadeponta .decisao .pc::before{content:'+';position:absolute;left:0;top:0;font-weight:700;color:var(--ok)}
+.sambadeponta .decisao .pc.contra::before{content:'−';color:var(--red)}
+.sambadeponta .decisao .acoes{margin-top:auto;padding-top:14px}
+.sambadeponta .sdp-btn.estrela.on{background:var(--lime);border-color:var(--lime);color:var(--dark)}
+/* Listas curtas (quem avisar, urgências): no celular as colunas de apoio descem para baixo do nome, sem rolagem lateral. */
+.sambadeponta table.curta .so-celular{display:none}
+.sambadeponta table.curta td.rowact button{margin-top:2px}
+@media (max-width:900px){
+  .sambadeponta table.curta{min-width:0}
+  .sambadeponta table.curta .larga{display:none}
+  .sambadeponta table.curta .so-celular{display:block}
+  .sambadeponta table.curta .so-celular.atrasada{color:var(--red);font-weight:600}
+  .sambadeponta table.curta td.rowact{white-space:normal;width:1%}
+  .sambadeponta table.curta td.rowact button{display:block;margin:0 0 4px auto}
+}
 }

@@ -131,7 +131,12 @@ registro em `presets/paginas`.
   (`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições
   e o cartão, a próxima edição. O detalhe fica em `paginas/sambadeponta` e na
   subcoleção `edicoes`. A primeira abertura semeia esses documentos a partir
-  do JSON do artefato original.
+  do JSON do artefato original. Cada edição tem a seção **Decisões e
+  urgências**, logo depois do Resumo: as decisões (`decisoes`, com opções,
+  prós e contras) e quem avisar (`avisos`) ficam no documento da edição; as
+  urgências não são uma lista à parte, são tarefas da Central fixadas pelo id
+  (`urgentes`), criadas ali ou marcadas com a estrela na seção Tarefas. O dia
+  da semana sai da data (o campo `diaSemana` dos documentos antigos é ignorado).
 - **Caminhos do Forró** (`/caminhosdoforro/`): página independente do festival
   (cadastro geral, patrocínios e cotas, orçamento com simulador, programação,
   tarefas por GT, arquivos, configuração). Todos os dados ficam nas
