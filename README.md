@@ -123,7 +123,8 @@ e `estilos.css` próprios); o slug entra em `src/pages/paginasProprias.ts` e o
 registro em `presets/paginas`.
 
 - **Ponta de Lança** (`/pontadelanca/`; o antigo `/sambadeponta/` redireciona pelo
-  `vercel.json`, e a chave dos dados no banco continua `sambadeponta`): edições da
+  `vercel.json`, e a chave dos dados no banco continua `sambadeponta`; não trocar o
+  slug em `presets/paginas`, que é o caminho dos dados e da exclusão do projeto): edições da
   festa, orçamento e fases. Veste o design system da festa (Verde Bandeira,
   Marfim, Marrom Terra, Pistache, Turquesa; títulos na Better Faster, com a
   Permanent Marker até a licença web; assinatura e listras em

@@ -6,6 +6,11 @@
       "permanent": false
     },
     {
+      "source": "/sambadeponta/",
+      "destination": "/pontadelanca/",
+      "permanent": false
+    },
+    {
       "source": "/sambadeponta/:caminho*",
       "destination": "/pontadelanca/:caminho*",
       "permanent": false
