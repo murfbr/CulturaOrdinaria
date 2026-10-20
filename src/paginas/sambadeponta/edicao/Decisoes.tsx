@@ -11,11 +11,9 @@ import { Avisos } from "./Avisos";
 import { Urgencias } from "./Urgencias";
 import type { Decisao, Edicao, Painel, StatusDecisao } from "../tipos";
 
-const CLASSE_STATUS: Record<StatusDecisao, string> = { aberta: "bad", provisoria: "warn", decidida: "ok" };
+/* A aba só aparece quando faz sentido: ver temDecisoes em abas.ts. */
 
-/** A seção aparece em toda edição não fechada; numa fechada, só se ficou algo registrado. */
-export const temDecisoes = (e: Edicao): boolean =>
-  e.status !== "fechada" || Boolean(e.decisoes?.length || e.avisos?.length || e.urgentes?.length);
+export const CLASSE_STATUS_DECISAO: Record<StatusDecisao, string> = { aberta: "bad", provisoria: "warn", decidida: "ok" };
 
 export function Decisoes({ painel, e }: { painel: Painel; e: Edicao }) {
   const modal = usarModalCampos();
@@ -60,12 +58,12 @@ export function Decisoes({ painel, e }: { painel: Painel; e: Edicao }) {
       {decisoes.length === 0
         ? <div className="note">Nenhuma decisão registrada. Use <b>+ Decisão</b> para pôr na mesa as opções, com prós e contras.</div>
         : (
-          <div className="sdp-grid sdp-g2">
+          <div className="sdp-grid sdp-g2 decisoes">
             {decisoes.map((d, i) => (
               <div className={"sdp-card decisao " + d.status} key={d.id}>
                 <div className="topo">
                   <div className="k">{d.tema}</div>
-                  <span className={"tag " + CLASSE_STATUS[d.status]}>{ROTULO_STATUS_DECISAO[d.status]}</span>
+                  <span className={"tag " + CLASSE_STATUS_DECISAO[d.status]}>{ROTULO_STATUS_DECISAO[d.status]}</span>
                 </div>
                 {d.atual && <div className="atual">{d.atual}</div>}
                 {(d.prazo || d.obs) && (

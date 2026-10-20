@@ -13,138 +13,198 @@
   --text-*: initial;
 }
 
-/* CSS da página Samba de Ponta: o CSS do artefato "Ponta de Lança" com todo
-   seletor dentro de .sambadeponta (nada vaza para a Central) e as classes que a
-   Central também estiliza (btn, card, grid, modal, hero, bar, col, cell,
-   eyebrow, brand, side, toolbar, prazo, rm) renomeadas com o prefixo sdp-.
-   Gerado a partir do artefato; ajustes à mão ficam no bloco final. */
-/* CSS antigo do artefato, na camada legado (abaixo das utilities). Some na etapa 7. */
+/* CSS da página da Ponta de Lança. Nasceu do CSS do artefato (todo seletor
+   dentro de .sambadeponta, nada vaza para a Central; as classes que a Central
+   também estiliza levam o prefixo sdp-). Desde 20/10/2026 veste o design
+   system da festa (https://claude.ai/artifact/7T25Qu7QpgEifbDSGyhszC):
+   - paleta Verde Bandeira, Marfim, Marrom Terra, Pistache, Turquesa e Tinta;
+     os nomes antigos (--green, --lime, --dark...) continuam como papéis, com
+     os valores da festa, para as telas não precisarem mudar;
+   - títulos na Better Faster (licença web pendente; até lá, Permanent Marker),
+     texto e NÚMEROS em Poppins: fonte de pincel não tem algarismos alinhados;
+   - botões e tarjas retos, sem sombra nem degradê, sem modo escuro;
+   - contraste conferido: texto pequeno sobre o verde é sempre Marfim (4,58:1);
+     Pistache e Turquesa só como fundo, com texto Tinta.
+   Fora do design system, de propósito: as cores de estado (vermelho, âmbar,
+   verde-escuro de "ok"), os tons neutros derivados e o texto de tabela abaixo
+   de 16px (é um painel de trabalho, não a página pública). */
 @layer legado {
-.sambadeponta{--green:#006837;--lime:#97C230;--cream:#FFFFCB;--dark:#00311B;
-  --paper:#F5F7F2;--card:#FFFFFF;--ink:#0B1F16;--muted:#63736A;--line:#DCE4DA;--zebra:#F5FAF1;
-  --red:#B23A2E;--red-soft:#F9E4E1;--amber:#9A6212;--amber-soft:#FBEEDC;--ok-soft:#E4F0DA;--ok:#3D6B16;
-  --navbg:#006837;--navtext:rgba(255,255,255,.82);--shadow:0 6px 24px rgba(0,49,27,.10);
-  --input:#FFFFFF;--input-line:#B9C7BC;}
-@media (prefers-color-scheme: dark){
-  .sambadeponta{--paper:#0D1812;--card:#15241B;--ink:#E9F0E6;--muted:#9DAEA2;--line:#26382D;--zebra:#182A20;
-    --red:#F08A7C;--red-soft:#3A1E1B;--amber:#E8B45A;--amber-soft:#3A2B12;--ok-soft:#1F3A17;--ok:#B9E07A;
-    --navbg:#03301C;--shadow:0 6px 24px rgba(0,0,0,.35);--input:#0F1C15;--input-line:#3B5044;--cream:#F4F4C4;}
+.sambadeponta{
+  --verde:#227C51;--marfim:#F5F1EA;--marrom:#715142;--pistache:#B6C075;--turquesa:#AED3CC;--tinta:#443E37;
+  --font-display:'Better Faster','Permanent Marker','Arial Narrow',sans-serif;
+  --font-texto:'Poppins','Segoe UI',system-ui,sans-serif;
+  --green:var(--verde);--lime:var(--pistache);--cream:var(--marfim);--dark:var(--marrom);
+  --paper:var(--marfim);--card:#FFFDF8;--ink:var(--tinta);--muted:#6E655C;--line:#E3DCCF;--zebra:#F7F2EA;--nota:#EDE6D8;
+  --red:#B23A2E;--red-soft:#F7E1DB;--amber:#8A5A10;--amber-soft:#F8EBD6;--ok:#1F6B45;--ok-soft:#E2EEE5;
+  --navbg:var(--verde);--navtext:var(--marfim);
+  --input:#FFFDF8;--input-line:#9A8D7C;
 }
 .sambadeponta *{box-sizing:border-box}
-.sambadeponta{margin:0}
-.sambadeponta{font-family:'Poppins','Segoe UI',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;font-size:14px;-webkit-font-smoothing:antialiased}
-.sambadeponta h1, .sambadeponta h2, .sambadeponta h3, .sambadeponta .display{font-family:'Anton','Poppins',sans-serif;font-weight:400;letter-spacing:.02em;text-transform:uppercase;line-height:1;margin:0}
-.sambadeponta h2{font-size:34px;color:var(--ink);padding-left:14px;border-left:6px solid var(--lime);text-wrap:balance}
-.sambadeponta h3{font-size:16px;color:var(--ink);letter-spacing:.04em}
+.sambadeponta{margin:0;min-height:100vh;font-family:var(--font-texto);background:var(--paper);color:var(--ink);line-height:1.5;font-size:14px;-webkit-font-smoothing:antialiased}
+/* Títulos: com entrelinha abaixo de 1 o Ç (EDIÇÃO, ORÇAMENTO) invadia a linha de baixo; o respiro de baixo segura cedilha e descendentes. */
+.sambadeponta h1, .sambadeponta h2, .sambadeponta .display{font-family:var(--font-display);font-weight:400;letter-spacing:0;text-transform:uppercase;line-height:1.05;padding-bottom:.08em;margin:0}
+.sambadeponta h2{font-size:36px;color:var(--verde);text-wrap:balance}
+.sambadeponta h3{font-family:var(--font-texto);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0}
 .sambadeponta p{margin:0}
-.sambadeponta a{color:var(--green)}
+.sambadeponta a{color:var(--verde)}
 .sambadeponta button{font:inherit;cursor:pointer}
 .sambadeponta [hidden]{display:none!important}
-.sambadeponta :focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.sambadeponta :focus-visible{outline:3px solid var(--tinta);outline-offset:3px}
+.sambadeponta nav.sdp-side :focus-visible, .sambadeponta .sdp-hero :focus-visible{outline-color:var(--marfim)}
 @media (prefers-reduced-motion: reduce){
   .sambadeponta *{transition:none!important;animation:none!important}
 }
+
+/* ── casca e menu ── */
 .sambadeponta .shell{display:flex;min-height:100vh}
-.sambadeponta nav.sdp-side{position:fixed;top:0;left:0;bottom:0;width:250px;background:var(--navbg);color:#fff;overflow-y:auto;z-index:30;padding:calc(22px + env(safe-area-inset-top,0px)) 0 calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
-.sambadeponta nav.sdp-side .sdp-brand{display:flex;align-items:center;gap:10px;padding:0 20px 16px;border-bottom:1px solid rgba(255,255,255,.15)}
-.sambadeponta nav.sdp-side .sdp-brand svg{width:26px;height:26px;flex:none}
-.sambadeponta nav.sdp-side .sdp-brand b{font-family:'Anton',sans-serif;font-weight:400;font-size:18px;line-height:.95;letter-spacing:.03em;text-transform:uppercase}
-.sambadeponta nav.sdp-side .group{font-size:10px;letter-spacing:.14em;color:var(--lime);padding:18px 20px 4px;text-transform:uppercase;font-weight:700}
-.sambadeponta nav.sdp-side a{display:block;padding:8px 20px;color:var(--navtext);text-decoration:none;font-size:13px;font-weight:500;border-left:3px solid transparent}
-.sambadeponta nav.sdp-side a.sub{padding-left:32px;font-size:12.5px;color:rgba(255,255,255,.68)}
-.sambadeponta nav.sdp-side a:hover{background:rgba(255,255,255,.07);color:#fff}
-.sambadeponta nav.sdp-side a.active{color:var(--cream);border-left-color:var(--lime);background:rgba(151,194,48,.16);font-weight:600}
+.sambadeponta nav.sdp-side{position:fixed;top:0;left:0;bottom:0;width:250px;background:var(--navbg);color:var(--marfim);overflow-y:auto;z-index:30;padding:calc(20px + env(safe-area-inset-top,0px)) 0 calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
+.sambadeponta nav.sdp-side .sdp-brand{display:block;padding:4px 20px 18px;border-bottom:1px solid rgba(245,241,234,.25)}
+.sambadeponta nav.sdp-side .sdp-brand img{display:block;height:46px;width:auto}
+.sambadeponta nav.sdp-side .group{font-size:10.5px;letter-spacing:.16em;color:var(--marfim);padding:20px 20px 4px;text-transform:uppercase;font-weight:700}
+.sambadeponta nav.sdp-side a{display:block;padding:8px 20px;color:var(--navtext);text-decoration:none;font-size:13px;font-weight:500}
+.sambadeponta nav.sdp-side a.sub{padding-left:32px;font-size:12.5px;font-weight:400}
+.sambadeponta nav.sdp-side a.ed.aberta{font-weight:600}
+.sambadeponta nav.sdp-side a:hover{background:rgba(245,241,234,.12)}
+.sambadeponta nav.sdp-side a.active{background:var(--marfim);color:var(--verde);font-weight:600}
 .sambadeponta nav.sdp-side .ed-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.sambadeponta nav.sdp-side .pill{font-size:9.5px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
-.sambadeponta nav.sdp-side .pill.exec{background:var(--lime);color:var(--dark)}
-.sambadeponta nav.sdp-side .pill.plan{background:rgba(255,255,203,.25);color:var(--cream)}
+.sambadeponta nav.sdp-side .pill{font-size:9.5px;padding:2px 6px;background:transparent;border:1px solid var(--marfim);color:var(--marfim);letter-spacing:.06em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.sambadeponta nav.sdp-side .pill.exec{background:var(--pistache);border-color:var(--pistache);color:var(--tinta)}
+.sambadeponta nav.sdp-side .pill.plan{background:var(--turquesa);border-color:var(--turquesa);color:var(--tinta)}
 .sambadeponta nav.sdp-side .navfoot{margin-top:auto;padding:18px 20px 0;display:flex;flex-direction:column;gap:8px}
-.sambadeponta .sdp-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;line-height:1.2}
-.sambadeponta .sdp-btn:hover{border-color:var(--green)}
-.sambadeponta .sdp-btn.primary{background:var(--lime);border-color:var(--lime);color:var(--dark)}
-.sambadeponta .sdp-btn.primary:hover{filter:brightness(.95)}
-.sambadeponta .sdp-btn.ghost{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}
-.sambadeponta .sdp-btn.ghost:hover{background:rgba(255,255,255,.1);border-color:#fff}
-.sambadeponta .sdp-btn.small{padding:4px 9px;font-size:11.5px}
-.sambadeponta .sdp-btn.danger{color:var(--red);border-color:var(--red)}
-.sambadeponta .sdp-btn:disabled{opacity:.5;cursor:default}
+.sambadeponta nav.sdp-side .estado{font-size:11px;color:var(--marfim);display:flex;flex-direction:column;gap:2px}
+.sambadeponta nav.sdp-side .estado .ponto{display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(245,241,234,.5);margin-right:6px}
+.sambadeponta nav.sdp-side .estado .ponto.ok{background:var(--pistache)} .sambadeponta nav.sdp-side .estado .ponto.sv{background:#E8B45A} .sambadeponta nav.sdp-side .estado .ponto.er{background:#FFC9BD}
+.sambadeponta nav.sdp-side .estado button{background:none;border:0;color:var(--marfim);padding:0;font-size:11px;text-align:left;cursor:pointer;text-decoration:underline}
 .sambadeponta main{margin-left:250px;flex:1;min-width:0;padding-bottom:90px}
+.sambadeponta .menutoggle{display:none;position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:45;background:var(--verde);color:var(--marfim);border:2px solid var(--marfim);width:44px;height:44px;font-size:20px;align-items:center;justify-content:center}
+.sambadeponta .carregando{padding:60px 52px;color:var(--muted);font-size:14px}
+
+/* ── botões, tarjas e rótulos ── */
+.sambadeponta .sdp-btn{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--verde);background:transparent;color:var(--verde);border-radius:0;padding:6px 12px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;line-height:1.2;text-decoration:none}
+.sambadeponta .sdp-btn:hover{box-shadow:inset 0 -3px 0 var(--marrom)}
+.sambadeponta .sdp-btn.primary{background:var(--verde);color:var(--marfim)}
+.sambadeponta .sdp-btn.ghost{border-color:var(--marfim);color:var(--marfim)}
+.sambadeponta .sdp-btn.ghost:hover{background:rgba(245,241,234,.12);box-shadow:none}
+.sambadeponta .sdp-btn.small{padding:4px 9px;font-size:10.5px}
+.sambadeponta .sdp-btn.danger{color:var(--red);border-color:var(--red)}
+.sambadeponta .sdp-btn:disabled{opacity:.5;cursor:default;box-shadow:none}
+.sambadeponta .sdp-btn.estrela.on{background:var(--pistache);border-color:var(--pistache);color:var(--tinta)}
+/* Tarja: a fita de cor das artes, levemente torta, com o texto na letra dos títulos. */
+.sambadeponta .sdp-tarja{display:inline-block;background:var(--pistache);color:var(--tinta);font-family:var(--font-display);font-size:19px;line-height:1.3;letter-spacing:.03em;text-transform:uppercase;padding:3px 14px 2px;transform:rotate(-1.5deg);transform-origin:left center}
+/* Rótulo de seção: tarja reta e pequena, em Poppins (a letra de pincel não lê bem em 11px). */
+.sambadeponta .sdp-eyebrow{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:12px;background:var(--pistache);color:var(--tinta);padding:4px 10px}
+.sambadeponta .tag{display:inline-block;padding:2px 8px;border-radius:2px;font-size:10.5px;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.sambadeponta .tag.ok{background:var(--ok-soft);color:var(--ok)}
+.sambadeponta .tag.warn{background:var(--amber-soft);color:var(--amber)}
+.sambadeponta .tag.bad{background:var(--red-soft);color:var(--red)}
+.sambadeponta .tag.neutral{background:var(--line);color:var(--tinta)}
+.sambadeponta .tag.click{cursor:pointer}
+
+/* ── seções ── */
 .sambadeponta section{padding:54px 52px;border-bottom:1px solid var(--line)}
-.sambadeponta .sdp-eyebrow{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:14px;background:var(--lime);color:var(--dark);padding:4px 12px;border-radius:20px}
-.sambadeponta .lead{font-size:15px;color:var(--muted);max-width:66ch;margin:10px 0 26px;text-wrap:pretty}
+.sambadeponta section.curta{padding-top:24px;padding-bottom:24px}
+.sambadeponta .lead{font-size:16px;color:var(--muted);max-width:66ch;margin:10px 0 26px;text-wrap:pretty}
+.sambadeponta .lead b{color:var(--ink)}
 .sambadeponta .sechead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px}
-.sambadeponta .sechead .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-.sambadeponta .ksub{font-size:12px;color:var(--muted);margin:28px 0 10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-.sambadeponta .note{border-left:3px solid var(--lime);background:var(--card);border-radius:0 8px 8px 0;padding:11px 15px;font-size:12.5px;color:var(--muted);margin-top:16px}
+.sambadeponta .sechead .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.sambadeponta .sechead.bloco{margin-top:30px;margin-bottom:10px;align-items:center}
+.sambadeponta .sechead.bloco .ksub{margin:0}
+.sambadeponta .sechead.bloco .actions{margin-bottom:0}
+.sambadeponta .ksub{font-size:12px;color:var(--muted);margin:28px 0 10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.sambadeponta .note{background:var(--nota);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--ink);margin-top:16px}
 .sambadeponta .note b{color:var(--ink)}
-.sambadeponta .editnote{font-size:12.5px;color:var(--dark);margin-top:16px;padding:11px 15px;border-radius:8px;background:var(--cream);font-style:italic}
-@media (prefers-color-scheme: dark){
-  .sambadeponta .editnote{color:#0B1F16}
-}
-.sambadeponta .sdp-hero{background:var(--green);color:#fff;border-bottom:6px solid var(--lime);padding:64px 52px 52px}
-.sambadeponta .sdp-hero .sdp-eyebrow{background:var(--lime);color:var(--dark)}
-.sambadeponta .sdp-hero h1{font-size:64px;line-height:.92;color:#fff;margin:6px 0 6px}
-.sambadeponta .sdp-hero .sub{font-size:16px;color:rgba(255,255,255,.82);margin-bottom:32px;font-weight:300;max-width:70ch}
-.sambadeponta .sdp-hero .sub b{color:#FFFFCB;font-weight:600}
-.sambadeponta .band{display:flex;flex-wrap:wrap;border:1px solid rgba(255,255,255,.22);border-radius:10px;overflow:hidden}
-.sambadeponta .band .sdp-cell{flex:1;min-width:150px;padding:18px 22px;border-right:1px solid rgba(255,255,255,.14)}
+.sambadeponta .editnote{font-size:13px;color:var(--tinta);margin-top:16px;padding:11px 15px;border-radius:12px;background:var(--turquesa);font-style:italic}
+.sambadeponta .help{font-size:14px;color:var(--ink);max-width:70ch;line-height:1.6}
+.sambadeponta .help p{margin-bottom:12px}
+.sambadeponta .help code{background:var(--zebra);padding:1px 6px;border-radius:4px;font-size:12px}
+
+/* ── capa (hero) ── */
+.sambadeponta .sdp-hero{background:var(--verde);color:var(--marfim);padding:52px 52px 44px}
+.sambadeponta .sdp-hero h1{font-size:92px;color:var(--marfim);margin:16px 0 8px}
+.sambadeponta .sdp-hero h1 .asterisco{display:inline-block;height:.5em;width:auto;margin:0 .16em;vertical-align:.14em}
+.sambadeponta .sdp-hero h1.assinatura{padding:0;margin:22px 0 18px;line-height:0}
+.sambadeponta .sdp-hero h1.assinatura img{display:block;height:112px;width:auto;max-width:100%}
+.sambadeponta .sdp-hero .sub{font-size:16px;color:var(--marfim);margin-bottom:30px;font-weight:300;max-width:72ch}
+.sambadeponta .sdp-hero .sub b{color:var(--marfim);font-weight:600}
+.sambadeponta .sdp-hero .sub .linha{display:block;font-size:13px;font-weight:700;letter-spacing:.166em;text-transform:uppercase}
+.sambadeponta .sdp-hero .sub .lineup{display:block;margin-top:6px}
+.sambadeponta .sdp-hero.compacta{padding-top:34px;padding-bottom:24px}
+.sambadeponta .sdp-hero.compacta h1{font-size:52px;margin:12px 0 4px}
+.sambadeponta .sdp-hero.compacta .sub{margin-bottom:0}
+.sambadeponta .band{display:flex;flex-wrap:wrap;border:2px solid rgba(245,241,234,.35);border-radius:16px;overflow:hidden}
+.sambadeponta .band .sdp-cell{flex:1;min-width:150px;padding:18px 22px;border-right:1px solid rgba(245,241,234,.25)}
 .sambadeponta .band .sdp-cell:last-child{border-right:none}
-.sambadeponta .band .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:6px;font-weight:600}
-.sambadeponta .band .v{font-family:'Anton',sans-serif;font-size:28px;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
-.sambadeponta .band .v.neg{color:#FFB4A8}
-.sambadeponta .band .v.pos{color:#C9F27A}
-.sambadeponta .band .foot{font-size:12px;color:rgba(255,255,255,.62);margin-top:6px}
+.sambadeponta .band .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--marfim);margin-bottom:6px;font-weight:700}
+.sambadeponta .band .v{font-size:28px;font-weight:600;letter-spacing:-.02em;color:var(--marfim);line-height:1.1;font-variant-numeric:tabular-nums}
+.sambadeponta .band .v.neg{color:#FFC9BD}
+.sambadeponta .band .v.pos{color:var(--marfim)}
+.sambadeponta .band .foot{font-size:12.5px;color:var(--marfim);font-weight:300;margin-top:6px}
 .sambadeponta .sdp-hero .sdp-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+/* Faixa de listras pintadas à mão (fundo do design system) fechando a capa. */
+.sambadeponta .sdp-listras{height:20px;background:var(--pistache) url(/pontadelanca/listras-pistache.jpg) center/cover}
+
+/* ── abas da edição ── */
+.sambadeponta .sdp-abas{position:sticky;top:0;z-index:20;display:flex;overflow-x:auto;scrollbar-width:none;background:var(--marfim);border-bottom:2px solid var(--verde);padding:0 52px}
+.sambadeponta .sdp-abas::-webkit-scrollbar{display:none}
+.sambadeponta .sdp-abas button{flex:none;background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;padding:15px 14px 11px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta);white-space:nowrap}
+.sambadeponta .sdp-abas button:hover{color:var(--verde)}
+.sambadeponta .sdp-abas button.atual{color:var(--verde);border-bottom-color:var(--verde)}
+
+/* ── cartões e números ── */
 .sambadeponta .sdp-grid{display:grid;gap:16px}
 .sambadeponta .sdp-g2{grid-template-columns:repeat(2,1fr)}
 .sambadeponta .sdp-g3{grid-template-columns:repeat(3,1fr)}
 .sambadeponta .sdp-g4{grid-template-columns:repeat(4,1fr)}
-.sambadeponta .sdp-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
-.sambadeponta .sdp-card .k{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
-.sambadeponta .sdp-card .v{font-family:'Anton',sans-serif;font-size:28px;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
-.sambadeponta .sdp-card .v.green{color:var(--green)}
+.sambadeponta .sdp-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.sambadeponta .sdp-card .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+.sambadeponta .sdp-card .v{font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}
+.sambadeponta .sdp-card .v.green{color:var(--verde)}
 .sambadeponta .sdp-card .v.red{color:var(--red)}
 .sambadeponta .sdp-card .foot{font-size:12px;color:var(--muted);margin-top:7px}
-.sambadeponta .sdp-card.hl{background:var(--dark);color:#fff;border-color:var(--dark)}
-.sambadeponta .sdp-card.hl .k{color:var(--lime)}
-.sambadeponta .sdp-card.hl .v{color:#fff}
-.sambadeponta .sdp-card.hl .foot{color:rgba(255,255,255,.65)}
-.sambadeponta .result{display:flex;align-items:center;gap:26px;background:var(--card);border:2px solid var(--red);border-radius:14px;padding:22px 26px;flex-wrap:wrap}
-.sambadeponta .result.pos{border-color:var(--green)}
-.sambadeponta .result .big{font-family:'Anton',sans-serif;font-size:46px;color:var(--red);line-height:.9;font-variant-numeric:tabular-nums}
-.sambadeponta .result.pos .big{color:var(--green)}
+.sambadeponta .sdp-card.hl{background:var(--marrom);color:var(--marfim);border-color:var(--marrom)}
+.sambadeponta .sdp-card.hl .k, .sambadeponta .sdp-card.hl .v, .sambadeponta .sdp-card.hl .foot{color:var(--marfim)}
+.sambadeponta .result{display:flex;align-items:center;gap:26px;background:var(--card);border:2px solid var(--red);border-radius:16px;padding:22px 26px;flex-wrap:wrap}
+.sambadeponta .result.pos{border-color:var(--verde)}
+.sambadeponta .result .big{font-size:40px;font-weight:600;letter-spacing:-.02em;color:var(--red);line-height:1;font-variant-numeric:tabular-nums}
+.sambadeponta .result.pos .big{color:var(--verde)}
 .sambadeponta .result .txt b{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink)}
 .sambadeponta .result .txt p{font-size:13px;color:var(--muted);margin-top:4px}
 .sambadeponta .split{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
-.sambadeponta .split .s{flex:1;min-width:160px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;text-align:center}
-.sambadeponta .split .s .k{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.sambadeponta .split .s .v{font-family:'Anton',sans-serif;font-size:24px;color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums}
+.sambadeponta .split .s{flex:1;min-width:160px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center}
+.sambadeponta .split .s .k{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sambadeponta .split .s .v{font-size:22px;font-weight:600;color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums}
 .sambadeponta .split .s .v.neg{color:var(--red)}
-.sambadeponta .split .s .v.pos{color:var(--green)}
+.sambadeponta .split .s .v.pos{color:var(--verde)}
+
+/* ── gráficos (cor chapada, sem degradê) ── */
 .sambadeponta .bars{display:flex;flex-direction:column;gap:9px;margin-top:8px}
 .sambadeponta .sdp-bar{display:grid;grid-template-columns:170px 1fr 100px;align-items:center;gap:12px;font-size:13px}
 .sambadeponta .sdp-bar .lbl{color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sambadeponta .sdp-bar .track{background:var(--line);border-radius:6px;height:18px;overflow:hidden}
-.sambadeponta .sdp-bar .fill{height:100%;border-radius:6px;background:var(--green)}
-.sambadeponta .sdp-bar .fill.lime{background:var(--lime)}
+.sambadeponta .sdp-bar .track{background:var(--line);height:18px;overflow:hidden}
+.sambadeponta .sdp-bar .fill{height:100%;background:var(--verde)}
+.sambadeponta .sdp-bar .fill.lime{background:var(--pistache)}
 .sambadeponta .sdp-bar .fill.red{background:var(--red)}
-.sambadeponta .sdp-bar .fill.dk{background:var(--dark)}
+.sambadeponta .sdp-bar .fill.dk{background:var(--marrom)}
 .sambadeponta .sdp-bar .val{text-align:right;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .sambadeponta .curve{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:18px;border-bottom:2px solid var(--line);margin-top:10px}
 .sambadeponta .curve .sdp-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%}
-.sambadeponta .curve .sdp-col .b{width:100%;max-width:34px;background:linear-gradient(var(--lime),var(--green));border-radius:4px 4px 0 0;min-height:2px}
-.sambadeponta .curve .sdp-col.d0 .b{background:linear-gradient(#ffd84d,var(--red))}
-.sambadeponta .curve .sdp-col .n{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
-.sambadeponta .curve .sdp-col .d{font-size:10px;color:var(--muted)}
-.sambadeponta .tw{overflow-x:auto;margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
-.sambadeponta table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
-.sambadeponta th{background:var(--green);color:#fff;text-align:left;padding:9px 12px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;white-space:nowrap}
-.sambadeponta td{padding:8px 12px;border-top:1px solid var(--line);color:var(--ink);vertical-align:top}
+.sambadeponta .curve .sdp-col .b{width:100%;max-width:34px;background:var(--verde);min-height:2px}
+.sambadeponta .curve .sdp-col.d0 .b{background:var(--marrom)}
+.sambadeponta .curve .sdp-col .n, .sambadeponta .curve .sdp-col .d{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sambadeponta .progress{height:10px;background:var(--line);overflow:hidden;margin-top:8px}
+.sambadeponta .progress i{display:block;height:100%;background:var(--verde)}
+
+/* ── tabelas ── */
+.sambadeponta .tw{overflow-x:auto;margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.sambadeponta table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px;background:transparent;border:0}
+.sambadeponta th{background:var(--verde);color:var(--marfim);text-align:left;padding:9px 12px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;white-space:nowrap;border-bottom:0}
+.sambadeponta td{padding:8px 12px;border-top:1px solid var(--line);border-bottom:0;color:var(--ink);vertical-align:top}
+.sambadeponta tbody tr:hover{background:transparent}
 .sambadeponta tbody tr:nth-child(even) td{background:var(--zebra)}
 .sambadeponta td.num, .sambadeponta th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sambadeponta tr.subtot td{background:var(--ok-soft)!important;font-weight:700}
-.sambadeponta tr.cat td{background:var(--dark)!important;color:#fff;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
-.sambadeponta tr.total td{background:var(--dark)!important;color:#fff;font-weight:700}
+.sambadeponta tr.cat td{background:var(--marrom)!important;color:var(--marfim);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.sambadeponta tr.total td{background:var(--marrom)!important;color:var(--marfim);font-weight:700}
 .sambadeponta td .m{display:block;font-size:11px;color:var(--muted)}
 .sambadeponta td.diffpos{color:var(--red);font-weight:600}
 .sambadeponta td.diffneg{color:var(--ok);font-weight:600}
@@ -153,110 +213,55 @@
 .sambadeponta tr.done td{color:var(--muted)}
 .sambadeponta tr.done td.task{text-decoration:line-through}
 .sambadeponta tr.late td.sdp-prazo{color:var(--red);font-weight:700}
-.sambadeponta .crono td:first-child{font-weight:600;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sambadeponta .crono td:first-child{font-weight:600;color:var(--verde);font-variant-numeric:tabular-nums;white-space:nowrap}
 .sambadeponta .crono td.atr{background:var(--ok-soft)!important;font-weight:600}
-.sambadeponta .crono td.atr.sdp{background:var(--lime)!important;color:#0B1F16}
-.sambadeponta .crono td.atr.hl{background:var(--green)!important;color:#FFFFCB;font-weight:700}
-.sambadeponta .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;letter-spacing:.02em}
-.sambadeponta .tag.ok{background:var(--ok-soft);color:var(--ok)}
-.sambadeponta .tag.warn{background:var(--amber-soft);color:var(--amber)}
-.sambadeponta .tag.bad{background:var(--red-soft);color:var(--red)}
-.sambadeponta .tag.neutral{background:var(--line);color:var(--muted)}
-.sambadeponta .tag.click{cursor:pointer}
-.sambadeponta .chk{width:18px;height:18px;border-radius:5px;border:2px solid var(--input-line);background:var(--input);display:inline-grid;place-items:center;cursor:pointer;color:#fff;font-size:12px;flex:none}
-.sambadeponta .chk.on{background:var(--green);border-color:var(--green)}
-.sambadeponta .chk.half{background:var(--lime);border-color:var(--lime);color:var(--dark)}
-.sambadeponta .ro .chk{cursor:default}
-.sambadeponta .wl{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.sambadeponta .wl .sdp-col{border-radius:12px;padding:20px 22px;border:1px solid var(--line);background:var(--card)}
-.sambadeponta .wl .sdp-col.win{border-top:4px solid var(--lime)}
-.sambadeponta .wl .sdp-col.loss{border-top:4px solid var(--red)}
-.sambadeponta .wl h3{margin-bottom:12px}
-.sambadeponta .wl ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0}
-.sambadeponta .wl li{font-size:13px;padding-left:20px;position:relative;line-height:1.45;color:var(--ink)}
-.sambadeponta .wl li::before{content:'';position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:50%}
-.sambadeponta .wl .win li::before{background:var(--lime)}
-.sambadeponta .wl .loss li::before{background:var(--red)}
-.sambadeponta .wl li .sdp-rm{margin-left:6px}
-.sambadeponta .phases{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
-.sambadeponta .phase{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:600}
-.sambadeponta .phase.now{background:var(--lime);color:var(--dark);border-color:var(--lime)}
-.sambadeponta .phase.past{background:var(--ok-soft);color:var(--ok);border-color:transparent}
-.sambadeponta .progress{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}
-.sambadeponta .progress i{display:block;height:100%;background:var(--green)}
-.sambadeponta .edlist{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.sambadeponta .edtile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
-.sambadeponta .edtile:hover{border-color:var(--green)}
-.sambadeponta .edtile .t{font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:.02em}
-.sambadeponta .edtile .d{font-size:12.5px;color:var(--muted)}
-.sambadeponta .edtile .r{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
-.sambadeponta .edtile.new{border-style:dashed;align-items:center;justify-content:center;color:var(--muted);min-height:110px}
-.sambadeponta .files{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-.sambadeponta .file{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:3px}
-.sambadeponta .file a, .sambadeponta .file .fn{font-weight:600;color:var(--green);font-size:13px;text-decoration:none;word-break:break-word}
-.sambadeponta .file .fd{font-size:12px;color:var(--muted)}
-.sambadeponta .sdp-modalbg{position:fixed;inset:0;background:rgba(0,20,10,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
-.sambadeponta .sdp-modal{background:var(--card);color:var(--ink);border-radius:14px;width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:22px 24px;box-shadow:var(--shadow)}
-.sambadeponta .sdp-modal h3{margin-bottom:14px;font-size:20px}
-.sambadeponta .form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.sambadeponta .form .f{display:flex;flex-direction:column;gap:4px}
-.sambadeponta .form .f.full{grid-column:1/-1}
-.sambadeponta .form label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.sambadeponta .form input, .sambadeponta .form select, .sambadeponta .form textarea{font:inherit;font-size:13.5px;padding:8px 10px;border:1px solid var(--input-line);border-radius:8px;background:var(--input);color:var(--ink);width:100%}
-.sambadeponta .form textarea{min-height:72px;resize:vertical}
-.sambadeponta .sdp-modal .mact{display:flex;justify-content:space-between;gap:8px;margin-top:18px;flex-wrap:wrap}
-.sambadeponta .sdp-modal .mact .r{display:flex;gap:8px}
+.sambadeponta .crono td.atr.sdp{background:var(--pistache)!important;color:var(--tinta)}
+.sambadeponta .crono td.atr.hl{background:var(--verde)!important;color:var(--marfim);font-weight:700}
 .sambadeponta .cmp td:first-child{font-weight:600}
 .sambadeponta .cmp td.best{color:var(--ok);font-weight:700}
 .sambadeponta .cmp td.worst{color:var(--red);font-weight:700}
 .sambadeponta .legend{font-size:12px;color:var(--muted);margin-top:8px}
-.sambadeponta .menutoggle{display:none;position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:45;background:var(--green);color:#fff;border:none;border-radius:8px;width:44px;height:44px;font-size:20px;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.sambadeponta .inline-add{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.sambadeponta .inline-add input{flex:1;min-width:200px;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--input-line);border-radius:8px;background:var(--input);color:var(--ink)}
-.sambadeponta .help{font-size:13.5px;color:var(--ink);max-width:70ch;line-height:1.6}
-.sambadeponta .help p{margin-bottom:12px}
-.sambadeponta .help code{background:var(--zebra);padding:1px 6px;border-radius:4px;font-size:12px}
-@media (max-width:900px){
-  .sambadeponta nav.sdp-side{transform:translateX(-100%);transition:transform .25s}
-  .sambadeponta nav.sdp-side.open{transform:none}
-  .sambadeponta main{margin-left:0}
-  .sambadeponta section, .sambadeponta .sdp-hero{padding-left:16px;padding-right:16px}
-  .sambadeponta section{padding-top:36px;padding-bottom:36px}
-  .sambadeponta .sdp-hero{padding-top:64px}
-  .sambadeponta .sdp-hero h1{font-size:44px}
-  .sambadeponta h2{font-size:26px}
-  .sambadeponta .sdp-g2, .sambadeponta .sdp-g3, .sambadeponta .sdp-g4, .sambadeponta .wl{grid-template-columns:1fr}
-  .sambadeponta .sdp-bar{grid-template-columns:110px 1fr 84px}
-  .sambadeponta .form{grid-template-columns:1fr}
-  .sambadeponta .menutoggle{display:flex}
-}
+.sambadeponta .chk{width:18px;height:18px;border-radius:3px;border:2px solid var(--input-line);background:var(--input);display:inline-grid;place-items:center;cursor:pointer;color:var(--marfim);font-size:12px;flex:none}
+.sambadeponta .chk.on{background:var(--verde);border-color:var(--verde)}
+.sambadeponta .chk.half{background:var(--pistache);border-color:var(--pistache);color:var(--tinta)}
+.sambadeponta .ro .chk{cursor:default}
+/* Listas curtas (quem avisar, urgências): no celular as colunas de apoio descem para baixo do nome, sem rolagem lateral. */
+.sambadeponta table.curta .so-celular{display:none}
+.sambadeponta table.curta td.rowact button{margin-top:2px}
 
-/* ── ajustes desta página (não vêm do artefato) ── */
-.sambadeponta{min-height:100vh}
-/* O CSS global da Central estiliza tabela, célula e campos soltos; aqui volta ao que o artefato espera. */
-.sambadeponta table{background:transparent;border:0}
-.sambadeponta th,.sambadeponta td{border-bottom:0}
-.sambadeponta tbody tr:hover{background:transparent}
-.sambadeponta input:not([type=checkbox]),.sambadeponta select,.sambadeponta textarea{width:auto;font:inherit;font-size:13.5px;line-height:1.4;padding:8px 10px;border:1px solid var(--input-line);border-radius:8px;background:var(--input);color:var(--ink)}
-.sambadeponta textarea{min-height:72px;resize:vertical}
-.sambadeponta a.sdp-btn{text-decoration:none}
-.sambadeponta .carregando{padding:60px 52px;color:var(--muted);font-size:14px}
-.sambadeponta nav.sdp-side .estado{font-size:11px;color:rgba(255,255,255,.5);display:flex;flex-direction:column;gap:2px}
-.sambadeponta nav.sdp-side .estado .ponto{display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);margin-right:6px}
-.sambadeponta nav.sdp-side .estado .ponto.ok{background:var(--lime)} .sambadeponta nav.sdp-side .estado .ponto.sv{background:#E8B45A} .sambadeponta nav.sdp-side .estado .ponto.er{background:#F08A7C}
-.sambadeponta nav.sdp-side .estado button{background:none;border:0;color:rgba(255,255,255,.6);padding:0;font-size:11px;text-align:left;cursor:pointer;text-decoration:underline}
-.sambadeponta .edtile.new{cursor:pointer}
-.sambadeponta .sdp-eyebrow{color:var(--dark)}
-/* Títulos em Anton: com entrelinha abaixo de 1 o Ç (EDIÇÃO, ORÇAMENTO) invadia a linha de baixo. */
-.sambadeponta .sdp-hero h1{line-height:1;padding-bottom:.14em;margin-bottom:2px}
-.sambadeponta h2{line-height:1.08;padding-bottom:.06em}
-/* Decisões e urgências */
-.sambadeponta .sechead.bloco{margin-top:30px;margin-bottom:10px;align-items:center}
-.sambadeponta .sechead.bloco .ksub{margin:0}
-.sambadeponta .sechead.bloco .actions{margin-bottom:0}
-.sambadeponta .decisao{display:flex;flex-direction:column;border-top:4px solid var(--red)}
-.sambadeponta .decisao.provisoria{border-top-color:var(--amber)}
-.sambadeponta .decisao.decidida{border-top-color:var(--ok)}
+/* ── listas, fases e edições ── */
+.sambadeponta .wl{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.sambadeponta .wl .sdp-col{border-radius:16px;padding:20px 22px;border:1px solid var(--line);background:var(--card)}
+.sambadeponta .wl h3{margin-bottom:12px}
+.sambadeponta .wl .win h3{color:var(--verde)}
+.sambadeponta .wl .loss h3{color:var(--red)}
+.sambadeponta .wl ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0;padding:0}
+.sambadeponta .wl li{font-size:13px;padding-left:20px;position:relative;line-height:1.45;color:var(--ink)}
+.sambadeponta .wl li::before{content:'';position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:50%}
+.sambadeponta .wl .win li::before{background:var(--verde)}
+.sambadeponta .wl .loss li::before{background:var(--red)}
+.sambadeponta .wl li .sdp-rm{margin-left:6px}
+.sambadeponta .phases{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+.sambadeponta .phase{font-size:11px;padding:5px 10px;border-radius:2px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:600}
+.sambadeponta .phase.now{background:var(--pistache);color:var(--tinta);border-color:var(--pistache)}
+.sambadeponta .phase.past{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.sambadeponta .edlist{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.sambadeponta .edtile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.sambadeponta .edtile:hover{border-color:var(--verde)}
+.sambadeponta .edtile .t{font-family:var(--font-display);font-size:26px;line-height:1.1;text-transform:uppercase;color:var(--verde)}
+.sambadeponta .edtile .d{font-size:12.5px;color:var(--muted)}
+.sambadeponta .edtile .r{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.sambadeponta .edtile.new{border-style:dashed;align-items:center;justify-content:center;color:var(--muted);min-height:110px}
+.sambadeponta .files{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.sambadeponta .file{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px}
+.sambadeponta .file a, .sambadeponta .file .fn{font-weight:600;color:var(--verde);font-size:13px;text-decoration:none;word-break:break-word}
+.sambadeponta .file .fd{font-size:12px;color:var(--muted)}
+.sambadeponta .inline-add{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.sambadeponta .inline-add input{flex:1;min-width:200px}
+
+/* ── decisões e urgências ── */
+.sambadeponta .decisoes{align-items:start}
+.sambadeponta .decisao{display:flex;flex-direction:column}
 .sambadeponta .decisao .topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .sambadeponta .decisao .topo .k{margin-bottom:0}
 .sambadeponta .decisao .atual{font-size:17px;font-weight:600;color:var(--ink);margin-top:8px;line-height:1.35}
@@ -268,16 +273,65 @@
 .sambadeponta .decisao .pc::before{content:'+';position:absolute;left:0;top:0;font-weight:700;color:var(--ok)}
 .sambadeponta .decisao .pc.contra::before{content:'−';color:var(--red)}
 .sambadeponta .decisao .acoes{margin-top:auto;padding-top:14px}
-.sambadeponta .sdp-btn.estrela.on{background:var(--lime);border-color:var(--lime);color:var(--dark)}
-/* Listas curtas (quem avisar, urgências): no celular as colunas de apoio descem para baixo do nome, sem rolagem lateral. */
-.sambadeponta table.curta .so-celular{display:none}
-.sambadeponta table.curta td.rowact button{margin-top:2px}
+
+/* ── Agora (Resumo) ── */
+.sambadeponta .agora{margin-top:18px}
+.sambadeponta .agora-cartao{display:flex;flex-direction:column;align-items:stretch;text-align:left;color:var(--ink);font:inherit}
+.sambadeponta .agora-cartao:hover{border-color:var(--verde)}
+.sambadeponta .agora-cartao .v{font-size:34px}
+.sambadeponta .agora-cartao.alerta .v{color:var(--marrom)}
+.sambadeponta .agora-cartao ul{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sambadeponta .agora-cartao li{font-size:12.5px;line-height:1.4;padding-left:12px;position:relative}
+.sambadeponta .agora-cartao li::before{content:'✷';position:absolute;left:0;top:0;font-size:9px;color:var(--verde)}
+.sambadeponta .agora-cartao li.mais{color:var(--muted)}
+.sambadeponta .agora-cartao li.mais::before{content:''}
+.sambadeponta .agora-cartao .vazio{font-size:12.5px;color:var(--muted);margin-top:12px}
+.sambadeponta .agora-cartao .ir{margin-top:auto;padding-top:14px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--verde)}
+
+/* ── modal e formulários ── */
+.sambadeponta .sdp-modalbg{position:fixed;inset:0;background:rgba(68,62,55,.6);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+.sambadeponta .sdp-modal{background:var(--card);color:var(--ink);border-radius:16px;border:2px solid var(--verde);width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:22px 24px}
+.sambadeponta .sdp-modal h3{font-family:var(--font-display);font-weight:400;font-size:26px;letter-spacing:0;color:var(--verde);margin-bottom:14px;line-height:1.1}
+.sambadeponta .form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sambadeponta .form .f{display:flex;flex-direction:column;gap:4px}
+.sambadeponta .form .f.full{grid-column:1/-1}
+.sambadeponta .form label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sambadeponta .form input, .sambadeponta .form select, .sambadeponta .form textarea{width:100%}
+.sambadeponta input:not([type=checkbox]),.sambadeponta select,.sambadeponta textarea{width:auto;font:inherit;font-size:13.5px;line-height:1.4;padding:8px 10px;border:1px solid var(--input-line);border-radius:8px;background:var(--input);color:var(--ink)}
+.sambadeponta .form input, .sambadeponta .form select, .sambadeponta .form textarea{width:100%}
+.sambadeponta textarea{min-height:72px;resize:vertical}
+.sambadeponta .sdp-modal .mact{display:flex;justify-content:space-between;gap:8px;margin-top:18px;flex-wrap:wrap}
+.sambadeponta .sdp-modal .mact .r{display:flex;gap:8px}
+
+/* ── celular ── */
 @media (max-width:900px){
+  .sambadeponta nav.sdp-side{transform:translateX(-100%);transition:transform .25s}
+  .sambadeponta nav.sdp-side.open{transform:none}
+  .sambadeponta main{margin-left:0}
+  .sambadeponta section, .sambadeponta .sdp-hero{padding-left:16px;padding-right:16px}
+  .sambadeponta section{padding-top:36px;padding-bottom:36px}
+  .sambadeponta .sdp-hero{padding-top:70px}
+  .sambadeponta .sdp-hero h1{font-size:58px}
+  .sambadeponta .sdp-hero h1.assinatura img{height:72px}
+  .sambadeponta .sdp-hero.compacta{padding-top:64px;padding-bottom:20px}
+  .sambadeponta .sdp-hero.compacta h1{font-size:38px}
+  .sambadeponta .band .sdp-cell{padding:16px 16px}
+  .sambadeponta .band .v{font-size:22px}
+  .sambadeponta h2{font-size:28px}
+  .sambadeponta .sdp-abas{padding:0 64px 0 8px}
+  .sambadeponta .sdp-abas button{padding-left:10px;padding-right:10px}
+  .sambadeponta .sdp-g2, .sambadeponta .sdp-g3, .sambadeponta .sdp-g4, .sambadeponta .wl{grid-template-columns:1fr}
+  .sambadeponta .sdp-bar{grid-template-columns:110px 1fr 84px}
+  .sambadeponta .form{grid-template-columns:1fr}
+  .sambadeponta .menutoggle{display:flex}
   .sambadeponta table.curta{min-width:0}
   .sambadeponta table.curta .larga{display:none}
   .sambadeponta table.curta .so-celular{display:block}
   .sambadeponta table.curta .so-celular.atrasada{color:var(--red);font-weight:600}
   .sambadeponta table.curta td.rowact{white-space:normal;width:1%}
   .sambadeponta table.curta td.rowact button{display:block;margin:0 0 4px auto}
+}
+@media (min-width:901px) and (max-width:1200px){
+  .sambadeponta .sdp-g4{grid-template-columns:repeat(2,1fr)}
 }
 }

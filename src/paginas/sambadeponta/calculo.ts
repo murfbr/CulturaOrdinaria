@@ -58,6 +58,18 @@ export function diaDaSemana(iso?: string): string {
   return DIAS_DA_SEMANA[new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12).getDay()];
 }
 
+/** "2026-11-06" → "6/11", o padrão das artes da festa (1/8 ✷ 21H). */
+export const dataCurta = (iso?: string): string => {
+  const m = partesIso(iso);
+  return m ? Number(m[3]) + "/" + Number(m[2]) : "";
+};
+
+/** Hora de início do texto do horário: "20h → 04h" → "20H", "19h30 às 2h" → "19H30". */
+export function horaInicio(horario?: string): string {
+  const m = /(\d{1,2})\s*(?:h|:)\s*(\d{2})?/i.exec(horario || "");
+  return m ? m[1] + "H" + (m[2] && m[2] !== "00" ? m[2] : "") : "";
+}
+
 /** Dias de hoje até a data (negativo = já passou); null sem data. */
 export function diasAte(iso?: string): number | null {
   if (!iso) return null;

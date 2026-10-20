@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <!-- Entrada da página própria /pontadelanca/ (a festa Ponta de Lança, do
+       Samba de Ponta; o antigo /sambadeponta/ redireciona para cá pelo
+       vercel.json). É o mesmo site da raiz (o script é o mesmo e o App escolhe
+       a página pelo caminho); o que muda é o que o robô de prévia de link
+       (WhatsApp, Telegram, Slack) lê sem rodar JavaScript: título, descrição,
+       cor, ícone e a imagem em public/pontadelanca/. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Ponta de Lança · painel da festa</title>
+  <meta name="description" content="Painel da festa Ponta de Lança: edições, decisões, orçamento, operação, tarefas e fechamento." />
+  <meta name="theme-color" content="#227C51" />
+  <link rel="icon" type="image/svg+xml" href="/pontadelanca/icone.svg" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Central do Coletivo" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:url" content="https://cultura-ordinaria.vercel.app/pontadelanca/" />
+  <meta property="og:title" content="Ponta de Lança · painel da festa" />
+  <meta property="og:description" content="Painel da festa Ponta de Lança: edições, decisões, orçamento, operação, tarefas e fechamento." />
+  <meta property="og:image" content="https://cultura-ordinaria.vercel.app/pontadelanca/compartilhar.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ponta de Lança: painel da festa" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ponta de Lança · painel da festa" />
+  <meta name="twitter:description" content="Painel da festa Ponta de Lança: edições, decisões, orçamento, operação, tarefas e fechamento." />
+  <meta name="twitter:image" content="https://cultura-ordinaria.vercel.app/pontadelanca/compartilhar.png" />
+  <!-- Guarda o #edição/aba do link antes do script da Central, que reescreve o hash ao carregar. -->
+  <script>window.__hashInicialPdl = location.hash;</script>
+</head>
+<body>
+  <div id="raiz"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

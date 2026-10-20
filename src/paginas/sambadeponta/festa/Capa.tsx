@@ -5,6 +5,7 @@ import { N, R, ROTULO_STATUS_EDICAO, br, brCompleta, calcular, diasAte } from ".
 import { alterarPagina } from "../dados";
 import { usarModalCampos } from "../ModalCampos";
 import { CAMPOS_FESTA } from "./pedidos";
+import { ASSINATURA_MARFIM } from "../MenuLateral";
 import type { Painel } from "../tipos";
 
 export function Capa({ painel }: { painel: Painel }) {
@@ -23,9 +24,11 @@ export function Capa({ painel }: { painel: Painel }) {
   }
 
   return (
+    <>
     <div className="sdp-hero" id="l-visao">
-      <div className="sdp-eyebrow">Festa · {painel.edicoes.length} edições</div>
-      <h1>{painel.titulo}</h1>
+      <span className="sdp-tarja">Festa · {painel.edicoes.length} edições</span>
+      {/* A marca é a assinatura desenhada à mão; o nome escrito numa fonte não a substitui. */}
+      <h1 className="assinatura"><img src={ASSINATURA_MARFIM} alt={painel.titulo} /></h1>
       <div className="sub">{festa.sub} · <b>{festa.local}</b><br />{festa.modelo}</div>
       <div className="band">
         {proxima && (
@@ -63,5 +66,7 @@ export function Capa({ painel }: { painel: Painel }) {
       </div>
       {modal.elemento}
     </div>
+    <div className="sdp-listras" aria-hidden="true" />
+    </>
   );
 }

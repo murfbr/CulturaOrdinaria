@@ -1,7 +1,9 @@
-/* Branding do Samba de Ponta (festa Ponta de Lança): cores, fontes e tamanhos
-   da página /sambadeponta/. Independente do config da Central. As classes
-   saem com o prefixo sdp: (sdp:bg-card, sdp:font-display) e a versão escura
-   de cada cor termina em -dark, para usar com dark: (sdp:dark:bg-card-dark). */
+/* Branding da festa Ponta de Lança (página /pontadelanca/): os tokens do
+   design system da festa (https://claude.ai/artifact/7T25Qu7QpgEifbDSGyhszC),
+   independentes do config da Central. As classes saem com o prefixo sdp:
+   (sdp:bg-verde, sdp:font-display). Sem modo escuro: a festa não tem.
+   Hoje nenhuma tela usa estas classes (o CSS em estilos.css ainda é o do
+   artefato, com as mesmas cores); quando migrar, já nasce com a marca certa. */
 export default {
   theme: {
     colors: {
@@ -10,32 +12,33 @@ export default {
       white: "#FFFFFF",
       black: "#000000",
 
-      // marca
-      green: "#006837",
-      lime: "#97C230",
-      cream: { DEFAULT: "#FFFFCB", dark: "#F4F4C4" },
-      dark: "#00311B",
+      // paleta da festa (proporção do manual: verde e marfim 30% cada, marrom 20%, pistache e turquesa 10%)
+      verde: "#227C51",
+      marfim: "#F5F1EA",
+      marrom: "#715142",
+      pistache: "#B6C075",
+      turquesa: "#AED3CC",
+      tinta: "#443E37",
 
-      // superfícies e texto (claro / escuro)
-      paper: { DEFAULT: "#F5F7F2", dark: "#0D1812" },
-      card: { DEFAULT: "#FFFFFF", dark: "#15241B" },
-      zebra: { DEFAULT: "#F5FAF1", dark: "#182A20" },
-      ink: { DEFAULT: "#0B1F16", dark: "#E9F0E6" },
-      muted: { DEFAULT: "#63736A", dark: "#9DAEA2" },
-      line: { DEFAULT: "#DCE4DA", dark: "#26382D" },
-      nav: { DEFAULT: "#006837", dark: "#03301C" },
-      input: { DEFAULT: "#FFFFFF", dark: "#0F1C15", line: "#B9C7BC", "line-dark": "#3B5044" },
+      // superfícies e texto do painel (neutros derivados, fora da paleta)
+      card: "#FFFDF8",
+      zebra: "#F7F2EA",
+      nota: "#EDE6D8",
+      muted: "#6E655C",
+      line: "#E3DCCF",
+      input: { DEFAULT: "#FFFDF8", line: "#9A8D7C" },
 
-      // estados
-      red: { DEFAULT: "#B23A2E", soft: "#F9E4E1", dark: "#F08A7C", "soft-dark": "#3A1E1B" },
-      amber: { DEFAULT: "#9A6212", soft: "#FBEEDC", dark: "#E8B45A", "soft-dark": "#3A2B12" },
-      ok: { DEFAULT: "#3D6B16", soft: "#E4F0DA", dark: "#B9E07A", "soft-dark": "#1F3A17" },
+      // estados (fora da paleta, de propósito: negativo continua vermelho)
+      red: { DEFAULT: "#B23A2E", soft: "#F7E1DB" },
+      amber: { DEFAULT: "#8A5A10", soft: "#F8EBD6" },
+      ok: { DEFAULT: "#1F6B45", soft: "#E2EEE5" },
     },
     fontFamily: {
       sans: ["Poppins", "Segoe UI", "system-ui", "sans-serif"],
-      display: ["Anton", "Poppins", "sans-serif"],
+      // Better Faster quando a licença web chegar; até lá, Permanent Marker.
+      display: ["Better Faster", "Permanent Marker", "Arial Narrow", "sans-serif"],
     },
-    // base = corpo da página (14px). display, hero e giant são os títulos Anton.
+    // base = corpo do painel (14px). display e hero são os títulos de pincel.
     fontSize: {
       "3xs": "10px",
       "2xs": "11px",
@@ -46,14 +49,14 @@ export default {
       xl: "18px",
       "2xl": "22px",
       "3xl": "28px",
-      display: "34px",
-      hero: "46px",
-      giant: "64px",
+      display: "36px",
+      hero: "52px",
+      giant: "92px",
     },
     extend: {
-      boxShadow: {
-        card: "0 6px 24px rgba(0,49,27,.10)",
-        "card-dark": "0 6px 24px rgba(0,0,0,.35)",
+      borderRadius: {
+        cartao: "16px",
+        painel: "26px",
       },
     },
   },

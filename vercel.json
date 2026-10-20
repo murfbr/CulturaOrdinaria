@@ -1,7 +1,28 @@
 {
+  "redirects": [
+    {
+      "source": "/sambadeponta",
+      "destination": "/pontadelanca/",
+      "permanent": false
+    },
+    {
+      "source": "/sambadeponta/:caminho*",
+      "destination": "/pontadelanca/:caminho*",
+      "permanent": false
+    }
+  ],
   "rewrites": [
-    { "source": "/sambadeponta/:caminho*", "destination": "/sambadeponta/index.html" },
-    { "source": "/caminhosdoforro/:caminho*", "destination": "/caminhosdoforro/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/pontadelanca/:caminho*",
+      "destination": "/pontadelanca/index.html"
+    },
+    {
+      "source": "/caminhosdoforro/:caminho*",
+      "destination": "/caminhosdoforro/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
