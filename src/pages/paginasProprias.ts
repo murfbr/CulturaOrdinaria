@@ -8,6 +8,9 @@ import { PaginaSambaDePonta } from "../paginas/sambadeponta/PaginaSambaDePonta";
 import { PaginaCaminhosDoForro } from "../paginas/caminhosdoforro/PaginaCaminhosDoForro";
 
 export const PAGINAS_PROPRIAS: Record<string, ComponentType> = {
+  // Ponta de Lança: o endereço é /pontadelanca/; o antigo /sambadeponta/ redireciona (vercel.json)
+  // e fica aqui só para o servidor de desenvolvimento. A chave dos dados segue "sambadeponta".
+  pontadelanca: PaginaSambaDePonta,
   sambadeponta: PaginaSambaDePonta,
   caminhosdoforro: PaginaCaminhosDoForro,
 };

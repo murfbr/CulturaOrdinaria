@@ -6,7 +6,7 @@ import { Fragment } from "react";
 import { nomeEquipe } from "../../../lib/nomes";
 import { ROTULO_TAREFA, type Tarefa } from "../../../types";
 import { br, diasAte, hojeIso, tarefasDaEdicao } from "../calculo";
-import { alternarStatusTarefa, excluirTarefa, salvarTarefa, tarefaNova } from "../dados";
+import { alternarStatusTarefa, alternarUrgente, excluirTarefa, salvarTarefa, tarefaNova } from "../dados";
 import { usarModalCampos } from "../ModalCampos";
 import { camposTarefa } from "./pedidos";
 import type { FaseFesta } from "../../../types";
@@ -15,6 +15,7 @@ import type { Edicao, Painel } from "../tipos";
 export function Tarefas({ painel, e }: { painel: Painel; e: Edicao }) {
   const modal = usarModalCampos();
   const lista = tarefasDaEdicao(painel, e);
+  const urgentes = new Set(e.urgentes || []);
   const hoje = hojeIso();
   const fases = painel.presets.fases;
 
@@ -64,7 +65,7 @@ export function Tarefas({ painel, e }: { painel: Painel; e: Edicao }) {
     <div className="tw">
       <table>
         <thead>
-          <tr><th style={{ width: 36 }} /><th>Tarefa</th><th style={{ width: 140 }}>Responsável</th><th style={{ width: 90 }}>Prazo</th><th style={{ width: 200 }}>Origem / obs.</th><th style={{ width: 70 }} /></tr>
+          <tr><th style={{ width: 36 }} /><th>Tarefa</th><th style={{ width: 140 }}>Responsável</th><th style={{ width: 90 }}>Prazo</th><th style={{ width: 200 }}>Origem / obs.</th><th style={{ width: 150 }} /></tr>
         </thead>
         <tbody>
           {itens.map((t) => {
@@ -83,7 +84,14 @@ export function Tarefas({ painel, e }: { painel: Painel; e: Edicao }) {
                 <td>{t.respId ? nomeEquipe(t.respId) : "—"}</td>
                 <td className="sdp-prazo">{t.prazo ? br(t.prazo) : "—"}</td>
                 <td><span className="m">{t.obs}</span></td>
-                <td className="rowact"><button className="sdp-btn small" onClick={() => editar(t)}>editar</button></td>
+                <td className="rowact">
+                  <button className={"sdp-btn small estrela" + (urgentes.has(t.id) ? " on" : "")}
+                    title={urgentes.has(t.id) ? "fixada em Decisões e urgências (clique para soltar)" : "fixar em Decisões e urgências"}
+                    onClick={() => alternarUrgente(e.id, t.id)}>
+                    {urgentes.has(t.id) ? "★ urgente" : "☆"}
+                  </button>
+                  <button className="sdp-btn small" onClick={() => editar(t)}>editar</button>
+                </td>
               </tr>
             );
           })}

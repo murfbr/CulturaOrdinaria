@@ -1,7 +1,7 @@
 /* Linha do tempo: um cartão por edição (resultado ou projeção) e o cartão
    "+ Nova edição", que herda a última. */
 import { toast } from "../../../components/Toast";
-import { N, R, ROTULO_STATUS_EDICAO, brCompleta, calcular, tarefasDaEdicao } from "../calculo";
+import { N, R, ROTULO_STATUS_EDICAO, brCompleta, calcular, diaDaSemana, tarefasDaEdicao } from "../calculo";
 import { novaEdicao } from "../dados";
 import type { Painel } from "../tipos";
 import type { IrPara } from "../visao";
@@ -27,7 +27,7 @@ export function LinhaDoTempo({ painel, irPara }: { painel: Painel; irPara: IrPar
           return (
             <div className="edtile" key={e.id} onClick={() => irPara({ sec: "edicao", id: e.id })}>
               <div className="t">{e.nome}</div>
-              <div className="d">{brCompleta(e.data)}{e.diaSemana ? " · " + e.diaSemana : ""} · {ROTULO_STATUS_EDICAO[e.status]}</div>
+              <div className="d">{brCompleta(e.data)}{diaDaSemana(e.data) ? " · " + diaDaSemana(e.data) : ""} · {ROTULO_STATUS_EDICAO[e.status]}</div>
               <div className="r" style={{ color: k.resultado < 0 ? "var(--red)" : "var(--green)" }}>
                 {k.fechada ? "Resultado " : "Projeção "}{R(k.resultado)}
               </div>

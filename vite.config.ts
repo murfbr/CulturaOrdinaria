@@ -20,10 +20,10 @@ export default defineConfig({
       // Um HTML por endereço: a raiz (Central) e as páginas próprias, cada uma
       // com título, descrição, ícone e prévia de link (Open Graph) próprios. O
       // JavaScript é o mesmo; o App escolhe a página pelo caminho. Cada HTML
-      // sai no dist no mesmo caminho em que está aqui (dist/sambadeponta/).
+      // sai no dist no mesmo caminho em que está aqui (dist/pontadelanca/).
       input: {
         central: aqui("index.html"),
-        sambadeponta: aqui("sambadeponta/index.html"),
+        pontadelanca: aqui("pontadelanca/index.html"),
         caminhosdoforro: aqui("caminhosdoforro/index.html"),
       },
       output: {

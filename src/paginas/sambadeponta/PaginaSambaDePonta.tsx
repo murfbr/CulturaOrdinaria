@@ -1,22 +1,30 @@
-/* Página própria do Samba de Ponta: o painel "Ponta de Lança" (a festa e as
-   edições) dentro da Central, no endereço /sambadeponta/. Mesmo login e
-   mesmo banco, casca própria com o menu lateral do artefato; o conteúdo é a
-   festa ou uma edição aberta. Tudo desta página vive nesta pasta; os dados
-   moram num documento só do banco (ver dados.ts). */
+/* Página própria da festa Ponta de Lança (do Samba de Ponta) dentro da
+   Central, no endereço /pontadelanca/ (o antigo /sambadeponta/ redireciona;
+   a chave dos dados no banco continua "sambadeponta"). Mesmo login e mesmo
+   banco, casca própria com a identidade da festa; o conteúdo é a festa ou uma
+   edição aberta, em abas. Tudo desta página vive nesta pasta; os dados moram
+   nos documentos descritos em dados.ts. */
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/Toast";
 import { iniciarSambaDePonta, usarSambaDePonta } from "./dados";
 import { MenuLateral } from "./MenuLateral";
 import { TelaFesta } from "./festa/TelaFesta";
 import { TelaEdicao } from "./edicao/TelaEdicao";
-import type { Visao } from "./visao";
+import { hashDaVisao, visaoDoHash, type Visao } from "./visao";
 import "./estilos.css";
 
 const CHAVE_VISAO = "sdp-visao";
-const FONTES = "https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600;700&display=swap";
+/* Títulos: Better Faster (licença web pendente) com a Permanent Marker como
+   substituta provisória, como no design system da festa; texto e números em Poppins. */
+const FONTES = "https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap";
 
-/** Reabre onde parou (a festa ou uma edição), como o artefato. */
+declare global { interface Window { __hashInicialPdl?: string } }
+
+/** Abre pelo link (#e02/financeiro) ou onde parou. O hash é lido pelo index.html
+    antes do script da Central, que reescreve a URL ao carregar. */
 function lerVisao(): Visao {
+  const doLink = visaoDoHash(window.__hashInicialPdl ?? window.location.hash);
+  if (doLink) return doLink;
   try {
     const v = JSON.parse(localStorage.getItem(CHAVE_VISAO) || "null");
     if (v && v.sec === "edicao" && typeof v.id === "string") return v;
@@ -32,8 +40,7 @@ export function PaginaSambaDePonta() {
 
   useEffect(() => { iniciarSambaDePonta(); }, []);
 
-  // Fontes do artefato só nesta página, título da aba e URL limpa (a
-  // navegação da Central põe um hash na URL ao carregar, que aqui não vale).
+  // Fontes só nesta página e título da aba do navegador.
   useEffect(() => {
     if (!document.getElementById("sdp-fontes")) {
       const link = document.createElement("link");
@@ -42,9 +49,14 @@ export function PaginaSambaDePonta() {
       link.href = FONTES;
       document.head.appendChild(link);
     }
-    if (window.location.hash) history.replaceState(null, "", window.location.pathname);
-    document.title = "Ponta de Lança · Samba de Ponta";
+    document.title = "Ponta de Lança · painel da festa";
   }, []);
+
+  // O endereço acompanha a visão (sem criar histórico: o voltar do navegador
+  // passaria pela navegação da Central, que entende outro formato de hash).
+  useEffect(() => {
+    try { history.replaceState(null, "", window.location.pathname + hashDaVisao(visao)); } catch { /* sem history */ }
+  }, [visao]);
 
   // Depois de trocar a tela, rola até a seção pedida (ou para o topo).
   useEffect(() => {
@@ -70,17 +82,17 @@ export function PaginaSambaDePonta() {
   }, [painel, visao, edicao]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!painel) {
-    return <div className="sambadeponta"><div className="carregando">abrindo a página do Samba de Ponta…</div></div>;
+    return <div className="sambadeponta"><div className="carregando">abrindo a Ponta de Lança…</div></div>;
   }
 
   return (
     <div className="sambadeponta">
-      <button className="menutoggle" onClick={() => setMenuAberto(!menuAberto)} aria-label="Menu">☰</button>
+      <button className="menutoggle" onClick={() => setMenuAberto(!menuAberto)} aria-label="Menu" aria-expanded={menuAberto}>☰</button>
       <div className="shell">
         <MenuLateral painel={painel} visao={visao} aberto={menuAberto} irPara={irPara} />
         <main>
-          {edicao
-            ? <TelaEdicao key={edicao.id} painel={painel} e={edicao} />
+          {edicao && visao.sec === "edicao"
+            ? <TelaEdicao key={edicao.id} painel={painel} e={edicao} aba={visao.aba} irPara={irPara} />
             : <TelaFesta painel={painel} irPara={irPara} />}
         </main>
       </div>

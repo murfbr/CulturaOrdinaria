@@ -10,7 +10,7 @@ calendário),
 edital, a transferência para a plataforma oficial, o pipeline por status e o
 banco de textos) e **Contexto** de escrita (fichas, regras e julgamentos)
 para redigir propostas com IA. Fora da Central, no mesmo login e no mesmo
-banco, ficam as **páginas próprias** de projeto: `/sambadeponta/` (a festa
+banco, ficam as **páginas próprias** de projeto: `/pontadelanca/` (a festa
 Ponta de Lança) e `/caminhosdoforro/` (o festival).
 
 > **Versão 3 (set/2026).** O conceito de candidatura saiu: cada projeto já é
@@ -59,7 +59,7 @@ sem internet e sincroniza quando ela volta).
 3. Deploy. (Build: `npm run build`, output: `dist` — a Vercel detecta sozinha.)
 
 Cada página própria tem um `index.html` na raiz do repositório
-(`sambadeponta/`, `caminhosdoforro/`) só para a prévia de link (Open Graph);
+(`pontadelanca/`, `caminhosdoforro/`) só para a prévia de link (Open Graph);
 o site em si é o mesmo bundle.
 
 ## Estrutura de dados (Firestore)
@@ -122,7 +122,16 @@ mesmo banco, casca própria, tudo em `src/paginas/<slug>/` (com `tailwind.config
 e `estilos.css` próprios); o slug entra em `src/pages/paginasProprias.ts` e o
 registro em `presets/paginas`.
 
-- **Ponta de Lança** (`/sambadeponta/`): edições da festa, orçamento e fases.
+- **Ponta de Lança** (`/pontadelanca/`; o antigo `/sambadeponta/` redireciona pelo
+  `vercel.json`, e a chave dos dados no banco continua `sambadeponta`): edições da
+  festa, orçamento e fases. Veste o design system da festa (Verde Bandeira,
+  Marfim, Marrom Terra, Pistache, Turquesa; títulos na Better Faster, com a
+  Permanent Marker até a licença web; assinatura e listras em
+  `public/pontadelanca/`). Cada edição abre em abas (Resumo, Decisões,
+  Financeiro, Operação, Tarefas, Comunicação, Fechamento) e cada aba tem
+  endereço próprio para mandar o link (`/pontadelanca/#e02/financeiro`); o
+  `index.html` da página guarda esse hash antes do script da Central, que
+  reescreve a URL ao carregar.
   O que a Central já tem, a página usa e não repete: as tarefas de cada edição
   são documentos de `tarefas` (origem `proj:<id>`, campos `edicaoId` e `fase`)
   e aparecem no quadro, no Resumo e na ficha do projeto; os fornecedores são
@@ -131,7 +140,12 @@ registro em `presets/paginas`.
   (`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições
   e o cartão, a próxima edição. O detalhe fica em `paginas/sambadeponta` e na
   subcoleção `edicoes`. A primeira abertura semeia esses documentos a partir
-  do JSON do artefato original.
+  do JSON do artefato original. Cada edição tem a seção **Decisões e
+  urgências**, logo depois do Resumo: as decisões (`decisoes`, com opções,
+  prós e contras) e quem avisar (`avisos`) ficam no documento da edição; as
+  urgências não são uma lista à parte, são tarefas da Central fixadas pelo id
+  (`urgentes`), criadas ali ou marcadas com a estrela na seção Tarefas. O dia
+  da semana sai da data (o campo `diaSemana` dos documentos antigos é ignorado).
 - **Caminhos do Forró** (`/caminhosdoforro/`): página independente do festival
   (cadastro geral, patrocínios e cotas, orçamento com simulador, programação,
   tarefas por GT, arquivos, configuração). Todos os dados ficam nas

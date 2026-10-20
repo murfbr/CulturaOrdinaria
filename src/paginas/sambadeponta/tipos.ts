@@ -113,6 +113,28 @@ export interface Balanco { certo: string[]; errado: string[] }
 
 export interface Arquivo { nome: string; desc: string; url: string }
 
+/** Uma das opções na mesa, com o que pesa a favor e contra. */
+export interface OpcaoDecisao { texto: string; pros: string; contras: string }
+
+/** aberta = ninguém bateu o martelo; provisoria = vale por enquanto, falta confirmar; decidida = fechada. */
+export type StatusDecisao = "aberta" | "provisoria" | "decidida";
+
+/** Decisão da edição (data, local, formato...). Fica no documento da edição. */
+export interface Decisao {
+  id: string;
+  tema: string;
+  status: StatusDecisao;
+  /** O que vale agora: a escolha provisória ou a decidida. */
+  atual: string;
+  opcoes: OpcaoDecisao[];
+  /** Até quando decidir (ISO). */
+  prazo: string;
+  obs: string;
+}
+
+/** Quem precisa saber das mudanças da edição. `avisado` volta a falso quando muda de novo. */
+export interface Aviso { id: string; nome: string; papel: string; avisado: boolean; obs: string }
+
 /** Documento `paginas/sambadeponta/edicoes/<id>`. As tarefas da edição
     moram em `tarefas` (campo `edicaoId`), não aqui. */
 export interface Edicao {
@@ -121,7 +143,8 @@ export interface Edicao {
   num: number;
   nome: string;
   data: string;
-  diaSemana: string;
+  /** Obsoleto: o dia da semana sai da data (diaDaSemana em calculo.ts). Documentos antigos ainda trazem. */
+  diaSemana?: string;
   status: StatusEdicao;
   horario: string;
   local: string;
@@ -143,6 +166,11 @@ export interface Edicao {
   acertoObs: string;
   arquivos: Arquivo[];
   notas: string;
+  /** Decisões e urgências: o que está em aberto, quem avisar e as tarefas fixadas como urgentes. */
+  decisoes?: Decisao[];
+  avisos?: Aviso[];
+  /** Ids de tarefas da Central (coleção `tarefas`) fixadas como urgentes nesta edição. */
+  urgentes?: string[];
   atualizado?: string;
 }
 

@@ -1,14 +1,18 @@
-/* Menu lateral do artefato: marca, links da festa, as edições com o status
-   e as seções da edição aberta, "+ Nova edição", indicador de salvamento
-   (o mesmo do cabeçalho da Central), sair e a volta para a Central. */
+/* Menu lateral: assinatura da Ponta de Lança, links da festa, as edições com
+   o status e as abas da edição aberta, "+ Nova edição", indicador de
+   salvamento (o mesmo do cabeçalho da Central), sair e a volta para a Central. */
 import { Fragment, useEffect, useState, useSyncExternalStore } from "react";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair, usarSessao } from "../../services/sessao";
 import { toast } from "../../components/Toast";
 import { ROTULO_STATUS_EDICAO, br, brCompleta } from "./calculo";
 import { novaEdicao } from "./dados";
+import { abaValida, abasDaEdicao } from "./edicao/abas";
 import type { Painel } from "./tipos";
 import type { IrPara, Visao } from "./visao";
+
+/** Assinatura horizontal em Marfim, do design system (vetorizada do original). */
+export const ASSINATURA_MARFIM = "/pontadelanca/assinatura-horizontal-marfim.svg";
 
 /** [âncora, rótulo, é sub-item]. */
 const LINKS_FESTA: [string, string, boolean][] = [
@@ -16,18 +20,11 @@ const LINKS_FESTA: [string, string, boolean][] = [
   ["l-checklist", "Checklist-mestre", true], ["l-fornecedores", "Fornecedores", true], ["l-ajuda", "Como usar", true],
 ];
 
-const secoesEdicao = (fechada: boolean): [string, string][] => [
-  ["e-resumo", "Resumo"], ["e-orcamento", "Orçamento"],
-  ...(fechada ? [] : [["e-simulacao", "Simulação"] as [string, string]]),
-  ["e-tarefas", "Tarefas"], ["e-cronograma", "Cronograma"], ["e-maquinas", "Máquinas"],
-  ["e-comunicacao", "Comunicação"], ["e-fechamento", "Fechamento"],
-];
-
 function usarStatusBanco(): StatusSalvamento {
   return useSyncExternalStore((cb) => Banco.aoMudarStatus(cb), () => Banco.statusAtual());
 }
 
-/** Âncora da seção visível (a última cujo topo já passou), como o scroll spy do artefato. */
+/** Âncora da seção visível da festa (a última cujo topo já passou), como o scroll spy do artefato. */
 function usarAncoraAtiva(ancoras: string[]): string {
   const [ativa, setAtiva] = useState(ancoras[0] || "");
   const chave = ancoras.join("|");
@@ -51,8 +48,8 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
   const status = usarStatusBanco();
   const sessao = usarSessao();
   const edicaoAberta = visao.sec === "edicao" ? painel.edicoes.find((e) => e.id === visao.id) : undefined;
-  const ancoras = edicaoAberta ? secoesEdicao(edicaoAberta.status === "fechada").map(([a]) => a) : LINKS_FESTA.map(([a]) => a);
-  const ativa = usarAncoraAtiva(ancoras);
+  const ativa = usarAncoraAtiva(edicaoAberta ? [] : LINKS_FESTA.map(([a]) => a));
+  const abaAberta = edicaoAberta && visao.sec === "edicao" ? abaValida(edicaoAberta, visao.aba) : undefined;
   const edicoes = [...painel.edicoes].reverse();
 
   function criar() {
@@ -62,13 +59,9 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
 
   return (
     <nav className={"sdp-side" + (aberto ? " open" : "")}>
-      <div className="sdp-brand">
-        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-          <path d="M20 3 L27 15 L22 15 L22 30 L18 30 L18 15 L13 15 Z" fill="#97C230" />
-          <path d="M20 3 L23 8 L17 8 Z" fill="#FFFFCB" />
-        </svg>
-        <b>Samba<br />de Ponta</b>
-      </div>
+      <a className="sdp-brand" href="#" onClick={(ev) => { ev.preventDefault(); irPara({ sec: "festa" }, "l-visao"); }}>
+        <img src={ASSINATURA_MARFIM} alt={painel.titulo} />
+      </a>
 
       <div className="group">A festa</div>
       {LINKS_FESTA.map(([ancora, rotulo, sub]) => (
@@ -84,17 +77,17 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
         const atual = edicaoAberta?.id === e.id;
         return (
           <Fragment key={e.id}>
-            <a href="#e-resumo" className={atual && ativa === "e-resumo" ? "active" : ""}
-              onClick={(ev) => { ev.preventDefault(); irPara({ sec: "edicao", id: e.id }, "e-resumo"); }}>
+            <a href={"#" + e.id + "/resumo"} className={"ed" + (atual ? " aberta" : "")}
+              onClick={(ev) => { ev.preventDefault(); irPara({ sec: "edicao", id: e.id, aba: "resumo" }); }}>
               <span className="ed-head">
                 <span>{e.nome} · {br(e.data) || "sem data"}</span>
                 <span className={"pill " + (e.status === "execucao" ? "exec" : e.status === "planejada" ? "plan" : "")}>{ROTULO_STATUS_EDICAO[e.status]}</span>
               </span>
             </a>
-            {atual && secoesEdicao(e.status === "fechada").map(([ancora, rotulo]) => (
-              <a key={ancora} href={"#" + ancora} className={"sub" + (ativa === ancora ? " active" : "")}
-                onClick={(ev) => { ev.preventDefault(); irPara({ sec: "edicao", id: e.id }, ancora); }}>
-                {rotulo}
+            {atual && abasDaEdicao(e).map((a) => (
+              <a key={a.id} href={"#" + e.id + "/" + a.id} className={"sub" + (abaAberta === a.id ? " active" : "")}
+                onClick={(ev) => { ev.preventDefault(); irPara({ sec: "edicao", id: e.id, aba: a.id }); }}>
+                {a.id === "decisoes" ? "Decisões e urgências" : a.rotulo}
               </a>
             ))}
           </Fragment>
