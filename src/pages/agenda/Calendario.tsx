@@ -1,10 +1,15 @@
-/* Calendário: grade do mês com tudo listado no dia, uma cor por tipo: prazo
-   de edital em vermelho cheio (destaque), reunião em azul e tarefa em verde,
-   mais a célula da semana (rótulo e os focos da aba Semana) à esquerda de cada
-   linha. Clicar num dia abre o painel do dia ao lado da grade (DiaDoCalendario),
-   sem sair da aba; o marcador do edital abre a ficha direto; a célula da semana
-   é o único atalho para a aba Semana. Três filtros por tipo, lembrados no
-   navegador, que também são a legenda das cores. A grade rola de lado no celular. */
+/* Calendário: grade do mês com tudo listado no dia, uma cor por tipo seguindo
+   a identidade (ver Badge): prazo de edital em âmbar cheio (prazo é âmbar),
+   reunião em vermelho claro (como a Semana e a aba Reuniões) e tarefa neutra.
+   Cada dia mostra até quatro linhas; passando disso, a quarta vira "+N mais"
+   e o painel do dia lista tudo. As linhas da grade têm todas a mesma altura
+   (a da célula mais cheia do mês), para o visual ficar padrão. À esquerda de
+   cada linha, a célula da semana
+   (rótulo e os focos da aba Semana). Clicar num dia abre o painel do dia ao
+   lado da grade (DiaDoCalendario), sem sair da aba; o marcador do edital abre
+   a ficha direto; a célula da semana é o único atalho para a aba Semana. Três
+   filtros por tipo, lembrados no navegador, que também são a legenda das
+   cores. A grade rola de lado no celular. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { abrirDetalhe, abrirSemana } from "../../store/navegacao";
@@ -21,12 +26,17 @@ import { DiaDoCalendario } from "./DiaDoCalendario";
 import type { Semana } from "../../types";
 import { MESES } from "../../utils";
 
-/** Cor de cada tipo: o marcador na célula e o quadradinho da legenda ao lado do filtro. */
+/** Cor de cada tipo (regra da identidade, em Badge): prazo é âmbar; vermelho é "estou aqui"
+    e ligação, e a Semana já usa nas reuniões; tarefa é neutra, como o cartão do quadro.
+    `marcador` é a linha na célula; `legenda`, o quadradinho ao lado do filtro. */
 const COR_TIPO: Record<TipoItem, { marcador: string; legenda: string }> = {
-  editais: { marcador: "bg-accent text-on-fill hover:bg-ink", legenda: "bg-accent" },
-  reunioes: { marcador: "bg-est-soft text-est", legenda: "bg-est" },
-  tarefas: { marcador: "bg-ok-soft text-ok", legenda: "bg-ok" },
+  editais: { marcador: "bg-warn text-on-fill hover:bg-ink", legenda: "bg-warn" },
+  reunioes: { marcador: "bg-accent-soft text-accent", legenda: "bg-accent" },
+  tarefas: { marcador: "bg-bg-sunk text-ink", legenda: "bg-line-strong" },
 };
+
+/** Linhas por célula, contando o "+N mais". */
+const LINHAS_POR_DIA = 4;
 const FILTROS: [TipoItem, string][] = [["editais", "Editais"], ["reunioes", "Reuniões"], ["tarefas", "Tarefas"]];
 const CHAVE_FILTROS = "central-calendario-filtros";
 
@@ -59,13 +69,31 @@ function CelulaSemana({ segunda, doc }: { segunda: string; doc?: Semana }) {
 const MARCADOR = "mt-1 truncate rounded-md px-1.5 py-0.5 text-3xs font-semibold leading-tight";
 
 /** Um dia da grade: número no alto e um marcador por item, na cor do tipo: prazo de
-    edital (clique abre a ficha), reunião com hora e tarefa. Clique na célula seleciona
-    o dia. `vazia` é o espaço antes do dia 1 e depois do último. */
+    edital (clique abre a ficha), reunião com hora e tarefa; até LINHAS_POR_DIA linhas,
+    a última virando "+N mais" quando não cabe tudo. Clique na célula seleciona o dia.
+    `vazia` é o espaço antes do dia 1 e depois do último. */
 function Celula({ vazia, iso, itens, hoje, selecionado, aoSelecionar }: {
   vazia?: boolean; iso: string; itens?: ItensDoDia; hoje: string; selecionado: boolean; aoSelecionar: () => void;
 }) {
   if (vazia) return <div className="min-h-20 rounded-lg border border-transparent p-1.5" />;
   const ehHoje = iso === hoje;
+  const marcadores = [
+    ...(itens?.editais || []).map((e) => (
+      <div key={"e" + e.editalId} title="abrir a ficha do edital" className={cx(MARCADOR, COR_TIPO.editais.marcador)}
+        onClick={(ev) => { ev.stopPropagation(); abrirDetalhe("edital", e.editalId); }}>
+        {tituloCurto(e.titulo)}
+      </div>
+    )),
+    ...(itens?.reunioes || []).map((r) => {
+      const texto = (r.hora ? r.hora + " " : "") + (r.titulo || "Reunião");
+      return <div key={"r" + r.id} className={cx(MARCADOR, COR_TIPO.reunioes.marcador)} title={texto}>{texto}</div>;
+    }),
+    ...(itens?.tarefas || []).map((t) => (
+      <div key={"t" + t.id} className={cx(MARCADOR, COR_TIPO.tarefas.marcador)} title={t.titulo}>{t.titulo}</div>
+    )),
+  ];
+  const sobram = marcadores.length - LINHAS_POR_DIA;
+  const visiveis = sobram > 0 ? marcadores.slice(0, LINHAS_POR_DIA - 1) : marcadores;
   return (
     <div
       className={cx(
@@ -75,19 +103,12 @@ function Celula({ vazia, iso, itens, hoje, selecionado, aoSelecionar }: {
       )}
       title="ver o dia" onClick={aoSelecionar}>
       <div className={cx("text-xs font-semibold", ehHoje ? "text-accent" : "text-faint")}>{Number(iso.slice(8))}</div>
-      {(itens?.editais || []).map((e) => (
-        <div key={e.editalId} title="abrir a ficha do edital" className={cx(MARCADOR, COR_TIPO.editais.marcador)}
-          onClick={(ev) => { ev.stopPropagation(); abrirDetalhe("edital", e.editalId); }}>
-          {tituloCurto(e.titulo)}
+      {visiveis}
+      {sobram > 0 && (
+        <div className="mt-1 px-1.5 text-2xs font-semibold leading-tight text-muted" title="ver tudo no painel do dia">
+          +{sobram + 1} mais
         </div>
-      ))}
-      {(itens?.reunioes || []).map((r) => {
-        const texto = (r.hora ? r.hora + " " : "") + (r.titulo || "Reunião");
-        return <div key={r.id} className={cx(MARCADOR, COR_TIPO.reunioes.marcador)} title={texto}>{texto}</div>;
-      })}
-      {(itens?.tarefas || []).map((t) => (
-        <div key={t.id} className={cx(MARCADOR, COR_TIPO.tarefas.marcador)} title={t.titulo}>{t.titulo}</div>
-      ))}
+      )}
     </div>
   );
 }
@@ -153,7 +174,9 @@ export function Calendario() {
       </CabecalhoSecao>
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="overflow-x-auto">
-          <div className="grid min-w-[640px] grid-cols-[minmax(104px,1fr)_repeat(7,minmax(0,1fr))] gap-1.5">
+          {/* Linhas em 1fr: todas as semanas do mês ficam com a altura da célula mais cheia (até 4 linhas). */}
+          <div className="grid min-w-[640px] grid-cols-[minmax(104px,1fr)_repeat(7,minmax(0,1fr))] gap-1.5"
+            style={{ gridTemplateRows: `auto repeat(${linhas}, minmax(5rem, 1fr))` }}>
             <Rotulo className="p-0.5">Semana</Rotulo>
             {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d) => <Rotulo key={d} className="p-0.5 text-center">{d}</Rotulo>)}
             {celulas}
@@ -161,7 +184,7 @@ export function Calendario() {
         </div>
         <DiaDoCalendario iso={diaAberto} itens={itensDe(diaAberto)} />
       </div>
-      <Dica className="mt-2">Clique no dia para ver o que ele tem ao lado; no marcador vermelho, abre a ficha do edital; na célula da semana, abre a aba Semana. As tarefas são as em aberto com prazo no dia.</Dica>
+      <Dica className="mt-2">Clique no dia para ver tudo o que ele tem ao lado; no marcador âmbar, abre a ficha do edital; na célula da semana, abre a aba Semana. As tarefas são as em aberto com prazo no dia.</Dica>
     </>
   );
 }

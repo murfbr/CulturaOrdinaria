@@ -31,7 +31,7 @@ export default function App() {
     if (!sessao.usuario) return <Login />;
   }
   // Página própria de projeto (/<slug>/): mesmo login e mesmo banco, casca própria.
-  const Pagina = PAGINAS_PROPRIAS[CAMINHO.slice(1)];
+  const Pagina = PAGINAS_PROPRIAS[CAMINHO.slice(1)]?.tela;
   if (Pagina) return <Pagina />;
   return <Central emailUsuario={sessao.usuario?.email || null} />;
 }
