@@ -19,7 +19,7 @@ Tempo real, offline, autoria e log de graça. Tudo passa por ele; nenhuma págin
 
 `Documento = Record<string, unknown> & { id: string }`. Id de documento não aceita barra. Subcoleção: a chave do espelho é a mesma string com barras (`paginas/caminhosdoforro/cadastro`); no `localStorage` (`central-coletivo-local-v1`) tudo fica em `colls`.
 
-Uso de referência: `src/paginas/caminhosdoforro/dados.ts` (página + 10 subcoleções, sem a Central) e `src/paginas/sambadeponta/dados.ts` (página + subcoleção `edicoes` + coleções da Central).
+Uso de referência: `src/paginas/caminhosdoforro/dados.ts` (página + 10 subcoleções, sem a Central) e `src/paginas/pontadelanca/dados.ts` (página + subcoleção `edicoes` + coleções da Central).
 
 ## `store/central.ts`: o estado da Central
 | função | assinatura | uso |
@@ -44,7 +44,7 @@ Nunca `Banco.gravar` direto numa coleção da Central; por aqui vêm `_ord`, `at
 | `excluirRegistro` | `(colecao: ColecaoPainel, id: string) => void` (vai para a lixeira; excluir projeto leva as tarefas `proj:` e o rascunho dele; uma página anexo nunca vai junto) |
 | `porId` | `(colecao, id) => registro \| undefined` |
 
-Uso de referência: `sambadeponta/dados.ts` (`salvarRegistro("tarefas", ...)`; os totais a página grava no próprio documento com `alterarPagina`).
+Uso de referência: `pontadelanca/dados.ts` (`salvarRegistro("tarefas", ...)`; os totais a página grava no próprio documento com `alterarPagina`).
 
 ## `services/sessao.ts`, `components/Toast.tsx`, `utils/index.ts`
 - `usarSessao(): { carregando: boolean; usuario: User | null }`; `sair(): Promise<void>`; `emailSessao(): string`.

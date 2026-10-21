@@ -17,13 +17,14 @@ import type { Contato, PessoaEquipe, PresetFesta, PresetPaginas, StatusTarefa, T
 import { PRESET_FESTA_PADRAO } from "../../types";
 import type { Custo, Edicao, PaginaFesta, Peca } from "./tipos";
 
-/** Chave dos dados no banco: `paginas/sambadeponta` e a subcoleção `edicoes`. */
-export const SLUG = "sambadeponta";
-/** Endereço da página (/pontadelanca/) e chave do registro em presets/paginas. Vai ser
-    também a chave dos dados quando a renomeação for feita; até lá são duas chaves. */
-export const ENDERECO = "pontadelanca";
+/** Chave da página: o endereço (/pontadelanca/), o registro em presets/paginas e os dados
+    no banco (`paginas/pontadelanca` e a subcoleção `edicoes`). */
+export const SLUG = "pontadelanca";
+/** Chave dos dados até 21/10/2026 (`paginas/sambadeponta`): a página copia o que houver
+    nela para a chave nova na primeira abertura (dados.ts, talvezMigrar) e não apaga. */
+export const SLUG_ANTIGO = "sambadeponta";
 /** Vínculo das tarefas desta página na coleção `tarefas` da Central. */
-export const ORIGEM_TAREFA = "pagina:" + ENDERECO;
+export const ORIGEM_TAREFA = "pagina:" + SLUG;
 export const TIPO = "festa";
 
 /** O bloco `pdl-state` do artefato, como está em semente.json. */
@@ -121,7 +122,7 @@ export function converterArtefato(json: ArtefatoJson, existentes: { equipe: Pess
 
   return {
     presetFesta: { ...PRESET_FESTA_PADRAO, fases: json.label.fases },
-    presetPaginas: { id: "paginas", paginas: [{ slug: ENDERECO, tipo: TIPO, titulo: json.label.nome }] },
+    presetPaginas: { id: "paginas", paginas: [{ slug: SLUG, tipo: TIPO, titulo: json.label.nome }] },
     pagina, edicoes, tarefas, contatos,
   };
 }

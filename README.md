@@ -89,7 +89,7 @@ usam **os mesmos nomes do artefato**:
 | `regras`       | Contexto: regras com fonte obrigatória            |
 | `julgamentos`  | Contexto: pareceres e lições                      |
 | `presets`      | presets do sistema, lidos por todo mundo no login: `festa` (fases, categorias de custo, naturezas de máquina, formatos de peça) e `paginas` (registro das páginas próprias: slug, projeto, tipo, título) |
-| `paginas`      | páginas próprias de projeto, uma por slug. `paginas/sambadeponta` tem a subcoleção `edicoes`; `paginas/caminhosdoforro` tem `cadastro`, `espacos`, `cotas`, `patrocinios`, `parceiros`, `orcamento_itens`, `slots`, `tarefas`, `arquivos` e `comentarios`. Só a página lê |
+| `paginas`      | páginas anexo, uma por slug. `paginas/pontadelanca` tem a subcoleção `edicoes` (até 21/10/2026 a chave era `sambadeponta`; a página copiou os dados e o documento antigo ficou marcado com `migradoPara`); `paginas/caminhosdoforro` tem `cadastro`, `espacos`, `cotas`, `patrocinios`, `parceiros`, `orcamento_itens`, `slots`, `tarefas`, `arquivos` e `comentarios`. Só a página lê |
 
 Detalhes que diferem do artefato (por limitação do Firestore, que não aceita
 array dentro de array): as tuplas viraram arrays de objetos —
@@ -130,10 +130,10 @@ projeto → Página anexo, campo `paginaSlug`), e excluir o projeto não toca a
 página. As tarefas de uma página são documentos de `tarefas` com o vínculo
 `pagina:<slug>`, que a Central mostra como "Página · <título>".
 
-- **Ponta de Lança** (`/pontadelanca/`; o antigo `/sambadeponta/` redireciona pelo
-  `vercel.json` em produção e pelo `App.tsx` no servidor de desenvolvimento; o registro em
-  `presets/paginas` usa `pontadelanca`, e a chave dos dados no banco continua
-  `sambadeponta` até a renomeação): edições da
+- **Ponta de Lança** (`/pontadelanca/`, pasta `src/paginas/pontadelanca/`, dados em
+  `paginas/pontadelanca`; o antigo `/sambadeponta/` redireciona em definitivo pelo
+  `vercel.json` em produção e pelo `App.tsx` no servidor de desenvolvimento; as classes
+  de estilo seguem com o prefixo `sdp`, a marca do Samba de Ponta): edições da
   festa, orçamento e fases. Veste o design system da festa (Verde Bandeira,
   Marfim, Marrom Terra, Pistache, Turquesa; títulos na Better Faster, com a
   Permanent Marker até a licença web; assinatura e listras em
@@ -148,10 +148,12 @@ página. As tarefas de uma página são documentos de `tarefas` com o vínculo
   Lança" (as gravadas antes com `proj:p7` são regravadas na primeira abertura
   da página); os fornecedores são `contatos` do tipo Fornecedor, e a linha de
   custo aponta `contatoId`; o nome da festa é o título do registro. Os totais
-  por edição a página grava no próprio documento (`paginas/sambadeponta`, campo
+  por edição a página grava no próprio documento (`paginas/pontadelanca`, campo
   `resumo`) a cada mudança; a Central não lê. O detalhe fica em
-  `paginas/sambadeponta` e na subcoleção `edicoes`. A primeira abertura semeia
-  esses documentos a partir do JSON do artefato original. Cada edição tem a seção **Decisões e
+  `paginas/pontadelanca` e na subcoleção `edicoes`. A primeira abertura semeia
+  esses documentos a partir do JSON do artefato original; se a chave antiga
+  (`paginas/sambadeponta`) existir, a página copia dela em vez de semear, e o
+  documento antigo fica, marcado com `migradoPara`. Cada edição tem a seção **Decisões e
   urgências**, logo depois do Resumo: as decisões (`decisoes`, com opções,
   prós e contras) e quem avisar (`avisos`) ficam no documento da edição; as
   urgências não são uma lista à parte, são tarefas da Central fixadas pelo id
@@ -245,7 +247,7 @@ src/
     contexto/              ← Contexto, Geral, Fichas, Regras, ModalRegra,
                              Julgamentos, ModalJulgamento, Trocar, RegrasParaRascunho
   paginas/
-    sambadeponta/          ← página da festa: casca, menu, edição/, festa/, calculo, dados, semente
+    pontadelanca/          ← página da festa: casca, menu, edição/, festa/, calculo, dados, semente
     caminhosdoforro/       ← página do festival: casca, cadastro/, patrocinios/, orcamento/,
                              programacao/, tarefas/, arquivos/, importar/, configuracao/, ui/ próprio
   services/

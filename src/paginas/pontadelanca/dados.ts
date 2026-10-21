@@ -1,6 +1,6 @@
-/* Dados da página Samba de Ponta. No banco:
-   - `paginas/sambadeponta`: a festa (escuta de um documento só);
-   - `paginas/sambadeponta/edicoes/*`: uma edição por documento;
+/* Dados da página Ponta de Lança. No banco:
+   - `paginas/pontadelanca`: a festa (escuta de um documento só);
+   - `paginas/pontadelanca/edicoes/*`: uma edição por documento;
    - `tarefas`, `equipe`, `contatos`, `projetos` e `presets`: pelo store da
      Central, ligando só essas coleções (nada de semente nem de Contexto).
    O Painel que as telas recebem é montado em memória a partir disso tudo.
@@ -14,9 +14,14 @@
    ficam no próprio documento da página (`resumo`); o detalhe fica só aqui.
    A página não pertence a projeto nenhum.
 
-   Semente: quando o banco confirma que a página não existe (e a Equipe, os
-   contatos, os projetos e os presets já responderam), o JSON do artefato vira
-   os documentos de cima, uma vez só. */
+   Renomeação (21/10/2026): os dados moraram em `paginas/sambadeponta` até
+   aqui. Quando o banco confirma que a chave nova não existe, a página olha a
+   antiga uma vez: se existe, copia o documento e as edições para a chave nova
+   (a antiga fica, marcada com `migradoPara`) e a semente não roda.
+
+   Semente: quando o banco confirma que a página não existe em nenhuma das
+   chaves (e a Equipe, os contatos, os projetos e os presets já responderam),
+   o JSON do artefato vira os documentos de cima, uma vez só. */
 import { useMemo, useSyncExternalStore } from "react";
 import { Banco } from "../../services/banco";
 import { clonar, uid } from "../../utils";
@@ -26,7 +31,7 @@ import {
 import { excluirRegistro, salvarRegistro } from "../../store/mutacoes";
 import { STATUS_TAREFA, type Contato, type Tarefa } from "../../types";
 import { criarProximaEdicao, hojeIso, resumoDaEdicao } from "./calculo";
-import { ENDERECO, ORIGEM_TAREFA, SLUG, converterArtefato } from "./semente";
+import { ORIGEM_TAREFA, SLUG, SLUG_ANTIGO, converterArtefato } from "./semente";
 import type { Edicao, PaginaFesta, Painel } from "./tipos";
 
 const COLECAO_PAGINAS = "paginas";
@@ -37,13 +42,16 @@ let pagina: PaginaFesta | null = null;
 let edicoes: Record<string, Edicao> = {};
 let paginaConfirmada = false;
 let edicoesConfirmadas = false;
+/** A chave antiga dos dados: "pendente" = ainda não olhou; "verificando" = lendo o banco;
+    "nenhuma" = não há o que migrar (a semente pode rodar); "migrada" = copiada para a chave nova. */
+let migracao: "pendente" | "verificando" | "nenhuma" | "migrada" = "pendente";
 let ligado = false;
 let semeou = false;
 const assinantes = new Set<() => void>();
 const publicar = () => assinantes.forEach((f) => f());
 
 /** Liga as escutas (idempotente). */
-export function iniciarSambaDePonta() {
+export function iniciarPontaDeLanca() {
   if (ligado) return;
   ligado = true;
   iniciarDados(["tarefas", "equipe", "contatos", "projetos"]);
@@ -51,9 +59,10 @@ export function iniciarSambaDePonta() {
   Banco.assinarDocumento(COLECAO_PAGINAS, SLUG, (documento, confirmado) => {
     pagina = (documento as unknown as PaginaFesta) || null;
     if (confirmado) paginaConfirmada = true;
+    void talvezMigrar();
     talvezSemear();
     publicar();
-    // A semente grava o documento da página por último: é aqui que o primeiro resumo nasce.
+    // A semente (ou a cópia) grava o documento da página por último: é aqui que o primeiro resumo nasce.
     sincronizarResumo();
   });
   Banco.assinar(COLECAO_EDICOES, (mapa, confirmado) => {
@@ -67,9 +76,29 @@ export function iniciarSambaDePonta() {
   });
 }
 
-/** Primeira abertura: a página não existe no banco e o resto já respondeu → grava o JSON do artefato. */
+/** Renomeação de 21/10/2026: com o banco confirmando que a página não existe na chave nova,
+    olha a chave antiga uma vez. Existindo, copia o documento e as edições para a chave nova
+    (ids das edições iguais; `paginaId` novo), marca o antigo com `migradoPara` e não apaga
+    nada: a cópia chega pelas escutas e a semente não roda. Não existindo, libera a semente. */
+async function talvezMigrar() {
+  if (migracao !== "pendente" || !paginaConfirmada) return;
+  if (pagina) { migracao = "nenhuma"; return; }
+  migracao = "verificando";
+  const antiga = await Banco.carregarDocumento(COLECAO_PAGINAS, SLUG_ANTIGO);
+  if (!antiga) { migracao = "nenhuma"; talvezSemear(); return; }
+  const antigas = await Banco.carregarColecao(COLECAO_PAGINAS + "/" + SLUG_ANTIGO + "/edicoes");
+  const agora = new Date().toISOString();
+  Object.values(antigas).forEach((e) => Banco.gravar(COLECAO_EDICOES, e.id, { ...e, paginaId: SLUG, atualizado: agora }, true));
+  const { migradoPara: _marca, ...festa } = antiga;
+  void _marca;
+  Banco.gravar(COLECAO_PAGINAS, SLUG, { ...festa, id: SLUG, atualizado: agora }, true);
+  if (antiga.migradoPara !== SLUG) Banco.gravar(COLECAO_PAGINAS, SLUG_ANTIGO, { ...antiga, migradoPara: SLUG }, true);
+  migracao = "migrada";
+}
+
+/** Primeira abertura: a página não existe no banco (em nenhuma chave) e o resto já respondeu → grava o JSON do artefato. */
 function talvezSemear() {
-  if (semeou || !paginaConfirmada || pagina) return;
+  if (semeou || migracao !== "nenhuma" || !paginaConfirmada || pagina) return;
   if (!["equipe", "contatos", "projetos", "presets"].every(colecaoConfirmada)) return;
   semeou = true;
   void import("./semente.json").then(({ default: json }) => {
@@ -77,7 +106,7 @@ function talvezSemear() {
     const agora = new Date().toISOString();
     const s = converterArtefato(clonar(json) as never, { equipe: painel.equipe, contatos: painel.contatos }, agora);
     if (!presets.festa) Banco.gravar("presets", "festa", s.presetFesta as unknown as Documento, true);
-    const registro = (presets.paginas?.paginas || []).filter((p) => p.slug !== SLUG && p.slug !== ENDERECO);
+    const registro = (presets.paginas?.paginas || []).filter((p) => p.slug !== SLUG && p.slug !== SLUG_ANTIGO);
     Banco.gravar("presets", "paginas", { id: "paginas", paginas: [...registro, ...s.presetPaginas.paginas] }, true);
     s.contatos.forEach((c) => salvarRegistro("contatos", c, true));
     s.tarefas.forEach((t) => salvarRegistro("tarefas", t, true));
@@ -86,20 +115,20 @@ function talvezSemear() {
   });
 }
 
-/** O registro em presets/paginas passou a usar o endereço (pontadelanca) como chave e
-    não tem mais projeto; um registro gravado antes, com a chave dos dados (sambadeponta)
-    e `projetoId`, é regravado uma vez. Roda quando `presets` já respondeu. */
+/** O registro em presets/paginas usa a chave `pontadelanca` e não tem mais projeto; um
+    registro gravado antes de 21/10/2026, com a chave antiga (`sambadeponta`) e `projetoId`,
+    é regravado uma vez. Roda quando `presets` já respondeu. */
 let corrigiuRegistro = false;
 function corrigirRegistro() {
   if (corrigiuRegistro || !colecaoConfirmada("presets")) return;
   const lista = obterEstado().presets.paginas?.paginas || [];
-  const antigo = lista.find((p) => p.slug === SLUG);
+  const antigo = lista.find((p) => p.slug === SLUG_ANTIGO);
   corrigiuRegistro = true;
-  if (!antigo || lista.some((p) => p.slug === ENDERECO)) return;
+  if (!antigo || lista.some((p) => p.slug === SLUG)) return;
   const { projetoId: _projeto, ...resto } = antigo;
   void _projeto;
   Banco.gravar("presets", "paginas", {
-    id: "paginas", paginas: lista.map((p) => (p.slug === SLUG ? { ...resto, slug: ENDERECO } : p)),
+    id: "paginas", paginas: lista.map((p) => (p.slug === SLUG_ANTIGO ? { ...resto, slug: SLUG } : p)),
   }, true);
 }
 
@@ -123,13 +152,13 @@ function montarPainel(p: PaginaFesta | null, mapa: Record<string, Edicao>, centr
   if (!p) return null;
   const lista = Object.values(mapa).sort((a, b) => a.num - b.num);
   const ids = new Set(lista.map((e) => e.id));
-  const registro = (central.presets.paginas?.paginas || []).find((x) => x.slug === ENDERECO || x.slug === SLUG);
+  const registro = (central.presets.paginas?.paginas || []).find((x) => x.slug === SLUG || x.slug === SLUG_ANTIGO);
   return {
     pagina: p,
     titulo: registro?.titulo || "Ponta de Lança",
     edicoes: lista,
     presets: presetFesta(),
-    projetos: central.painel.projetos.filter((x) => x.paginaSlug === ENDERECO && !x.arquivado),
+    projetos: central.painel.projetos.filter((x) => x.paginaSlug === SLUG && !x.arquivado),
     tarefas: central.painel.tarefas.filter((t) => t.edicaoId && ids.has(t.edicaoId)),
     tarefasCentral: central.painel.tarefas,
     equipe: central.painel.equipe,
@@ -165,7 +194,7 @@ function usarEdicoes() {
 }
 
 /** Hook: o Painel montado (null enquanto a página não carregou). */
-export function usarSambaDePonta(): Painel | null {
+export function usarPontaDeLanca(): Painel | null {
   const p = usarEstadoDaPagina();
   const mapa = usarEdicoes();
   const central = usarCentral();

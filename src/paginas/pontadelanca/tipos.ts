@@ -2,7 +2,7 @@
    "Ponta de Lança"; o que a Central já tem (tarefa, pessoa da equipe,
    contato, projeto, presets) vem dos tipos da Central e não se repete aqui.
 
-   No banco: `paginas/sambadeponta` (a festa) e `paginas/sambadeponta/edicoes/*`
+   No banco: `paginas/pontadelanca` (a festa) e `paginas/pontadelanca/edicoes/*`
    (uma edição por documento). Tarefas moram em `tarefas`, fornecedores em
    `contatos`, fases e categorias em `presets/festa`. */
 import type { Contato, PessoaEquipe, PresetFesta, Projeto, ResumoEdicao, StatusEdicao, Tarefa } from "../../types";
@@ -31,7 +31,7 @@ export interface ItemMestre {
 /** O que uma edição ensinou; `tarefa` diz se virou item do checklist-mestre. */
 export interface Aprendizado { ed: number; texto: string; tarefa: string }
 
-/** Documento `paginas/sambadeponta`: o que vale para todas as edições.
+/** Documento `paginas/pontadelanca`: o que vale para todas as edições.
     O nome da festa é o título do registro em presets/paginas, não fica aqui. */
 export interface PaginaFesta {
   id: string;
@@ -136,7 +136,7 @@ export interface Decisao {
 /** Quem precisa saber das mudanças da edição. `avisado` volta a falso quando muda de novo. */
 export interface Aviso { id: string; nome: string; papel: string; avisado: boolean; obs: string }
 
-/** Documento `paginas/sambadeponta/edicoes/<id>`. As tarefas da edição
+/** Documento `paginas/pontadelanca/edicoes/<id>`. As tarefas da edição
     moram em `tarefas` (campo `edicaoId`), não aqui. */
 export interface Edicao {
   id: string;

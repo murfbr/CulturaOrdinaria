@@ -1,19 +1,20 @@
-/* Página própria da festa Ponta de Lança (do Samba de Ponta) dentro da
-   Central, no endereço /pontadelanca/ (o antigo /sambadeponta/ redireciona;
-   a chave dos dados no banco continua "sambadeponta"). Mesmo login e mesmo
-   banco, casca própria com a identidade da festa; o conteúdo é a festa ou uma
-   edição aberta, em abas. Tudo desta página vive nesta pasta; os dados moram
-   nos documentos descritos em dados.ts. */
+/* Página anexo da festa Ponta de Lança (do Samba de Ponta) dentro da
+   Central, no endereço /pontadelanca/ (o antigo /sambadeponta/ redireciona).
+   Mesmo login e mesmo banco, casca própria com a identidade da festa; o
+   conteúdo é a festa ou uma edição aberta, em abas. Tudo desta página vive
+   nesta pasta; os dados moram nos documentos descritos em dados.ts. As
+   classes de estilo levam o prefixo "sdp" (Samba de Ponta, o coletivo dono
+   da festa) e ficaram assim na renomeação de 21/10/2026. */
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/Toast";
-import { iniciarSambaDePonta, usarSambaDePonta } from "./dados";
+import { iniciarPontaDeLanca, usarPontaDeLanca } from "./dados";
 import { MenuLateral } from "./MenuLateral";
 import { TelaFesta } from "./festa/TelaFesta";
 import { TelaEdicao } from "./edicao/TelaEdicao";
 import { hashDaVisao, visaoDoHash, type Visao } from "./visao";
 import "./estilos.css";
 
-const CHAVE_VISAO = "sdp-visao";
+const CHAVE_VISAO = "pdl-visao";
 /* Títulos: Better Faster (licença web pendente) com a Permanent Marker como
    substituta provisória, como no design system da festa; texto e números em Poppins. */
 const FONTES = "https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap";
@@ -32,13 +33,13 @@ function lerVisao(): Visao {
   return { sec: "festa" };
 }
 
-export function PaginaSambaDePonta() {
-  const painel = usarSambaDePonta();
+export function PaginaPontaDeLanca() {
+  const painel = usarPontaDeLanca();
   const [visao, setVisao] = useState<Visao>(lerVisao);
   const [ancora, setAncora] = useState<string | null>(null);
   const [menuAberto, setMenuAberto] = useState(false);
 
-  useEffect(() => { iniciarSambaDePonta(); }, []);
+  useEffect(() => { iniciarPontaDeLanca(); }, []);
 
   // Fontes só nesta página e título da aba do navegador.
   useEffect(() => {

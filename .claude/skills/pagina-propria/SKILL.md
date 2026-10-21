@@ -5,7 +5,7 @@ description: Transforma o protótipo de página de evento que uma pessoa montou 
 
 # Página própria de evento: receber, verificar, montar
 
-Uma página própria é uma pasta fechada em `src/paginas/<slug>/`, servida em `/<slug>/`, com casca e identidade visual próprias, mesmo login e mesmo `Banco` da Central. As duas que existem são a referência: `src/paginas/caminhosdoforro/` (a melhor para copiar: Tailwind desde o início, `ui/` próprio, `importar/` genérico, Storage) e `src/paginas/sambadeponta/` (a mais integrada com a Central: tarefas, contatos, totais no projeto).
+Uma página própria é uma pasta fechada em `src/paginas/<slug>/`, servida em `/<slug>/`, com casca e identidade visual próprias, mesmo login e mesmo `Banco` da Central. As duas que existem são a referência: `src/paginas/caminhosdoforro/` (a melhor para copiar: Tailwind desde o início, `ui/` próprio, `importar/` genérico, Storage) e `src/paginas/pontadelanca/` (a mais integrada com a Central: tarefas, contatos, totais no documento da página).
 
 O trabalho tem duas partes com donos diferentes: **verificar** é a palavra final do Gustavo ou do Antonio sobre o que a pessoa montou; **montar** é código, feito aqui, em sequência, sem subagente e sem paralelismo, com commit só por eles e só com autorização.
 

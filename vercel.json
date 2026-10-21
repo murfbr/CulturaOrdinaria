@@ -3,17 +3,17 @@
     {
       "source": "/sambadeponta",
       "destination": "/pontadelanca/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/sambadeponta/",
       "destination": "/pontadelanca/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/sambadeponta/:caminho*",
       "destination": "/pontadelanca/:caminho*",
-      "permanent": false
+      "permanent": true
     }
   ],
   "rewrites": [
