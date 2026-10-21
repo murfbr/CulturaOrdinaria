@@ -3,6 +3,7 @@
    mostram. Formatação de dinheiro, número e data também mora aqui. */
 import { uid } from "../../utils";
 import { ROTULO_STATUS_EDICAO, type Contato, type ResumoEdicao, type Tarefa } from "../../types";
+import { ORIGEM_TAREFA } from "./semente";
 import type { Custo, Edicao, Painel, Simulacao, Socio, StatusCusto } from "./tipos";
 
 export { ROTULO_STATUS_EDICAO };
@@ -307,7 +308,7 @@ export function acerto(painel: Painel, e: Edicao): LinhaAcerto[] {
   });
 }
 
-/** Os totais que a Central recebe (Projeto.resumoEdicoes): arredondados a centavos, sem carimbo de tempo. */
+/** Os totais por edição, gravados no documento da página (`resumo`): arredondados a centavos, sem carimbo de tempo. */
 export function resumoDaEdicao(painel: Painel, e: Edicao): ResumoEdicao {
   const k = calcular(painel, e);
   const t = totaisPorStatus(e);
@@ -414,7 +415,7 @@ export function criarProximaEdicao(painel: Painel): { edicao: Edicao; tarefas: T
     avisos: src ? (src.avisos || []).map((a) => ({ ...a, id: uid("av"), avisado: false, obs: "" })) : [],
   };
   const tarefas: Tarefa[] = painel.pagina.checklist.map((m) => ({
-    id: uid("t"), titulo: m.tarefa, respId: m.respId || "", origem: "proj:" + painel.pagina.projetoId,
+    id: uid("t"), titulo: m.tarefa, respId: m.respId || "", origem: ORIGEM_TAREFA,
     prazo: "", obs: m.obs ? "Checklist-mestre · " + m.obs : "Checklist-mestre", status: "fazer",
     edicaoId: edicao.id, fase: m.fase,
   }));

@@ -32,12 +32,14 @@ function LinkAcao({ aoClicar, children }: { aoClicar: () => void; children: Reac
 }
 
 export function GeralProjetoDados({ p }: { p: Projeto }) {
-  const { painel, rascunhos, formularios } = usarCentral();
+  const { painel, rascunhos, formularios, presets } = usarCentral();
   const edital = editalDoProjeto(p);
   const rascunho = p.rascunhoId ? rascunhos[p.rascunhoId] : undefined;
   const formularioVazio = !rascunho || !Object.values(rascunho.valores || {}).some(temValor);
   const artistas = p.artistaIds.map((id) => painel.artistas.find((a) => a.id === id)).filter(Boolean);
-  const pagina = paginaDoProjeto(p.id);
+  // Página anexo a que o projeto pertence: escolhida aqui, entre as registradas no banco.
+  const pagina = paginaDoProjeto(p);
+  const paginas = presets.paginas?.paginas || [];
   const opcoesForm = Object.values(formularios)
     .filter((f) => !edital || !(edital.formIds?.length || edital.formId) || (edital.formIds || [edital.formId]).includes(f.id))
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
@@ -87,7 +89,17 @@ export function GeralProjetoDados({ p }: { p: Projeto }) {
         <Dado rotulo="Pasta no Drive">
           {p.linkDrive ? <LinkArquivo className={ESTILO_LINK} href={url(p.linkDrive)}>📁 abrir ↗</LinkArquivo> : TRACO}
         </Dado>
-        {pagina && <Dado rotulo="Página própria"><a className={ESTILO_LINK} href={"/" + pagina.slug + "/"}>{pagina.titulo} ↗</a></Dado>}
+        <Dado rotulo="Página anexo">
+          <span className="inline-flex flex-wrap items-center gap-2">
+            <Selecao className="w-auto max-w-full py-1 text-sm" value={p.paginaSlug || ""}
+              onChange={(e) => alterarProjeto(p, (c) => { c.paginaSlug = e.target.value; })}>
+              <option value="">— nenhuma (projeto avulso)</option>
+              {paginas.map((x) => <option key={x.slug} value={x.slug}>{x.titulo}</option>)}
+              {p.paginaSlug && !paginas.some((x) => x.slug === p.paginaSlug) && <option value={p.paginaSlug}>{p.paginaSlug}</option>}
+            </Selecao>
+            {pagina && <a className={ESTILO_LINK} href={"/" + pagina.slug + "/"}>abrir a página ↗</a>}
+          </span>
+        </Dado>
         {p.obs && <Dado rotulo="Observações"><span className="whitespace-pre-wrap">{p.obs}</span></Dado>}
       </Dados>
     </Painel>

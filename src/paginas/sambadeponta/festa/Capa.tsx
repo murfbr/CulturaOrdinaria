@@ -62,7 +62,9 @@ export function Capa({ painel }: { painel: Painel }) {
       </div>
       <div className="sdp-toolbar">
         <button className="sdp-btn ghost small" onClick={editar}>Editar dados da festa</button>
-        {painel.projeto && <a className="sdp-btn ghost small" href={"/#/projetos/visao/projeto/" + painel.projeto.id}>Projeto na Central ↗</a>}
+        {painel.projetos.map((p) => (
+          <a key={p.id} className="sdp-btn ghost small" href={"/#/projetos/visao/projeto/" + p.id} title="projeto da Central que aponta para esta página">{p.nome} na Central ↗</a>
+        ))}
       </div>
       {modal.elemento}
     </div>

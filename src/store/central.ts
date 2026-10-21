@@ -77,9 +77,16 @@ export const colecaoConfirmada = (colecao: string): boolean => confirmadas.has(c
 /** Preset de página tipo festa; o padrão do código vale enquanto o banco não tem o documento. */
 export const presetFesta = (): PresetFesta => estado.presets.festa || PRESET_FESTA_PADRAO;
 
-/** Página própria registrada para um projeto (presets/paginas), se houver. */
-export const paginaDoProjeto = (projetoId: string): PaginaPropria | undefined =>
-  (estado.presets.paginas?.paginas || []).find((p) => p.projetoId === projetoId);
+/** Registro de uma página anexo (presets/paginas) pelo slug, se o banco já tem. */
+export const paginaRegistrada = (slug: string): PaginaPropria | undefined =>
+  (estado.presets.paginas?.paginas || []).find((p) => p.slug === slug);
+
+/** Título de uma página anexo pelo slug; o próprio slug enquanto o banco não tem o registro. */
+export const tituloDaPagina = (slug: string): string => paginaRegistrada(slug)?.titulo || slug;
+
+/** A página anexo para a qual o projeto aponta (Projeto.paginaSlug), se houver. */
+export const paginaDoProjeto = (p: Projeto): { slug: string; titulo: string } | undefined =>
+  p.paginaSlug ? { slug: p.paginaSlug, titulo: tituloDaPagina(p.paginaSlug) } : undefined;
 
 /** Hook: qualquer componente que use isso re-renderiza quando os dados mudam. */
 export function usarCentral(): EstadoCentral {

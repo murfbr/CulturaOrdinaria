@@ -240,7 +240,7 @@ export function prepararColado(bruto: unknown, escolha: Escolha): Preparo {
 /** Campos que as fichas gravam e o formulário de edição não mostra; o conferidor não os estranha. */
 const CAMPOS_DAS_FICHAS: Partial<Record<ColecaoPainel, string[]>> = {
   artistas: ["enq", "det"],
-  projetos: ["formId", "rascunhoId", "arquivado", "proponente", "proponenteId", "docs", "producao", "interno", "historico", "origem", "resumoEdicoes"],
+  projetos: ["formId", "rascunhoId", "arquivado", "proponente", "proponenteId", "docs", "producao", "interno", "historico", "origem", "paginaSlug", "resumoEdicoes"],
   editais: [
     "formIds", "verif", "links", "linhas", "aceitaPf", "aceitaMei", "aceitaColetivo", "criterios", "criteriosTotal",
     "notaMinima", "desempate", "bonus", "criteriosFonte", "exigencias", "fontes", "confianca", "lacunasTexto",

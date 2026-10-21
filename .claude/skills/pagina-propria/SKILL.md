@@ -17,12 +17,12 @@ O pacote tem três partes: o link do artefato publicado (mostra as telas), o JSO
 
 Conferir, nesta ordem, e sem escrever código:
 1. **O JSON está no formato:** `config` com `listas` (`{ id, nome }`) e `parametros`; cada lista de registros é `id → registro`; todo registro tem `id` e `atualizado`; datas ISO; dinheiro em número; ids de lista em minúsculas sem acento. Se não estiver, ajuste ao ler (a semente é o lugar certo) e anote.
-2. **Cada lista do JSON é nova ou é da Central.** Tarefas, contatos (fornecedores, patrocinadores...), equipe e projeto são da Central: os campos têm que bater com `src/forms/especificacoes/*.ts` e `src/types/painel.ts` (`Tarefa`, `Contato`, `PessoaEquipe`, `Projeto.resumoEdicoes`). Responsável e fornecedor chegam como nome em texto: a semente vincula pelo nome exato, o resto fica em `obs`. O que é novo do evento vira subcoleção de `paginas/<slug>/`.
+2. **Cada lista do JSON é nova ou é da Central.** Tarefas, contatos (fornecedores, patrocinadores...) e equipe são da Central: os campos têm que bater com `src/forms/especificacoes/*.ts` e `src/types/painel.ts` (`Tarefa`, `Contato`, `PessoaEquipe`). Responsável e fornecedor chegam como nome em texto: a semente vincula pelo nome exato, o resto fica em `obs`. O que é novo do evento vira subcoleção de `paginas/<slug>/`.
 3. **O slug está livre:** não existe em `presets/paginas` nem em `src/pages/paginasProprias.ts`, e não colide com uma aba da Central.
-4. **O projeto existe** em `projetos` (ou precisa ser criado pelo "Novo projeto" da Central antes da semente). O registro em `presets/paginas` liga a página ao projeto.
+4. **A página não pertence a projeto.** Página anexo é projeto ou braço contínuo, sem prazo para acabar; o registro em `presets/paginas` tem só slug, tipo e título. Um projeto da Central (com início, meio e fim) pode apontar para a página pela ficha dele (`Projeto.paginaSlug`), e excluir o projeto não toca a página.
 5. **O que vai para presets** (lista que só preenche select e vale para mais de uma página: `presets/<tipo>`) e o que fica no documento da página (listas do evento). Enum que o código interpreta fica no código.
 6. **Os três números da ficha** batem com as fórmulas do protótipo, recalculados do JSON. Se não baterem, a fórmula da ficha está errada ou o JSON está incompleto: volta para a pessoa.
-7. **A Central recebe só totais** (`Projeto.resumoEdicoes` ou equivalente), nunca o detalhe. Se a ficha pede que a Central mostre linhas da página, é uma tela que abre o detalhe puxando da página, não dado copiado.
+7. **Os totais ficam na página** (`paginas/<slug>.resumo` ou equivalente), gravados pela própria página a cada mudança; a Central não recebe o detalhe. Se a ficha pede que a Central mostre linhas da página, é uma tela que abre o detalhe puxando da página, não dado copiado.
 8. **Sensível:** RG, dados bancários e senha não entram; se vier, sai antes da semente. CPF e CNPJ podem ficar na página, mas a semente não leva CPF: o repositório é público, então CPF entra no banco pela tela ou pela importação, nunca pelo arquivo de semente.
 
 Entregue ao Gustavo ou ao Antonio uma lista em três blocos: **entra como está**, **entra com ajuste** (qual), **volta para a pessoa** (o quê e por quê). Pare aí. Montar começa com o "pode fazer" deles.
@@ -31,18 +31,17 @@ Entregue ao Gustavo ou ao Antonio uma lista em três blocos: **entra como está*
 
 ### 1. Antes do código
 - Levante as regras implícitas que a ficha conta ou deixa de contar: o que cada status faz de verdade (ex.: pagar é o dinheiro sair, então marcar pago preenche o realizado com o orçado). Confirme com eles em uma mensagem curta. O artefato não implementa essas regras; a página tem que implementar.
-- Pontos de integração, e só eles. Três perguntas por conceito: a Central já modela isso? (usa a coleção dela). A Central precisa saber disso? (recebe totais, gravados pela página no projeto). O resto é lógica da página e fica nela.
+- Pontos de integração, e só eles. Duas perguntas por conceito: a Central já modela isso? (usa a coleção dela). É da página? (fica nela, inclusive os totais, no documento da página). O resto é lógica da página e fica nela.
 - Reproduza os três números de aceite com funções puras em `calculo.ts` antes de qualquer tela.
 
 ### 2. Estrutura no banco
 ```
-presets/paginas              registro { slug, projetoId, tipo, titulo } (a semente acrescenta o seu)
+presets/paginas              registro { slug, tipo, titulo } (a semente acrescenta o seu; sem projeto)
 presets/<tipo>               listas compartilhadas entre páginas do mesmo tipo, se houver
-paginas/<slug>               um documento: listas, parâmetros, o que vale para a página inteira
+paginas/<slug>               um documento: listas, parâmetros, o que vale para a página inteira, e `resumo` (totais por unidade, gravados pela página a cada mudança)
 paginas/<slug>/<lista>/*     um documento por registro (as listas novas do evento)
-tarefas/*                    tarefas da página: origem "proj:<id>", edicaoId e fase quando houver, status fazer/and/feito, respId da Equipe
+tarefas/*                    tarefas da página: origem "pagina:<slug>", edicaoId e fase quando houver, status fazer/and/feito, respId da Equipe
 contatos/*                   fornecedores e parceiros, com tipo
-projetos/<id>.resumo*        totais por unidade, gravados pela página a cada mudança
 ```
 Regras do Firestore (`{document=**}`) e do Storage (`paginas/**`) já cobrem tudo isso; não se tocam. Arquivos no Storage em `paginas/<slug>/...`.
 

@@ -72,7 +72,7 @@ export function converterArtefato(json: ArtefatoJson, agora: string): Semeadura 
   for (const c of COLECOES) {
     colecoes[c] = Object.entries(json[c] || {}).map(([id, d]) => ({ ...semCarimbo(d), id, atualizado: agora }));
   }
-  return { pagina, colecoes, registro: { slug: SLUG, projetoId: "", tipo: TIPO, titulo: TITULO } };
+  return { pagina, colecoes, registro: { slug: SLUG, tipo: TIPO, titulo: TITULO } };
 }
 
 /** Só os cartões de arquivo (Fase 6), para a semente complementar de quem já tinha a página gravada. */

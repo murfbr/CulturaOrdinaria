@@ -1,11 +1,11 @@
-/* Barra lateral do site: a marca em selo, a busca, os seis ambientes em
-   grupos (Painel; Trabalho; Escrita) com o item ativo em vermelho, a seção
-   Páginas extras (as páginas próprias, retraída por padrão) e no rodapé o
-   status do banco, Exportar, Importar, o que ainda não chegou ao banco
-   (quando há problema) e Sair. O botão Agenda mostra quantos prazos pedem
-   atenção; Gestão avisa quando há dado no formato antigo. No celular vira
-   uma faixa no topo com o botão ☰: o menu abre embaixo da faixa e fecha ao
-   escolher um ambiente, no Esc ou no ✕. */
+/* Barra lateral do site: a marca em selo, a busca, os sete ambientes em
+   grupos (Painel; Trabalho; Escrita; Páginas anexo, sozinho, como seção
+   própria) com o item ativo em vermelho, e no rodapé o status do banco,
+   Exportar, Importar, o que ainda não chegou ao banco (quando há problema)
+   e Sair. O botão Agenda mostra quantos prazos pedem atenção; Gestão avisa
+   quando há dado no formato antigo. No celular vira uma faixa no topo com o
+   botão ☰: o menu abre embaixo da faixa e fecha ao escolher um ambiente, no
+   Esc ou no ✕. */
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair } from "../../services/sessao";
@@ -20,13 +20,14 @@ import { Selo } from "../ui/Selo";
 import { ModalExportar } from "../ferramentas/ModalExportar";
 import { ModalImportar } from "../ferramentas/ModalImportar";
 import { ModalGravacoes } from "./ModalGravacoes";
-import { PAGINAS_PROPRIAS } from "../../pages/paginasProprias";
 
-/** Os grupos do menu, por id de ambiente. O que não está aqui vai solto no topo. */
+/** Os grupos do menu, por id de ambiente. Grupo sem rótulo é um item sozinho
+    (Painel no topo; Páginas anexo como seção própria no fim). */
 const GRUPOS: { rotulo: string; ids: string[] }[] = [
   { rotulo: "", ids: ["painel"] },
   { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "gestao"] },
   { rotulo: "Escrita", ids: ["contexto"] },
+  { rotulo: "", ids: ["anexos"] },
 ];
 
 /** Indicador de salvamento, sincronizado com a camada de armazenamento. */
@@ -42,30 +43,6 @@ const COR_STATUS: Record<StatusSalvamento["classe"], string> = {
 type ModalAberto = "" | "exportar" | "importar" | "gravacoes";
 
 const ESTILO_ITEM = "flex w-full cursor-pointer items-center gap-2 whitespace-nowrap rounded-md border-0 px-2.5 py-[5px] text-left text-lg transition-colors";
-
-/** Seção Páginas extras: as páginas próprias do registro em código, com o título do
-    banco (presets/paginas) quando existe. Retraída por padrão; o rótulo abre e fecha. */
-function PaginasExtras({ titulos }: { titulos: Record<string, string> }) {
-  const [aberta, setAberta] = useState(false);
-  const slugs = Object.keys(PAGINAS_PROPRIAS);
-  if (!slugs.length) return null;
-  return (
-    <div className="grid gap-0.5">
-      <button type="button" aria-expanded={aberta} onClick={() => setAberta((v) => !v)}
-        className="flex cursor-pointer items-center gap-1.5 border-0 bg-transparent px-2.5 pb-1 text-left"
-        title={aberta ? "retrair" : "mostrar as páginas"}>
-        <Rotulo className="hover:text-ink">Páginas extras</Rotulo>
-        <span className="font-mono text-2xs text-faint">{aberta ? "▾" : "▸"}</span>
-      </button>
-      {aberta && slugs.map((slug) => (
-        <a key={slug} href={`/${slug}/`} className={cx(ESTILO_ITEM, "bg-transparent text-ink no-underline hover:bg-bg-hover")}
-          title={`abrir /${slug}/`}>
-          {titulos[slug] || PAGINAS_PROPRIAS[slug].titulo}
-        </a>
-      ))}
-    </div>
-  );
-}
 
 /** Contador ao lado do nome do ambiente. */
 function Marcador({ children, title, ativo }: { children: ReactNode; title?: string; ativo: boolean }) {
@@ -84,9 +61,8 @@ const ESTILO_BOTAO_TOPO = "flex size-9 cursor-pointer items-center justify-cente
 
 export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) {
   const nav = usarNavegacao();
-  const { painel, legado, presets } = usarCentral();
+  const { painel, legado } = usarCentral();
   const status = usarStatusBanco();
-  const titulosPaginas = Object.fromEntries((presets.paginas?.paginas || []).map((p) => [p.slug, p.titulo]));
   const [modal, setModal] = useState<ModalAberto>("");
   const [aberto, setAberto] = useState(false);
   const urgentes = contarUrgentes(painel);
@@ -149,12 +125,11 @@ export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) 
 
         <nav className="flex flex-col gap-2.5">
           {GRUPOS.map((g) => (
-            <div key={g.rotulo || "topo"} className="grid gap-0.5">
+            <div key={g.rotulo || g.ids[0]} className="grid gap-0.5">
               {g.rotulo && <Rotulo className="px-2.5 pb-1">{g.rotulo}</Rotulo>}
               {g.ids.map(item)}
             </div>
           ))}
-          <PaginasExtras titulos={titulosPaginas} />
         </nav>
 
         <div className="flex flex-col gap-2.5 border-t border-line pt-3 md:mt-auto md:border-t-0 md:pt-0">

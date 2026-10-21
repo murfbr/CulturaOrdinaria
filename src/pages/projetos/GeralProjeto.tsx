@@ -4,7 +4,6 @@
    (Dados); anotações, agentes e cronograma (Interno); documentos e produção
    (Documentos); tarefas e histórico de status (Tarefas). */
 import type { Projeto } from "../../types";
-import { EdicoesDoProjeto } from "./EdicoesDoProjeto";
 import { GeralProjetoAlertas, GeralProjetoDados, GeralProjetoProponente } from "./GeralProjetoDados";
 import { GeralProjetoInterno } from "./GeralProjetoInterno";
 import { GeralProjetoDocumentos, GeralProjetoProducao } from "./GeralProjetoDocumentos";
@@ -14,7 +13,6 @@ export function GeralProjeto({ p }: { p: Projeto }) {
   return (
     <div className="max-w-[980px]">
       <GeralProjetoDados p={p} />
-      <EdicoesDoProjeto p={p} />
       <GeralProjetoAlertas p={p} />
       <GeralProjetoProponente p={p} />
       <GeralProjetoInterno p={p} />

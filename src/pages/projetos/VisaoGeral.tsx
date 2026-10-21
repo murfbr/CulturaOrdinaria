@@ -24,7 +24,6 @@ import { STATUS_EDITAL, STATUS_PROJETO, type Edital, type Projeto } from "../../
 import { comparar, relativo } from "../../utils";
 import { cx } from "../../utils/classes";
 import { ModalNovoProjeto } from "./ModalNovoProjeto";
-import { ResumoEdicoesCartao } from "./EdicoesDoProjeto";
 import { usarExclusaoProjeto } from "./exclusao";
 
 /** Ordem dos grupos: editais abertos e em fluxo contínuo primeiro, depois
@@ -88,7 +87,7 @@ export function VisaoGeral() {
   const cartao = (p: Projeto) => {
     const e = editalDoProjeto(p);
     const st = STATUS_PROJETO.find((s) => s.id === p.status);
-    const pagina = paginaDoProjeto(p.id);
+    const pagina = paginaDoProjeto(p);
     return (
       <CartaoLista key={p.id} aoAbrir={() => abrirProjeto(p.id)} rotuloAbrir="abrir →"
         titulo={p.nome}
@@ -109,10 +108,9 @@ export function VisaoGeral() {
           <Badge tom={st?.classe || "neutro"}>{st?.rotulo}</Badge>
           {p.grupo && <Chip title="faz parte de">{p.grupo}</Chip>}
           {p.inscricao && <Chip title="nº de inscrição">nº {p.inscricao}</Chip>}
-          {pagina && <a className={cx(ESTILO_LINK, "text-2xs")} href={"/" + pagina.slug + "/"} title="página própria do projeto" onClick={(ev) => ev.stopPropagation()}>página ↗</a>}
+          {pagina && <a className={cx(ESTILO_LINK, "text-2xs")} href={"/" + pagina.slug + "/"} title={"página anexo: " + pagina.titulo} onClick={(ev) => ev.stopPropagation()}>{pagina.titulo} ↗</a>}
         </div>
         <ProgressoFormulario p={p} />
-        <ResumoEdicoesCartao p={p} />
       </CartaoLista>
     );
   };

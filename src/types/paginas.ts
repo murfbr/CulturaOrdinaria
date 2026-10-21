@@ -1,7 +1,7 @@
-/* O que a Central enxerga de uma página própria de projeto: só os totais por
-   edição, que a própria página grava no documento do projeto
-   (`Projeto.resumoEdicoes`) a cada mudança. O detalhe (linhas de custo,
-   máquinas, cronograma...) é lógica da página e fica nela. */
+/* Os totais por edição de uma página anexo tipo festa, que a própria página
+   grava no documento dela (`paginas/<slug>.resumo`) a cada mudança. O detalhe
+   (linhas de custo, máquinas, cronograma...) é lógica da página e fica nela.
+   Até 21/10/2026 iam para o projeto (`Projeto.resumoEdicoes`, hoje legado). */
 
 export type StatusEdicao = "planejada" | "execucao" | "fechada";
 

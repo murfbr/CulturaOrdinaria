@@ -144,7 +144,11 @@ export interface Projeto {
   obs: string;
   /** De onde veio na migração v2 → v3 (projeto e candidatura antigos). */
   origem?: { projeto?: string; candidatura?: string; rascunho?: string };
-  /** Totais por edição, gravados pela página própria do projeto (o detalhe fica na página). */
+  /** Página anexo a que este projeto pertence (slug do registro, ex. "pontadelanca"), se houver.
+      A ligação é só daqui para a página: excluir o projeto não toca a página. */
+  paginaSlug?: string;
+  /** Legado (até 21/10/2026): totais por edição que a página gravava no projeto. A página passou
+      a guardar os totais no próprio documento (`paginas/<slug>.resumo`); a Central não lê mais. */
   resumoEdicoes?: ResumoEdicao[];
   _ord?: number;
   atualizado?: string;
@@ -329,8 +333,9 @@ export interface Tarefa {
   id: string;
   titulo: string;
   respId: string;
-  /** Vínculo: "proj:c2" | "edital:ed7" | "reuniao:r1" | "" (sem vínculo).
-      "cand:" é do formato v2 e a migração converte em "proj:". */
+  /** Vínculo: "proj:c2" | "edital:ed7" | "reuniao:r1" | "pagina:pontadelanca" (página anexo,
+      pelo slug do registro) | "" (sem vínculo). "cand:" é do formato v2 e a migração converte
+      em "proj:"; "proj:p7" nas tarefas do Ponta de Lança virou "pagina:" em 21/10/2026. */
   origem: string;
   /** Prazo ISO (yyyy-mm-dd). */
   prazo: string;

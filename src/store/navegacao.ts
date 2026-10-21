@@ -14,19 +14,23 @@ export interface Ambiente {
   abas: [id: string, rotulo: string][];
 }
 
-/** Os seis ambientes do site, com suas abas. */
+/** Os sete ambientes do site, com suas abas. Páginas anexo ganha, no cabeçalho,
+    uma aba por página do registro em código (link para /<slug>/). */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
   { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"], ["pessoas", "Pessoas"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["calendario", "Calendário"], ["cronograma", "Cronograma"]] },
-  { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"], ["paginas-extras", "Páginas Extras"]] },
+  { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
+  { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"]] },
 ];
 
 /** Endereços da versão anterior (v2) → onde a mesma coisa mora agora.
-    O ambiente Pessoas (até 15/10/2026) virou a aba Pessoas de Cadastros. */
+    O ambiente Pessoas (até 15/10/2026) virou a aba Pessoas de Cadastros; a aba
+    Páginas Extras de Gestão (até 21/10/2026) virou a aba Modelo de Páginas anexo. */
 const ENDERECO_ANTIGO: Record<string, [string, string]> = {
+  "gestao/paginas-extras": ["anexos", "modelo"],
   "pessoas/": ["cadastros", "pessoas"], "pessoas/elenco": ["cadastros", "pessoas"],
   "pessoas/equipe": ["cadastros", "pessoas"], "pessoas/contatos": ["cadastros", "pessoas"],
   "portfolio/artistas": ["cadastros", "artistas"], "portfolio/projetos": ["projetos", "visao"],
@@ -194,7 +198,7 @@ const CASA_DO_DETALHE: Record<Detalhe["tipo"], [string, string]> = {
 };
 
 /** Ambientes cujo roteador sabe desenhar fichas do Painel (artista, edital...). */
-const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "gestao"];
+const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "gestao", "anexos"];
 
 /** Abre a ficha de detalhe de um registro. Projeto abre sempre em Projetos;
     as outras fichas abrem onde estiver, se o ambiente souber desenhá-las. */

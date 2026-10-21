@@ -18,7 +18,7 @@ const proximaOuUltima = (lista: ResumoEdicao[]): ResumoEdicao | undefined =>
   lista.find((e) => e.status !== "fechada") || lista[lista.length - 1];
 
 export function EdicoesDoProjeto({ p }: { p: Projeto }) {
-  const pagina = paginaDoProjeto(p.id);
+  const pagina = paginaDoProjeto(p);
   const lista = p.resumoEdicoes || [];
   if (!lista.length && !pagina) return null;
   return (

@@ -27,7 +27,7 @@ export function FormularioRegistro() {
 
 function ModalDeRegistro() {
   const { aberto } = usarEdicao();
-  const { painel } = usarCentral();
+  const { painel, presets } = usarCentral();
   const spec = ENTIDADES[aberto!.chave];
   const editando = aberto!.id != null;
 
@@ -46,16 +46,18 @@ function ModalDeRegistro() {
     return base;
   });
 
-  // Opções do campo "origem" (vínculo polimórfico da tarefa). A semana (aba Semana da
-  // Agenda) não é lista: entra só a do valor atual, para o modal mostrar o vínculo certo.
+  // Opções do campo "origem" (vínculo polimórfico da tarefa): projetos, páginas anexo
+  // (registro em presets/paginas), editais e reuniões. A semana (aba Semana da Agenda)
+  // não é lista: entra só a do valor atual, para o modal mostrar o vínculo certo.
   const origemAtual = String(valores.origem || "");
   const opcoesOrigem = useMemo(() => [
     ["", "— sem vínculo"] as [string, string],
     ...painel.projetos.map((p) => ["proj:" + p.id, "Projeto · " + p.nome + (p.arquivado ? " (arquivado)" : "")] as [string, string]),
+    ...(presets.paginas?.paginas || []).map((p) => ["pagina:" + p.slug, "Página · " + p.titulo] as [string, string]),
     ...painel.editais.map((e) => ["edital:" + e.id, "Edital · " + (e.curto || e.nome)] as [string, string]),
     ...painel.reunioes.map((r) => ["reuniao:" + r.id, "Reunião · " + (r.titulo || r.data || r.id)] as [string, string]),
     ...(origemAtual.startsWith("semana:") ? [[origemAtual, rotuloOrigemSemana(origemAtual.slice(7))] as [string, string]] : []),
-  ], [painel, origemAtual]);
+  ], [painel, presets, origemAtual]);
 
   // Exclusão em duas etapas: primeiro o impacto nos vínculos, depois o destino.
   const [impacto, setImpacto] = useState<ImpactoExclusao | null>(null);

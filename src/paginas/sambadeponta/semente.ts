@@ -17,8 +17,13 @@ import type { Contato, PessoaEquipe, PresetFesta, PresetPaginas, StatusTarefa, T
 import { PRESET_FESTA_PADRAO } from "../../types";
 import type { Custo, Edicao, PaginaFesta, Peca } from "./tipos";
 
+/** Chave dos dados no banco: `paginas/sambadeponta` e a subcoleção `edicoes`. */
 export const SLUG = "sambadeponta";
-export const PROJETO_ID = "p7";
+/** Endereço da página (/pontadelanca/) e chave do registro em presets/paginas. Vai ser
+    também a chave dos dados quando a renomeação for feita; até lá são duas chaves. */
+export const ENDERECO = "pontadelanca";
+/** Vínculo das tarefas desta página na coleção `tarefas` da Central. */
+export const ORIGEM_TAREFA = "pagina:" + ENDERECO;
 export const TIPO = "festa";
 
 /** O bloco `pdl-state` do artefato, como está em semente.json. */
@@ -77,7 +82,7 @@ export function converterArtefato(json: ArtefatoJson, existentes: { equipe: Pess
   }
 
   const pagina: PaginaFesta = {
-    id: SLUG, projetoId: PROJETO_ID, tipo: TIPO,
+    id: SLUG, tipo: TIPO,
     meta: { ...json.meta, atualizadoEm: agora.slice(0, 10) },
     sub: json.label.sub, local: json.label.local, modelo: json.label.modelo,
     socios: json.label.socios,
@@ -95,7 +100,7 @@ export function converterArtefato(json: ArtefatoJson, existentes: { equipe: Pess
     e.tarefas.forEach((t) => {
       const respId = respPorNome(t.dono);
       tarefas.push({
-        id: uid("t"), titulo: t.tarefa, respId, origem: "proj:" + PROJETO_ID, prazo: t.prazo || "",
+        id: uid("t"), titulo: t.tarefa, respId, origem: ORIGEM_TAREFA, prazo: t.prazo || "",
         obs: juntar(t.origem, notaDono(t.dono, respId)), status: STATUS[t.status] || "fazer",
         edicaoId: e.id, fase: t.fase, atualizado: agora,
       });
@@ -116,7 +121,7 @@ export function converterArtefato(json: ArtefatoJson, existentes: { equipe: Pess
 
   return {
     presetFesta: { ...PRESET_FESTA_PADRAO, fases: json.label.fases },
-    presetPaginas: { id: "paginas", paginas: [{ slug: SLUG, projetoId: PROJETO_ID, tipo: TIPO, titulo: json.label.nome }] },
+    presetPaginas: { id: "paginas", paginas: [{ slug: ENDERECO, tipo: TIPO, titulo: json.label.nome }] },
     pagina, edicoes, tarefas, contatos,
   };
 }

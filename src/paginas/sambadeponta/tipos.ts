@@ -5,7 +5,7 @@
    No banco: `paginas/sambadeponta` (a festa) e `paginas/sambadeponta/edicoes/*`
    (uma edição por documento). Tarefas moram em `tarefas`, fornecedores em
    `contatos`, fases e categorias em `presets/festa`. */
-import type { Contato, PessoaEquipe, PresetFesta, Projeto, StatusEdicao, Tarefa } from "../../types";
+import type { Contato, PessoaEquipe, PresetFesta, Projeto, ResumoEdicao, StatusEdicao, Tarefa } from "../../types";
 
 export interface Meta {
   rev: number;
@@ -32,12 +32,13 @@ export interface ItemMestre {
 export interface Aprendizado { ed: number; texto: string; tarefa: string }
 
 /** Documento `paginas/sambadeponta`: o que vale para todas as edições.
-    O nome da festa é o nome do projeto (`projetoId`), não fica aqui. */
+    O nome da festa é o título do registro em presets/paginas, não fica aqui. */
 export interface PaginaFesta {
   id: string;
-  projetoId: string;
   tipo: "festa";
   meta: Meta;
+  /** Totais por edição, que a página grava aqui a cada mudança (a Central não lê; o detalhe está nas edições). */
+  resumo?: ResumoEdicao[];
   sub: string;
   local: string;
   modelo: string;
@@ -177,11 +178,12 @@ export interface Edicao {
 /** O que as telas recebem: montado em memória a partir do banco (ver dados.ts). */
 export interface Painel {
   pagina: PaginaFesta;
-  /** Nome da festa: o do projeto, ou o título do registro enquanto o projeto não carrega. */
+  /** Nome da festa: o título do registro em presets/paginas (ou o de reserva enquanto não carrega). */
   titulo: string;
   edicoes: Edicao[];
   presets: PresetFesta;
-  projeto?: Projeto;
+  /** Projetos da Central (com início, meio e fim) que apontam para esta página (Projeto.paginaSlug). */
+  projetos: Projeto[];
   /** Tarefas das edições desta página (coleção `tarefas`, campo `edicaoId`). */
   tarefas: Tarefa[];
   /** Todas as tarefas da Central: as urgências podem fixar uma que não é da edição (ex.: da agenda da semana). */

@@ -128,7 +128,8 @@ const maiorOrd = (colecao: ColecaoPainel) =>
   obterEstado().painel[colecao].reduce((m, x) => Math.max(m, x._ord || 0), -1);
 
 /** Exclui um registro (para a lixeira). Excluir projeto leva junto as tarefas
-    ligadas e o rascunho do formulário dele. */
+    ligadas e o rascunho do formulário dele. Uma página anexo para a qual o projeto
+    aponta não é dele e fica como está. */
 export function excluirRegistro(colecao: ColecaoPainel, id: string) {
   emLoteDeExclusao(() => {
     const projeto = colecao === "projetos" ? porId("projetos", id) : undefined;
@@ -140,28 +141,6 @@ export function excluirRegistro(colecao: ColecaoPainel, id: string) {
       if (projeto?.rascunhoId && Banco.ler("rascunhos")[projeto.rascunhoId]) moverParaLixeira("rascunhos", projeto.rascunhoId);
     }
   });
-  // A página própria do projeto (registro em presets/paginas) vai junto, num lote próprio.
-  if (colecao === "projetos") void excluirPaginasDoProjeto(id);
-}
-
-/** Documento da página e edições de cada página própria do projeto vão para a lixeira; o registro sai. */
-async function excluirPaginasDoProjeto(projetoId: string) {
-  const registro = obterEstado().presets.paginas;
-  const minhas = (registro?.paginas || []).filter((p) => p.projetoId === projetoId);
-  if (!registro || !minhas.length) return;
-  for (const p of minhas) {
-    const caminhoEdicoes = "paginas/" + p.slug + "/edicoes";
-    await Banco.carregarDocumento("paginas", p.slug);
-    const edicoes = await Banco.carregarColecao(caminhoEdicoes);
-    emLoteDeExclusao(() => {
-      Object.keys(edicoes).forEach((id) => moverParaLixeira(caminhoEdicoes, id));
-      moverParaLixeira("paginas", p.slug);
-    });
-  }
-  Banco.gravar("presets", "paginas", {
-    ...(clonar(registro) as unknown as Documento),
-    paginas: registro.paginas.filter((p) => p.projetoId !== projetoId),
-  }, true);
 }
 
 /** Busca por id em qualquer coleção do Painel. */

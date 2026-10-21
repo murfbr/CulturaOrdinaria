@@ -1,5 +1,6 @@
 /* Resolvedores de nomes entre coleções do Painel ("quais artistas estão neste
    projeto?", "qual o edital dele?") e rótulos derivados. */
+import { tituloDaPagina } from "../store/central";
 import { porId } from "../store/mutacoes";
 import { rotuloOrigemSemana } from "./semana";
 import { statusProjetoDe, type Edital, type PessoaEquipe, type Projeto, type Tarefa } from "../types";
@@ -42,11 +43,12 @@ export function prazoCurto(e?: Edital): string {
   return t.length > 60 ? t.slice(0, 58).trimEnd() + "…" : t;
 }
 
-/** Rótulo do vínculo de uma tarefa ("Projeto · X", "Edital · Y", "Reunião · Z"). */
+/** Rótulo do vínculo de uma tarefa ("Projeto · X", "Edital · Y", "Reunião · Z", "Página · W"). */
 export function rotuloOrigem(origem?: string): string {
   if (!origem) return "—";
   const [tipo, id] = origem.split(":");
   if (tipo === "proj") return "Projeto · " + (porId("projetos", id)?.nome || "?");
+  if (tipo === "pagina") return "Página · " + tituloDaPagina(id);
   if (tipo === "edital") return "Edital · " + (nomeCurto(porId("editais", id)) || "?");
   if (tipo === "reuniao") {
     const r = porId("reunioes", id);

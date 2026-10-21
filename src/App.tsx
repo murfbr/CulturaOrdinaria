@@ -17,10 +17,17 @@ import { Login } from "./pages/Login";
 import { RoteadorPainel } from "./pages/RoteadorPainel";
 import { Projetos } from "./pages/projetos/Projetos";
 import { Contexto } from "./pages/contexto/Contexto";
-import { PAGINAS_PROPRIAS } from "./pages/paginasProprias";
+import { ENDERECOS_ANTIGOS, PAGINAS_PROPRIAS } from "./pages/paginasProprias";
 
-/** Caminho da URL sem a barra final: páginas próprias de projeto moram em /<slug>/. */
+/** Caminho da URL sem a barra final: as páginas anexo moram em /<slug>/. */
 const CAMINHO = window.location.pathname.replace(/[/]+$/, "").toLowerCase();
+
+// Endereço antigo de página (/sambadeponta/ → /pontadelanca/): em produção o
+// vercel.json redireciona antes de qualquer script (e preserva o #hash); aqui é
+// o servidor de desenvolvimento fazendo o mesmo, sem o hash, porque a navegação
+// da Central já o reescreveu quando este módulo roda.
+const NOVO = ENDERECOS_ANTIGOS[CAMINHO.slice(1).split("/")[0]];
+if (NOVO) window.location.replace("/" + NOVO + "/" + window.location.search);
 
 export default function App() {
   const sessao = usarSessao();
@@ -30,7 +37,7 @@ export default function App() {
     if (sessao.carregando) return <div className="flex min-h-[60vh] items-center justify-center text-lg text-muted">abrindo a Central…</div>;
     if (!sessao.usuario) return <Login />;
   }
-  // Página própria de projeto (/<slug>/): mesmo login e mesmo banco, casca própria.
+  // Página anexo (/<slug>/): mesmo login e mesmo banco, casca própria.
   const Pagina = PAGINAS_PROPRIAS[CAMINHO.slice(1)]?.tela;
   if (Pagina) return <Pagina />;
   return <Central emailUsuario={sessao.usuario?.email || null} />;

@@ -16,11 +16,14 @@ export interface PresetFesta {
   formatosPeca: string[];
 }
 
-/** Uma página própria registrada (documento `presets/paginas`). */
+/** Uma página anexo registrada (documento `presets/paginas`): o título que a Central
+    mostra e o endereço. Página anexo não pertence a projeto; é o projeto que pode
+    apontar para ela (`Projeto.paginaSlug`). */
 export interface PaginaPropria {
-  /** Caminho da página: /<slug>/. */
+  /** Caminho da página: /<slug>/. É a chave do vínculo das tarefas ("pagina:<slug>"). */
   slug: string;
-  projetoId: string;
+  /** Legado (até 21/10/2026): o projeto a que a página pertencia. Não é mais lido nem gravado. */
+  projetoId?: string;
   /** Tipo de página; decide qual tela desenha (registro em código: pages/paginasProprias.ts). */
   tipo: string;
   titulo: string;

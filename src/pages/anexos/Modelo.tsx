@@ -1,8 +1,9 @@
-/* Páginas Extras: a primeira etapa para quem vai montar a página própria
-   do seu evento. Não gera nada na hora: explica o processo em três passos,
+/* Páginas anexo, aba Modelo: a primeira etapa para quem vai montar uma
+   página anexo. Não gera nada na hora: explica o processo em três passos,
    entrega as diretrizes (o próprio docs/diretrizes-pagina-de-evento.md,
    importado como texto, uma fonte só) e o prompt pronto para colar no Claude.
-   O resto acontece no Claude da pessoa e, depois, na skill pagina-propria. */
+   O resto acontece no Claude da pessoa e, depois, na skill pagina-propria.
+   Até 21/10/2026 era a aba "Páginas Extras" de Gestão. */
 import { useState } from "react";
 import diretrizes from "../../../docs/diretrizes-pagina-de-evento.md?raw";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
@@ -20,16 +21,16 @@ export const PROMPT = "Anexei as diretrizes da página de evento. Quero montar a
 
 const PASSOS: [string, string][] = [
   ["Baixe as diretrizes", "É um arquivo de texto com o roteiro que o Claude vai seguir. Você não precisa ler; só anexar."],
-  ["Abra um chat novo no Claude, anexe o arquivo e cole o prompt", "Depois conte o que você quer, do seu jeito, aos poucos: uma seção, depois outra, muda o que não gostou. Cadastre os dados reais do evento na página que ele montar."],
+  ["Abra um chat novo no Claude, anexe o arquivo e cole o prompt", "Depois conte o que você quer, do seu jeito, aos poucos: uma seção, depois outra, muda o que não gostou. Cadastre os dados reais na página que ele montar."],
   ["Quando estiver bom, envie para a equipe técnica", "Clique nos dois botões que a página tem, \"Baixar a base em JSON\" e \"Ficha de entrega\", publique a página pelo link de compartilhamento e mande o link, o JSON e a ficha para o Gustavo ou para o Antonio. A página só entra no ar depois dessa verificação."],
 ];
 
-export function PaginasExtras() {
+export function ModeloAnexo() {
   const [verDiretrizes, setVerDiretrizes] = useState(false);
 
   return (
     <>
-      <CabecalhoSecao titulo="Páginas Extras" sub="Monte a página do seu evento no Claude; a equipe técnica transforma numa página da Central, ligada ao banco." />
+      <CabecalhoSecao titulo="Modelo" sub="Monte a página anexo no Claude; a equipe técnica transforma numa página da Central, ligada ao banco." />
 
       <Painel titulo="Como funciona">
         <ol className="m-0 flex list-none flex-col gap-4 p-0">

@@ -115,16 +115,25 @@ edição) e um modelo para copiar, em JSON e CSV. Gravações recusadas pelo ban
 ficam visíveis no menu da conta, e cada registro tem a aba **Histórico**, lida
 de `log_alteracoes`.
 
-### Páginas próprias de projeto
+### Páginas anexo
 
-Um projeto pode ter uma página de gestão própria, em `/<slug>/`. Mesmo login e
-mesmo banco, casca própria, tudo em `src/paginas/<slug>/` (com `tailwind.config.js`
-e `estilos.css` próprios); o slug entra em `src/pages/paginasProprias.ts` e o
-registro em `presets/paginas`.
+Página anexo é um projeto ou braço contínuo do coletivo, sem prazo para acabar,
+com página de gestão própria em `/<slug>/` (a seção Projetos é para o que tem
+início, meio e fim). Mesmo login e mesmo banco, casca própria, tudo em
+`src/paginas/<slug>/` (com `tailwind.config.js` e `estilos.css` próprios); o
+slug entra em `src/pages/paginasProprias.ts` e o registro (slug, tipo, título)
+em `presets/paginas`. Na Central, o ambiente **Páginas anexo** tem as abas
+Geral (um cartão por página), Modelo (como montar uma página nova) e uma aba
+por página, que abre a página. A página não pertence a projeto; um projeto da
+Central pode apontar para a página anexo a que pertence (ficha → Dados do
+projeto → Página anexo, campo `paginaSlug`), e excluir o projeto não toca a
+página. As tarefas de uma página são documentos de `tarefas` com o vínculo
+`pagina:<slug>`, que a Central mostra como "Página · <título>".
 
 - **Ponta de Lança** (`/pontadelanca/`; o antigo `/sambadeponta/` redireciona pelo
-  `vercel.json`, e a chave dos dados no banco continua `sambadeponta`; não trocar o
-  slug em `presets/paginas`, que é o caminho dos dados e da exclusão do projeto): edições da
+  `vercel.json` em produção e pelo `App.tsx` no servidor de desenvolvimento; o registro em
+  `presets/paginas` usa `pontadelanca`, e a chave dos dados no banco continua
+  `sambadeponta` até a renomeação): edições da
   festa, orçamento e fases. Veste o design system da festa (Verde Bandeira,
   Marfim, Marrom Terra, Pistache, Turquesa; títulos na Better Faster, com a
   Permanent Marker até a licença web; assinatura e listras em
@@ -134,14 +143,15 @@ registro em `presets/paginas`.
   `index.html` da página guarda esse hash antes do script da Central, que
   reescreve a URL ao carregar.
   O que a Central já tem, a página usa e não repete: as tarefas de cada edição
-  são documentos de `tarefas` (origem `proj:<id>`, campos `edicaoId` e `fase`)
-  e aparecem no quadro, no Resumo e na ficha do projeto; os fornecedores são
-  `contatos` do tipo Fornecedor, e a linha de custo aponta `contatoId`; o nome
-  da festa é o nome do projeto. Os totais por edição a página grava no projeto
-  (`resumoEdicoes`) a cada mudança: a ficha do projeto mostra o bloco Edições
-  e o cartão, a próxima edição. O detalhe fica em `paginas/sambadeponta` e na
-  subcoleção `edicoes`. A primeira abertura semeia esses documentos a partir
-  do JSON do artefato original. Cada edição tem a seção **Decisões e
+  são documentos de `tarefas` (origem `pagina:pontadelanca`, campos `edicaoId` e
+  `fase`) e aparecem no quadro, no Resumo e na agenda como "Página · Ponta de
+  Lança" (as gravadas antes com `proj:p7` são regravadas na primeira abertura
+  da página); os fornecedores são `contatos` do tipo Fornecedor, e a linha de
+  custo aponta `contatoId`; o nome da festa é o título do registro. Os totais
+  por edição a página grava no próprio documento (`paginas/sambadeponta`, campo
+  `resumo`) a cada mudança; a Central não lê. O detalhe fica em
+  `paginas/sambadeponta` e na subcoleção `edicoes`. A primeira abertura semeia
+  esses documentos a partir do JSON do artefato original. Cada edição tem a seção **Decisões e
   urgências**, logo depois do Resumo: as decisões (`decisoes`, com opções,
   prós e contras) e quem avisar (`avisos`) ficam no documento da edição; as
   urgências não são uma lista à parte, são tarefas da Central fixadas pelo id
