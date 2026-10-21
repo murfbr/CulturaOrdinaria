@@ -23,6 +23,8 @@ export const SLUG = "pontadelanca";
 /** Chave dos dados até 21/10/2026 (`paginas/sambadeponta`): a página copia o que houver
     nela para a chave nova na primeira abertura (dados.ts, talvezMigrar) e não apaga. */
 export const SLUG_ANTIGO = "sambadeponta";
+/** Subcoleções de `paginas/pontadelanca/` (um documento por registro); a aba Backup da Central lê por aqui. */
+export const SUBCOLECOES: readonly string[] = ["edicoes"];
 /** Vínculo das tarefas desta página na coleção `tarefas` da Central. */
 export const ORIGEM_TAREFA = "pagina:" + SLUG;
 export const TIPO = "festa";

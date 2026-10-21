@@ -26,6 +26,7 @@ import { Lixeira } from "./gestao/Lixeira";
 import { Migracao } from "./gestao/Migracao";
 import { GeralAnexos } from "./anexos/Geral";
 import { ModeloAnexo } from "./anexos/Modelo";
+import { BackupAnexos } from "./anexos/Backup";
 import type { ColecaoPainel } from "../types";
 
 const COLECAO_DO_DETALHE: Record<string, ColecaoPainel> = {
@@ -76,6 +77,7 @@ export function RoteadorPainel() {
     case "migracao": return <Migracao />;
     case "geral": return <GeralAnexos />;
     case "modelo": return <ModeloAnexo />;
+    case "backup": return <BackupAnexos />;
     default: return <Resumo />;
   }
 }

@@ -1,16 +1,27 @@
-/* Registro em código das páginas anexo: slug → tela e título de reserva. Os
-   dados de cada página (título, tipo) ficam em `presets/paginas` no banco;
-   aqui só o que precisa ser código: qual componente desenha, e o título a
-   usar enquanto o banco não tem o registro (a seção Páginas anexo lista
-   daqui). O App abre /<slug>/ quando o slug está aqui. As páginas moram em
-   src/paginas/<slug>/, fora de src/pages (que é só a Central). */
+/* Registro em código das páginas anexo: slug → tela, título de reserva e as
+   subcoleções da página no banco. Os dados de cada página (título, tipo)
+   ficam em `presets/paginas` no banco; aqui só o que precisa ser código:
+   qual componente desenha, o título a usar enquanto o banco não tem o
+   registro (a seção Páginas anexo lista daqui) e quais subcoleções de
+   `paginas/<slug>/` a aba Backup lê. O App abre /<slug>/ quando o slug está
+   aqui. As páginas moram em src/paginas/<slug>/, fora de src/pages (que é só
+   a Central). */
 import type { ComponentType } from "react";
 import { PaginaPontaDeLanca } from "../paginas/pontadelanca/PaginaPontaDeLanca";
+import { SUBCOLECOES as SUBCOLECOES_PONTA } from "../paginas/pontadelanca/semente";
 import { PaginaCaminhosDoForro } from "../paginas/caminhosdoforro/PaginaCaminhosDoForro";
+import { COLECOES as COLECOES_FORRO } from "../paginas/caminhosdoforro/tipos";
 
-export const PAGINAS_PROPRIAS: Record<string, { tela: ComponentType; titulo: string }> = {
-  pontadelanca: { tela: PaginaPontaDeLanca, titulo: "Ponta de Lança" },
-  caminhosdoforro: { tela: PaginaCaminhosDoForro, titulo: "Caminhos do Forró" },
+export interface PaginaAnexo {
+  tela: ComponentType;
+  titulo: string;
+  /** Subcoleções de `paginas/<slug>/` (um documento por registro), para o backup. */
+  colecoes: readonly string[];
+}
+
+export const PAGINAS_PROPRIAS: Record<string, PaginaAnexo> = {
+  pontadelanca: { tela: PaginaPontaDeLanca, titulo: "Ponta de Lança", colecoes: SUBCOLECOES_PONTA },
+  caminhosdoforro: { tela: PaginaCaminhosDoForro, titulo: "Caminhos do Forró", colecoes: COLECOES_FORRO },
 };
 
 /** Endereços antigos de página → endereço atual (o App redireciona no servidor de

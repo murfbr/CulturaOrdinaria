@@ -169,15 +169,23 @@ página. As tarefas de uma página são documentos de `tarefas` com o vínculo
 As regras do Firestore usam o coringa recursivo `{document=**}` para alcançar as
 subcoleções.
 
-**Como nasce uma página nova.** Quem vai gerir o evento monta um protótipo no
-Claude da própria conta, seguindo [docs/diretrizes-pagina-de-evento.md](docs/diretrizes-pagina-de-evento.md):
-a pessoa anexa o arquivo no chat e vai construindo aos poucos, e o roteiro faz o
-protótipo nascer com os campos da Central e com dois botões, "Baixar a base em
-JSON" e "Ficha de entrega". Ela envia o link do artefato, o JSON e a ficha; a
-equipe técnica verifica e transforma em página com a skill `pagina-propria`
+**Como nasce uma página nova.** Quem vai cuidar da frente (um evento, uma
+captação, um caderno) monta um protótipo no Claude da própria conta, seguindo
+[docs/diretrizes-pagina-anexo.md](docs/diretrizes-pagina-anexo.md), que a aba
+Modelo de Páginas anexo entrega junto com o prompt: a pessoa anexa o arquivo no
+chat e vai construindo aos poucos, e o roteiro faz o protótipo nascer com os
+campos da Central e com dois botões, "Baixar a base em JSON" e "Ficha de
+entrega". Ela envia o link do artefato, o JSON e a ficha; a equipe técnica
+verifica e transforma em página com a skill `pagina-propria`
 (`.claude/skills/pagina-propria/`, carregada pelo Claude Code ao abrir o
 repositório: passo 0 de verificação, estrutura no banco, pasta fazendo igual o
 forró, os cinco toques fora da pasta, semente, teste e fechamento).
+
+**Backup das páginas.** A aba Backup de Páginas anexo baixa, na hora, a base de
+cada página em JSON (o documento da página em `config` e cada subcoleção como
+id → registro, as subcoleções declaradas no registro em código), no mesmo
+formato das diretrizes; serve de cópia e de semente. O Exportar da Central
+continua cobrindo só as coleções do coletivo; os arquivos do Storage ficam fora.
 
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 

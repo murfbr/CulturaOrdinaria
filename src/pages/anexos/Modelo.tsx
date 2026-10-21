@@ -1,11 +1,12 @@
 /* Páginas anexo, aba Modelo: a primeira etapa para quem vai montar uma
    página anexo. Não gera nada na hora: explica o processo em três passos,
-   entrega as diretrizes (o próprio docs/diretrizes-pagina-de-evento.md,
+   entrega as diretrizes (o próprio docs/diretrizes-pagina-anexo.md,
    importado como texto, uma fonte só) e o prompt pronto para colar no Claude.
    O resto acontece no Claude da pessoa e, depois, na skill pagina-propria.
-   Até 21/10/2026 era a aba "Páginas Extras" de Gestão. */
+   Até 21/10/2026 era a aba "Páginas Extras" de Gestão, com as diretrizes de
+   "página de evento". */
 import { useState } from "react";
-import diretrizes from "../../../docs/diretrizes-pagina-de-evento.md?raw";
+import diretrizes from "../../../docs/diretrizes-pagina-anexo.md?raw";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { BlocoModelo } from "../../components/ferramentas/GuiaImportacao";
 import { copiarComAviso } from "../../components/Toast";
@@ -14,10 +15,10 @@ import { Dica } from "../../components/ui/Dica";
 import { Painel } from "../../components/ui/Painel";
 import { baixarArquivo } from "../../utils";
 
-const ARQUIVO = "diretrizes-pagina-de-evento.md";
+const ARQUIVO = "diretrizes-pagina-anexo.md";
 
 /** A frase que a pessoa cola no chat depois de anexar as diretrizes. */
-export const PROMPT = "Anexei as diretrizes da página de evento. Quero montar a página do meu evento. Vou te contando o que preciso e você vai construindo; pergunte só quando não der para seguir sem a resposta.";
+export const PROMPT = "Anexei as diretrizes de página anexo. Quero montar a minha página. Vou te contando o que preciso e você vai construindo; pergunte só quando não der para seguir sem a resposta.";
 
 const PASSOS: [string, string][] = [
   ["Baixe as diretrizes", "É um arquivo de texto com o roteiro que o Claude vai seguir. Você não precisa ler; só anexar."],
@@ -30,7 +31,7 @@ export function ModeloAnexo() {
 
   return (
     <>
-      <CabecalhoSecao titulo="Modelo" sub="Monte a página anexo no Claude; a equipe técnica transforma numa página da Central, ligada ao banco." />
+      <CabecalhoSecao titulo="Modelo" sub="Monte a página anexo no Claude; a equipe técnica transforma numa página da Central, ligada ao banco. Serve para evento, frente de captação, caderno, circuito: o que precisar de um lugar próprio." />
 
       <Painel titulo="Como funciona">
         <ol className="m-0 flex list-none flex-col gap-4 p-0">

@@ -1,6 +1,6 @@
-# Contrato entre uma página própria e a Central
+# Contrato entre uma página anexo e a Central
 
-O que uma página em `src/paginas/<slug>/` pode usar da camada compartilhada, com a assinatura real (conferida no código em 15/10/2026) e onde ver um uso. Tudo que está fora desta lista é mudança de escopo: parar e perguntar.
+O que uma página anexo em `src/paginas/<slug>/` pode usar da camada compartilhada, com a assinatura real (conferida no código em 15/10/2026) e onde ver um uso. Tudo que está fora desta lista é mudança de escopo: parar e perguntar.
 
 ## `services/banco.ts`: o `Banco`
 Tempo real, offline, autoria e log de graça. Tudo passa por ele; nenhuma página fala com o Firestore direto (a única exceção aceita no projeto é `lib/simulador/versoes.ts`, por decisão antiga).
