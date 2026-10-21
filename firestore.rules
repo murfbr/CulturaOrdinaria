@@ -15,16 +15,13 @@ rules_version = '2';
 // subcoleções, mais a leitura de presets. Conta sem documento ou desativada não lê
 // nem grava nada.
 //
-// ORDEM DE PUBLICAÇÃO (não pular; em 22/10/2026 estas regras entraram com a coleção
-// usuarios vazia e trancaram o banco para todo mundo, local e produção, até as antigas
-// voltarem): 1) o site com a tela Acessos no ar; 2) enquanto as regras antigas valem
-// (qualquer login grava), quem coordena abre Núcleo → Acessos, cria a própria linha como
-// master (botão com o e-mail exato do login) e cadastra as outras contas na mesma sentada,
-// porque a partir da primeira linha master o site já nega conta sem linha; a tela diz
-// quando já dá para publicar; 3) publicar estas regras; 4) tirar a tolerância do site.
-// Com estas regras no ar, conta sem linha vê "Sem acesso" no site novo; no site antigo,
-// que lê tudo na entrada, fica sem carregar. Se a ordem for furada, o único caminho de
-// volta é o console (voltar as regras antigas ou criar a linha master à mão).
+// PRIMEIRA LINHA E RECUPERAÇÃO: estas regras exigem a linha em usuarios até para criar
+// linhas (módulo "nucleo" ou master). Num banco novo, ou se a coleção ficar sem nenhuma
+// conta master ativa, a primeira linha master se cria à mão no console: documento
+// usuarios/<e-mail em minúsculas> com ativo: true, master: true, modulos: []. Em
+// 22/10/2026 estas regras entraram com a coleção vazia e trancaram o banco para todo
+// mundo, local e produção, até as antigas voltarem: regras novas só entram com o site
+// que as entende no ar e as linhas já criadas.
 service cloud.firestore {
   match /databases/{database}/documents {
     function logado() { return request.auth != null; }

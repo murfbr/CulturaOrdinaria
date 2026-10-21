@@ -5,20 +5,10 @@
    Banco: uma gravação que a lista não permite é recusada aqui, com aviso,
    antes de ir ao banco (que recusaria também, pelas regras).
 
-   Leitura do documento: uma vez só, com `carregarDocumento`. Se o banco recusar
-   (regras novas e conta sem linha), a resposta é "sem acesso", não um laço de
-   religar; mudança de papel vale na próxima entrada.
-
-   Transição (22/10/2026): conta logada sem documento entra como se fosse
-   master (TOLERANCIA_SEM_DOCUMENTO), mas só enquanto a lista de contas não
-   tem nenhuma master ativa: é a janela em que a primeira linha master nasce,
-   pela tela Acessos (com as regras antigas qualquer login já gravava tudo,
-   então a janela não abre nada que não estivesse aberto). A partir da
-   primeira linha master, conta sem documento vê "Sem acesso", com as regras
-   antigas ou novas. As regras novas só podem ser publicadas depois dessa
-   linha (a tela Acessos diz quando dá): em 22/10/2026 elas entraram com a
-   coleção vazia e trancaram o banco para todo mundo. Tirar a tolerância quando
-   as regras novas forem publicadas.
+   Leitura do documento: uma vez só, com `carregarDocumento`. Conta sem
+   documento, desativada ou leitura recusada pelo banco: "sem acesso", não um
+   laço de religar; mudança de papel vale na próxima entrada. A primeira linha
+   master de um banco novo se cria à mão no console (ver firestore.rules).
 
    Modo local (sem Firebase): a conta é master. Para testar as cascas, grave no
    localStorage a chave `central-acesso-teste`, por exemplo
@@ -29,15 +19,11 @@ import { firebaseAtivo } from "./firebase";
 import { toast } from "../components/Toast";
 import { MODULOS_CENTRAL, MODULOS_DA_COLECAO, moduloDaPagina, type Acesso } from "../types/acesso";
 
-export const TOLERANCIA_SEM_DOCUMENTO = true;
-
 export interface EstadoAcesso {
   /** Ainda esperando o banco dizer se a conta tem documento. */
   carregando: boolean;
-  /** null = sem documento (e sem tolerância): a conta não abre nada. */
+  /** null = sem documento: a conta não abre nada. */
   acesso: Acesso | null;
-  /** Entrou pela tolerância da transição (sem documento). */
-  tolerado: boolean;
 }
 
 const CHAVE_TESTE = "central-acesso-teste";
@@ -53,47 +39,32 @@ function acessoLocal(): Acesso {
 }
 
 let estado: EstadoAcesso = firebaseAtivo
-  ? { carregando: true, acesso: null, tolerado: false }
-  : { carregando: false, acesso: acessoLocal(), tolerado: false };
+  ? { carregando: true, acesso: null }
+  : { carregando: false, acesso: acessoLocal() };
 let chaveAtual = "";
 const assinantes = new Set<() => void>();
 const publicar = () => assinantes.forEach((f) => f());
 
 /** Chamado pela sessão quando o login muda (e-mail, ou null ao sair). */
 export function ligarAcesso(email: string | null) {
-  if (!email) { chaveAtual = ""; estado = { carregando: false, acesso: null, tolerado: false }; publicar(); return; }
+  if (!email) { chaveAtual = ""; estado = { carregando: false, acesso: null }; publicar(); return; }
   const chave = email.trim().toLowerCase();
   chaveAtual = chave;
-  estado = { carregando: true, acesso: null, tolerado: false };
+  estado = { carregando: true, acesso: null };
   publicar();
   void lerAcesso(chave);
 }
 
 async function lerAcesso(chave: string) {
   let documento: Record<string, unknown> | undefined;
-  let recusado = false;
   try {
     documento = await Banco.carregarDocumento("usuarios", chave);
   } catch {
-    recusado = true; // regras novas e conta sem linha: o banco não deixa nem ler o próprio documento
+    documento = undefined; // o banco recusou a leitura: sem acesso
   }
-  // Sem documento: a tolerância só vale enquanto a lista não tem nenhuma master ativa (a janela da transição).
-  const janelaAberta = !documento && !recusado && TOLERANCIA_SEM_DOCUMENTO && await semMasterNaLista();
   if (chave !== chaveAtual) return; // o login mudou no meio da leitura
-  if (documento) estado = { carregando: false, acesso: documento as unknown as Acesso, tolerado: false };
-  else if (janelaAberta) estado = { carregando: false, acesso: { email: chave, nome: "", ativo: true, master: false, modulos: [...MODULOS_CENTRAL] }, tolerado: true };
-  else estado = { carregando: false, acesso: null, tolerado: false };
+  estado = { carregando: false, acesso: documento ? (documento as unknown as Acesso) : null };
   publicar();
-}
-
-/** A lista de contas ainda não tem nenhuma master ativa? Com as regras novas, conta sem linha nem lê a lista: não. */
-async function semMasterNaLista(): Promise<boolean> {
-  try {
-    const contas = await Banco.carregarColecao("usuarios");
-    return !Object.values(contas).some((c) => c.master === true && c.ativo !== false);
-  } catch {
-    return false;
-  }
 }
 
 export function usarAcesso(): EstadoAcesso {
@@ -105,11 +76,11 @@ export function usarAcesso(): EstadoAcesso {
 
 export const acessoAtual = (): EstadoAcesso => estado;
 
-/** A conta abre este módulo? Master abre tudo; conta tolerada (transição) também. */
+/** A conta abre este módulo? Master abre tudo. */
 export function temModulo(modulo: string): boolean {
   const a = estado.acesso;
   if (!a || !a.ativo) return false;
-  if (a.master || estado.tolerado) return true;
+  if (a.master) return true;
   return a.modulos.includes(modulo);
 }
 
@@ -126,8 +97,8 @@ export function podeGravar(colecao: string, id: string): boolean {
   if (a.master) return true;
   if (colecao === "paginas") return temModulo(moduloDaPagina(id));
   if (colecao.startsWith("paginas/")) return temModulo(moduloDaPagina(colecao.split("/")[1]));
-  if (colecao === "presets") return estado.tolerado || a.modulos.length > 0;
-  if (colecao === "lixeira" || colecao === "log_alteracoes") return estado.tolerado || a.modulos.length > 0;
+  if (colecao === "presets") return a.modulos.length > 0;
+  if (colecao === "lixeira" || colecao === "log_alteracoes") return a.modulos.length > 0;
   if (colecao === "backup_v2") return false;
   const donos = MODULOS_DA_COLECAO[colecao];
   if (!donos) return true; // coleção que o site não conhece: o banco decide

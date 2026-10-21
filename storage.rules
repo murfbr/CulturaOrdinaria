@@ -7,7 +7,7 @@ rules_version = '2';
 // usuarios/<e-mail> do Firestore, lido daqui pela regra entre serviços; master passa
 // por cima; a pasta de uma página anexo (paginas/<slug>/...) abre para quem tem o
 // módulo "pagina:<slug>"; a pasta nucleo/ só para o módulo Núcleo. O resto fica fechado.
-// Publicar só junto com o firestore.rules novo, na ordem descrita lá.
+// Publicar junto com o firestore.rules: a conta precisa existir em usuarios (ver o aviso lá).
 service firebase.storage {
   match /b/{bucket}/o {
     function chave() { return request.auth.token.email.lower(); }

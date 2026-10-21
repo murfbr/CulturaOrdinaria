@@ -7,7 +7,6 @@
    desativam. A última conta master ativa não se rebaixa nem se desativa, para
    ninguém ficar trancado para fora. */
 import { useEffect, useState } from "react";
-import { TOLERANCIA_SEM_DOCUMENTO } from "../../services/acesso";
 import { emailSessao } from "../../services/sessao";
 import { usarCentral } from "../../store/central";
 import { chaveDaConta, iniciarNucleo, salvarConta, usarNucleo } from "../../store/nucleo";
@@ -44,15 +43,6 @@ export function Acessos() {
   const colunas = colunasDeModulo(titulos);
   const mastersAtivos = contas.filter((c) => c.master && c.ativo).length;
   const ultimoMaster = (c: ContaUsuario) => c.master && c.ativo && mastersAtivos === 1;
-  // Pronto para publicar as regras novas? Só quando a conta de quem está aqui já é master na lista.
-  const minha = contas.find((c) => c.id === eu);
-  const pronto = Boolean(minha && minha.master && minha.ativo);
-  /** A própria linha, com o e-mail exato do login: sem digitar, sem erro de grafia. */
-  function criarMinhaLinha() {
-    if (!eu || minha) return;
-    salvarConta({ id: eu, email: eu, nome: "", ativo: true, master: true, modulos: [], perfil: "master" });
-    toast("Sua linha foi criada como master. A partir de agora, conta sem linha fica sem acesso: cadastre as outras.");
-  }
 
   const alterar = (c: ContaUsuario, mudanca: Partial<ContaUsuario>) => salvarConta({ ...c, ...mudanca });
   const alternarModulo = (c: ContaUsuario, m: string) =>
@@ -83,23 +73,7 @@ export function Acessos() {
     <>
       <CabecalhoSecao titulo="Acessos" sub="quem abre o quê: a marca master e a lista de módulos de cada conta" />
 
-      {TOLERANCIA_SEM_DOCUMENTO && (
-        <Painel titulo="Antes de publicar as regras novas" sub="conta sem linha aqui entra como master só enquanto não existe nenhuma linha master; a partir da primeira, fica sem acesso">
-          <ul className="m-0 flex list-none flex-col gap-1 p-0 text-sm">
-            <li className="flex flex-wrap items-center gap-2">
-              <span>{pronto ? "✓" : "✗"} A sua conta ({eu || "modo local"}) tem linha aqui como master{pronto ? "." : minha ? ": marque a caixa Master na sua linha." : "."}</span>
-              {!pronto && !minha && eu && <Botao onClick={criarMinhaLinha}>Criar a minha linha como master</Botao>}
-            </li>
-            <li>{contas.length ? "✓" : "✗"} {contas.length} {contas.length === 1 ? "conta cadastrada" : "contas cadastradas"}. Todo login do Authentication precisa de uma linha; cadastre todas na mesma sentada, porque conta sem linha já fica sem acesso a partir da primeira linha master.</li>
-            <li>• O site novo precisa estar no ar antes das regras: o site antigo, que lê tudo na entrada, fica sem carregar com elas.</li>
-          </ul>
-          <p className={"m-0 mt-2 text-sm font-semibold " + (pronto ? "text-ok" : "text-warn")}>
-            {pronto ? "Dá para publicar firestore.rules e storage.rules no console." : "Ainda não publique as regras novas."}
-          </p>
-        </Painel>
-      )}
-
-      <Painel titulo="+ Conta" sub="o login se cria no console do Firebase (Authentication → Users) com o mesmo e-mail; a senha a pessoa define pelo 'esqueci a senha'">
+      <Painel titulo="+ Conta" sub="o login se cria no console do Firebase (Authentication → Users) com o mesmo e-mail; a senha a pessoa define pelo 'esqueci a senha'. Conta sem linha aqui vê 'Sem acesso'">
         <div className="flex flex-col gap-2 md:flex-row md:items-end">
           <label className="flex flex-1 flex-col gap-1 text-sm"><span className="text-muted">e-mail do login</span>
             <Entrada type="email" value={nova.email} onChange={(e) => setNova({ ...nova, email: e.target.value })} placeholder="pessoa@exemplo.com" /></label>

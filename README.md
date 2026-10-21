@@ -226,20 +226,16 @@ Como o site e o banco aplicam a lista (`src/types/acesso.ts`, `src/services/aces
   `localStorage` a chave `central-acesso-teste`, por exemplo
   `{"master":false,"modulos":["agenda","pagina:caminhosdoforro"]}`.
 
-**Transição e ordem de publicação** (`TOLERANCIA_SEM_DOCUMENTO` em
-`services/acesso.ts`): conta sem documento entra como master só enquanto a lista
-de contas não tem nenhuma master ativa (as regras antigas já deixavam qualquer
-login gravar tudo); é nessa janela que a primeira linha master nasce, pela própria
-tela Acessos, com o botão "Criar a minha linha como master" (usa o e-mail exato do
-login). A partir da primeira linha master a janela se fecha sozinha: conta sem
-linha vê "Sem acesso", com as regras antigas ou novas, por isso as outras contas
-se cadastram na mesma sentada. Ordem, sem pular: site no ar → quem coordena abre
-Núcleo → Acessos, cria a própria linha e cadastra as outras contas (a tela diz
-quando já dá para publicar) → as regras novas são publicadas → um commit tira a
-tolerância. No site antigo (que lê tudo na entrada) as regras novas travam o
-carregamento, por isso o deploy vem antes das regras. Em 22/10/2026 as regras
-entraram antes das linhas e trancaram o banco para todo mundo até as antigas
-voltarem; se a ordem for furada, só o console desfaz.
+**Primeira linha e recuperação.** As regras exigem a linha em `usuarios` até para
+criar linhas (módulo Núcleo ou master), então conta sem linha vê "Sem acesso" e
+só quem tem o Núcleo a cria. Num banco novo, ou se a coleção ficar sem nenhuma
+conta master ativa, a primeira linha master se cria à mão no console: documento
+`usuarios/<e-mail em minúsculas>` com `ativo: true`, `master: true` e
+`modulos: []`. A transição de 22/10/2026 (tolerância para conta sem linha
+enquanto não existia linha master, com a tela Acessos dizendo quando publicar as
+regras) acabou quando as regras entraram. Naquele dia elas tinham sido publicadas
+antes das linhas e trancaram o banco para todo mundo até as antigas voltarem, por
+isso regras novas só entram com o site que as entende no ar e as linhas criadas.
 
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 
