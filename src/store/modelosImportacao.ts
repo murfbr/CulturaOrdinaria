@@ -248,6 +248,10 @@ const CAMPOS_DAS_FICHAS: Partial<Record<ColecaoPainel, string[]>> = {
   ],
   tarefas: ["edicaoId", "fase"],
   contatos: ["obs"],
+  // Captação: listas dentro do documento da empresa, a ordem da cota e o "comissão paga" (marcado no modal).
+  empresas: ["pessoas", "historico"],
+  cotas: ["ordem"],
+  negociacoes: ["comissaoPaga"],
 };
 const INTERNOS = ["id", "_ord", "_novo", "atualizado"];
 

@@ -79,6 +79,11 @@ usam **os mesmos nomes do artefato**:
 | `elenco`       | músicos e técnicos que entram nos editais (contém CPF/RG — ver LGPD) |
 | `contatos`     | contatos externos (tipo Fornecedor: quem a festa contrata) |
 | `reunioes`     | reuniões, pauta e ata                             |
+| `empresas`     | Captação: empresa com CNPJ, setor, site, `pessoas[]` (nome, cargo, telefone, e-mail) e `historico[]` (data, quem, texto) dentro do documento. Separada de `contatos` de propósito: é registro de relacionamento, não agenda |
+| `captadoras`   | Captação: parceiras de fora que captam com comissão (nome, contato, área) |
+| `portfolio`    | Captação: os projetos que o coletivo oferece às empresas (datas, local, mecanismo, situação, meta, comissão e base). Não é o projeto da Central; a ligação entre os dois é etapa futura |
+| `cotas`        | Captação: cotas de patrocínio de um projeto do portfólio (→ `projetoId`; valor e quantidade em branco = variável / sem limite) |
+| `negociacoes`  | Captação: empresa × projeto × quem capta (→ `empresaId`, `projetoId`, `cotaId`, `captadoraId`; vazio = a equipe), etapa, valor, datas, próximo passo, reserva, motivo, comissão, recebido, paga |
 | `rascunhos`    | respostas de cada projeto no formulário dele (`valores`, `status`, `notas`; `ref` = id do projeto) |
 | `formularios`  | definições dos formulários, com `origem` ("chrome" = extraído da plataforma; "documento" = reconstruído do espelho/regulamento), importáveis em Cadastros → Formulários sem deploy |
 | `backup_v2`    | cópia dos projetos e candidaturas do formato antigo, gravada pela migração v3 |
@@ -88,7 +93,7 @@ usam **os mesmos nomes do artefato**:
 | `fichas`       | Contexto: conhecimento de escrita (id = id do Painel) |
 | `regras`       | Contexto: regras com fonte obrigatória            |
 | `julgamentos`  | Contexto: pareceres e lições                      |
-| `presets`      | presets do sistema, lidos por todo mundo no login: `festa` (fases, categorias de custo, naturezas de máquina, formatos de peça) e `paginas` (registro das páginas próprias: slug, projeto, tipo, título) |
+| `presets`      | presets do sistema, lidos por todo mundo no login: `festa` (fases, categorias de custo, naturezas de máquina, formatos de peça), `paginas` (registro das páginas próprias: slug, projeto, tipo, título) e `captacao` (as quatro listas de escolha da Captação: etapas, mecanismos, situação do projeto, base da comissão) |
 | `paginas`      | páginas anexo, uma por slug. `paginas/pontadelanca` tem a subcoleção `edicoes` (até 21/10/2026 a chave era `sambadeponta`; a página copiou os dados e o documento antigo ficou marcado com `migradoPara`); `paginas/caminhosdoforro` tem `cadastro`, `espacos`, `cotas`, `patrocinios`, `parceiros`, `orcamento_itens`, `slots`, `tarefas`, `arquivos` e `comentarios`. Só a página lê |
 
 Detalhes que diferem do artefato (por limitação do Firestore, que não aceita
@@ -198,7 +203,7 @@ O login continua sendo criado no console do Firebase (Authentication → Users),
 o que cada login abre está no banco: a coleção `usuarios`, um documento por conta
 com o id igual ao e-mail em minúsculas, a marca `master` e a lista `modulos`.
 Módulo é um item do menu: `painel`, `cadastros`, `projetos`, `agenda`, `gestao`,
-`contexto`, `nucleo` e `pagina:<slug>` para cada página anexo. Tem o módulo, abre e
+`captacao`, `contexto`, `nucleo` e `pagina:<slug>` para cada página anexo. Tem o módulo, abre e
 edita; não tem, não aparece. Master passa por cima da lista: abre e grava em tudo,
 inclusive nos módulos criados depois. A tela **Acessos** (ambiente Núcleo do
 Coletivo, módulo `nucleo`) é uma linha por conta com uma caixa por módulo; o
@@ -217,6 +222,7 @@ Como o site e o banco aplicam a lista (`src/types/acesso.ts`, `src/services/aces
   das regras): Cadastros grava artistas, proponentes, editais, formulários, equipe,
   elenco e contatos; Projetos grava projetos, respostas e versões; Agenda e Gestão
   gravam tarefas, reuniões e semanas; Contexto grava fichas, regras e julgamentos;
+  Captação grava empresas, captadoras, portfólio, cotas e negociações;
   cada página grava os próprios dados (e o Ponta de Lança, tarefas e contatos). O
   `Banco` recusa na hora, com aviso, o que a lista não permite; as regras recusam
   também. Exportar pede o módulo Gestão; Importar é só de master.
@@ -243,6 +249,46 @@ enquanto não existia linha master, com a tela Acessos dizendo quando publicar a
 regras) acabou quando as regras entraram. Naquele dia elas tinham sido publicadas
 antes das linhas e trancaram o banco para todo mundo até as antigas voltarem, por
 isso regras novas só entram com o site que as entende no ar e as linhas criadas.
+
+### Captação: empresas, portfólio, negociações e captadoras
+
+O ambiente Captação (módulo `captacao`, entrada no menu em Trabalho) é a frente
+de patrocínio do coletivo, nascida em 21/10/2026 do artefato "Captação do
+Coletivo". Seis abas: **Resumo** (confirmado contra a meta, em negociação,
+inventário de cotas e comissões; funil por etapa, andamento por projeto,
+próximos passos de 7 dias e a tabela por captadora), **Portfólio** (um cartão
+por projeto com as cotas, criadas ali), **Empresas** (cadastro único, com busca
+e aviso de duplicidade; a ficha tem dados, pessoas de contato, histórico de
+contato e as negociações), **Negociações** (empresa × projeto × quem capta; a
+etapa se troca na tabela, e "perdido" pede o motivo), **Captadoras** (carteira,
+confirmado e comissão de cada uma) e **Opções** (as listas de escolha, o que há
+na base e o botão **Trazer do artefato (JSON)**, que lê o arquivo do botão
+"Baixar a base em JSON" do artefato, mostra a conferência e grava; mesmo id grava
+por cima). As contas ficam em `src/pages/captacao/calculo.ts` (funções puras):
+"confirmado" soma na receita e gera comissão, "perdido" sai das contas, só
+projetos "aberto" entram no resumo e no inventário, comissão por projeto com
+ajuste por negociação e base a definir (estimativa), sobre o fechado ou sobre o
+recebido.
+
+A faixa **Ver como** simula a visão de uma captadora: o que é dela e da equipe
+aparece inteiro; de outra captadora, só "em conversa com X". É um filtro do
+navegador, não controle de acesso: quem tem o módulo lê o banco inteiro, como
+todo módulo da Central. Captadoras de fora com leitura restrita são etapa futura.
+
+Os dados são cinco coleções planas da Central (`empresas`, `captadoras`,
+`portfolio`, `cotas`, `negociacoes`) e o preset `presets/captacao`; por isso
+Lixeira, histórico por registro, Exportar, Importar por planilha e a busca
+Ctrl+K funcionam como para o resto. Projeto do portfólio, cota e captadora usam
+o formulário padrão (specs em `src/forms/especificacoes/`); empresa e negociação
+têm modais próprios. Excluir passa pelo impacto nos vínculos
+(`src/store/vinculos.ts`): empresa leva ou solta as negociações; projeto leva
+as cotas e leva ou solta as negociações; cota e captadora só soltam.
+
+**Regras:** as cinco coleções têm bloco próprio em `firestore.rules`
+(leitura por módulo da Central, gravação por `captacao`). Publicar as regras
+**antes** do deploy do site que as lê: o site antigo ignora coleções que não
+conhece; o site novo sem as regras trava em "carregando os dados do coletivo"
+porque as escutas são recusadas.
 
 ### Núcleo do Coletivo: Anotações e ideias, Melhorias, Acessos
 
@@ -336,6 +382,9 @@ src/
       pessoas/             ← Pessoas (sub-abas), Elenco, Equipe, Contatos (eram o ambiente Pessoas até 15/10/2026)
     agenda/                ← Cronograma, Calendario
     gestao/                ← Reunioes, FichaReuniao, QuadroTarefas, Lixeira, Migracao
+    captacao/              ← RoteadorCaptacao, FaixaVerComo, Resumo (+ resumo/), Portfolio (+ portfolio/),
+                             Empresas, FichaEmpresa (+ empresa/), Negociacoes (+ negociacoes/), Captadoras,
+                             Opcoes (+ opcoes/: Listas, ImportarArtefato), calculo.ts (contas puras), visao.ts, apoio.ts
     projetos/              ← Projetos (roteador), VisaoGeral, Pipeline, BancoTextos, FichaProjeto,
                              GeralProjeto (+ Dados, Documentos, Interno, Tarefas), EdicoesDoProjeto,
                              ContextoProjeto, ModalNovoProjeto, Transferencia
@@ -375,7 +424,7 @@ src/
     cnpj.ts                ← consulta de CNPJ na Receita
     textos.ts              ← índice do banco de textos
     nomes.ts, agenda.ts, documentos.ts, csv.ts, arrastar.ts
-  types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto)
+  types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto, acesso, caderno, captacao)
   data/                    ← catálogos estáticos (Salic, plataformas) + sementes de migração;
                              as definições de formulário vivem no banco (coleção formularios)
   utils/                   ← ids, datas, dinheiro, clipboard, download, classes

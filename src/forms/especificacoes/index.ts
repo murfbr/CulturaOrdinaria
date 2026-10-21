@@ -9,11 +9,18 @@ import { equipe } from "./equipe";
 import { elenco } from "./elenco";
 import { contato } from "./contato";
 import { proponente } from "./proponente";
+import { empresa } from "./empresa";
+import { captadora } from "./captadora";
+import { projetoCaptacao } from "./projetoCaptacao";
+import { cota } from "./cota";
+import { negociacao } from "./negociacao";
 
 export type ChaveEntidade =
   | "artista" | "projeto" | "edital" | "tarefa"
-  | "reuniao" | "equipe" | "elenco" | "contato" | "proponente";
+  | "reuniao" | "equipe" | "elenco" | "contato" | "proponente"
+  | "empresa" | "captadora" | "projetoCaptacao" | "cota" | "negociacao";
 
 export const ENTIDADES: Record<ChaveEntidade, EntidadeSpec> = {
   artista, projeto, edital, tarefa, reuniao, equipe, elenco, contato, proponente,
+  empresa, captadora, projetoCaptacao, cota, negociacao,
 };

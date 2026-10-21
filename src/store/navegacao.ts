@@ -14,13 +14,14 @@ export interface Ambiente {
   abas: [id: string, rotulo: string][];
 }
 
-/** Os oito ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
-    uma aba por página do registro em código (link para /<slug>/). */
+/** Os nove ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
+    uma aba por página do registro em código (link para /<slug>/). Captação (21/10/2026) é roteada pelo ambiente, não pela aba. */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
   { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"], ["pessoas", "Pessoas"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["calendario", "Calendário"], ["cronograma", "Cronograma"]] },
   { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
+  { id: "captacao", rotulo: "Captação", abas: [["resumo", "Resumo"], ["portfolio", "Portfólio"], ["empresas", "Empresas"], ["negociacoes", "Negociações"], ["captadoras", "Captadoras"], ["opcoes", "Opções"]] },
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
   { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"], ["backup", "Backup"]] },
@@ -40,9 +41,9 @@ const ENDERECO_ANTIGO: Record<string, [string, string]> = {
   "simulador/transferencia": ["projetos", "visao"], "simulador/plataformas": ["cadastros", "formularios"],
 };
 
-/** Ficha de detalhe aberta (artista, edital, formulário, projeto, reunião). */
+/** Ficha de detalhe aberta (artista, edital, formulário, projeto, reunião, empresa da captação). */
 export interface Detalhe {
-  tipo: "artista" | "projeto" | "edital" | "formulario" | "reuniao";
+  tipo: "artista" | "projeto" | "edital" | "formulario" | "reuniao" | "empresa";
   id: string;
   /** Sub-aba dentro da ficha ("geral", "formulario"...). */
   sub?: string;
@@ -64,7 +65,7 @@ const CHAVE = "central-nav-v3";
 
 /* ══════════ endereço na URL ══════════ */
 
-const TIPOS_DETALHE = ["artista", "projeto", "edital", "formulario", "reuniao"] as const;
+const TIPOS_DETALHE = ["artista", "projeto", "edital", "formulario", "reuniao", "empresa"] as const;
 
 /** Estado de navegação → hash ("#/captacao/editais/edital/ed-3"). */
 function paraHash(n: EstadoNavegacao): string {
@@ -195,7 +196,7 @@ export function irParaAba(aba: string) {
 /** Ambiente/aba "casa" de cada tipo de ficha. */
 const CASA_DO_DETALHE: Record<Detalhe["tipo"], [string, string]> = {
   artista: ["cadastros", "artistas"], edital: ["cadastros", "editais"], formulario: ["cadastros", "formularios"],
-  projeto: ["projetos", "visao"], reuniao: ["gestao", "reunioes"],
+  projeto: ["projetos", "visao"], reuniao: ["gestao", "reunioes"], empresa: ["captacao", "empresas"],
 };
 
 /** Ambientes cujo roteador sabe desenhar fichas do Painel (artista, edital...). */
@@ -206,6 +207,9 @@ const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "gestao", "anexos", "nu
 export function abrirDetalhe(tipo: Detalhe["tipo"], id: string, sub?: string) {
   if (tipo === "projeto") {
     if (nav.amb !== "projetos") [nav.amb, nav.aba] = CASA_DO_DETALHE.projeto;
+  } else if (tipo === "empresa") {
+    // A ficha da empresa só existe na Captação.
+    if (nav.amb !== "captacao") [nav.amb, nav.aba] = CASA_DO_DETALHE.empresa;
   } else if (!FAMILIA_PAINEL.includes(nav.amb)) {
     [nav.amb, nav.aba] = CASA_DO_DETALHE[tipo];
   }

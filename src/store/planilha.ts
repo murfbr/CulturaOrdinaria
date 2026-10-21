@@ -9,12 +9,16 @@ import { ENTIDADES } from "../forms/especificacoes";
 import { gerarCsv } from "../lib/csv";
 import { baixarArquivo, clonar, uid } from "../utils";
 import {
-  COLECOES_PAINEL, ROTULO_COLECAO, ROTULO_STATUS_PROJETO, ROTULO_TAREFA,
-  type ColecaoPainel, type DadosPainel,
+  COLECOES_PAINEL, PRESET_CAPTACAO_PADRAO, ROTULO_COLECAO, ROTULO_STATUS_PROJETO, ROTULO_TAREFA,
+  type ColecaoPainel, type DadosPainel, type NomeListaCaptacao,
 } from "../types";
 
 type Registro = Record<string, unknown> & { id: string };
 type RegistroPainel = DadosPainel[ColecaoPainel][number];
+
+/** Id → nome de uma lista de escolha da Captação (os nomes padrão; a lista é editável em Opções). */
+const nomesDaLista = (lista: NomeListaCaptacao): Record<string, string> =>
+  Object.fromEntries(PRESET_CAPTACAO_PADRAO.listas[lista].map((i) => [i.id, i.nome]));
 
 /** Uma coluna da planilha: campo do registro + como converter texto ⇄ valor. */
 export interface ColunaCsv {
@@ -132,6 +136,58 @@ export const COLUNAS_CSV: Record<ColecaoPainel, ColunaCsv[]> = {
     { campo: "municipio", rotulo: "Município" },
     { campo: "representante", rotulo: "Representante" },
     { campo: "contato", rotulo: "Contato" },
+    { campo: "obs", rotulo: "Observações" },
+  ],
+  // Captação (21/10/2026). As listas de escolha são editáveis em Opções; aqui vão os nomes
+  // padrão (a importação aceita id ou nome; pessoas e histórico da empresa não vão na planilha).
+  empresas: [
+    { campo: "nome", rotulo: "Nome" },
+    { campo: "cnpj", rotulo: "CNPJ" },
+    { campo: "setor", rotulo: "Setor" },
+    { campo: "site", rotulo: "Site" },
+    { campo: "obs", rotulo: "Observações" },
+  ],
+  captadoras: [
+    { campo: "nome", rotulo: "Nome" },
+    { campo: "contato", rotulo: "Contato" },
+    { campo: "area", rotulo: "Área de atuação" },
+    { campo: "obs", rotulo: "Observações" },
+  ],
+  portfolio: [
+    { campo: "nome", rotulo: "Nome" },
+    { campo: "situacao", rotulo: "Situação", valores: nomesDaLista("situacaoProjeto") },
+    { campo: "resumo", rotulo: "Resumo" },
+    { campo: "inicio", rotulo: "Início", data: true },
+    { campo: "fim", rotulo: "Fim", data: true },
+    { campo: "local", rotulo: "Local" },
+    { campo: "link", rotulo: "Link" },
+    { campo: "mecanismo", rotulo: "Mecanismo", valores: nomesDaLista("mecanismos") },
+    { campo: "meta", rotulo: "Meta (R$)", numero: true },
+    { campo: "comissaoPct", rotulo: "Comissão (%)", numero: true },
+    { campo: "comissaoBase", rotulo: "Base da comissão", valores: nomesDaLista("baseComissao") },
+    { campo: "obs", rotulo: "Observações" },
+  ],
+  cotas: [
+    { campo: "projetoId", rotulo: "Projeto", ref: "portfolio" },
+    { campo: "nome", rotulo: "Cota" },
+    { campo: "valor", rotulo: "Valor (R$)", numero: true },
+    { campo: "quantidade", rotulo: "Quantidade", numero: true },
+    { campo: "contrapartidas", rotulo: "Contrapartidas" },
+  ],
+  negociacoes: [
+    { campo: "empresaId", rotulo: "Empresa", ref: "empresas" },
+    { campo: "projetoId", rotulo: "Projeto", ref: "portfolio" },
+    { campo: "cotaId", rotulo: "Cota", ref: "cotas" },
+    { campo: "captadoraId", rotulo: "Quem capta", ref: "captadoras" },
+    { campo: "valor", rotulo: "Valor (R$)", numero: true },
+    { campo: "etapa", rotulo: "Etapa", valores: nomesDaLista("etapas") },
+    { campo: "ultimoContato", rotulo: "Último contato", data: true },
+    { campo: "dataProximo", rotulo: "Data do próximo passo", data: true },
+    { campo: "proximoPasso", rotulo: "Próximo passo" },
+    { campo: "reservaAte", rotulo: "Reservado até", data: true },
+    { campo: "motivoPerda", rotulo: "Motivo, se perdido" },
+    { campo: "comissaoPct", rotulo: "Comissão (%)", numero: true },
+    { campo: "valorRecebido", rotulo: "Valor recebido (R$)", numero: true },
     { campo: "obs", rotulo: "Observações" },
   ],
 };

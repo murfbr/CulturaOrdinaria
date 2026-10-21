@@ -6,7 +6,7 @@ rules_version = '2';
 //
 // Modelo de acesso (22/10/2026, ver src/types/acesso.ts): cada conta tem um documento
 // em usuarios/<e-mail em minúsculas> com a marca `master` e a lista `modulos`
-// ("painel", "cadastros", "projetos", "agenda", "gestao", "contexto", "nucleo",
+// ("painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "contexto", "nucleo",
 // "pagina:<slug>"). Master passa por cima de tudo. Quem tem qualquer módulo da Central
 // lê o banco do coletivo inteiro (as telas cruzam os nomes); gravar numa coleção pede o
 // módulo dono dela (a mesma tabela de MODULOS_DA_COLECAO). O Núcleo (`nucleo`,
@@ -33,7 +33,7 @@ service cloud.firestore {
     function modulo(m) { return master() || (temConta() && m in conta().modulos); }
     function algum(lista) { return master() || (temConta() && conta().modulos.hasAny(lista)); }
     // Tem módulo da Central: lê o banco do coletivo.
-    function central() { return algum(["painel", "cadastros", "projetos", "agenda", "gestao", "contexto"]); }
+    function central() { return algum(["painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "contexto"]); }
     // Tem qualquer módulo (da Central ou de página): grava presets, lixeira e log.
     function qualquer() { return master() || (temConta() && conta().modulos.size() > 0); }
 
@@ -81,6 +81,14 @@ service cloud.firestore {
     match /fichas/{id} { allow read: if central(); allow write: if modulo("contexto"); }
     match /regras/{id} { allow read: if central(); allow write: if modulo("contexto"); }
     match /julgamentos/{id} { allow read: if central(); allow write: if modulo("contexto"); }
+    // Captação (ambiente da Central, 21/10/2026): cinco coleções próprias, gravadas pelo módulo "captacao".
+    // Publicar ANTES do deploy do site que as lê: o site antigo não conhece as coleções e nada muda
+    // para ele; o site novo sem estas linhas trava em "carregando" porque as escutas são recusadas.
+    match /empresas/{id} { allow read: if central(); allow write: if modulo("captacao"); }
+    match /captadoras/{id} { allow read: if central(); allow write: if modulo("captacao"); }
+    match /portfolio/{id} { allow read: if central(); allow write: if modulo("captacao"); }
+    match /cotas/{id} { allow read: if central(); allow write: if modulo("captacao"); }
+    match /negociacoes/{id} { allow read: if central(); allow write: if modulo("captacao"); }
 
     // Controle: lixeira (mover, restaurar, esvaziar), log de alterações e o backup da migração v2.
     match /lixeira/{id} { allow read: if central(); allow write: if qualquer(); }

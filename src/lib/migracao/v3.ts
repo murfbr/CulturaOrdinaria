@@ -407,6 +407,8 @@ export function converterV2(
         artistas, projetos: novos, editais, tarefas,
         equipe: P.equipe || [], elenco: P.elenco || [], contatos: P.contatos || [], reunioes: P.reunioes || [],
         proponentes: (P as { proponentes?: DadosPainel["proponentes"] }).proponentes || [],
+        // Captação (21/10/2026): não existia no v2; nasce vazia.
+        empresas: [], captadoras: [], portfolio: [], cotas: [], negociacoes: [],
       },
       rascunhos: R,
       contexto: C,

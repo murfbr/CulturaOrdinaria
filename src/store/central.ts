@@ -14,8 +14,8 @@ import { useSyncExternalStore } from "react";
 import { Banco } from "../services/banco";
 import { clonar } from "../utils";
 import {
-  COLECOES_PAINEL, PRESET_FESTA_PADRAO, type Candidatura, type ColecaoPainel, type DadosPainel, type Ficha,
-  type Formulario, type ItemLixeira, type Julgamento, type PaginaPropria, type PresetFesta, type Presets,
+  COLECOES_PAINEL, PRESET_CAPTACAO_PADRAO, PRESET_FESTA_PADRAO, type Candidatura, type ColecaoPainel, type DadosPainel, type Ficha,
+  type Formulario, type ItemLixeira, type Julgamento, type PaginaPropria, type PresetCaptacao, type PresetFesta, type Presets,
   type Projeto, type Rascunho, type Regra, type Semana,
 } from "../types";
 import { converterV2, normalizarProjeto, projetoEhV2, type PainelV2 } from "../lib/migracao/v3";
@@ -50,7 +50,10 @@ export interface EstadoCentral {
 
 let estado: EstadoCentral = {
   pronto: false,
-  painel: { artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [], proponentes: [] },
+  painel: {
+    artistas: [], projetos: [], editais: [], tarefas: [], equipe: [], elenco: [], contatos: [], reunioes: [], proponentes: [],
+    empresas: [], captadoras: [], portfolio: [], cotas: [], negociacoes: [],
+  },
   rascunhos: {}, formularios: {}, lixeira: {}, fichas: {}, regras: {}, julgamentos: {},
   legado: { candidaturas: [], projetosV2: 0 },
   presets: {},
@@ -76,6 +79,9 @@ export const colecaoConfirmada = (colecao: string): boolean => confirmadas.has(c
 
 /** Preset de página tipo festa; o padrão do código vale enquanto o banco não tem o documento. */
 export const presetFesta = (): PresetFesta => estado.presets.festa || PRESET_FESTA_PADRAO;
+
+/** Preset da Captação (as listas de escolha); o padrão do código vale enquanto o banco não tem `presets/captacao`. */
+export const presetCaptacao = (): PresetCaptacao => estado.presets.captacao || PRESET_CAPTACAO_PADRAO;
 
 /** Registro de uma página anexo (presets/paginas) pelo slug, se o banco já tem. */
 export const paginaRegistrada = (slug: string): PaginaPropria | undefined =>

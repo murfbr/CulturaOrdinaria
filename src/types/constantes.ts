@@ -9,6 +9,7 @@ import type { StatusCampo } from "./simulador";
 export const COLECOES_PAINEL: ColecaoPainel[] = [
   "artistas", "projetos", "editais", "tarefas",
   "equipe", "elenco", "contatos", "reunioes", "proponentes",
+  "empresas", "captadoras", "portfolio", "cotas", "negociacoes",
 ];
 
 /** Nomes das coleções do Painel, para o exportar/importar e afins. */
@@ -17,6 +18,8 @@ export const ROTULO_COLECAO: Record<ColecaoPainel, string> = {
   tarefas: "Tarefas", equipe: "Equipe do coletivo",
   elenco: "Elenco / colaboradores", contatos: "Contatos externos", reunioes: "Reuniões",
   proponentes: "Proponentes",
+  empresas: "Empresas (captação)", captadoras: "Captadoras", portfolio: "Portfólio de captação",
+  cotas: "Cotas", negociacoes: "Negociações",
 };
 
 /** Situação do cadastro de proponente. */

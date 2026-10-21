@@ -4,8 +4,8 @@
    edição ou tela). O índice é montado na hora: com centenas de registros já
    em memória, não precisa de índice persistente. Só entra o que a conta abre:
    cada grupo pertence a um módulo (Cadastros, Projetos, Agenda ou Gestão,
-   Contexto); o Núcleo fica fora, e as páginas anexo entram como atalho que
-   abre a página. */
+   Contexto, Captação); o Núcleo fica fora, e as páginas anexo entram como
+   atalho que abre a página. */
 import { temModulo } from "../services/acesso";
 import type { EstadoCentral } from "../store/central";
 import {
@@ -79,6 +79,18 @@ export function montarIndice(estado: EstadoCentral): ResultadoBusca[] {
     Object.values(estado.julgamentos).forEach((j) =>
       item("Julgamento", junta(nomeDaEntidade(j.edital), j.ano), ROTULO_RESULTADO[j.resultado] || "",
         [j.resumo, j.projeto && nomeDaEntidade(j.projeto)], () => abrirJulgamento(j.id)));
+  }
+  if (temModulo("captacao")) {
+    const nomeDe = (lista: { id: string; nome: string }[], id: string) => lista.find((x) => x.id === id)?.nome || "";
+    painel.empresas.forEach((e) =>
+      item("Empresa", e.nome, junta(e.setor, e.cnpj && "CNPJ " + e.cnpj), [e.obs, e.pessoas.map((p) => p.nome)], () => abrirDetalhe("empresa", e.id)));
+    painel.negociacoes.forEach((n) =>
+      item("Negociação", junta(nomeDe(painel.empresas, n.empresaId) || "(empresa apagada)", nomeDe(painel.portfolio, n.projetoId)),
+        junta(nomeDe(painel.captadoras, n.captadoraId) || "equipe", n.etapa), [n.proximoPasso, n.obs], () => irParaAmbiente("captacao", "negociacoes")));
+    painel.portfolio.forEach((p) =>
+      item("Portfólio", p.nome, p.local, [p.resumo], () => irParaAmbiente("captacao", "portfolio")));
+    painel.captadoras.forEach((c) =>
+      item("Captadora", c.nome, c.area, [c.contato, c.obs], () => irParaAmbiente("captacao", "captadoras")));
   }
   // Páginas anexo: um atalho por página que a conta abre (título do registro no banco, ou o do código).
   const registro = estado.presets.paginas?.paginas || [];

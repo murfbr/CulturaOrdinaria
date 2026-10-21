@@ -171,6 +171,58 @@ export function impactoExclusao(chave: ChaveEntidade, id: string): ImpactoExclus
     };
   }
 
-  // Tarefa, elenco e contato: nada aponta para eles.
+  /* Captação (21/10/2026): as negociações apontam empresa, projeto, cota e captadora. */
+  if (chave === "empresa") {
+    const negs = painel.negociacoes.filter(x => x.empresaId === id);
+    return {
+      vinculos: negs.length ? [n(negs.length, "negociação desta empresa", "negociações desta empresa")] : [],
+      notas: negs.length ? ['Desvinculando, as negociações ficam e mostram "(empresa apagada)".'] : [],
+      excluir(destino) {
+        if (destino === "junto") negs.forEach((x) => excluirRegistro("negociacoes", x.id));
+        excluirRegistro("empresas", id);
+      },
+    };
+  }
+
+  if (chave === "projetoCaptacao") {
+    const negs = painel.negociacoes.filter((x) => x.projetoId === id);
+    const cotas = painel.cotas.filter((c) => c.projetoId === id);
+    return {
+      vinculos: negs.length ? [n(negs.length, "negociação neste projeto", "negociações neste projeto")] : [],
+      notas: cotas.length ? [n(cotas.length, "cota do projeto vai", "cotas do projeto vão") + " junto para a lixeira de qualquer jeito."] : [],
+      excluir(destino) {
+        if (destino === "junto") negs.forEach((x) => excluirRegistro("negociacoes", x.id));
+        else negs.forEach((x) => salvarRegistro("negociacoes", { ...x, projetoId: "", cotaId: "" }));
+        cotas.forEach((c) => excluirRegistro("cotas", c.id));
+        excluirRegistro("portfolio", id);
+      },
+    };
+  }
+
+  if (chave === "cota") {
+    const negs = painel.negociacoes.filter((x) => x.cotaId === id);
+    return {
+      vinculos: [],
+      notas: negs.length ? [n(negs.length, "negociação fica", "negociações ficam") + " sem a cota (o valor combinado não muda)."] : [],
+      excluir() {
+        negs.forEach((x) => salvarRegistro("negociacoes", { ...x, cotaId: "" }));
+        excluirRegistro("cotas", id);
+      },
+    };
+  }
+
+  if (chave === "captadora") {
+    const negs = painel.negociacoes.filter((x) => x.captadoraId === id);
+    return {
+      vinculos: [],
+      notas: negs.length ? [n(negs.length, "negociação passa", "negociações passam") + " para a equipe do coletivo (sem comissão)."] : [],
+      excluir() {
+        negs.forEach((x) => salvarRegistro("negociacoes", { ...x, captadoraId: "" }));
+        excluirRegistro("captadoras", id);
+      },
+    };
+  }
+
+  // Tarefa, elenco, contato e negociação: nada aponta para eles.
   return { vinculos: [], notas: [], excluir: () => excluirRegistro(ENTIDADES[chave].colecao, id) };
 }

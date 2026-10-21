@@ -1,4 +1,5 @@
 import type { ResumoEdicao } from "./paginas";
+import type { Captadora, CotaCaptacao, Empresa, Negociacao, ProjetoCaptacao } from "./captacao";
 
 /* Tipos das entidades do Painel (as nove coleções de gestão).
    Os nomes dos campos são exatamente os do artefato original — e são os nomes
@@ -478,6 +479,12 @@ export interface DadosPainel {
   contatos: Contato[];
   reunioes: Reuniao[];
   proponentes: Proponente[];
+  /** Captação (types/captacao.ts): as cinco coleções do ambiente, desde 21/10/2026. */
+  empresas: Empresa[];
+  captadoras: Captadora[];
+  portfolio: ProjetoCaptacao[];
+  cotas: CotaCaptacao[];
+  negociacoes: Negociacao[];
 }
 
 export type ColecaoPainel = keyof DadosPainel;

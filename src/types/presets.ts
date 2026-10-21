@@ -4,6 +4,8 @@
    código interpreta (status de tarefa, status do projeto) continua em
    constantes.ts: um id de status muda comportamento, não é preset. */
 
+import type { PresetCaptacao } from "./captacao";
+
 /** Fase por distância do evento (D-60, D-45 … Dia, Pós). */
 export interface FaseFesta { id: string; label: string; desc: string }
 
@@ -32,7 +34,7 @@ export interface PaginaPropria {
 export interface PresetPaginas { id: "paginas"; paginas: PaginaPropria[] }
 
 /** Os documentos da coleção `presets`, pelo id. */
-export interface Presets { festa?: PresetFesta; paginas?: PresetPaginas }
+export interface Presets { festa?: PresetFesta; paginas?: PresetPaginas; captacao?: PresetCaptacao }
 
 /** Vale enquanto o banco não tem o documento `presets/festa`; a semente grava este. */
 export const PRESET_FESTA_PADRAO: PresetFesta = {

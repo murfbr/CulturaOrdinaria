@@ -1,6 +1,7 @@
 /* Roteia o conteúdo dos ambientes de gestão (Painel, Cadastros, Agenda,
-   Gestão, Páginas anexo): ou uma ficha de detalhe aberta, ou a tela da aba.
-   Projetos e Contexto têm roteadores próprios (ver App). */
+   Gestão, Páginas anexo, Núcleo): ou uma ficha de detalhe aberta, ou a tela da aba.
+   Projetos e Contexto têm roteadores próprios (ver App); a Captação é roteada
+   pelo ambiente (as abas dela repetem nomes de outros ambientes). */
 import { useEffect } from "react";
 import { usarCentral } from "../store/central";
 import { porId } from "../store/mutacoes";
@@ -30,10 +31,12 @@ import { BackupAnexos } from "./anexos/Backup";
 import { AnotacoesNucleo } from "./nucleo/Anotacoes";
 import { Acessos } from "./nucleo/Acessos";
 import { MelhoriasNucleo } from "./nucleo/Melhorias";
+import { RoteadorCaptacao } from "./captacao/RoteadorCaptacao";
+import { FichaEmpresa } from "./captacao/FichaEmpresa";
 import type { ColecaoPainel } from "../types";
 
 const COLECAO_DO_DETALHE: Record<string, ColecaoPainel> = {
-  artista: "artistas", edital: "editais", reuniao: "reunioes",
+  artista: "artistas", edital: "editais", reuniao: "reunioes", empresa: "empresas",
 };
 
 export function RoteadorPainel() {
@@ -59,8 +62,11 @@ export function RoteadorPainel() {
       case "edital": return <FichaEdital id={d.id} sub={d.sub || "geral"} />;
       case "formulario": return <FichaFormulario id={d.id} />;
       case "reuniao": return <FichaReuniao id={d.id} />;
+      case "empresa": return <FichaEmpresa id={d.id} />;
     }
   }
+
+  if (nav.amb === "captacao") return <RoteadorCaptacao aba={nav.aba} />;
 
   switch (nav.aba) {
     case "resumo": return <Resumo />;

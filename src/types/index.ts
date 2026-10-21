@@ -7,3 +7,4 @@ export * from "./presets";
 export * from "./paginas";
 export * from "./acesso";
 export * from "./caderno";
+export * from "./captacao";

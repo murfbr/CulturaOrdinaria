@@ -76,7 +76,7 @@ export const SECOES_ANTIGAS: Record<string, { nome: string; secao: string; aba: 
   forro: { nome: "Caminhos do Forró", secao: SECAO_PAGINAS, aba: "Caminhos do Forró" },
   ponta: { nome: "Ponta de Lança", secao: SECAO_PAGINAS, aba: "Ponta de Lança" },
   "anexo-melhorias": { nome: "Melhorias da Central", secao: SECAO_NUCLEO, aba: "Melhorias" },
-  "anexo-captadores": { nome: "Captadores / patrocínios", secao: SECAO_PAGINAS, aba: "" },
+  "anexo-captadores": { nome: "Captação", secao: SECAO_CENTRAL, aba: "Captação" },
   "anexo-carnaval": { nome: "Central Carnaval 2027", secao: SECAO_PAGINAS, aba: "" },
   nucleo: { nome: "Núcleo do Coletivo: geral", secao: SECAO_NUCLEO, aba: "" },
   "nucleo-ideias": { nome: "Anotações e ideias", secao: SECAO_NUCLEO, aba: "Anotações e ideias" },
