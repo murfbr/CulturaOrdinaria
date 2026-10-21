@@ -1,6 +1,7 @@
 /* A linha expandida de um cadastro: histórico de contatos (com o formulário
    para registrar mais um e remover com dois cliques) e os detalhes (e-mail,
-   telefone, documento, carta, anotações), a auditoria e os botões. */
+   telefone, documento, carta, Instagram e outras redes, anotações), a
+   auditoria e os botões. */
 import { useState, type FormEvent } from "react";
 import { toast } from "../../../components/Toast";
 import { clonar } from "../../../utils";
@@ -13,6 +14,7 @@ import { Botao } from "../ui/Botao";
 import { BotaoArmado } from "../ui/BotaoArmado";
 import { AreaTexto, Campo, Entrada, Selecao } from "../ui/Campo";
 import { H3 } from "../ui/classes";
+import { linkInstagram, redesDe } from "./redes";
 
 interface Props { base: Base; d: Cadastro; aoEditar: () => void }
 
@@ -85,6 +87,15 @@ export function DetalheCadastro({ base, d, aoEditar }: Props) {
           <dt className={DT}>CPF ou CNPJ</dt><dd className={DD}>{d.documento || "—"}</dd>
           <dt className={DT}>Carta de anuência</dt>
           <dd className={DD}>{rotulo(base.pagina, "cartaAnuencia", d.carta)}{d.cartaArquivo && <><br /><LinkArquivo arquivo={d.cartaArquivo} /></>}</dd>
+          <dt className={DT}>Instagram</dt>
+          <dd className={DD}>
+            {d.instagram ? <a href={linkInstagram(d.instagram)} target="_blank" rel="noopener" className="cdf:text-link">@{d.instagram}</a> : "—"}
+            {d.seguidores != null && <span className="cdf:text-fraco"> · {Number(d.seguidores).toLocaleString("pt-BR")} seguidores{d.seguidoresEm ? " em " + dataBr(d.seguidoresEm) : ""}</span>}
+          </dd>
+          {redesDe(d).length > 0 && <>
+            <dt className={DT}>Outras redes</dt>
+            <dd className={DD}>{redesDe(d).map((r, i) => <span key={r.rede}>{i > 0 && " · "}<a href={r.url} target="_blank" rel="noopener" className="cdf:text-link">{r.nome}</a></span>)}</dd>
+          </>}
           <dt className={DT}>Anotações</dt><dd className={DD}>{d.anotacoes || "—"}</dd>
         </dl>
         <p className="cdf:m-0 cdf:mb-2.5 cdf:text-[13px] cdf:text-fraco">{auditoria(d as Cadastro & { atualizadoPor?: string })}</p>

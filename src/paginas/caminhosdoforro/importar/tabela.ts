@@ -25,6 +25,8 @@ export interface ColunaTabela {
   lista?: boolean;
   /** Sim ou não. */
   booleano?: boolean;
+  /** Converte o texto da célula no valor do campo (número, perfil, data); undefined = não serve, com aviso. */
+  converter?: (texto: string) => unknown;
   /** Valor da linha de exemplo do modelo. */
   exemplo: string;
 }
@@ -106,6 +108,11 @@ function valorDaCelula(col: ColunaTabela, texto: string, avisos: string[], onde:
   };
   if (col.lista) {
     return t.split(t.includes("|") ? "|" : ",").map((x) => x.trim()).filter(Boolean).map(resolver).filter((x): x is string => x != null);
+  }
+  if (col.converter) {
+    const v = col.converter(t);
+    if (v === undefined || v === null || v === "") avisos.push(`${onde}: ${col.cabecalho} "${t}" não foi entendido; ficou de fora.`);
+    return v === null || v === "" ? undefined : v;
   }
   if (col.booleano) {
     const n = normalizar(t).trim();
