@@ -184,6 +184,8 @@ export interface Painel {
   projeto?: Projeto;
   /** Tarefas das edições desta página (coleção `tarefas`, campo `edicaoId`). */
   tarefas: Tarefa[];
+  /** Todas as tarefas da Central: as urgências podem fixar uma que não é da edição (ex.: da agenda da semana). */
+  tarefasCentral: Tarefa[];
   equipe: PessoaEquipe[];
   contatos: Contato[];
 }

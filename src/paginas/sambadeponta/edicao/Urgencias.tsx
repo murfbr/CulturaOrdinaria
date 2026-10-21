@@ -1,14 +1,22 @@
 /* Urgências: tarefas da Central (coleção `tarefas`) fixadas nesta edição.
-   Não é uma lista à parte: "+ Urgência" cria a tarefa na Central já fixada, e
-   a estrela na seção Tarefas fixa uma que já existe. Assim ela segue
-   aparecendo no quadro, no Resumo e na agenda da Central. */
+   Não é uma lista à parte: "+ Urgência" cria a tarefa na Central já fixada,
+   "Fixar tarefa da Central" escolhe uma que já existe (inclusive as que não
+   são da edição, como as da agenda da semana) e a estrela na seção Tarefas
+   fixa uma da edição. Assim ela segue aparecendo no quadro, no Resumo e na
+   agenda da Central. */
 import { nomeEquipe } from "../../../lib/nomes";
 import { ROTULO_TAREFA, type Tarefa } from "../../../types";
-import { br, hojeIso, urgentesDaEdicao } from "../calculo";
+import { br, hojeIso, tarefasParaFixar, urgentesDaEdicao } from "../calculo";
 import { alternarStatusTarefa, alternarUrgente, salvarTarefa, tarefaNova } from "../dados";
 import { usarModalCampos } from "../ModalCampos";
 import { camposTarefa } from "./pedidos";
 import type { Edicao, Painel } from "../tipos";
+
+/** Rótulo de uma tarefa no seletor: título curto e prazo. */
+const rotuloTarefa = (t: Tarefa): string => {
+  const titulo = (t.titulo || "(sem título)").replace(/\s+/g, " ");
+  return (titulo.length > 70 ? titulo.slice(0, 69) + "…" : titulo) + (t.prazo ? " · até " + br(t.prazo) : "");
+};
 
 export function Urgencias({ painel, e }: { painel: Painel; e: Edicao }) {
   const modal = usarModalCampos();
@@ -16,12 +24,15 @@ export function Urgencias({ painel, e }: { painel: Painel; e: Edicao }) {
   const hoje = hojeIso();
   const fases = painel.presets.fases;
   const abertas = lista.filter((t) => t.status !== "feito").length;
+  const disponiveis = tarefasParaFixar(painel, e);
 
   function editar(t: Tarefa | null) {
     const atual = t || tarefaNova(e.id, fases.find((f) => f.id === "d15")?.id || fases[0]?.id || "");
+    // Tarefa que não é desta edição não ganha fase: o campo só faz sentido dentro da edição.
+    const daEdicao = atual.edicaoId === e.id;
     modal.abrir({
       titulo: t ? "Editar urgência" : "Nova urgência (vira tarefa da Central)",
-      campos: camposTarefa(fases, painel.equipe),
+      campos: camposTarefa(fases, painel.equipe).filter((c) => daEdicao || c.k !== "fase"),
       valores: atual as unknown as Record<string, unknown>,
       aoAplicar: (s) => {
         if (!s.titulo) return;
@@ -31,14 +42,29 @@ export function Urgencias({ painel, e }: { painel: Painel; e: Edicao }) {
     });
   }
 
+  function fixarExistente() {
+    modal.abrir({
+      titulo: "Fixar tarefa da Central",
+      campos: [{
+        k: "tarefaId", label: "Tarefa (abertas; as da festa primeiro)", type: "select", full: true,
+        opts: disponiveis.map((t) => [t.id, rotuloTarefa(t)] as [string, string]),
+      }],
+      valores: { tarefaId: disponiveis[0]?.id || "" },
+      aoAplicar: (s) => { const id = String(s.tarefaId || ""); if (id) alternarUrgente(e.id, id); },
+    });
+  }
+
   return (
     <>
       <div className="sechead bloco">
         <div className="ksub">Urgências{lista.length ? ` · ${abertas} em aberto` : ""}</div>
-        <div className="actions"><button className="sdp-btn small" onClick={() => editar(null)}>+ Urgência</button></div>
+        <div className="actions">
+          {disponiveis.length > 0 && <button className="sdp-btn small" onClick={fixarExistente}>Fixar tarefa da Central</button>}
+          <button className="sdp-btn small" onClick={() => editar(null)}>+ Urgência</button>
+        </div>
       </div>
       {lista.length === 0
-        ? <div className="note">Nenhuma urgência fixada. Crie com <b>+ Urgência</b> ou fixe uma tarefa existente pela estrela ☆ na seção Tarefas.</div>
+        ? <div className="note">Nenhuma urgência fixada. Crie com <b>+ Urgência</b>, escolha uma que já existe em <b>Fixar tarefa da Central</b> ou use a estrela ☆ na seção Tarefas.</div>
         : (
           <div className="tw">
             <table className="curta">
@@ -58,6 +84,7 @@ export function Urgencias({ painel, e }: { painel: Painel; e: Edicao }) {
                       </td>
                       <td className="task">
                         {t.titulo}{t.status === "and" && <> <span className="tag warn">em andamento</span></>}
+                        {t.edicaoId !== e.id && <> <span className="tag neutral" title="tarefa da Central que não é desta edição">da Central</span></>}
                         {t.obs && <span className="m">{t.obs}</span>}
                         <span className={"m so-celular" + (atrasada ? " atrasada" : "")}>
                           {[t.respId ? nomeEquipe(t.respId) : "sem responsável", t.prazo ? "até " + br(t.prazo) : "sem prazo"].join(" · ")}

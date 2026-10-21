@@ -88,11 +88,24 @@ export const rotuloFase = (painel: Painel, id: string): string =>
 export const tarefasDaEdicao = (painel: Painel, e: Edicao): Tarefa[] =>
   painel.tarefas.filter((t) => t.edicaoId === e.id);
 
-/** Tarefas fixadas como urgentes na edição, as abertas primeiro e por prazo (sem prazo no fim). Id de tarefa apagada some. */
+/** Tarefas fixadas como urgentes na edição, as abertas primeiro e por prazo (sem prazo no fim). Vale qualquer
+    tarefa da Central, também as que não são da edição (agenda da semana, reunião). Id de tarefa apagada some. */
 export function urgentesDaEdicao(painel: Painel, e: Edicao): Tarefa[] {
   const ids = new Set(e.urgentes || []);
   const chave = (t: Tarefa) => (t.status === "feito" ? "1" : "0") + (t.prazo || "9999");
-  return painel.tarefas.filter((t) => ids.has(t.id)).sort((a, b) => chave(a).localeCompare(chave(b)));
+  return (painel.tarefasCentral || painel.tarefas).filter((t) => ids.has(t.id)).sort((a, b) => chave(a).localeCompare(chave(b)));
+}
+
+/** Tarefas abertas da Central que ainda podem ser fixadas na edição: as que falam da festa primeiro, depois as da
+    própria edição, depois o resto; dentro de cada grupo, por prazo. */
+export function tarefasParaFixar(painel: Painel, e: Edicao): Tarefa[] {
+  const fixadas = new Set(e.urgentes || []);
+  const nomeFesta = new RegExp(painel.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+  const grupo = (t: Tarefa) =>
+    nomeFesta.test((t.titulo || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")) ? 0 : t.edicaoId === e.id ? 1 : 2;
+  return (painel.tarefasCentral || painel.tarefas)
+    .filter((t) => t.status !== "feito" && !fixadas.has(t.id))
+    .sort((a, b) => grupo(a) - grupo(b) || (a.prazo || "9999").localeCompare(b.prazo || "9999"));
 }
 
 /** Contatos do tipo Fornecedor (coleção `contatos`). */
