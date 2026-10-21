@@ -6,19 +6,21 @@
    a senha a pessoa define pelo "esqueci a senha". Contas não se apagam:
    desativam. A última conta master ativa não se rebaixa nem se desativa, para
    ninguém ficar trancado para fora. */
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { emailSessao } from "../../services/sessao";
 import { usarCentral } from "../../store/central";
+import { AMBIENTES } from "../../store/navegacao";
 import { chaveDaConta, iniciarNucleo, salvarConta, usarNucleo } from "../../store/nucleo";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { toast } from "../../components/Toast";
+import { Balao } from "../../components/ui/Balao";
 import { Botao } from "../../components/ui/Botao";
 import { CaixaMarcar, Entrada, Selecao } from "../../components/ui/Campo";
 import { Dica } from "../../components/ui/Dica";
 import { Painel } from "../../components/ui/Painel";
 import { Tabela, Td, Th } from "../../components/ui/Tabela";
 import { Vazio } from "../../components/ui/Vazio";
-import { MODULOS_CENTRAL, MODULO_NUCLEO, PERFIS, ROTULO_MODULO, moduloDaPagina, type ContaUsuario } from "../../types";
+import { MODULOS_CENTRAL, MODULOS_DA_COLECAO, MODULO_NUCLEO, PERFIS, ROTULO_COLECAO, ROTULO_MODULO, ehModuloDePagina, moduloDaPagina, slugDoModulo, type ContaUsuario } from "../../types";
 import { relativo } from "../../utils";
 import { PAGINAS_PROPRIAS } from "../paginasProprias";
 
@@ -29,6 +31,55 @@ function colunasDeModulo(titulos: Record<string, string>): [id: string, rotulo: 
     [MODULO_NUCLEO, "Núcleo"],
     ...Object.entries(PAGINAS_PROPRIAS).map(([slug, p]) => [moduloDaPagina(slug), titulos[slug] || p.titulo] as [string, string]),
   ];
+}
+
+const ROTULO_EXTRA: Record<string, string> = {
+  formularios: "Formulários", rascunhos: "Rascunhos de projeto", versoes: "Versões de projeto", candidaturas: "Candidaturas",
+  fichas: "Fichas de contexto", regras: "Regras", julgamentos: "Julgamentos",
+  semanas: "Programação da semana", nucleo: "Anotações do Núcleo", usuarios: "Contas",
+};
+const rotuloDaColecao = (c: string) => (ROTULO_COLECAO as Record<string, string>)[c] || ROTULO_EXTRA[c] || c;
+/** "a, b e c" */
+const lista = (xs: string[]) => (xs.length <= 1 ? xs.join("") : xs.slice(0, -1).join(", ") + " e " + xs[xs.length - 1]);
+const abasDe = (id: string) => (AMBIENTES.find((a) => a.id === id)?.abas || []).map(([, r]) => r);
+function nomeDoModulo(m: string, titulos: Record<string, string>): string {
+  if (!ehModuloDePagina(m)) return ROTULO_MODULO[m] || m;
+  const slug = slugDoModulo(m);
+  return titulos[slug] || PAGINAS_PROPRIAS[slug]?.titulo || slug;
+}
+
+/** O que a coluna envolve: as telas que o módulo abre e as coleções em que grava, com quem mais grava nelas
+    (a mesma tabela MODULOS_DA_COLECAO das regras do banco). */
+function explicacaoDoModulo(id: string, titulos: Record<string, string>): ReactNode {
+  const grava = Object.entries(MODULOS_DA_COLECAO)
+    .filter(([, donos]) => donos.includes(id))
+    .map(([colecao, donos]) => {
+      const outros = donos.filter((d) => d !== id).map((d) => nomeDoModulo(d, titulos));
+      return rotuloDaColecao(colecao) + (outros.length ? " (também " + lista(outros) + ")" : "");
+    });
+  let abre: string;
+  let nota: string;
+  if (ehModuloDePagina(id)) {
+    const slug = slugDoModulo(id);
+    abre = "a página /" + slug + "/";
+    grava.unshift("a base da própria página");
+    nota = PAGINAS_PROPRIAS[slug]?.leACentral
+      ? "A página lê a Central: só abre para conta que também tem um módulo da Central."
+      : "Página independente: abre mesmo para conta sem módulo da Central, em Suas páginas.";
+  } else if (id === MODULO_NUCLEO) {
+    abre = lista(abasDe(id));
+    nota = "Único módulo de leitura restrita: quem não o tem não lê contas nem anotações.";
+  } else {
+    abre = lista(abasDe(id));
+    nota = "Lê o banco inteiro do coletivo, como todo módulo da Central; o que muda é onde grava.";
+  }
+  return (
+    <>
+      <span className="block"><b className="font-semibold">Abre:</b> {abre}.</span>
+      <span className="block"><b className="font-semibold">Grava:</b> {grava.length ? lista(grava) : "nada, só mostra"}.</span>
+      <span className="mt-1 block text-muted">{nota}</span>
+    </>
+  );
 }
 
 const NOVA = { email: "", nome: "", perfil: "coordenador" };
@@ -93,9 +144,11 @@ export function Acessos() {
         <Tabela minima="min-w-[900px]">
           <thead>
             <tr>
-              <Th>Conta</Th><Th>Ativa</Th><Th>Master</Th>
-              {colunas.map(([id, rotulo]) => <Th key={id} quebra>{rotulo}</Th>)}
-              <Th>Preencher como</Th>
+              <Th>Conta</Th>
+              <Th><Balao titulo="Ativa" texto="Desmarcada, a conta não abre nada, com qualquer lista de módulos. É o jeito de tirar alguém sem apagar a linha.">Ativa</Balao></Th>
+              <Th><Balao titulo="Master" texto="Passa por cima da lista: abre e grava tudo, inclusive os módulos que vierem. A última master ativa não se rebaixa nem se desativa.">Master</Balao></Th>
+              {colunas.map(([id, rotulo]) => <Th key={id} quebra><Balao titulo={rotulo} texto={explicacaoDoModulo(id, titulos)}>{rotulo}</Balao></Th>)}
+              <Th><Balao titulo="Preencher como" texto="Um perfil só preenche as caixas da linha de uma vez; depois você ajusta caixa por caixa. Não cria regra nova.">Preencher como</Balao></Th>
             </tr>
           </thead>
           <tbody>
