@@ -7,7 +7,7 @@
    não entram: só os links e caminhos gravados nos registros. */
 import { useState } from "react";
 import { temModulo } from "../../services/acesso";
-import { Banco } from "../../services/banco";
+import { baixarBaseDaPagina } from "../../lib/basePagina";
 import { usarCentral } from "../../store/central";
 import { moduloDaPagina } from "../../types";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
@@ -16,26 +16,7 @@ import { toast } from "../../components/Toast";
 import { Botao } from "../../components/ui/Botao";
 import { Dica } from "../../components/ui/Dica";
 import { Painel } from "../../components/ui/Painel";
-import { baixarArquivo } from "../../utils";
 import { PAGINAS_PROPRIAS } from "../paginasProprias";
-
-const hojeIso = () => new Date().toISOString().slice(0, 10);
-
-/** Lê o documento da página e as subcoleções e monta o arquivo; null quando a página não existe no banco. */
-async function montarBase(slug: string, titulo: string, colecoes: readonly string[]) {
-  const pagina = await Banco.carregarDocumento("paginas", slug);
-  if (!pagina) return null;
-  const base: Record<string, unknown> = {
-    exportadoEm: new Date().toISOString(), origem: "Central do Coletivo · /" + slug + "/", slug, titulo, config: pagina,
-  };
-  const contagens: Record<string, number> = {};
-  for (const c of colecoes) {
-    const mapa = await Banco.carregarColecao("paginas/" + slug + "/" + c);
-    base[c] = mapa;
-    contagens[c] = Object.keys(mapa).length;
-  }
-  return { base, contagens };
-}
 
 export function BackupAnexos() {
   const { presets } = usarCentral();
@@ -47,10 +28,9 @@ export function BackupAnexos() {
   async function baixar(slug: string, titulo: string, colecoes: readonly string[]) {
     setLendo(slug);
     try {
-      const r = await montarBase(slug, titulo, colecoes);
-      if (!r) { toast("A página ainda não tem dados no banco."); return; }
-      setContagens((c) => ({ ...c, [slug]: r.contagens }));
-      baixarArquivo(slug + "-base-" + hojeIso() + ".json", JSON.stringify(r.base, null, 2));
+      const contagem = await baixarBaseDaPagina(slug, titulo, colecoes);
+      if (!contagem) { toast("A página ainda não tem dados no banco."); return; }
+      setContagens((c) => ({ ...c, [slug]: contagem }));
       toast("Base baixada");
     } catch (e) {
       toast("Não deu para ler a página: " + (e instanceof Error ? e.message : String(e)));

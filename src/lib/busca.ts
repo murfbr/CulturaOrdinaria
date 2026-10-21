@@ -4,7 +4,8 @@
    edição ou tela). O índice é montado na hora: com centenas de registros já
    em memória, não precisa de índice persistente. Só entra o que a conta abre:
    cada grupo pertence a um módulo (Cadastros, Projetos, Agenda ou Gestão,
-   Contexto); o Núcleo e as páginas anexo ficam fora. */
+   Contexto); o Núcleo fica fora, e as páginas anexo entram como atalho que
+   abre a página. */
 import { temModulo } from "../services/acesso";
 import type { EstadoCentral } from "../store/central";
 import {
@@ -13,7 +14,8 @@ import {
 import { abrirEdicao } from "../store/edicao";
 import { nomeEditalDoProjeto, nomeEquipe, nomesArtistas } from "./nomes";
 import { nomeDaEntidade } from "./contexto/consultas";
-import { ROTULO_RESULTADO, ROTULO_STATUS_PROJETO, ROTULO_TIPO_REGRA } from "../types";
+import { ROTULO_RESULTADO, ROTULO_STATUS_PROJETO, ROTULO_TIPO_REGRA, moduloDaPagina } from "../types";
+import { PAGINAS_PROPRIAS } from "../pages/paginasProprias";
 import { formatarData } from "../utils";
 
 export interface ResultadoBusca {
@@ -78,6 +80,12 @@ export function montarIndice(estado: EstadoCentral): ResultadoBusca[] {
       item("Julgamento", junta(nomeDaEntidade(j.edital), j.ano), ROTULO_RESULTADO[j.resultado] || "",
         [j.resumo, j.projeto && nomeDaEntidade(j.projeto)], () => abrirJulgamento(j.id)));
   }
+  // Páginas anexo: um atalho por página que a conta abre (título do registro no banco, ou o do código).
+  const registro = estado.presets.paginas?.paginas || [];
+  Object.entries(PAGINAS_PROPRIAS).filter(([slug]) => temModulo(moduloDaPagina(slug))).forEach(([slug, p]) => {
+    const titulo = registro.find((x) => x.slug === slug)?.titulo || p.titulo;
+    item("Página anexo", titulo, "/" + slug + "/", [slug, p.titulo, "pagina anexo"], () => window.location.assign("/" + slug + "/"));
+  });
 
   return r;
 }

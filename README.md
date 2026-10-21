@@ -189,6 +189,11 @@ continua cobrindo só as coleções do coletivo; os arquivos do Storage ficam fo
 
 ### Acessos: módulos por conta, master acima de tudo
 
+O Ponta de Lança tem o mesmo botão no próprio menu ("Baixar a base em JSON", o
+mesmo arquivo que a aba Backup gera; `src/lib/basePagina.ts`); o Caminhos do Forró
+tem o dele em Configuração → Dados na base. Na busca Ctrl+K, as páginas anexo que a
+conta abre entram como atalho ("Página anexo · Ponta de Lança" abre /pontadelanca/).
+
 O login continua sendo criado no console do Firebase (Authentication → Users), mas
 o que cada login abre está no banco: a coleção `usuarios`, um documento por conta
 com o id igual ao e-mail em minúsculas, a marca `master` e a lista `modulos`.

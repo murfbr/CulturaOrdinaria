@@ -1,13 +1,16 @@
 /* Menu lateral: assinatura da Ponta de Lança, links da festa, as edições com
-   o status e as abas da edição aberta, "+ Nova edição", indicador de
+   o status e as abas da edição aberta, "+ Nova edição", "Baixar a base em
+   JSON" (a cópia da página, a mesma da aba Backup da Central), indicador de
    salvamento (o mesmo do cabeçalho da Central), sair e a volta para a Central. */
 import { Fragment, useEffect, useState, useSyncExternalStore } from "react";
 import { temCentral } from "../../services/acesso";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair, usarSessao } from "../../services/sessao";
 import { toast } from "../../components/Toast";
+import { baixarBaseDaPagina } from "../../lib/basePagina";
 import { ROTULO_STATUS_EDICAO, br, brCompleta } from "./calculo";
 import { novaEdicao } from "./dados";
+import { SLUG, SUBCOLECOES } from "./semente";
 import { abaValida, abasDaEdicao } from "./edicao/abas";
 import type { Painel } from "./tipos";
 import type { IrPara, Visao } from "./visao";
@@ -58,6 +61,20 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
     if (nova) { toast("Edição criada"); irPara({ sec: "edicao", id: nova.id }); }
   }
 
+  const [baixando, setBaixando] = useState(false);
+  /** A base da página em JSON (documento + edições), lida na hora do banco: cópia e semente. */
+  async function baixar() {
+    setBaixando(true);
+    try {
+      const contagem = await baixarBaseDaPagina(SLUG, painel.titulo, SUBCOLECOES);
+      toast(contagem ? "Base baixada: " + Object.entries(contagem).map(([k, n]) => n + " em " + k).join(" · ") : "A página ainda não tem dados no banco.");
+    } catch (e) {
+      toast("Não deu para ler a página: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setBaixando(false);
+    }
+  }
+
   return (
     <nav className={"sdp-side" + (aberto ? " open" : "")}>
       <a className="sdp-brand" href="#" onClick={(ev) => { ev.preventDefault(); irPara({ sec: "festa" }, "l-visao"); }}>
@@ -97,6 +114,7 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
 
       <div className="navfoot">
         <button className="sdp-btn ghost small" onClick={criar}>+ Nova edição</button>
+        <button className="sdp-btn ghost small" disabled={baixando} onClick={() => void baixar()}>{baixando ? "lendo o banco…" : "Baixar a base em JSON"}</button>
         <a className="sdp-btn ghost small" href="/">{temCentral() ? "← Central" : "← Suas páginas"}</a>
         <div className="estado">
           <span><span className={"ponto " + status.classe} />{status.texto}</span>
