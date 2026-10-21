@@ -31,6 +31,8 @@ export interface ContaUsuario extends Acesso { id: string }
 /** Anotação do Núcleo (coleção `nucleo`). */
 export interface Anotacao {
   id: string;
+  /** Sem tipo (ou "anotacao") é anotação; os outros tipos da coleção `nucleo` são o caderno Melhorias (types/caderno.ts). */
+  tipo?: "anotacao";
   texto: string;
   /** E-mail de quem anotou. */
   quem: string;

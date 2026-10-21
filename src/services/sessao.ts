@@ -40,7 +40,13 @@ export function usarSessao(): Sessao {
 }
 
 /** E-mail de quem está logado ("" no modo local) — para carimbar quem fez o quê. */
-export const emailSessao = (): string => sessao.usuario?.email || "";
+/** E-mail do login. Em modo local (sem Firebase) a chave `central-email-teste` do
+    localStorage simula o login, para testar o que depende da pessoa logada
+    (quadro de tarefas, Minhas tarefas). */
+export const emailSessao = (): string => sessao.usuario?.email || (firebaseAtivo ? "" : emailDeTeste());
+function emailDeTeste(): string {
+  try { return localStorage.getItem("central-email-teste") || ""; } catch { return ""; }
+}
 
 /** Entra com e-mail e senha. Lança erro com mensagem em português se falhar. */
 export async function entrar(email: string, senha: string) {

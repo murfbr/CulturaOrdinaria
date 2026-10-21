@@ -29,6 +29,7 @@ import { ModeloAnexo } from "./anexos/Modelo";
 import { BackupAnexos } from "./anexos/Backup";
 import { AnotacoesNucleo } from "./nucleo/Anotacoes";
 import { Acessos } from "./nucleo/Acessos";
+import { MelhoriasNucleo } from "./nucleo/Melhorias";
 import type { ColecaoPainel } from "../types";
 
 const COLECAO_DO_DETALHE: Record<string, ColecaoPainel> = {
@@ -81,6 +82,7 @@ export function RoteadorPainel() {
     case "modelo": return <ModeloAnexo />;
     case "backup": return <BackupAnexos />;
     case "anotacoes": return <AnotacoesNucleo />;
+    case "melhorias": return <MelhoriasNucleo />;
     case "acessos": return <Acessos />;
     default: return <Resumo />;
   }

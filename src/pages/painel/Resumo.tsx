@@ -5,6 +5,7 @@ import { usarCentral } from "../../store/central";
 import { abrirDetalhe, irParaAmbiente } from "../../store/navegacao";
 import { abrirEdicao } from "../../store/edicao";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
+import { MinhasTarefas } from "./MinhasTarefas";
 import { GradeKpis, Kpi } from "../../components/ui/Kpi";
 import { Grade } from "../../components/ui/Grade";
 import { Painel } from "../../components/ui/Painel";
@@ -75,6 +76,7 @@ export function Resumo() {
         {kpis.map(([rotulo, n]) => <Kpi key={rotulo} n={n} rotulo={rotulo} />)}
       </GradeKpis>
       <Grade colunas={2}>
+        <MinhasTarefas />
         <Painel
           titulo="Próximos prazos"
           acoes={vencidos.length > 0 ? <Badge tom="ur-vencido">{vencidos.length} vencido(s)</Badge> : undefined}

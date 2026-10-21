@@ -24,7 +24,7 @@ export const AMBIENTES: Ambiente[] = [
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
   { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"], ["backup", "Backup"]] },
-  { id: "nucleo", rotulo: "Núcleo do Coletivo", abas: [["anotacoes", "Anotações e ideias"], ["acessos", "Acessos"]] },
+  { id: "nucleo", rotulo: "Núcleo do Coletivo", abas: [["anotacoes", "Anotações e ideias"], ["melhorias", "Melhorias"], ["acessos", "Acessos"]] },
 ];
 
 /** Endereços da versão anterior (v2) → onde a mesma coisa mora agora.

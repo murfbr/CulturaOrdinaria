@@ -224,7 +224,9 @@ Como o site e o banco aplicam a lista (`src/types/acesso.ts`, `src/services/aces
   não abre para essas contas; a tela Acessos avisa.
 - Modo local (sem Firebase): a conta é master; para simular outra lista, grave no
   `localStorage` a chave `central-acesso-teste`, por exemplo
-  `{"master":false,"modulos":["agenda","pagina:caminhosdoforro"]}`.
+  `{"master":false,"modulos":["agenda","pagina:caminhosdoforro"]}`; para simular o e-mail
+  do login (quadro de tarefas e a caixa Minhas tarefas do Resumo), a chave
+  `central-email-teste` com o e-mail de alguém da Equipe.
 
 **Primeira linha e recuperação.** As regras exigem a linha em `usuarios` até para
 criar linhas (módulo Núcleo ou master), então conta sem linha vê "Sem acesso" e
@@ -236,6 +238,39 @@ enquanto não existia linha master, com a tela Acessos dizendo quando publicar a
 regras) acabou quando as regras entraram. Naquele dia elas tinham sido publicadas
 antes das linhas e trancaram o banco para todo mundo até as antigas voltarem, por
 isso regras novas só entram com o site que as entende no ar e as linhas criadas.
+
+### Núcleo do Coletivo: Anotações e ideias, Melhorias, Acessos
+
+O ambiente Núcleo do Coletivo abre só para quem tem o módulo `nucleo` (ou é
+master). Tem três abas: **Anotações e ideias** (anotações soltas do Núcleo),
+**Melhorias** (o caderno "Melhorias da Central") e **Acessos** (as contas).
+
+A aba Melhorias tem o layout do caderno que nasceu como artefato, agrupado: à
+esquerda, Início, Levar ao Gustavo e três seções (Central do Coletivo, Páginas
+anexo, Núcleo do Coletivo); as abas-filtro de cada seção são o que existe no
+site hoje (os ambientes da Central mais "Transversal"; as páginas anexo do
+registro em código; as abas do Núcleo), montadas na tela a partir de
+`store/navegacao.ts` e `pages/paginasProprias.ts`; à direita, a seção
+escolhida.
+Uma melhoria é uma **tarefa** da seção ("+ Tarefa": texto, aba, quem, prazo,
+origem e a marca "precisa de código"); a caixa à esquerda marca feita; "só
+abertas" e "só código" filtram. Anotações ("+ Anotação") são as notas da seção.
+"Início" mostra os números, as próximas tarefas e as últimas anotações; "Levar ao Gustavo" lista
+as tarefas abertas que precisam de código, por seção. A estrutura (seções, abas,
+status) vive no código (`src/types/caderno.ts`); os itens vivem na coleção
+`nucleo`, junto com as anotações, separados pelo campo `tipo`, e ficam fora do
+Exportar, do log, da lixeira e da cópia local, como o resto do Núcleo (apagar é
+de vez). "Baixar o caderno em JSON" devolve o formato do artefato; "trazer do
+artefato (JSON)" importa esse arquivo (as 20 seções antigas viram as abas de hoje,
+e o que não tem mais tela vai para a origem do item; registro com o mesmo id é
+regravado; status de página, plano da semana e semanas do piloto ficam de fora). As tarefas do caderno não entram nas
+Tarefas da Central: é backlog de melhoria, não trabalho da equipe.
+
+**Minhas tarefas no Resumo:** a primeira caixa do Painel → Resumo lista as cinco
+primeiras tarefas em aberto da pessoa logada (a da Equipe cujo e-mail de cadastro
+é o do login), vencidas primeiro; cada linha abre a tarefa, ✓ conclui, +7d adia,
+e "ver todas" leva a Gestão → Tarefas, já na coluna da pessoa. Login fora da
+Equipe: a caixa diz o que cadastrar.
 
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 

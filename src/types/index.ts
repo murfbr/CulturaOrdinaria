@@ -6,3 +6,4 @@ export * from "./constantes";
 export * from "./presets";
 export * from "./paginas";
 export * from "./acesso";
+export * from "./caderno";

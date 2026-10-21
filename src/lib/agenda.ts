@@ -65,7 +65,8 @@ export const diaVazio = (itens?: ItensDoDia): boolean =>
   !itens || (!itens.editais.length && !itens.tarefas.length && !itens.reunioes.length);
 
 /** Título curto de um evento (corta o que vem depois de "—" ou "("). */
-export const tituloCurto = (t: string) => t.split(/[—(]/)[0].trim();
+/** Título sem o sufixo entre travessão ou parêntese. Tolera título vazio (tarefa salva sem nome não pode derrubar o Resumo). */
+export const tituloCurto = (t?: string) => (t || "").split(/[—(]/)[0].trim();
 
 /** Nomes dos participantes de uma reunião. */
 export const nomesParticipantes = (r: Reuniao): string[] =>
