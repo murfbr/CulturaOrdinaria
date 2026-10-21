@@ -145,7 +145,9 @@ registro em `presets/paginas`.
   urgências**, logo depois do Resumo: as decisões (`decisoes`, com opções,
   prós e contras) e quem avisar (`avisos`) ficam no documento da edição; as
   urgências não são uma lista à parte, são tarefas da Central fixadas pelo id
-  (`urgentes`), criadas ali ou marcadas com a estrela na seção Tarefas. O dia
+  (`urgentes`), criadas ali, marcadas com a estrela na seção Tarefas ou escolhidas
+  em "Fixar tarefa da Central" (vale qualquer tarefa aberta da Central, também as da
+  agenda da semana, que seguem sem fase nem edição). O dia
   da semana sai da data (o campo `diaSemana` dos documentos antigos é ignorado).
 - **Caminhos do Forró** (`/caminhosdoforro/`): página independente do festival
   (cadastro geral, patrocínios e cotas, orçamento com simulador, programação,

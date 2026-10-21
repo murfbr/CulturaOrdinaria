@@ -92,6 +92,7 @@ function montarPainel(p: PaginaFesta | null, mapa: Record<string, Edicao>, centr
     presets: presetFesta(),
     projeto,
     tarefas: central.painel.tarefas.filter((t) => t.edicaoId && ids.has(t.edicaoId)),
+    tarefasCentral: central.painel.tarefas,
     equipe: central.painel.equipe,
     contatos: central.painel.contatos,
   };
