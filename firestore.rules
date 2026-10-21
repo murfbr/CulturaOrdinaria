@@ -1,19 +1,93 @@
 rules_version = '2';
 
 // Regras de segurança da Central do Coletivo.
-// Deploy: `npm run regras` (ou cole no console: Firestore Database → Rules → Publish).
+// Publicação: cole no console (Firestore Database → Rules → Publish). O `npm run regras`
+// só funciona com o CLI logado na conta dona do projeto.
 //
-// Modelo de acesso combinado: quem tem conta (criada pelo coletivo no console,
-// Authentication → Users) edita tudo; quem não tem conta não lê nada.
-// As contas são o "muro" — não há papéis nem auto-cadastro.
+// Modelo de acesso (22/10/2026, ver src/types/acesso.ts): cada conta tem um documento
+// em usuarios/<e-mail em minúsculas> com a marca `master` e a lista `modulos`
+// ("painel", "cadastros", "projetos", "agenda", "gestao", "contexto", "nucleo",
+// "pagina:<slug>"). Master passa por cima de tudo. Quem tem qualquer módulo da Central
+// lê o banco do coletivo inteiro (as telas cruzam os nomes); gravar numa coleção pede o
+// módulo dono dela (a mesma tabela de MODULOS_DA_COLECAO). O Núcleo (`nucleo`,
+// `usuarios`) é a única parte de leitura restrita. Quem não tem módulo da Central
+// (cliente, captador) só abre as páginas anexo marcadas: paginas/<slug> e as
+// subcoleções, mais a leitura de presets. Conta sem documento ou desativada não lê
+// nem grava nada.
 //
-// O coringa é recursivo ({document=**}) para cobrir também as subcoleções das
-// páginas próprias de projeto (paginas/<slug>/edicoes); a permissão é a mesma
-// da regra anterior, que só alcançava documentos na raiz.
+// ORDEM DE PUBLICAÇÃO (não pular; em 22/10/2026 estas regras entraram com a coleção
+// usuarios vazia e trancaram o banco para todo mundo, local e produção, até as antigas
+// voltarem): 1) o site com a tela Acessos no ar; 2) enquanto as regras antigas valem
+// (qualquer login grava), quem coordena abre Núcleo → Acessos, cria a própria linha como
+// master (botão com o e-mail exato do login) e cadastra as outras contas na mesma sentada,
+// porque a partir da primeira linha master o site já nega conta sem linha; a tela diz
+// quando já dá para publicar; 3) publicar estas regras; 4) tirar a tolerância do site.
+// Com estas regras no ar, conta sem linha vê "Sem acesso" no site novo; no site antigo,
+// que lê tudo na entrada, fica sem carregar. Se a ordem for furada, o único caminho de
+// volta é o console (voltar as regras antigas ou criar a linha master à mão).
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    function logado() { return request.auth != null; }
+    function chave() { return request.auth.token.email.lower(); }
+    function caminhoConta() { return /databases/$(database)/documents/usuarios/$(chave()); }
+    function temConta() { return logado() && exists(caminhoConta()) && get(caminhoConta()).data.ativo == true; }
+    function conta() { return get(caminhoConta()).data; }
+    function master() { return temConta() && conta().master == true; }
+    function modulo(m) { return master() || (temConta() && m in conta().modulos); }
+    function algum(lista) { return master() || (temConta() && conta().modulos.hasAny(lista)); }
+    // Tem módulo da Central: lê o banco do coletivo.
+    function central() { return algum(["painel", "cadastros", "projetos", "agenda", "gestao", "contexto"]); }
+    // Tem qualquer módulo (da Central ou de página): grava presets, lixeira e log.
+    function qualquer() { return master() || (temConta() && conta().modulos.size() > 0); }
+
+    // Acessos: cada um lê o próprio documento; o Núcleo lê e grava todos.
+    match /usuarios/{id} {
+      allow read: if logado() && (id == chave() || modulo("nucleo"));
+      allow write: if modulo("nucleo");
     }
+    // Núcleo do Coletivo (anotações): só quem tem o módulo, ou master.
+    match /nucleo/{id} {
+      allow read, write: if modulo("nucleo");
+    }
+
+    // Presets do sistema (festa, paginas): toda conta ativa lê; quem tem qualquer módulo grava.
+    match /presets/{id} {
+      allow read: if temConta();
+      allow write: if qualquer();
+    }
+
+    // Páginas anexo: o documento da página e as subcoleções, pelo módulo "pagina:<slug>".
+    match /paginas/{slug} {
+      allow read, write: if modulo("pagina:" + slug);
+      match /{resto=**} {
+        allow read, write: if modulo("pagina:" + slug);
+      }
+    }
+
+    // Coleções da Central: leitura para quem tem módulo da Central; gravação pelo módulo dono.
+    match /artistas/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    match /proponentes/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    match /editais/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    match /formularios/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    match /equipe/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    match /elenco/{id} { allow read: if central(); allow write: if modulo("cadastros"); }
+    // Contatos: o Ponta de Lança grava fornecedores.
+    match /contatos/{id} { allow read: if central(); allow write: if algum(["cadastros", "pagina:pontadelanca"]); }
+    match /projetos/{id} { allow read: if central(); allow write: if modulo("projetos"); }
+    match /rascunhos/{id} { allow read: if central(); allow write: if modulo("projetos"); }
+    match /versoes/{id} { allow read: if central(); allow write: if modulo("projetos"); }
+    match /candidaturas/{id} { allow read: if central(); allow write: if modulo("projetos"); }
+    // Tarefas: Agenda e Gestão, a ficha do projeto e o Ponta de Lança gravam.
+    match /tarefas/{id} { allow read: if central(); allow write: if algum(["agenda", "gestao", "projetos", "pagina:pontadelanca"]); }
+    match /reunioes/{id} { allow read: if central(); allow write: if algum(["agenda", "gestao"]); }
+    match /semanas/{id} { allow read: if central(); allow write: if algum(["agenda", "gestao"]); }
+    match /fichas/{id} { allow read: if central(); allow write: if modulo("contexto"); }
+    match /regras/{id} { allow read: if central(); allow write: if modulo("contexto"); }
+    match /julgamentos/{id} { allow read: if central(); allow write: if modulo("contexto"); }
+
+    // Controle: lixeira (mover, restaurar, esvaziar), log de alterações e o backup da migração v2.
+    match /lixeira/{id} { allow read: if central(); allow write: if qualquer(); }
+    match /log_alteracoes/{id} { allow read: if central(); allow write: if qualquer(); }
+    match /backup_v2/{id} { allow read, write: if master(); }
   }
 }

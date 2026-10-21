@@ -67,7 +67,7 @@ function ModalDeRegistro() {
       ? { ...clonar(porId(spec.colecao, aberto!.id!) || {}), ...valores }
       : { id: uid(spec.prefixoId), ...(spec.padrao || {}), ...valores };
     spec.depois?.(registro);
-    salvarRegistro(spec.colecao, registro as never);
+    if (!salvarRegistro(spec.colecao, registro as never)) return; // sem acesso: o aviso já apareceu, o modal fica
     fecharEdicao();
     toast("Salvo");
   }

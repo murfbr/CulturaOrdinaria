@@ -1,13 +1,16 @@
-/* Barra lateral do site: a marca em selo, a busca, os sete ambientes em
-   grupos (Painel; Trabalho; Escrita; Páginas anexo, sozinho, como seção
-   própria) com o item ativo em vermelho, e no rodapé o status do banco,
+/* Barra lateral do site: a marca em selo, a busca, os ambientes em grupos
+   (Painel; Trabalho; Escrita; Páginas anexo e Núcleo, cada um sozinho, como
+   seção própria) com o item ativo em vermelho, e no rodapé o status do banco,
    Exportar, Importar, o que ainda não chegou ao banco (quando há problema)
-   e Sair. O botão Agenda mostra quantos prazos pedem atenção; Gestão avisa
+   e Sair. Só aparece o que a conta abre: cada item é um módulo da lista de
+   acesso (master vê tudo); Exportar pede o módulo Gestão e Importar é só de
+   master. O botão Agenda mostra quantos prazos pedem atenção; Gestão avisa
    quando há dado no formato antigo. No celular vira uma faixa no topo com o
    botão ☰: o menu abre embaixo da faixa e fecha ao escolher um ambiente, no
    Esc ou no ✕. */
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Banco, type StatusSalvamento } from "../../services/banco";
+import { podeAbrirAmbiente, temModulo, usarAcesso } from "../../services/acesso";
 import { sair } from "../../services/sessao";
 import { usarCentral } from "../../store/central";
 import { AMBIENTES, irParaAmbiente, usarNavegacao } from "../../store/navegacao";
@@ -28,6 +31,7 @@ const GRUPOS: { rotulo: string; ids: string[] }[] = [
   { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "gestao"] },
   { rotulo: "Escrita", ids: ["contexto"] },
   { rotulo: "", ids: ["anexos"] },
+  { rotulo: "", ids: ["nucleo"] },
 ];
 
 /** Indicador de salvamento, sincronizado com a camada de armazenamento. */
@@ -62,6 +66,7 @@ const ESTILO_BOTAO_TOPO = "flex size-9 cursor-pointer items-center justify-cente
 export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) {
   const nav = usarNavegacao();
   const { painel, legado } = usarCentral();
+  const { acesso } = usarAcesso();
   const status = usarStatusBanco();
   const [modal, setModal] = useState<ModalAberto>("");
   const [aberto, setAberto] = useState(false);
@@ -82,7 +87,7 @@ export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) 
 
   const item = (id: string) => {
     const a = AMBIENTES.find((x) => x.id === id);
-    if (!a) return null;
+    if (!a || !podeAbrirAmbiente(a.id)) return null;
     const ativo = a.id === nav.amb;
     return (
       <button
@@ -124,7 +129,7 @@ export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) 
         </button>
 
         <nav className="flex flex-col gap-2.5">
-          {GRUPOS.map((g) => (
+          {GRUPOS.filter((g) => g.ids.some(podeAbrirAmbiente)).map((g) => (
             <div key={g.rotulo || g.ids[0]} className="grid gap-0.5">
               {g.rotulo && <Rotulo className="px-2.5 pb-1">{g.rotulo}</Rotulo>}
               {g.ids.map(item)}
@@ -141,10 +146,12 @@ export function BarraLateral({ emailUsuario }: { emailUsuario: string | null }) 
             <span className={cx("inline-block size-2.5 flex-none rounded-full", COR_STATUS[status.classe])} />
             <span className="min-w-0 truncate">{status.texto}</span>
           </button>
-          <div className="flex gap-2">
-            <Botao variante="fantasma" tamanho="pequeno" className="flex-1" onClick={() => abrir("exportar")}>Exportar</Botao>
-            <Botao variante="fantasma" tamanho="pequeno" className="flex-1" onClick={() => abrir("importar")}>Importar</Botao>
-          </div>
+          {(temModulo("gestao") || acesso?.master) && (
+            <div className="flex gap-2">
+              {temModulo("gestao") && <Botao variante="fantasma" tamanho="pequeno" className="flex-1" onClick={() => abrir("exportar")}>Exportar</Botao>}
+              {acesso?.master && <Botao variante="fantasma" tamanho="pequeno" className="flex-1" onClick={() => abrir("importar")}>Importar</Botao>}
+            </div>
+          )}
           {emailUsuario && (
             <button type="button" className="cursor-pointer border-0 bg-transparent p-0 text-left text-xs text-faint hover:text-ink hover:underline" onClick={() => void sair()}>
               sair · {emailUsuario}

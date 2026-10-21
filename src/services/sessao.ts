@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { auth, firebaseAtivo, limparCacheFirestore } from "./firebase";
 import { Banco } from "./banco";
+import { ligarAcesso } from "./acesso";
 import { pararDados } from "../store/central";
 
 export interface Sessao {
@@ -23,6 +24,8 @@ if (firebaseAtivo && auth) {
   onAuthStateChanged(auth, (usuario) => {
     sessao = { carregando: false, usuario };
     Banco.definirAutor(usuario?.email || "");
+    // O acesso (marca master e lista de módulos) vem do documento usuarios/<e-mail>.
+    ligarAcesso(usuario?.email || null);
     assinantes.forEach((f) => f());
     // Faxina do log de alterações (faz o papel do TTL): depois que o site já carregou.
     if (usuario) setTimeout(() => { void Banco.limparLogVencido(); }, 20000);
@@ -74,6 +77,7 @@ export async function redefinirSenha(email: string) {
 export async function sair() {
   if (!auth) return;
   pararDados();
+  ligarAcesso(null);
   await Promise.race([Banco.despejar(), new Promise((r) => setTimeout(r, 4000))]);
   await signOut(auth);
   await limparCacheFirestore();

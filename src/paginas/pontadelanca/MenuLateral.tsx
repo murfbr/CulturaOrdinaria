@@ -2,6 +2,7 @@
    o status e as abas da edição aberta, "+ Nova edição", indicador de
    salvamento (o mesmo do cabeçalho da Central), sair e a volta para a Central. */
 import { Fragment, useEffect, useState, useSyncExternalStore } from "react";
+import { temCentral } from "../../services/acesso";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair, usarSessao } from "../../services/sessao";
 import { toast } from "../../components/Toast";
@@ -96,7 +97,7 @@ export function MenuLateral({ painel, visao, aberto, irPara }: Props) {
 
       <div className="navfoot">
         <button className="sdp-btn ghost small" onClick={criar}>+ Nova edição</button>
-        <a className="sdp-btn ghost small" href="/">← Central</a>
+        <a className="sdp-btn ghost small" href="/">{temCentral() ? "← Central" : "← Suas páginas"}</a>
         <div className="estado">
           <span><span className={"ponto " + status.classe} />{status.texto}</span>
           <span>atualizado em {brCompleta(painel.pagina.meta?.atualizadoEm)}</span>

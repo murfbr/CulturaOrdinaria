@@ -2,7 +2,10 @@
    as coleções do Painel, formulários e docs do Contexto — e
    filtra por texto sem acento. Cada resultado sabe se abrir (ficha, modal de
    edição ou tela). O índice é montado na hora: com centenas de registros já
-   em memória, não precisa de índice persistente. */
+   em memória, não precisa de índice persistente. Só entra o que a conta abre:
+   cada grupo pertence a um módulo (Cadastros, Projetos, Agenda ou Gestão,
+   Contexto); o Núcleo e as páginas anexo ficam fora. */
+import { temModulo } from "../services/acesso";
 import type { EstadoCentral } from "../store/central";
 import {
   abrirDetalhe, abrirFichaContexto, abrirJulgamento, irParaAmbiente,
@@ -40,34 +43,41 @@ export function montarIndice(estado: EstadoCentral): ResultadoBusca[] {
   };
   const junta = (...p: (string | undefined)[]) => p.filter(Boolean).join(" · ");
 
-  painel.artistas.forEach((a) =>
-    item("Artista", a.nome, junta(a.tipo, a.mun), [a.tags, a.bio, a.enq], () => abrirDetalhe("artista", a.id)));
-  painel.projetos.forEach((p) =>
-    item("Projeto", p.nome, junta(ROTULO_STATUS_PROJETO[p.status], nomeEditalDoProjeto(p), p.arquivado ? "arquivado" : ""),
-      [nomesArtistas(p), p.tipo, p.grupo, p.inscricao, p.valorPedido], () => abrirDetalhe("projeto", p.id)));
-  painel.editais.forEach((e) =>
-    item("Edital", e.nome, junta(e.orgao, e.prazo && "prazo " + e.prazo), [e.curto, e.mec, e.area, e.objeto, e.estimula], () => abrirDetalhe("edital", e.id)));
-  Object.values(estado.formularios).forEach((f) =>
-    item("Formulário", f.nome, f.origem === "chrome" ? "mapeado na plataforma" : "mapeado dos documentos", [f.plataforma], () => abrirDetalhe("formulario", f.id)));
-  painel.tarefas.forEach((t) =>
-    item("Tarefa", t.titulo, junta(nomeEquipe(t.respId), t.prazo && formatarData(t.prazo)), [t.obs], () => abrirEdicao("tarefa", t.id)));
-  painel.reunioes.forEach((x) =>
-    item("Reunião", x.titulo || "Reunião de " + formatarData(x.data), junta(formatarData(x.data), x.hora), [x.pauta, x.local, x.ata], () => abrirDetalhe("reuniao", x.id)));
-  painel.equipe.forEach((p) =>
-    item("Equipe", p.nome, (p.funcoes || []).join(", "), [p.nomeCompleto, p.email], () => abrirEdicao("equipe", p.id)));
-  painel.elenco.forEach((c) =>
-    item("Elenco", c.nome, c.funcao || "", [c.nomeCompleto, c.bio], () => abrirEdicao("elenco", c.id)));
-  painel.contatos.forEach((c) =>
-    item("Contato", c.nome, junta(c.tipo, c.ref), [c.contato], () => abrirEdicao("contato", c.id)));
-
-  Object.values(estado.fichas).forEach((f) =>
-    item("Ficha de escrita", nomeDaEntidade(f.id), { artista: "artista", projeto: "projeto", edital: "edital" }[f.tipo] || "",
-      [f.posicionamento, f.argumentos, f.julgador], () => abrirFichaContexto(f.id)));
-  Object.values(estado.regras).forEach((g) =>
-    item("Regra", g.texto, ROTULO_TIPO_REGRA[g.tipoRegra] || "", [g.fonte?.ref], () => irParaAmbiente("contexto", "regras")));
-  Object.values(estado.julgamentos).forEach((j) =>
-    item("Julgamento", junta(nomeDaEntidade(j.edital), j.ano), ROTULO_RESULTADO[j.resultado] || "",
-      [j.resumo, j.projeto && nomeDaEntidade(j.projeto)], () => abrirJulgamento(j.id)));
+  if (temModulo("cadastros")) {
+    painel.artistas.forEach((a) =>
+      item("Artista", a.nome, junta(a.tipo, a.mun), [a.tags, a.bio, a.enq], () => abrirDetalhe("artista", a.id)));
+    painel.editais.forEach((e) =>
+      item("Edital", e.nome, junta(e.orgao, e.prazo && "prazo " + e.prazo), [e.curto, e.mec, e.area, e.objeto, e.estimula], () => abrirDetalhe("edital", e.id)));
+    Object.values(estado.formularios).forEach((f) =>
+      item("Formulário", f.nome, f.origem === "chrome" ? "mapeado na plataforma" : "mapeado dos documentos", [f.plataforma], () => abrirDetalhe("formulario", f.id)));
+    painel.equipe.forEach((p) =>
+      item("Equipe", p.nome, (p.funcoes || []).join(", "), [p.nomeCompleto, p.email], () => abrirEdicao("equipe", p.id)));
+    painel.elenco.forEach((c) =>
+      item("Elenco", c.nome, c.funcao || "", [c.nomeCompleto, c.bio], () => abrirEdicao("elenco", c.id)));
+    painel.contatos.forEach((c) =>
+      item("Contato", c.nome, junta(c.tipo, c.ref), [c.contato], () => abrirEdicao("contato", c.id)));
+  }
+  if (temModulo("projetos")) {
+    painel.projetos.forEach((p) =>
+      item("Projeto", p.nome, junta(ROTULO_STATUS_PROJETO[p.status], nomeEditalDoProjeto(p), p.arquivado ? "arquivado" : ""),
+        [nomesArtistas(p), p.tipo, p.grupo, p.inscricao, p.valorPedido], () => abrirDetalhe("projeto", p.id)));
+  }
+  if (temModulo("gestao") || temModulo("agenda")) {
+    painel.tarefas.forEach((t) =>
+      item("Tarefa", t.titulo, junta(nomeEquipe(t.respId), t.prazo && formatarData(t.prazo)), [t.obs], () => abrirEdicao("tarefa", t.id)));
+    painel.reunioes.forEach((x) =>
+      item("Reunião", x.titulo || "Reunião de " + formatarData(x.data), junta(formatarData(x.data), x.hora), [x.pauta, x.local, x.ata], () => abrirDetalhe("reuniao", x.id)));
+  }
+  if (temModulo("contexto")) {
+    Object.values(estado.fichas).forEach((f) =>
+      item("Ficha de escrita", nomeDaEntidade(f.id), { artista: "artista", projeto: "projeto", edital: "edital" }[f.tipo] || "",
+        [f.posicionamento, f.argumentos, f.julgador], () => abrirFichaContexto(f.id)));
+    Object.values(estado.regras).forEach((g) =>
+      item("Regra", g.texto, ROTULO_TIPO_REGRA[g.tipoRegra] || "", [g.fonte?.ref], () => irParaAmbiente("contexto", "regras")));
+    Object.values(estado.julgamentos).forEach((j) =>
+      item("Julgamento", junta(nomeDaEntidade(j.edital), j.ano), ROTULO_RESULTADO[j.resultado] || "",
+        [j.resumo, j.projeto && nomeDaEntidade(j.projeto)], () => abrirJulgamento(j.id)));
+  }
 
   return r;
 }

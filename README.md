@@ -187,6 +187,60 @@ id → registro, as subcoleções declaradas no registro em código), no mesmo
 formato das diretrizes; serve de cópia e de semente. O Exportar da Central
 continua cobrindo só as coleções do coletivo; os arquivos do Storage ficam fora.
 
+### Acessos: módulos por conta, master acima de tudo
+
+O login continua sendo criado no console do Firebase (Authentication → Users), mas
+o que cada login abre está no banco: a coleção `usuarios`, um documento por conta
+com o id igual ao e-mail em minúsculas, a marca `master` e a lista `modulos`.
+Módulo é um item do menu: `painel`, `cadastros`, `projetos`, `agenda`, `gestao`,
+`contexto`, `nucleo` e `pagina:<slug>` para cada página anexo. Tem o módulo, abre e
+edita; não tem, não aparece. Master passa por cima da lista: abre e grava em tudo,
+inclusive nos módulos criados depois. A tela **Acessos** (ambiente Núcleo do
+Coletivo, módulo `nucleo`) é uma linha por conta com uma caixa por módulo; o
+"+ Conta" preenche as caixas por um perfil (master, coordenador, captador,
+cliente). Contas não se apagam: desativam. A última master ativa não se rebaixa.
+
+Como o site e o banco aplicam a lista (`src/types/acesso.ts`, `src/services/acesso.ts`,
+`firestore.rules`, `storage.rules`):
+
+- O site lê `usuarios/<e-mail>` assim que o login muda e escolhe a casca: a
+  Central (quem tem algum módulo dela), **Suas páginas** (quem só tem páginas
+  anexo: cliente, captador) ou **sem acesso** (conta sem documento ou desativada).
+  Menu, abas, a seção Páginas anexo e a busca só mostram o que a conta tem; um
+  endereço de ambiente que a conta não tem volta para o primeiro permitido.
+- Gravar numa coleção pede o módulo dono dela (tabela `MODULOS_DA_COLECAO`, a mesma
+  das regras): Cadastros grava artistas, proponentes, editais, formulários, equipe,
+  elenco e contatos; Projetos grava projetos, respostas e versões; Agenda e Gestão
+  gravam tarefas, reuniões e semanas; Contexto grava fichas, regras e julgamentos;
+  cada página grava os próprios dados (e o Ponta de Lança, tarefas e contatos). O
+  `Banco` recusa na hora, com aviso, o que a lista não permite; as regras recusam
+  também. Exportar pede o módulo Gestão; Importar é só de master.
+- Quem tem qualquer módulo da Central lê o banco do coletivo inteiro, porque as
+  telas cruzam os nomes o tempo todo. `nucleo` e `usuarios` são as únicas coleções
+  de leitura restrita (módulo Núcleo); ficam fora da lixeira comum, do log, do
+  Exportar, da busca e da cópia local do navegador.
+- Quem não tem módulo da Central não lê nada do coletivo: só `presets` e as páginas
+  marcadas. Página que lê a Central (hoje o Ponta de Lança, registro `leACentral`)
+  não abre para essas contas; a tela Acessos avisa.
+- Modo local (sem Firebase): a conta é master; para simular outra lista, grave no
+  `localStorage` a chave `central-acesso-teste`, por exemplo
+  `{"master":false,"modulos":["agenda","pagina:caminhosdoforro"]}`.
+
+**Transição e ordem de publicação** (`TOLERANCIA_SEM_DOCUMENTO` em
+`services/acesso.ts`): conta sem documento entra como master só enquanto a lista
+de contas não tem nenhuma master ativa (as regras antigas já deixavam qualquer
+login gravar tudo); é nessa janela que a primeira linha master nasce, pela própria
+tela Acessos, com o botão "Criar a minha linha como master" (usa o e-mail exato do
+login). A partir da primeira linha master a janela se fecha sozinha: conta sem
+linha vê "Sem acesso", com as regras antigas ou novas, por isso as outras contas
+se cadastram na mesma sentada. Ordem, sem pular: site no ar → quem coordena abre
+Núcleo → Acessos, cria a própria linha e cadastra as outras contas (a tela diz
+quando já dá para publicar) → as regras novas são publicadas → um commit tira a
+tolerância. No site antigo (que lê tudo na entrada) as regras novas travam o
+carregamento, por isso o deploy vem antes das regras. Em 22/10/2026 as regras
+entraram antes das linhas e trancaram o banco para todo mundo até as antigas
+voltarem; se a ordem for furada, só o console desfaz.
+
 ### Caminhos do Forró: tarefas e o plano de ação por GTs
 
 Na página do festival, a aba Tarefas é o plano de ação da

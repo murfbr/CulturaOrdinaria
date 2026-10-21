@@ -6,8 +6,10 @@
    lado. Os arquivos enviados ao Storage (apresentações, cartas, contexto)
    não entram: só os links e caminhos gravados nos registros. */
 import { useState } from "react";
+import { temModulo } from "../../services/acesso";
 import { Banco } from "../../services/banco";
 import { usarCentral } from "../../store/central";
+import { moduloDaPagina } from "../../types";
 import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { ModalExportar } from "../../components/ferramentas/ModalExportar";
 import { toast } from "../../components/Toast";
@@ -63,7 +65,7 @@ export function BackupAnexos() {
         <Botao variante="fantasma" tamanho="pequeno" onClick={() => setExportar(true)}>Exportar da Central</Botao>
       </CabecalhoSecao>
 
-      {Object.entries(PAGINAS_PROPRIAS).map(([slug, p]) => {
+      {Object.entries(PAGINAS_PROPRIAS).filter(([slug]) => temModulo(moduloDaPagina(slug))).map(([slug, p]) => {
         const titulo = registro.find((r) => r.slug === slug)?.titulo || p.titulo;
         const c = contagens[slug];
         return (

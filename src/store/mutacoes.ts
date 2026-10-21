@@ -2,6 +2,7 @@
    Painel, projetos (com o rascunho do formulário) e docs do Contexto — sempre via camada Banco,
    que espelha na hora e grava com debounce. Excluir nunca apaga de vez: o
    registro vai para a coleção `lixeira` (30 dias) e o toast oferece Desfazer. */
+import { podeGravar } from "../services/acesso";
 import { Banco } from "../services/banco";
 import { emailSessao } from "../services/sessao";
 import { toast } from "../components/Toast";
@@ -115,14 +116,19 @@ export function limparLixeiraAntiga(dias = 30) {
 
 /* ══════════ Painel ══════════ */
 
-/** Cria ou atualiza um registro do Painel. Novo registro entra no fim da lista. */
-export function salvarRegistro(colecao: ColecaoPainel, registro: RegistroPainel, rapido = true) {
+/** Cria ou atualiza um registro do Painel. Novo registro entra no fim da lista.
+    Devolve false (sem gravar, com aviso) quando a conta não tem o módulo dono da coleção. */
+export function salvarRegistro(colecao: ColecaoPainel, registro: RegistroPainel, rapido = true): boolean {
+  if (!podeGravar(colecao, registro.id)) { avisarSemAcesso(colecao); return false; }
   const r = clonar(registro) as RegistroPainel;
   const existente = obterEstado().painel[colecao].find((x) => x.id === r.id);
   r._ord = existente ? existente._ord : maiorOrd(colecao) + 1;
   r.atualizado = new Date().toISOString();
   Banco.gravar(colecao, r.id, r as unknown as Documento, rapido);
+  return true;
 }
+
+const avisarSemAcesso = (colecao: string) => toast("Sem acesso para gravar em " + colecao + ": sua conta não tem o módulo dessa parte.");
 
 const maiorOrd = (colecao: ColecaoPainel) =>
   obterEstado().painel[colecao].reduce((m, x) => Math.max(m, x._ord || 0), -1);
@@ -131,6 +137,8 @@ const maiorOrd = (colecao: ColecaoPainel) =>
     ligadas e o rascunho do formulário dele. Uma página anexo para a qual o projeto
     aponta não é dele e fica como está. */
 export function excluirRegistro(colecao: ColecaoPainel, id: string) {
+  // Sem o módulo dono, nada sai: nem para a lixeira (senão ficaria a cópia sem apagar o original).
+  if (!podeGravar(colecao, id)) { avisarSemAcesso(colecao); return; }
   emLoteDeExclusao(() => {
     const projeto = colecao === "projetos" ? porId("projetos", id) : undefined;
     moverParaLixeira(colecao, id);

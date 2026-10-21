@@ -5,9 +5,11 @@
    aberta). Em Páginas anexo, depois das abas vem uma aba por página do
    registro em código: é um link que sai da Central para /<slug>/ (as páginas
    têm "← Central" de volta). No celular as abas descem e rolam de lado. */
+import { temModulo, usarAcesso } from "../../services/acesso";
 import { usarCentral } from "../../store/central";
 import { ambienteDe, irParaAba, usarNavegacao } from "../../store/navegacao";
 import { PAGINAS_PROPRIAS } from "../../pages/paginasProprias";
+import { moduloDaPagina } from "../../types";
 import { cx } from "../../utils/classes";
 import { Rotulo } from "../ui/Rotulo";
 
@@ -18,12 +20,15 @@ const ESTILO_ABA = "cursor-pointer whitespace-nowrap border-0 border-b-stamp bor
 export function CabecalhoPagina() {
   const nav = usarNavegacao();
   const { legado, presets } = usarCentral();
+  usarAcesso(); // redesenha quando o acesso muda
   const ambiente = ambienteDe(nav.amb);
   const pendente = legado.candidaturas.length > 0 || legado.projetosV2 > 0;
   const abas = ambiente.abas.filter(([id]) => id !== "migracao" || pendente || nav.aba === "migracao");
-  // As páginas anexo: título do banco (presets/paginas) quando existe, senão o de reserva do registro.
+  // As páginas anexo que a conta abre: título do banco (presets/paginas) quando existe, senão o de reserva.
   const paginas = ambiente.id === "anexos"
-    ? Object.entries(PAGINAS_PROPRIAS).map(([slug, p]) => [slug, presets.paginas?.paginas.find((r) => r.slug === slug)?.titulo || p.titulo] as [string, string])
+    ? Object.entries(PAGINAS_PROPRIAS)
+      .filter(([slug]) => temModulo(moduloDaPagina(slug)))
+      .map(([slug, p]) => [slug, presets.paginas?.paginas.find((r) => r.slug === slug)?.titulo || p.titulo] as [string, string])
     : [];
 
   return (

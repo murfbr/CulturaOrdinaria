@@ -24,7 +24,9 @@ const CHAVE_LOCAL = "central-coletivo-local-v1";
     o cache offline do próprio Firestore (IndexedDB) já as guarda, e mantê-las
     fora evita inchar (e reserializar a cada tecla) o espelho. No modo local o
     localStorage É o banco, então elas entram normalmente. */
-const SEM_ESPELHO_NA_NUVEM = new Set(["formularios", "lixeira", "backup_v2"]);
+const SEM_ESPELHO_NA_NUVEM = new Set(["formularios", "lixeira", "backup_v2",
+  // Acessos e Núcleo: nada deles fica na cópia local do navegador.
+  "usuarios", "nucleo"]);
 
 /** Texto e cor do indicador "salvo às..." no topo do site. */
 export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" };
@@ -41,10 +43,12 @@ export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" 
    sozinha, mas exige faturamento ativo no projeto; enquanto isso, o próprio
    site apaga as vencidas uma vez por dia (`Banco.limparLogVencido`). */
 const COLECAO_LOG = "log_alteracoes";
-const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2"]);
+const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2", "usuarios", "nucleo"]);
 const CAMPOS_IGNORADOS_NO_DIFF = new Set(["_novo", "atualizado", "atualizadoPor"]);
 const DIAS_DE_LOG = 90;
 let autorAtual = "";
+/** Guarda de acesso (services/acesso.ts): devolve o motivo para não gravar, ou "" quando pode. */
+let guarda: ((colecao: string, id: string) => string) | null = null;
 /** Versão do documento antes da primeira gravação de cada janela de debounce. */
 const anteriores: Record<string, Documento | undefined> = {};
 
@@ -90,6 +94,14 @@ const falhas: Record<string, FalhaGravacao> = {};
 const aoFalhas: Set<() => void> = new Set();
 let versaoFalhas = 0;
 const avisarFalhas = () => { versaoFalhas++; aoFalhas.forEach((cb) => cb()); };
+
+/** Gravação (ou exclusão) barrada pela guarda de acesso: fica listada como recusa, sem ir ao banco. */
+function recusarPorAcesso(colecao: string, id: string, documento: Documento | undefined, motivo: string) {
+  const rotulo = documento ? String(documento.titulo || documento.nome || documento.id || id) : id;
+  falhas[colecao + "/" + id] = { colecao, id, rotulo, motivo, quando: new Date().toISOString() };
+  mudarStatus({ texto: "sem acesso para gravar", classe: "er" });
+  avisarFalhas();
+}
 
 /** O erro é de dado inválido (não adianta tentar de novo) e não de rede/permissão? */
 function erroDeDado(e: unknown): boolean {
@@ -191,6 +203,11 @@ export const Banco = {
     autorAtual = email || "";
   },
 
+  /** A guarda de acesso: gravação e exclusão passam por ela antes de ir ao banco (ver services/acesso.ts). */
+  definirGuarda(fn: (colecao: string, id: string) => string) {
+    guarda = fn;
+  },
+
   aoMudarStatus(cb: (s: StatusSalvamento) => void) {
     aoStatus.add(cb);
     return () => { aoStatus.delete(cb); };
@@ -276,7 +293,12 @@ export const Banco = {
           avisar(colecao, !snap.metadata.fromCache);
           subir.forEach((id) => { void this.descarregar(colecao, id); });
         },
-        () => {
+        (erro: { code?: string }) => {
+          // Permissão negada não se resolve esperando: para de religar e diz o que foi recusado.
+          if (erro?.code === "permission-denied") {
+            mudarStatus({ texto: "sem acesso a " + colecao, classe: "er" });
+            return;
+          }
           emCache.add(colecao);
           mudarStatus({ texto: "banco indisponível — tentando reconectar…", classe: "er" });
           religar = setTimeout(ligar, Math.min(30000, 1000 * 2 ** falhas++));
@@ -339,7 +361,11 @@ export const Banco = {
           for (const f of observadoresDoc[chave] || []) f(atual, !snap.metadata.fromCache);
           if (subir) void this.descarregar(colecao, id);
         },
-        () => {
+        (erro: { code?: string }) => {
+          if (erro?.code === "permission-denied") {
+            mudarStatus({ texto: "sem acesso a " + chave, classe: "er" });
+            return;
+          }
           emCache.add(chave);
           mudarStatus({ texto: "banco indisponível — tentando reconectar…", classe: "er" });
           religar = setTimeout(ligar, Math.min(30000, 1000 * 2 ** falhas++));
@@ -389,6 +415,8 @@ export const Banco = {
    * O espelho e os observadores são atualizados na hora — a rede vem depois.
    */
   gravar(colecao: string, id: string, documento: Documento, rapido = false) {
+    const impedimento = guarda ? guarda(colecao, id) : "";
+    if (impedimento) { recusarPorAcesso(colecao, id, documento, impedimento); return; }
     const copia = clonar(documento);
     // Sem Firebase, tudo nasce _novo: se este navegador um dia entrar no modo
     // nuvem, a reconciliação do onSnapshot sobe esses documentos sozinha.
@@ -486,6 +514,8 @@ export const Banco = {
   },
 
   async apagar(colecao: string, id: string) {
+    const impedimento = guarda ? guarda(colecao, id) : "";
+    if (impedimento) { recusarPorAcesso(colecao, id, (espelho[colecao] || {})[id], impedimento); return; }
     const chave = colecao + "/" + id;
     clearTimeout(timers[chave]);
     delete timers[chave];

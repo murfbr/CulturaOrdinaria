@@ -4,6 +4,7 @@
    fechando o grupo Apoio, o estado do banco e o sair. No celular vira o topo
    da página, com as seções rolando de lado e os títulos dos grupos escondidos. */
 import { useSyncExternalStore } from "react";
+import { temCentral } from "../../services/acesso";
 import { Banco, type StatusSalvamento } from "../../services/banco";
 import { sair, usarSessao } from "../../services/sessao";
 import { cx } from "../../utils/classes";
@@ -78,7 +79,7 @@ export function MenuLateral({ base, vista, irPara }: Props) {
             <h2 className={GRUPO}>{g.titulo}</h2>
             <ul className={LISTA}>
               {g.itens.map((n) => item(n.id, n.nome))}
-              {i === grupos.length - 1 && <li><a className={ITEM} href="/">← Central</a></li>}
+              {i === grupos.length - 1 && <li><a className={ITEM} href="/">{temCentral() ? "← Central" : "← Suas páginas"}</a></li>}
             </ul>
           </section>
         ))}

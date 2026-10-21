@@ -3,12 +3,24 @@ rules_version = '2';
 // Regras do Storage da Central do Coletivo.
 // Publicação: cole no console (Storage → Rules → Publish), como as regras do Firestore.
 //
-// Quem tem conta (criada pelo coletivo no console) lê e grava os arquivos das
-// páginas próprias de projeto, em paginas/<slug>/... Todo o resto fica fechado.
+// Mesmo modelo de acesso do Firestore (22/10/2026): a conta é o documento
+// usuarios/<e-mail> do Firestore, lido daqui pela regra entre serviços; master passa
+// por cima; a pasta de uma página anexo (paginas/<slug>/...) abre para quem tem o
+// módulo "pagina:<slug>"; a pasta nucleo/ só para o módulo Núcleo. O resto fica fechado.
+// Publicar só junto com o firestore.rules novo, na ordem descrita lá.
 service firebase.storage {
   match /b/{bucket}/o {
-    match /paginas/{resto=**} {
-      allow read, write: if request.auth != null;
+    function chave() { return request.auth.token.email.lower(); }
+    function caminhoConta() { return /databases/(default)/documents/usuarios/$(chave()); }
+    function temConta() { return request.auth != null && firestore.exists(caminhoConta()) && firestore.get(caminhoConta()).data.ativo == true; }
+    function conta() { return firestore.get(caminhoConta()).data; }
+    function modulo(m) { return temConta() && (conta().master == true || m in conta().modulos); }
+
+    match /paginas/{slug}/{resto=**} {
+      allow read, write: if modulo("pagina:" + slug);
+    }
+    match /nucleo/{resto=**} {
+      allow read, write: if modulo("nucleo");
     }
     match /{resto=**} {
       allow read, write: if false;

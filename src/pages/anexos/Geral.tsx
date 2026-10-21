@@ -11,6 +11,8 @@ import { CartaoLista } from "../../components/ui/CartaoLista";
 import { Dica } from "../../components/ui/Dica";
 import { Grade } from "../../components/ui/Grade";
 import { ESTILO_LINK } from "../../components/ui/estilos";
+import { temModulo } from "../../services/acesso";
+import { moduloDaPagina } from "../../types";
 import { PAGINAS_PROPRIAS } from "../paginasProprias";
 
 export function GeralAnexos() {
@@ -22,7 +24,7 @@ export function GeralAnexos() {
       <CabecalhoSecao titulo="Geral" sub="projetos ou braços contínuos do coletivo, sem prazo para acabar, cada um com página e acompanhamento próprios" />
 
       <Grade colunas="auto">
-        {Object.entries(PAGINAS_PROPRIAS).map(([slug, p]) => {
+        {Object.entries(PAGINAS_PROPRIAS).filter(([slug]) => temModulo(moduloDaPagina(slug))).map(([slug, p]) => {
           const noBanco = registro.find((r) => r.slug === slug);
           const projetos = painel.projetos.filter((x) => x.paginaSlug === slug && !x.arquivado);
           return (

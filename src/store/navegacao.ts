@@ -14,7 +14,7 @@ export interface Ambiente {
   abas: [id: string, rotulo: string][];
 }
 
-/** Os sete ambientes do site, com suas abas. Páginas anexo ganha, no cabeçalho,
+/** Os oito ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
     uma aba por página do registro em código (link para /<slug>/). */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
@@ -24,6 +24,7 @@ export const AMBIENTES: Ambiente[] = [
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
   { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"], ["backup", "Backup"]] },
+  { id: "nucleo", rotulo: "Núcleo do Coletivo", abas: [["anotacoes", "Anotações e ideias"], ["acessos", "Acessos"]] },
 ];
 
 /** Endereços da versão anterior (v2) → onde a mesma coisa mora agora.
@@ -198,7 +199,7 @@ const CASA_DO_DETALHE: Record<Detalhe["tipo"], [string, string]> = {
 };
 
 /** Ambientes cujo roteador sabe desenhar fichas do Painel (artista, edital...). */
-const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "gestao", "anexos"];
+const FAMILIA_PAINEL = ["painel", "cadastros", "agenda", "gestao", "anexos", "nucleo"];
 
 /** Abre a ficha de detalhe de um registro. Projeto abre sempre em Projetos;
     as outras fichas abrem onde estiver, se o ambiente souber desenhá-las. */
