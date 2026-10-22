@@ -10,7 +10,7 @@ import { clonar } from "../../../utils";
 import { auditoria, hojeIso, referenciasDoCadastro } from "../calculo";
 import { apagar, gravar, novoId } from "../dados";
 import { opcoes } from "../listas";
-import { REDES, type Base, type Cadastro, type Rede } from "../tipos";
+import { REDES, TIPOS_ATRACAO, type Base, type Cadastro, type Rede } from "../tipos";
 import { arquivoDoLink, linkValido } from "../ui/Arquivo";
 import { AreaTexto, Campo, Check, Chips, Entrada, Grupo, Opcoes, Selecao } from "../ui/Campo";
 import { LINHA_INTEIRA, Modal } from "../ui/Modal";
@@ -36,6 +36,8 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
   const [seguidores, setSeguidores] = useState(d.seguidores == null ? "" : String(d.seguidores));
   const [contadoEm, setContadoEm] = useState(d.seguidoresEm || "");
   const [redes, setRedes] = useState<Partial<Record<Rede, string>>>(() => ({ ...(d.redes || {}) }));
+  const [midiaKit, setMidiaKit] = useState(d.midiaKit || "");
+  const ehAtracao = d.tipos.some((t) => TIPOS_ATRACAO.includes(t));
   const p = base.pagina;
   const avisoDoc = avisoDocumento(d.documento, "documento");
   const mudar = (parte: Partial<Cadastro>) => setD((a) => ({ ...a, ...parte }));
@@ -48,6 +50,7 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
     if (!linkValido(arquivo)) { toast("O link precisa começar com http:// ou https://"); return; }
     const redeRuim = REDES.find(([r]) => !linkValido(redes[r] || ""));
     if (redeRuim) { toast("O link de " + redeRuim[1] + " precisa começar com http:// ou https://"); return; }
+    if (!linkValido(midiaKit)) { toast("O link do mídia-kit precisa começar com http:// ou https://"); return; }
     const seg = lerSeguidores(seguidores);
     if (seguidores.trim() && seg == null) { toast("Seguidores: escreva só o número (9369, 9.369 ou 9,4 mil)."); return; }
     // Contagem nova sem data: a data é hoje. Sem contagem, sem data.
@@ -57,6 +60,7 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       contato: { nome: d.contato.nome.trim(), telefone: d.contato.telefone.trim(), email: d.contato.email.trim() },
       documento: d.documento.trim(), anotacoes: d.anotacoes.trim(),
       instagram: perfilInstagram(d.instagram), seguidores: seg, seguidoresEm: em, redes: limparRedes(redes),
+      midiaKit: ehAtracao && midiaKit.trim() ? midiaKit.trim() : undefined,
       cartaArquivo: arquivo.trim() ? arquivoDoLink(arquivo) : (d.cartaArquivo?.tipo === "asset" ? d.cartaArquivo : null),
     });
     aoFechar();
@@ -96,6 +100,11 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       {REDES.map(([r, nome]) => (
         <Campo key={r} rotulo={nome + " (link)"}><Entrada type="url" value={redes[r] || ""} onChange={(e) => setRedes((a) => ({ ...a, [r]: e.target.value }))} placeholder="https://…" /></Campo>
       ))}
+      {ehAtracao && (
+        <Campo rotulo="Mídia-kit da atração (link: release, fotos, rider)" className={LINHA_INTEIRA}>
+          <Entrada type="url" value={midiaKit} onChange={(e) => setMidiaKit(e.target.value)} placeholder="https://…" />
+        </Campo>
+      )}
       <Campo rotulo="Anotações" className={LINHA_INTEIRA}><AreaTexto rows={4} value={d.anotacoes} onChange={(e) => mudar({ anotacoes: e.target.value })} /></Campo>
       <Check rotulo="A revisar" className={LINHA_INTEIRA} checked={d.revisar} onChange={(e) => mudar({ revisar: e.target.checked })} />
     </Modal>

@@ -44,6 +44,7 @@ export function colunasCadastro(base: Base): ColunaTabela[] {
       campo: "redes." + rede, cabecalho: nome, converter: link, aceita: (c: string) => c === normalizar(nome),
       como: "link completo (https://…)", exemplo: "",
     })),
+    { campo: "midiaKit", cabecalho: "Mídia-kit", converter: link, aceita: (c) => c.startsWith("midia") || c.startsWith("mídia") || c.startsWith("media kit") || c === "midiakit", como: "link completo (só para atrações)", exemplo: "" },
     { campo: "anotacoes", cabecalho: "Anotações", aceita: (c) => c.startsWith("anotac") || c.startsWith("observac"), como: 'texto livre; também aceita "Observações"', exemplo: "linha de exemplo: apague antes de importar" },
     { campo: "revisar", cabecalho: "A revisar", booleano: true, aceita: (c) => c.startsWith("revisar"), como: "sim ou não", exemplo: "não" },
   ];

@@ -96,6 +96,10 @@ export function DetalheCadastro({ base, d, aoEditar }: Props) {
             <dt className={DT}>Outras redes</dt>
             <dd className={DD}>{redesDe(d).map((r, i) => <span key={r.rede}>{i > 0 && " · "}<a href={r.url} target="_blank" rel="noopener" className="cdf:text-link">{r.nome}</a></span>)}</dd>
           </>}
+          {d.midiaKit && <>
+            <dt className={DT}>Mídia-kit</dt>
+            <dd className={DD}><a href={d.midiaKit} target="_blank" rel="noopener" className="cdf:text-link">{d.midiaKit.replace(/^https?:\/\/(www\.)?/, "").slice(0, 60)}</a></dd>
+          </>}
           <dt className={DT}>Anotações</dt><dd className={DD}>{d.anotacoes || "—"}</dd>
         </dl>
         <p className="cdf:m-0 cdf:mb-2.5 cdf:text-[13px] cdf:text-fraco">{auditoria(d as Cadastro & { atualizadoPor?: string })}</p>

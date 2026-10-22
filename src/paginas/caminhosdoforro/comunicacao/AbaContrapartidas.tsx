@@ -1,8 +1,7 @@
 /* Aba Contrapartidas do núcleo de comunicação: o que cada cota promete em
    comunicação (as linhas das contrapartidas que falam de marca, conteúdo,
    redes ou registros), o que cada patrocínio confirmado tem a receber e o
-   que ainda não tem onde morar (a prova de entrega). No fim, as tarefas e o
-   orçamento desta frente. */
+   que ainda não tem onde morar (a prova de entrega). */
 import { nomeCadastro, nomeCota, vendidasPorCota } from "../calculo";
 import { normalizar, rotulo } from "../listas";
 import type { Base, Cota, Nucleo } from "../tipos";
@@ -10,8 +9,7 @@ import { Botao } from "../ui/Botao";
 import { SECAO, TEXTO_LONGO } from "../ui/classes";
 import { Resumo } from "../ui/Resumo";
 import { NUM, Tabela, Td, Th } from "../ui/Tabela";
-import type { AbaNucleo, IrPara } from "../vista";
-import { BlocoFrente } from "./BlocoFrente";
+import type { IrPara } from "../vista";
 
 /** Linhas de contrapartida que falam de comunicação (marca, posts, redes, menções, conteúdo, naming). */
 const FALA_DE_COMUNICACAO = /comunica|marca|post|rede|men[cç][aã]o|conte[uú]do|v[ií]deo|naming|assinatura|registro|digital|campanha|divulga/;
@@ -20,9 +18,9 @@ const linhasDeComunicacao = (c: Cota) =>
   (c.contrapartidas || "").split(/\n|(?<=\.)\s+/).map((l) => l.trim()).filter((l) => l && FALA_DE_COMUNICACAO.test(normalizar(l)));
 
 
-interface Props { base: Base; nucleo: Nucleo; irPara: IrPara; abrirAba: (a: AbaNucleo) => void }
+interface Props { base: Base; nucleo: Nucleo; irPara: IrPara }
 
-export function AbaContrapartidas({ base, nucleo, irPara, abrirAba }: Props) {
+export function AbaContrapartidas({ base, irPara }: Props) {
   const p = base.pagina;
   const vendidas = vendidasPorCota(base);
   const cotas = Object.values(base.cotas).sort((a, b) => (a.ordem || 0) - (b.ordem || 0)).map((c) => ({ c, linhas: linhasDeComunicacao(c) })).filter((x) => x.linhas.length);
@@ -86,8 +84,6 @@ export function AbaContrapartidas({ base, nucleo, irPara, abrirAba }: Props) {
           <li><strong>Apoio cultural e parceiros.</strong> Parceiros institucionais também recebem menção; decidir se entram nesta lista ou só nas peças.</li>
         </ul>
       </div>
-
-      <BlocoFrente base={base} nucleo={nucleo} frente="contrapartidas" abrirAba={abrirAba} />
     </>
   );
 }

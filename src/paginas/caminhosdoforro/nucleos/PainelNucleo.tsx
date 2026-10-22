@@ -4,6 +4,7 @@
    cartão por frente (Redes, Design, Audiovisual, Contrapartidas) com o que
    cada aba tem. Só leitura: tudo é conta sobre o que as outras abas guardam. */
 import { brl, calcularOrcamento, contarTarefas, dataBr, nomeCadastro, nucleoCaptacao, nucleoComunicacao, pctTexto, respEfetivo, rotuloCenario, tarefaAtrasada, valorItem } from "../calculo";
+import { alcance } from "../comunicacao/alcance";
 import { FRENTES, itensDaFrente, tarefasDaFrente } from "../comunicacao/frentes";
 import { ResumoCaptacao } from "../patrocinios/ResumoCaptacao";
 import { rotulo } from "../listas";
@@ -36,6 +37,9 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
   const porCategoria: Record<string, number> = {};
   itens.forEach((it) => { const k = it.categoria || "_sem"; porCategoria[k] = (porCategoria[k] || 0) + valorItem(it, conta.cenario); });
   const categorias = Object.entries(porCategoria).sort((a, b) => b[1] - a[1]);
+  const ehComunicacao = nucleoComunicacao(base)?.id === n.id;
+  const al = ehComunicacao ? alcance(base) : null;
+  const num = (v: number) => v.toLocaleString("pt-BR");
 
   return (
     <>
@@ -55,8 +59,16 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
         </>
       )}
 
-      {nucleoComunicacao(base)?.id === n.id && (
+      {al && (
         <>
+          <h2 className={SECAO}>Alcance nas redes<Botao mini className="cdf:ml-auto cdf:font-sans" onClick={() => abrirAba("redes")}>Redes</Botao></h2>
+          <Resumo
+            itens={[
+              { titulo: "Alcance dos confirmados", valor: al.confirmados ? num(al.confirmados) : "—", sub: al.confirmados ? al.perfisConfirmados + " perfis de atrações e parceiros confirmados" : "Informe seguidores no cadastro de cada atração" },
+              { titulo: "Ainda não confirmados", valor: al.possivel ? "+" + num(al.possivel) : "—", sub: al.perfisPossiveis + " perfis de atrações e parceiros em conversa ou a contatar" },
+              { titulo: "Confirmados sem Instagram", valor: al.semInstagram.length, sub: al.semInstagram.length ? al.semInstagram.slice(0, 4).map((d) => d.nome).join(", ") + (al.semInstagram.length > 4 ? "…" : "") : "atrações e parceiros", classeValor: al.semInstagram.length ? "cdf:text-conversa" : undefined },
+            ]}
+          />
           <h2 className={SECAO}>Frentes da comunicação</h2>
           <div className="cdf:mb-2 cdf:grid cdf:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] cdf:gap-3">
             {FRENTES.map((f) => {
@@ -66,14 +78,13 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
               const valor = itensDaFrente(base, n.id, f.id).reduce((t, it) => t + valorItem(it, conta.cenario), 0);
               return (
                 <div key={f.id} className="cdf:flex cdf:flex-col cdf:gap-1.5 cdf:rounded-xl cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie cdf:px-4 cdf:py-3.5">
-                  <strong className="cdf:font-display cdf:text-[20px] cdf:font-black cdf:leading-tight cdf:text-primaria">{f.nome}</strong>
+                  <button type="button" onClick={() => abrirAba(f.id)} className="cdf:cursor-pointer cdf:self-start cdf:border-0 cdf:bg-transparent cdf:p-0 cdf:text-left cdf:font-display cdf:text-[20px] cdf:font-black cdf:leading-tight cdf:text-primaria cdf:underline cdf:decoration-2 cdf:underline-offset-4 cdf:hover:text-destaque">{f.nome}</button>
                   <span className="cdf:text-[13px] cdf:text-tinta-2">{f.descricao}</span>
                   <span className="cdf:mt-1 cdf:text-sm cdf:text-fraco">
                     {abertasF.length ? abertasF.length + (abertasF.length === 1 ? " tarefa aberta" : " tarefas abertas") : ts.length ? "tudo concluído" : "sem tarefas"}
                     {atrasadasF > 0 && <span className="cdf:font-bold cdf:text-erro">, {atrasadasF} atrasada{atrasadasF > 1 ? "s" : ""}</span>}
                     {valor > 0 && <> · {brl(valor)}</>}
                   </span>
-                  <div><Botao mini className="cdf:font-sans" onClick={() => abrirAba(f.id)}>Abrir {f.nome}</Botao></div>
                 </div>
               );
             })}
