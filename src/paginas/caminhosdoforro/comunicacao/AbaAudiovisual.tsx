@@ -1,17 +1,13 @@
 /* Aba Audiovisual do núcleo de comunicação: o plano de cobertura (foto,
-   vídeo e tempo real) por momento do festival, o que se decide antes de
-   contratar e, no fim, as tarefas e o orçamento desta frente (a categoria
-   Foto e vídeo do orçamento). */
-import { brl, calcularOrcamento, valorItem } from "../calculo";
+   vídeo e tempo real) por momento do festival e o que se decide antes de
+   contratar. As tarefas e o orçamento (categoria Foto e vídeo) ficam nas
+   abas Tarefas e Orçamento. */
 import type { Base, Nucleo } from "../tipos";
 import { SECAO, TEXTO_LONGO } from "../ui/classes";
-import { Resumo } from "../ui/Resumo";
 import { Tabela, Td, Th } from "../ui/Tabela";
-import type { AbaNucleo, IrPara } from "../vista";
-import { BlocoFrente } from "./BlocoFrente";
-import { itensDaFrente, tarefasDaFrente } from "./frentes";
+import type { IrPara } from "../vista";
 
-interface Props { base: Base; nucleo: Nucleo; irPara: IrPara; abrirAba: (a: AbaNucleo) => void }
+interface Props { base: Base; nucleo: Nucleo; irPara: IrPara }
 
 const MOMENTOS: [string, string, string][] = [
   ["Antes", "Teasers, bastidores da montagem, anúncio do line-up e das oficinas", "Fotos e vídeos curtos das atrações (pedir às bandas o material próprio) e registro das oficinas-piloto, se houver"],
@@ -19,23 +15,9 @@ const MOMENTOS: [string, string, string][] = [
   ["Depois", "Aftermovie, galeria por atração, relatório de resultados aos patrocinadores", "Edição e entregas pós-evento; material para a 2ª edição e para os editais"],
 ];
 
-export function AbaAudiovisual({ base, nucleo, abrirAba }: Props) {
-  const conta = calcularOrcamento(base);
-  const itens = itensDaFrente(base, nucleo.id, "audiovisual");
-  const total = itens.reduce((t, it) => t + valorItem(it, conta.cenario), 0);
-  const tarefas = tarefasDaFrente(base, nucleo.id, "audiovisual");
-  const abertas = tarefas.filter((t) => t.status !== "concluido").length;
-
+export function AbaAudiovisual(_: Props) {
   return (
     <>
-      <Resumo
-        itens={[
-          { titulo: "Orçamento de foto e vídeo", valor: total ? brl(total) : "—", sub: itens.length + (itens.length === 1 ? " item" : " itens") + " no cenário em vigor" },
-          { titulo: "Tarefas da frente", valor: abertas, sub: tarefas.length ? tarefas.length - abertas + " concluídas de " + tarefas.length : "nenhuma no plano" },
-          { titulo: "Plano de cobertura", valor: tarefas.some((t) => /cobertura/i.test(t.frente || t.titulo) && t.status === "concluido") ? "pronto" : "a fazer", sub: "briefing de foto, vídeo e tempo real (COM-010)", classeValor: "cdf:text-conversa" },
-        ]}
-      />
-
       <h2 className={SECAO}>Cobertura por momento</h2>
       <p className="cdf:m-0 cdf:mb-2.5 cdf:max-w-[820px] cdf:text-sm cdf:text-fraco">Proposta de partida para o briefing de cobertura (COM-010). O núcleo ajusta e, decidido, vira tarefas por momento.</p>
       <Tabela>
@@ -54,8 +36,6 @@ export function AbaAudiovisual({ base, nucleo, abrirAba }: Props) {
           <li><strong>Acessibilidade.</strong> Legendas nos vídeos e descrição das imagens nas redes, conforme o plano de comunicação acessível (COM-020).</li>
         </ul>
       </div>
-
-      <BlocoFrente base={base} nucleo={nucleo} frente="audiovisual" abrirAba={abrirAba} />
     </>
   );
 }

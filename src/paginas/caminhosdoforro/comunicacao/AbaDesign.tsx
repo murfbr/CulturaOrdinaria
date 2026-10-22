@@ -1,35 +1,25 @@
 /* Aba Design do núcleo de comunicação: a identidade visual e as peças
    (os cartões de arquivo das apresentações e os do contexto que falam de
-   identidade, marca ou manual), as regras de uso que já se conhecem e, no
-   fim, as tarefas e o orçamento desta frente. */
+   identidade, marca ou manual) e as regras de uso que já se conhecem. As
+   tarefas e o orçamento da frente ficam nas abas Tarefas e Orçamento. */
 import { dataBr } from "../calculo";
 import type { ArquivoBase, Base, Nucleo } from "../tipos";
 import { Botao } from "../ui/Botao";
 import { SECAO, TEXTO_LONGO } from "../ui/classes";
-import { Resumo } from "../ui/Resumo";
 import { Tabela, Td, Th } from "../ui/Tabela";
-import type { AbaNucleo, IrPara } from "../vista";
-import { BlocoFrente } from "./BlocoFrente";
+import type { IrPara } from "../vista";
 
-interface Props { base: Base; nucleo: Nucleo; irPara: IrPara; abrirAba: (a: AbaNucleo) => void }
+interface Props { base: Base; nucleo: Nucleo; irPara: IrPara }
 
 const ehPeca = (a: ArquivoBase) => a.secao === "apresentacao" || /identidade|marca|manual|logo|design|pe[çc]a/i.test(a.nome + " " + a.descricao);
 
-export function AbaDesign({ base, nucleo, irPara, abrirAba }: Props) {
+export function AbaDesign({ base, irPara }: Props) {
   const pecas = Object.values(base.arquivos).filter(ehPeca).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
-  const guardadas = pecas.filter((a) => a.versoes?.length);
-  const identidade = pecas.find((a) => /identidade/i.test(a.nome));
 
   return (
     <>
-      <Resumo
-        itens={[
-          { titulo: "Peças guardadas", valor: guardadas.length + " de " + pecas.length, sub: "apresentações e identidade visual" },
-          { titulo: "Identidade visual", valor: identidade?.versoes?.length ? identidade.versoes[identidade.versoes.length - 1].versao : "—", sub: identidade?.versoes?.length ? "versão atual, de " + dataBr(identidade.versoes[identidade.versoes.length - 1].data) : "ainda sem arquivo guardado", classeValor: identidade?.versoes?.length ? undefined : "cdf:text-conversa" },
-        ]}
-      />
-
       <h2 className={SECAO}>Peças e identidade<Botao mini className="cdf:ml-auto cdf:font-sans" onClick={() => irPara("apresentacoes")}>Apresentações</Botao><Botao mini className="cdf:font-sans" onClick={() => irPara("contexto")}>Contexto</Botao></h2>
+      <p className="cdf:m-0 cdf:mb-2.5 cdf:text-sm cdf:text-fraco">{pecas.filter((a) => a.versoes?.length).length} de {pecas.length} peças com arquivo guardado. Cada peça é um cartão de arquivo; a versão nova entra pela aba Apresentações ou pelo Contexto.</p>
       {!pecas.length ? <p className="cdf:m-0 cdf:text-sm cdf:text-fraco">Nenhum cartão de arquivo de design ainda.</p> : (
         <Tabela>
           <thead><tr><Th>Peça</Th><Th>Versão atual</Th><Th>Data</Th><Th>Onde</Th></tr></thead>
@@ -48,8 +38,6 @@ export function AbaDesign({ base, nucleo, irPara, abrirAba }: Props) {
         </ul>
         <p className="cdf:m-0 cdf:mt-2">O manual, quando existir, entra como versão do cartão "Identidade visual" no Contexto, com as regras resumidas na descrição.</p>
       </div>
-
-      <BlocoFrente base={base} nucleo={nucleo} frente="design" abrirAba={abrirAba} />
     </>
   );
 }

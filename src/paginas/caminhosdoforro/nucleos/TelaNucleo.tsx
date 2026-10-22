@@ -70,10 +70,10 @@ export function TelaNucleo({ base, nucleo: n, irPara }: Props) {
         : aba === "orcamento" ? <AbaOrcamento base={base} nucleo={n} irPara={irPara} />
         : aba === "tarefas" ? <TelaTarefas base={base} nucleoFixo={n.id} />
         : aba === "patrocinios" ? <TelaPatrocinios base={base} irPara={irPara} semCabecalho />
-        : aba === "redes" ? <AbaRedes base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
-        : aba === "design" ? <AbaDesign base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
-        : aba === "audiovisual" ? <AbaAudiovisual base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
-        : <AbaContrapartidas base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />}
+        : aba === "redes" ? <AbaRedes base={base} nucleo={n} irPara={irPara} />
+        : aba === "design" ? <AbaDesign base={base} nucleo={n} irPara={irPara} />
+        : aba === "audiovisual" ? <AbaAudiovisual base={base} nucleo={n} irPara={irPara} />
+        : <AbaContrapartidas base={base} nucleo={n} irPara={irPara} />}
     </>
   );
 }

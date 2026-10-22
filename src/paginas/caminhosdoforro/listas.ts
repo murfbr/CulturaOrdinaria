@@ -96,6 +96,10 @@ const CLASSE_STATUS: Record<string, string> = {
   negociacao: "cdf:bg-conversa-bg cdf:text-conversa",
   perdido: "cdf:bg-rec-bg cdf:text-rec",
   previsto: "cdf:bg-contatar-bg cdf:text-contatar",
+  a_criar: "cdf:bg-contatar-bg cdf:text-contatar",
+  em_producao: "cdf:bg-conversa-bg cdf:text-conversa",
+  no_ar: "cdf:bg-conf-bg cdf:text-conf",
+  pausado: "cdf:bg-rec-bg cdf:text-rec",
 };
 export const classeStatus = (id: string | null | undefined) =>
   CLASSE_STATUS[id || ""] || "cdf:bg-superficie-2 cdf:text-tinta-2";

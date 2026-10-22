@@ -68,11 +68,27 @@ export interface Simulador {
 }
 
 /** Documento `paginas/caminhosdoforro`. */
+/** Um canal de comunicação do festival (Instagram, site, imprensa, WhatsApp…), na configuração da página. */
+export interface Canal {
+  id: string;
+  nome: string;
+  /** Id do cadastro (equipe) que cuida. */
+  responsavel: string | null;
+  status: StatusCanal;
+  url: string;
+  anotacoes: string;
+  ordem: number;
+}
+export const STATUS_CANAL = [["a_criar", "A criar"], ["em_producao", "Em produção"], ["no_ar", "No ar"], ["pausado", "Pausado"]] as const;
+export type StatusCanal = (typeof STATUS_CANAL)[number][0];
+
 export interface PaginaFestival {
   id: string;
   tipo: string;
   listas: Listas;
   nucleos: Nucleo[];
+  /** Os canais da comunicação; vazio até o núcleo criar. */
+  canais?: Canal[];
   parametros: Parametros;
   simulador: Simulador;
   meta: { rev: number; atualizadoEm: string; /** Os cartões de arquivo da Fase 6 já foram semeados. */ fase6?: boolean };
@@ -115,8 +131,13 @@ export interface Cadastro {
   seguidoresEm?: string | null;
   /** As outras redes e páginas, por link completo (site, YouTube, Spotify, TikTok, Facebook). */
   redes?: Partial<Record<Rede, string>>;
+  /** Link do mídia-kit (release, fotos, rider) da atração; só para quem é atração. */
+  midiaKit?: string;
   atualizado?: string;
 }
+
+/** Os tipos de cadastro que são atração (têm mídia-kit e entram no alcance como atração). */
+export const TIPOS_ATRACAO = ["artista", "dj", "oficineiro", "danca", "mediador", "artista_visual"];
 
 /** As redes além do Instagram que o cadastro guarda, na ordem do formulário e da Comunicação. */
 export const REDES = [
