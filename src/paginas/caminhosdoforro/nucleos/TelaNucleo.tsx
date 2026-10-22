@@ -1,11 +1,16 @@
 /* A página de um núcleo (o GT do plano de ação): cabeçalho com o escopo, o
    responsável e os membros; abas Painel, Orçamento (os itens classificados
    no núcleo) e Tarefas (as do núcleo), mais as abas próprias: Patrocínios e
-   apoios na captação e Comunicação no núcleo de comunicação. A aba escolhida
+   apoios na captação; no núcleo de comunicação, as frentes Redes, Design,
+   Audiovisual e Contrapartidas entram entre o Painel e as Tarefas. A aba escolhida
    vale por núcleo enquanto a página está aberta; um atalho ("Patrocínios e
    apoios" no painel) pede a aba ao chegar. */
 import { useState } from "react";
-import { PainelComunicacao } from "../comunicacao/PainelComunicacao";
+import { AbaAudiovisual } from "../comunicacao/AbaAudiovisual";
+import { AbaContrapartidas } from "../comunicacao/AbaContrapartidas";
+import { AbaDesign } from "../comunicacao/AbaDesign";
+import { AbaRedes } from "../comunicacao/AbaRedes";
+import { FRENTES } from "../comunicacao/frentes";
 import { nomeCadastro, nucleoCaptacao, nucleoComunicacao } from "../calculo";
 import { Detalhamento } from "../orcamento/Detalhamento";
 import { TelaPatrocinios } from "../patrocinios/TelaPatrocinios";
@@ -26,9 +31,9 @@ export function TelaNucleo({ base, nucleo: n, irPara }: Props) {
   const ehComunicacao = nucleoComunicacao(base)?.id === n.id;
   const proprias: { id: AbaNucleo; nome: string; n?: number }[] = [
     ...(ehCaptacao ? [{ id: "patrocinios" as const, nome: "Patrocínios e apoios", n: Object.keys(base.patrocinios).length }] : []),
-    ...(ehComunicacao ? [{ id: "comunicacao" as const, nome: "Comunicação" }] : []),
   ];
-  const existe = (a: AbaNucleo | null | undefined) => !!a && (a === "painel" || a === "orcamento" || a === "tarefas" || proprias.some((x) => x.id === a));
+  const frentes: { id: AbaNucleo; nome: string }[] = ehComunicacao ? FRENTES.map((f) => ({ id: f.id, nome: f.nome })) : [];
+  const existe = (a: AbaNucleo | null | undefined) => !!a && (a === "painel" || a === "orcamento" || a === "tarefas" || proprias.some((x) => x.id === a) || frentes.some((x) => x.id === a));
 
   const [aba, setAba] = useState<AbaNucleo>(() => {
     const pedida = abaNucleoPedida;
@@ -54,9 +59,10 @@ export function TelaNucleo({ base, nucleo: n, irPara }: Props) {
       <Abas
         abas={[
           { id: "painel", nome: "Painel" },
-          { id: "orcamento", nome: "Orçamento", n: itensOrcamento },
-          { id: "tarefas", nome: "Tarefas", n: tarefas },
+          ...frentes,
           ...proprias,
+          { id: "tarefas", nome: "Tarefas", n: tarefas },
+          { id: "orcamento", nome: "Orçamento", n: itensOrcamento },
         ]}
         ativa={aba} aoMudar={mudar}
       />
@@ -64,7 +70,10 @@ export function TelaNucleo({ base, nucleo: n, irPara }: Props) {
         : aba === "orcamento" ? <AbaOrcamento base={base} nucleo={n} irPara={irPara} />
         : aba === "tarefas" ? <TelaTarefas base={base} nucleoFixo={n.id} />
         : aba === "patrocinios" ? <TelaPatrocinios base={base} irPara={irPara} semCabecalho />
-        : <PainelComunicacao base={base} nucleo={n} irPara={irPara} />}
+        : aba === "redes" ? <AbaRedes base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
+        : aba === "design" ? <AbaDesign base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
+        : aba === "audiovisual" ? <AbaAudiovisual base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />
+        : <AbaContrapartidas base={base} nucleo={n} irPara={irPara} abrirAba={mudar} />}
     </>
   );
 }
