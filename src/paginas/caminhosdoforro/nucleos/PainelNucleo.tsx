@@ -1,6 +1,6 @@
 /* O painel de um núcleo: os números (tarefas, orçamento no cenário atual,
    cadastros que ele cuida), as próximas tarefas e as atrasadas, o orçamento
-   por categoria e, na captação, os números da captação; na comunicação, um
+   e, na captação, os números da captação; na comunicação, o alcance e um
    cartão por frente (Redes, Design, Audiovisual, Contrapartidas) com o que
    cada aba tem. Só leitura: tudo é conta sobre o que as outras abas guardam. */
 import { brl, calcularOrcamento, contarTarefas, dataBr, nomeCadastro, nucleoCaptacao, nucleoComunicacao, pctTexto, respEfetivo, rotuloCenario, tarefaAtrasada, valorItem } from "../calculo";
@@ -13,7 +13,7 @@ import type { Base, Nucleo, TarefaFestival } from "../tipos";
 import { Botao } from "../ui/Botao";
 import { LINK, SECAO } from "../ui/classes";
 import { Resumo } from "../ui/Resumo";
-import { NUM, Tabela, Td, Th } from "../ui/Tabela";
+import { Tabela, Td, Th } from "../ui/Tabela";
 import { Pilula } from "../ui/Tag";
 import type { AbaNucleo, IrPara } from "../vista";
 
@@ -32,11 +32,8 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
 
   const abertas = tarefas.filter((t) => t.status !== "concluido");
   const atrasadas = abertas.filter(tarefaAtrasada).sort((a, b) => String(a.prazo).localeCompare(String(b.prazo)));
-  const proximas = abertas.filter((t) => !tarefaAtrasada(t) && t.prazo).sort((a, b) => String(a.prazo).localeCompare(String(b.prazo))).slice(0, 6);
-
-  const porCategoria: Record<string, number> = {};
-  itens.forEach((it) => { const k = it.categoria || "_sem"; porCategoria[k] = (porCategoria[k] || 0) + valorItem(it, conta.cenario); });
-  const categorias = Object.entries(porCategoria).sort((a, b) => b[1] - a[1]);
+  // Seis no máximo: as atrasadas primeiro, depois as próximas por prazo.
+  const foco = [...atrasadas, ...abertas.filter((t) => !tarefaAtrasada(t) && t.prazo).sort((a, b) => String(a.prazo).localeCompare(String(b.prazo)))].slice(0, 6);
   const ehComunicacao = nucleoComunicacao(base)?.id === n.id;
   const al = ehComunicacao ? alcance(base) : null;
   const num = (v: number) => v.toLocaleString("pt-BR");
@@ -99,31 +96,12 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
         <Tabela>
           <thead><tr><Th>Tarefa</Th><Th>Responsável</Th><Th>Prazo</Th><Th>Prioridade</Th><Th>Status</Th></tr></thead>
           <tbody>
-            {[...atrasadas, ...proximas].map((t) => <LinhaTarefa key={t.id} base={base} t={t} />)}
-            {!atrasadas.length && !proximas.length && <tr><Td colSpan={5}><span className="cdf:text-fraco">As tarefas abertas não têm prazo.</span></Td></tr>}
+            {foco.map((t) => <LinhaTarefa key={t.id} base={base} t={t} />)}
+            {!foco.length && <tr><Td colSpan={5}><span className="cdf:text-fraco">As tarefas abertas não têm prazo.</span></Td></tr>}
           </tbody>
         </Tabela>
       )}
-      {atrasadas.length > 0 && <p className="cdf:m-0 cdf:mt-2 cdf:text-sm cdf:text-fraco">As atrasadas vêm primeiro; depois, as seis próximas por prazo.</p>}
-
-      <h2 className={SECAO}>Orçamento por categoria<Botao mini className="cdf:ml-auto cdf:font-sans" onClick={() => abrirAba("orcamento")}>Itens do núcleo</Botao></h2>
-      {!categorias.length ? (
-        <p className="cdf:m-0 cdf:text-sm cdf:text-fraco">Nenhum item de orçamento classificado neste núcleo. Ao editar um item no Orçamento, escolha o núcleo; ele passa a aparecer aqui.</p>
-      ) : (
-        <Tabela>
-          <thead><tr><Th>Categoria</Th><Th className={NUM}>Valor</Th><Th className={NUM}>% do núcleo</Th></tr></thead>
-          <tbody>
-            {categorias.map(([cid, v]) => (
-              <tr key={cid}>
-                <Td>{cid === "_sem" ? "Sem categoria" : rotulo(p, "categoriasOrcamento", cid)}</Td>
-                <Td className={NUM}>{brl(v)}</Td>
-                <Td className={NUM}>{pctTexto(v, orcamento)}</Td>
-              </tr>
-            ))}
-            <tr className="cdf:font-bold"><Td>Total do núcleo</Td><Td className={NUM}>{brl(orcamento)}</Td><Td className={NUM}>{pctTexto(orcamento, conta.subtotal)} do festival</Td></tr>
-          </tbody>
-        </Tabela>
-      )}
+      {foco.length > 0 && <p className="cdf:m-0 cdf:mt-2 cdf:text-sm cdf:text-fraco">Até seis: {atrasadas.length > 6 ? "só as " + 6 + " atrasadas mais antigas (são " + atrasadas.length + ")" : atrasadas.length ? "as atrasadas primeiro, depois as próximas por prazo" : "as próximas por prazo"}.</p>}
 
       {cuida.length > 0 && (
         <p className="cdf:m-0 cdf:mt-6 cdf:text-sm cdf:text-fraco">

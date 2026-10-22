@@ -82,6 +82,24 @@ export interface Canal {
 export const STATUS_CANAL = [["a_criar", "A criar"], ["em_producao", "Em produção"], ["no_ar", "No ar"], ["pausado", "Pausado"]] as const;
 export type StatusCanal = (typeof STATUS_CANAL)[number][0];
 
+/** Uma peça de comunicação em produção (post, kit, release, impresso…), na configuração da página. */
+export interface Peca {
+  id: string;
+  nome: string;
+  /** Id do canal (Canal) por onde sai; vazio = vários ou a definir. */
+  canal: string | null;
+  /** Id do cadastro (equipe). */
+  responsavel: string | null;
+  /** ISO yyyy-mm-dd. */
+  prazo: string | null;
+  status: StatusPeca;
+  url: string;
+  anotacoes: string;
+  ordem: number;
+}
+export const STATUS_PECA = [["a_fazer", "A fazer"], ["em_producao", "Em produção"], ["em_aprovacao", "Em aprovação"], ["pronta", "Pronta"], ["publicada", "Publicada"]] as const;
+export type StatusPeca = (typeof STATUS_PECA)[number][0];
+
 export interface PaginaFestival {
   id: string;
   tipo: string;
@@ -89,6 +107,8 @@ export interface PaginaFestival {
   nucleos: Nucleo[];
   /** Os canais da comunicação; vazio até o núcleo criar. */
   canais?: Canal[];
+  /** As peças de comunicação em produção. */
+  pecas?: Peca[];
   parametros: Parametros;
   simulador: Simulador;
   meta: { rev: number; atualizadoEm: string; /** Os cartões de arquivo da Fase 6 já foram semeados. */ fase6?: boolean };
