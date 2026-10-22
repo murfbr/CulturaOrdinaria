@@ -1,8 +1,10 @@
 /* O painel de um núcleo: os números (tarefas, orçamento no cenário atual,
    cadastros que ele cuida), as próximas tarefas e as atrasadas, o orçamento
-   por categoria e, na captação, os números da captação. Só leitura: tudo é
-   conta sobre o que as outras abas guardam. */
-import { brl, calcularOrcamento, contarTarefas, dataBr, nomeCadastro, nucleoCaptacao, pctTexto, respEfetivo, rotuloCenario, tarefaAtrasada, valorItem } from "../calculo";
+   por categoria e, na captação, os números da captação; na comunicação, um
+   cartão por frente (Redes, Design, Audiovisual, Contrapartidas) com o que
+   cada aba tem. Só leitura: tudo é conta sobre o que as outras abas guardam. */
+import { brl, calcularOrcamento, contarTarefas, dataBr, nomeCadastro, nucleoCaptacao, nucleoComunicacao, pctTexto, respEfetivo, rotuloCenario, tarefaAtrasada, valorItem } from "../calculo";
+import { FRENTES, itensDaFrente, tarefasDaFrente } from "../comunicacao/frentes";
 import { ResumoCaptacao } from "../patrocinios/ResumoCaptacao";
 import { rotulo } from "../listas";
 import { PilulaPrioridade, classeStatusTarefa } from "../tarefas/etiquetas";
@@ -50,6 +52,32 @@ export function PainelNucleo({ base, nucleo: n, irPara, abrirAba }: Props) {
         <>
           <h2 className={SECAO}>Captação<Botao mini className="cdf:ml-auto cdf:font-sans" onClick={() => abrirAba("patrocinios")}>Patrocínios e apoios</Botao></h2>
           <ResumoCaptacao base={base} irPara={irPara} />
+        </>
+      )}
+
+      {nucleoComunicacao(base)?.id === n.id && (
+        <>
+          <h2 className={SECAO}>Frentes da comunicação</h2>
+          <div className="cdf:mb-2 cdf:grid cdf:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] cdf:gap-3">
+            {FRENTES.map((f) => {
+              const ts = tarefasDaFrente(base, n.id, f.id);
+              const abertasF = ts.filter((t) => t.status !== "concluido");
+              const atrasadasF = abertasF.filter(tarefaAtrasada).length;
+              const valor = itensDaFrente(base, n.id, f.id).reduce((t, it) => t + valorItem(it, conta.cenario), 0);
+              return (
+                <div key={f.id} className="cdf:flex cdf:flex-col cdf:gap-1.5 cdf:rounded-xl cdf:border cdf:border-solid cdf:border-linha cdf:bg-superficie cdf:px-4 cdf:py-3.5">
+                  <strong className="cdf:font-display cdf:text-[20px] cdf:font-black cdf:leading-tight cdf:text-primaria">{f.nome}</strong>
+                  <span className="cdf:text-[13px] cdf:text-tinta-2">{f.descricao}</span>
+                  <span className="cdf:mt-1 cdf:text-sm cdf:text-fraco">
+                    {abertasF.length ? abertasF.length + (abertasF.length === 1 ? " tarefa aberta" : " tarefas abertas") : ts.length ? "tudo concluído" : "sem tarefas"}
+                    {atrasadasF > 0 && <span className="cdf:font-bold cdf:text-erro">, {atrasadasF} atrasada{atrasadasF > 1 ? "s" : ""}</span>}
+                    {valor > 0 && <> · {brl(valor)}</>}
+                  </span>
+                  <div><Botao mini className="cdf:font-sans" onClick={() => abrirAba(f.id)}>Abrir {f.nome}</Botao></div>
+                </div>
+              );
+            })}
+          </div>
         </>
       )}
 

@@ -59,7 +59,7 @@ export let filtroTarefasPedido: { nucleo?: string; resp?: string } | null = null
 export const pedirFiltroTarefas = (f: { nucleo?: string; resp?: string } | null) => { filtroTarefasPedido = f; };
 
 /** As abas de uma página de núcleo: as três comuns e as próprias (patrocínios na captação, comunicação na comunicação). */
-export type AbaNucleo = "painel" | "orcamento" | "tarefas" | "patrocinios" | "comunicacao";
+export type AbaNucleo = "painel" | "orcamento" | "tarefas" | "patrocinios" | "redes" | "design" | "audiovisual" | "contrapartidas";
 
 /** Aba com que a página de um núcleo abre quando se chega por um atalho ("Patrocínios e apoios" do painel, por exemplo). */
 export let abaNucleoPedida: AbaNucleo | null = null;
