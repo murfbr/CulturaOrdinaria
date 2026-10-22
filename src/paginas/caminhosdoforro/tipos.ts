@@ -108,11 +108,21 @@ export interface Cadastro {
   anotacoes: string;
   /** Veio da carga inicial e ainda não foi conferido. */
   revisar: boolean;
-  /** Perfil no Instagram (com ou sem @) e o tamanho da comunidade, para a conta de alcance da Comunicação. */
+  /** Perfil no Instagram (sem o @) e o tamanho da comunidade, para a conta de alcance da Comunicação. */
   instagram?: string;
   seguidores?: number | null;
+  /** Dia em que os seguidores foram contados (yyyy-mm-dd): o número envelhece, a data diz quanto. */
+  seguidoresEm?: string | null;
+  /** As outras redes e páginas, por link completo (site, YouTube, Spotify, TikTok, Facebook). */
+  redes?: Partial<Record<Rede, string>>;
   atualizado?: string;
 }
+
+/** As redes além do Instagram que o cadastro guarda, na ordem do formulário e da Comunicação. */
+export const REDES = [
+  ["site", "Site"], ["youtube", "YouTube"], ["spotify", "Spotify"], ["tiktok", "TikTok"], ["facebook", "Facebook"],
+] as const;
+export type Rede = (typeof REDES)[number][0];
 
 export interface Espaco {
   id: string;

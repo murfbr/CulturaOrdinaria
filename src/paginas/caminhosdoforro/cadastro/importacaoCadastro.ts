@@ -4,10 +4,20 @@
    são genéricos (importar/tabela.ts). */
 import { novoId } from "../dados";
 import { escreverCampo, prepararTabela, type ColunaTabela, type PreparoTabela, type TabelaLida } from "../importar/tabela";
-import { opcoes } from "../listas";
-import type { Base, Cadastro } from "../tipos";
+import { normalizar, opcoes } from "../listas";
+import { REDES, type Base, type Cadastro } from "../tipos";
+import { lerSeguidores, perfilInstagram } from "./redes";
 
 const nomes = (lista: [string, string][]) => lista.map(([, n]) => n).join(", ");
+
+/** "21/10/2026" ou "2026-10-21" → "2026-10-21"; undefined quando não é data. */
+function lerData(t: string): string | undefined {
+  const iso = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return iso[0];
+  const br = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  return br ? br[3] + "-" + br[2].padStart(2, "0") + "-" + br[1].padStart(2, "0") : undefined;
+}
+const link = (t: string) => (/^https?:\/\//i.test(t) ? t : undefined);
 
 /** As colunas, na ordem da planilha; "ID" só vem na planilha baixada. */
 export function colunasCadastro(base: Base): ColunaTabela[] {
@@ -27,6 +37,13 @@ export function colunasCadastro(base: Base): ColunaTabela[] {
     { campo: "contato.email", cabecalho: "E-mail", aceita: (c) => c === "email" || c.startsWith("e-mail"), como: "texto", exemplo: "contato@exemplo.com" },
     { campo: "documento", cabecalho: "CPF ou CNPJ", aceita: (c) => c.startsWith("cpf") || c.startsWith("cnpj") || c === "documento", como: 'texto; também aceita "CNPJ", "CPF" ou "Documento"', exemplo: "" },
     { campo: "carta", cabecalho: "Carta de anuência", opcoes: cartas, aceita: (c) => c.startsWith("carta"), como: "um de: " + nomes(cartas), exemplo: "" },
+    { campo: "instagram", cabecalho: "Instagram", converter: (t) => perfilInstagram(t) || undefined, aceita: (c) => c.startsWith("instagram") || c === "ig", como: "o perfil, com ou sem @, ou o link do perfil", exemplo: "caminhosdoforro" },
+    { campo: "seguidores", cabecalho: "Seguidores", converter: (t) => lerSeguidores(t) ?? undefined, aceita: (c) => c === "seguidores" || c.startsWith("seguidores no"), como: "número (9369, 9.369 ou 9,4 mil)", exemplo: "" },
+    { campo: "seguidoresEm", cabecalho: "Seguidores contados em", converter: lerData, aceita: (c) => c.startsWith("contad") || c.startsWith("data da contagem"), como: "data da contagem (dd/mm/aaaa)", exemplo: "" },
+    ...REDES.map(([rede, nome]) => ({
+      campo: "redes." + rede, cabecalho: nome, converter: link, aceita: (c: string) => c === normalizar(nome),
+      como: "link completo (https://…)", exemplo: "",
+    })),
     { campo: "anotacoes", cabecalho: "Anotações", aceita: (c) => c.startsWith("anotac") || c.startsWith("observac"), como: 'texto livre; também aceita "Observações"', exemplo: "linha de exemplo: apague antes de importar" },
     { campo: "revisar", cabecalho: "A revisar", booleano: true, aceita: (c) => c.startsWith("revisar"), como: "sim ou não", exemplo: "não" },
   ];

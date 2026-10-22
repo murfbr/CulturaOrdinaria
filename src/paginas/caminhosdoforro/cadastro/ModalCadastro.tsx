@@ -1,18 +1,20 @@
 /* Novo ou editar cadastro: nome, tipos (um ou mais), status, núcleo que
    cuida, contato, documento, carta de anuência e o link do arquivo,
-   Instagram e seguidores (para a conta de alcance da Comunicação),
-   anotações, a revisar. Excluir só quando nada aponta para o registro. */
+   Instagram, seguidores e o dia da contagem (para a conta de alcance da
+   Comunicação), as outras redes, anotações, a revisar. Excluir só quando
+   nada aponta para o registro. */
 import { useState } from "react";
 import { toast } from "../../../components/Toast";
 import { avisoDocumento } from "../../../lib/cpfCnpj";
 import { clonar } from "../../../utils";
-import { auditoria, referenciasDoCadastro } from "../calculo";
+import { auditoria, hojeIso, referenciasDoCadastro } from "../calculo";
 import { apagar, gravar, novoId } from "../dados";
 import { opcoes } from "../listas";
-import type { Base, Cadastro } from "../tipos";
+import { REDES, type Base, type Cadastro, type Rede } from "../tipos";
 import { arquivoDoLink, linkValido } from "../ui/Arquivo";
 import { AreaTexto, Campo, Check, Chips, Entrada, Grupo, Opcoes, Selecao } from "../ui/Campo";
 import { LINHA_INTEIRA, Modal } from "../ui/Modal";
+import { lerSeguidores, limparRedes, perfilInstagram } from "./redes";
 
 interface Props {
   base: Base;
@@ -32,6 +34,8 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
   });
   const [arquivo, setArquivo] = useState(d.cartaArquivo?.tipo === "link" ? d.cartaArquivo.url || "" : "");
   const [seguidores, setSeguidores] = useState(d.seguidores == null ? "" : String(d.seguidores));
+  const [contadoEm, setContadoEm] = useState(d.seguidoresEm || "");
+  const [redes, setRedes] = useState<Partial<Record<Rede, string>>>(() => ({ ...(d.redes || {}) }));
   const p = base.pagina;
   const avisoDoc = avisoDocumento(d.documento, "documento");
   const mudar = (parte: Partial<Cadastro>) => setD((a) => ({ ...a, ...parte }));
@@ -42,11 +46,17 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
     if (!nome) { toast("Preencha o nome."); return; }
     if (!d.tipos.length) { toast("Marque pelo menos um tipo."); return; }
     if (!linkValido(arquivo)) { toast("O link precisa começar com http:// ou https://"); return; }
+    const redeRuim = REDES.find(([r]) => !linkValido(redes[r] || ""));
+    if (redeRuim) { toast("O link de " + redeRuim[1] + " precisa começar com http:// ou https://"); return; }
+    const seg = lerSeguidores(seguidores);
+    if (seguidores.trim() && seg == null) { toast("Seguidores: escreva só o número (9369, 9.369 ou 9,4 mil)."); return; }
+    // Contagem nova sem data: a data é hoje. Sem contagem, sem data.
+    const em = seg == null ? null : contadoEm || (seg !== (d.seguidores ?? null) ? hojeIso() : d.seguidoresEm || null);
     gravar("cadastro", {
       ...d, nome,
       contato: { nome: d.contato.nome.trim(), telefone: d.contato.telefone.trim(), email: d.contato.email.trim() },
       documento: d.documento.trim(), anotacoes: d.anotacoes.trim(),
-      instagram: (d.instagram || "").trim().replace(/^@/, ""), seguidores: seguidores.trim() === "" ? null : Number(seguidores),
+      instagram: perfilInstagram(d.instagram), seguidores: seg, seguidoresEm: em, redes: limparRedes(redes),
       cartaArquivo: arquivo.trim() ? arquivoDoLink(arquivo) : (d.cartaArquivo?.tipo === "asset" ? d.cartaArquivo : null),
     });
     aoFechar();
@@ -80,8 +90,12 @@ export function ModalCadastro({ base, id, preset, aoFechar }: Props) {
       <Campo rotulo="Arquivo da carta (cole o link, do Drive por exemplo)" className={LINHA_INTEIRA}>
         <Entrada type="url" value={arquivo} onChange={(e) => setArquivo(e.target.value)} placeholder="https://…" />
       </Campo>
-      <Campo rotulo="Instagram (sem o @)"><Entrada value={d.instagram || ""} onChange={(e) => mudar({ instagram: e.target.value })} placeholder="caminhosdoforro" /></Campo>
-      <Campo rotulo="Seguidores (para o alcance somado)"><Entrada type="number" min={0} step={100} value={seguidores} onChange={(e) => setSeguidores(e.target.value)} /></Campo>
+      <Campo rotulo="Instagram (o perfil, com ou sem @, ou o link)" className={LINHA_INTEIRA}><Entrada value={d.instagram || ""} onChange={(e) => mudar({ instagram: e.target.value })} placeholder="caminhosdoforro" /></Campo>
+      <Campo rotulo="Seguidores no Instagram"><Entrada inputMode="numeric" value={seguidores} onChange={(e) => { setSeguidores(e.target.value); setContadoEm(""); }} placeholder="9369 ou 9,4 mil" /></Campo>
+      <Campo rotulo="Contados em (vazio = hoje)"><Entrada type="date" value={contadoEm} onChange={(e) => setContadoEm(e.target.value)} /></Campo>
+      {REDES.map(([r, nome]) => (
+        <Campo key={r} rotulo={nome + " (link)"}><Entrada type="url" value={redes[r] || ""} onChange={(e) => setRedes((a) => ({ ...a, [r]: e.target.value }))} placeholder="https://…" /></Campo>
+      ))}
       <Campo rotulo="Anotações" className={LINHA_INTEIRA}><AreaTexto rows={4} value={d.anotacoes} onChange={(e) => mudar({ anotacoes: e.target.value })} /></Campo>
       <Check rotulo="A revisar" className={LINHA_INTEIRA} checked={d.revisar} onChange={(e) => mudar({ revisar: e.target.checked })} />
     </Modal>
