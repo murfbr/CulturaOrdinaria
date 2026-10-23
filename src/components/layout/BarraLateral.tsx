@@ -28,7 +28,7 @@ import { ModalGravacoes } from "./ModalGravacoes";
     (Painel no topo; Páginas anexo como seção própria no fim). */
 const GRUPOS: { rotulo: string; ids: string[] }[] = [
   { rotulo: "", ids: ["painel"] },
-  { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "gestao", "captacao"] },
+  { rotulo: "Trabalho", ids: ["cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao"] },
   { rotulo: "Escrita", ids: ["contexto"] },
   { rotulo: "", ids: ["anexos"] },
   { rotulo: "", ids: ["nucleo"] },

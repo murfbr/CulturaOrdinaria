@@ -1,7 +1,7 @@
 /* Casca do site: gate de login (modo nuvem), gate de acesso (o documento
    usuarios/<e-mail>: master e lista de módulos), e então uma de três cascas:
-   a Central (barra lateral, cabeçalho e os três roteadores: Painel-família,
-   Projetos e Contexto), "Suas páginas" (conta sem módulo da Central: só as
+   a Central (barra lateral, cabeçalho e os quatro roteadores: Painel-família,
+   Projetos, Contexto e Comunicação), "Suas páginas" (conta sem módulo da Central: só as
    páginas anexo liberadas) ou "sem acesso" (conta sem documento ou
    desativada). Uma página anexo (/<slug>/) abre quando a conta tem o módulo
    dela. O conteúdo em si vive em src/pages/ e src/paginas/. */
@@ -24,6 +24,7 @@ import { SuasPaginas } from "./pages/SuasPaginas";
 import { RoteadorPainel } from "./pages/RoteadorPainel";
 import { Projetos } from "./pages/projetos/Projetos";
 import { Contexto } from "./pages/contexto/Contexto";
+import { Comunicacao } from "./pages/comunicacao/Comunicacao";
 import { ENDERECOS_ANTIGOS, PAGINAS_PROPRIAS } from "./pages/paginasProprias";
 import { moduloDaPagina } from "./types";
 
@@ -89,8 +90,8 @@ function Central({ emailUsuario }: { emailUsuario: string | null }) {
           <div className="flex min-h-[60vh] items-center justify-center text-lg text-muted">carregando os dados do coletivo…</div>
         ) : (
           <main className="mx-auto max-w-site">
-            <LimiteDeErro rota={[nav.amb, nav.aba, nav.detalhe?.tipo, nav.detalhe?.id, nav.detalhe?.sub, nav.fichaAberta, nav.julgamentoAberto].join("/")}>
-              {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : <RoteadorPainel />}
+            <LimiteDeErro rota={[nav.amb, nav.aba, nav.detalhe?.tipo, nav.detalhe?.id, nav.detalhe?.sub, nav.fichaAberta, nav.julgamentoAberto, nav.bibliotecaAberta].join("/")}>
+              {nav.amb === "projetos" ? <Projetos /> : nav.amb === "contexto" ? <Contexto /> : nav.amb === "comunicacao" ? <Comunicacao /> : <RoteadorPainel />}
             </LimiteDeErro>
           </main>
         )}

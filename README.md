@@ -83,6 +83,9 @@ usam **os mesmos nomes do artefato**:
 | `captadoras`   | Captação: parceiras de fora que captam com comissão (nome, contato, área) |
 | `portfolio`    | Captação: os projetos que o coletivo oferece às empresas (datas, local, mecanismo, situação, meta, comissão e base). Não é o projeto da Central; a ligação entre os dois é etapa futura |
 | `cotas`        | Captação: cotas de patrocínio de um projeto do portfólio (→ `projetoId`; valor e quantidade em branco = variável / sem limite) |
+| `referencias`  | Comunicação, Biblioteca: perfil de referência (`rf-`), com o catálogo (Instagram, lógica, marcações), `ultimaLeitura` e `historico[]` (uma linha por rodada) |
+| `leiturasReferencias` | Comunicação, Biblioteca: o retrato de um perfil numa rodada (`lr-`): posts da janela, destaques, amostra assistida e notas. Lida um documento por vez; fora do espelho local no modo nuvem |
+| `rodadasReferencias` | Comunicação, Biblioteca: a rodada de leitura (`rr-`): síntese que cruza os perfis, grade de campos, método e de onde veio |
 | `negociacoes`  | Captação: empresa × projeto × quem capta (→ `empresaId`, `projetoId`, `cotaId`, `captadoraId`; vazio = a equipe), etapa, valor, datas, próximo passo, reserva, motivo, comissão, recebido, paga |
 | `rascunhos`    | respostas de cada projeto no formulário dele (`valores`, `status`, `notas`; `ref` = id do projeto) |
 | `formularios`  | definições dos formulários, com `origem` ("chrome" = extraído da plataforma; "documento" = reconstruído do espelho/regulamento), importáveis em Cadastros → Formulários sem deploy |
@@ -290,6 +293,47 @@ as cotas e leva ou solta as negociações; cota e captadora só soltam.
 conhece; o site novo sem as regras trava em "carregando os dados do coletivo"
 porque as escutas são recusadas.
 
+### Comunicação: a Biblioteca de referências
+
+O ambiente Comunicação (módulo `comunicacao`, entrada no menu em Trabalho)
+começa pela **Biblioteca**, parte Referências (doc 02 da metodologia de
+comunicação, seção 7a): os perfis que o coletivo acompanha pra aprender, lidos
+por rodada. Planos, Mailing e Como funciona entram depois, como abas e partes
+do mesmo ambiente.
+
+**De onde vêm os dados.** A leitura nasce no artefato vivo "Benchmarking ·
+perfis de referência", na conta do Antonio: lá ficam os dados brutos (CSV), as
+contas e os textos. Ao fim de cada rodada, a rotina gera o **espelho** (JSON no
+formato `biblioteca-referencias/1`) e grava pela vista **Importar** da
+Biblioteca (só master), com conferência: rodada, referências novas, posts por
+perfil, janela, tamanho de cada leitura, avisos e erros (com erro não grava).
+Mesmo id grava por cima; a referência que já existe guarda o que o arquivo não
+traz (ex.: `planos`) e o histórico ganha a linha da rodada. A Central não edita
+a Biblioteca: corrigir é corrigir no artefato e espelhar de novo.
+
+**O que a tela mostra.** Visão geral (abertura da rodada, um cartão por
+referência, "Lado a lado", desempenho por editoria, comentários a cada 100
+curtidas, Reels views × curtidas e "Devorar e devolver"), ficha de cada
+referência (`#/comunicacao/biblioteca/rf-…`: números da janela, página e
+destaques, ciclos de evento numa linha do tempo, o que rende ali, linguagem,
+amostra, posts e histórico), todos os posts com filtro e ordem, a amostra
+assistida e a grade com o método. Os gráficos são SVG próprios, sem biblioteca.
+
+**As contas** ficam em `src/pages/comunicacao/biblioteca/calculo.ts` (puras) e
+são as mesmas do artefato: janela do primeiro post não fixado ao mais recente
+da grade; desempenho = curtidas ÷ mediana do mesmo formato no perfil (formato
+com menos de 5 posts usa a mediana geral; post com menos de 3 dias fica fora);
+curtidas por view só em Reels com views. Mudou lá, muda aqui. Dia relativo ao
+evento é D (D-5, Dia, D+1), como no resto da metodologia.
+
+**Carregamento.** As coleções da Biblioteca ficam fora do "carregando os dados
+do coletivo": ligam só quando o ambiente abre (`src/store/comunicacao.ts`), e
+as leituras vêm uma a uma pelo id. Sem as regras publicadas, só a Biblioteca
+avisa "sem acesso"; o resto da Central abre normal. Mesmo assim, publicar as
+regras (`firestore.rules`: `central()` com `comunicacao` e os três blocos novos)
+antes do deploy. Contas master abrem o ambiente na hora; para as outras, marcar
+o módulo Comunicação em Núcleo › Acessos.
+
 ### Núcleo do Coletivo: Anotações e ideias, Melhorias, Acessos
 
 O ambiente Núcleo do Coletivo abre só para quem tem o módulo `nucleo` (ou é
@@ -382,6 +426,9 @@ src/
       pessoas/             ← Pessoas (sub-abas), Elenco, Equipe, Contatos (eram o ambiente Pessoas até 15/10/2026)
     agenda/                ← Cronograma, Calendario
     gestao/                ← Reunioes, FichaReuniao, QuadroTarefas, Lixeira, Migracao
+    comunicacao/           ← Comunicacao (roteador); biblioteca/: Biblioteca, VisaoGeral, FichaReferencia,
+                             TabelaPosts, Amostra, Metodo, ImportarBiblioteca, converterEspelho, calculo.ts,
+                             dados.ts, graficos/ (PontosEditoria, DispersaoReels, LinhaCiclos)
     captacao/              ← RoteadorCaptacao, FaixaVerComo, Resumo (+ resumo/), Portfolio (+ portfolio/),
                              Empresas, FichaEmpresa (+ empresa/), Negociacoes (+ negociacoes/), Captadoras,
                              Opcoes (+ opcoes/: Listas, ImportarArtefato), calculo.ts (contas puras), visao.ts, apoio.ts
@@ -404,6 +451,7 @@ src/
   store/
     central.ts             ← estado global (usarCentral) + semeadura
     mutacoes.ts            ← salvar/excluir registros, rascunhos e docs do Contexto
+    comunicacao.ts         ← coleções da Biblioteca (ligadas ao abrir o ambiente) e a gravação do espelho
     importarExportar.ts    ← pacote .json (v3; v2 e o do artefato são convertidos na hora)
     modelosImportacao.ts   ← campos e modelo por coleção (guia de importação, JSON sem envelope)
     planilha.ts            ← exportação em CSV
@@ -424,7 +472,7 @@ src/
     cnpj.ts                ← consulta de CNPJ na Receita
     textos.ts              ← índice do banco de textos
     nomes.ts, agenda.ts, documentos.ts, csv.ts, arrastar.ts
-  types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto, acesso, caderno, captacao)
+  types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto, acesso, caderno, captacao, comunicacao)
   data/                    ← catálogos estáticos (Salic, plataformas) + sementes de migração;
                              as definições de formulário vivem no banco (coleção formularios)
   utils/                   ← ids, datas, dinheiro, clipboard, download, classes
