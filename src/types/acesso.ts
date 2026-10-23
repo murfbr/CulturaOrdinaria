@@ -15,7 +15,7 @@ export interface Acesso {
   ativo: boolean;
   /** Passa por cima da lista: tudo, inclusive o Núcleo e os módulos que vierem. */
   master: boolean;
-  /** Ids de módulo: "painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "contexto", "nucleo", "pagina:<slug>". */
+  /** Ids de módulo: "painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao", "contexto", "nucleo", "pagina:<slug>". */
   modulos: string[];
   /** Perfil que preencheu a lista (só rótulo). */
   perfil?: string;
@@ -42,7 +42,7 @@ export interface Anotacao {
 }
 
 /** Os ambientes da Central que são módulos (Páginas anexo não é: abre para quem tem qualquer um destes). */
-export const MODULOS_CENTRAL = ["painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "contexto"] as const;
+export const MODULOS_CENTRAL = ["painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao", "contexto"] as const;
 export const MODULO_NUCLEO = "nucleo";
 export const moduloDaPagina = (slug: string) => "pagina:" + slug;
 export const ehModuloDePagina = (m: string) => m.startsWith("pagina:");
@@ -50,7 +50,7 @@ export const slugDoModulo = (m: string) => (ehModuloDePagina(m) ? m.slice("pagin
 
 export const ROTULO_MODULO: Record<string, string> = {
   painel: "Painel", cadastros: "Cadastros", projetos: "Projetos", agenda: "Agenda", gestao: "Gestão", captacao: "Captação",
-  contexto: "Contexto", nucleo: "Núcleo do Coletivo",
+  comunicacao: "Comunicação", contexto: "Contexto", nucleo: "Núcleo do Coletivo",
 };
 
 /** Perfis: preenchem a lista no "+ Conta"; depois se ajusta caixa a caixa. */
@@ -71,5 +71,6 @@ export const MODULOS_DA_COLECAO: Record<string, string[]> = {
   tarefas: ["agenda", "gestao", "projetos", "pagina:pontadelanca"], reunioes: ["agenda", "gestao"], semanas: ["agenda", "gestao"],
   fichas: ["contexto"], regras: ["contexto"], julgamentos: ["contexto"],
   empresas: ["captacao"], captadoras: ["captacao"], portfolio: ["captacao"], cotas: ["captacao"], negociacoes: ["captacao"],
+  referencias: ["comunicacao"], leiturasReferencias: ["comunicacao"], rodadasReferencias: ["comunicacao"],
   nucleo: ["nucleo"], usuarios: ["nucleo"],
 };

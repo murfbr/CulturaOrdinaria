@@ -37,6 +37,7 @@ const ROTULO_EXTRA: Record<string, string> = {
   formularios: "Formulários", rascunhos: "Rascunhos de projeto", versoes: "Versões de projeto", candidaturas: "Candidaturas",
   fichas: "Fichas de contexto", regras: "Regras", julgamentos: "Julgamentos",
   semanas: "Programação da semana", nucleo: "Anotações do Núcleo", usuarios: "Contas",
+  referencias: "Referências (Biblioteca)", leiturasReferencias: "Leituras das referências", rodadasReferencias: "Rodadas de leitura",
 };
 const rotuloDaColecao = (c: string) => (ROTULO_COLECAO as Record<string, string>)[c] || ROTULO_EXTRA[c] || c;
 /** "a, b e c" */

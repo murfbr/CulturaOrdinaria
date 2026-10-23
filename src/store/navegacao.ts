@@ -14,14 +14,16 @@ export interface Ambiente {
   abas: [id: string, rotulo: string][];
 }
 
-/** Os nove ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
-    uma aba por página do registro em código (link para /<slug>/). Captação (21/10/2026) é roteada pelo ambiente, não pela aba. */
+/** Os dez ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
+    uma aba por página do registro em código (link para /<slug>/). Captação (21/10/2026) e Comunicação (23/10/2026) são
+    roteadas pelo ambiente, não pela aba. A Comunicação começa pela Biblioteca; Planos e Como funciona entram depois. */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
   { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"], ["pessoas", "Pessoas"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["calendario", "Calendário"], ["cronograma", "Cronograma"]] },
   { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
   { id: "captacao", rotulo: "Captação", abas: [["resumo", "Resumo"], ["portfolio", "Portfólio"], ["empresas", "Empresas"], ["negociacoes", "Negociações"], ["captadoras", "Captadoras"], ["opcoes", "Opções"]] },
+  { id: "comunicacao", rotulo: "Comunicação", abas: [["biblioteca", "Biblioteca"]] },
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
   { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"], ["backup", "Backup"]] },
@@ -59,6 +61,8 @@ interface EstadoNavegacao {
   julgamentoAberto: string | null;
   /** Semana aberta na aba Semana da Agenda (segunda-feira ISO); null = a semana atual. */
   semanaAberta: string | null;
+  /** Vista da Biblioteca da Comunicação ("geral", "posts", "amostra", "metodo", "importar") ou o id de uma referência (rf-). */
+  bibliotecaAberta: string | null;
 }
 
 const CHAVE = "central-nav-v3";
@@ -79,6 +83,8 @@ function paraHash(n: EstadoNavegacao): string {
     partes.push(n.julgamentoAberto);
   } else if (n.amb === "agenda" && n.aba === "semana" && n.semanaAberta) {
     partes.push(n.semanaAberta);
+  } else if (n.amb === "comunicacao" && n.aba === "biblioteca" && n.bibliotecaAberta) {
+    partes.push(n.bibliotecaAberta);
   }
   return "#/" + partes.map(encodeURIComponent).join("/");
 }
@@ -103,6 +109,11 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
     lido.semanaAberta = alvo && /^\d{4}-\d{2}-\d{2}$/.test(alvo) ? alvo : null;
     return lido;
   }
+  // A vista da Biblioteca vai na URL ("#/comunicacao/biblioteca/rf-ab12cd"); sem ela, a visão geral.
+  if (amb.id === "comunicacao" && aba === "biblioteca") {
+    lido.bibliotecaAberta = alvo || null;
+    return lido;
+  }
   if (!alvo) return lido;
   if (amb.id === "contexto" && aba === "fichas") lido.fichaAberta = alvo;
   else if (amb.id === "contexto" && aba === "julgamentos") lido.julgamentoAberto = alvo;
@@ -114,7 +125,7 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
 
 function carregar(): EstadoNavegacao {
   const padrao: EstadoNavegacao = {
-    amb: "painel", aba: "resumo", detalhe: null, fichaAberta: null, julgamentoAberto: null, semanaAberta: null,
+    amb: "painel", aba: "resumo", detalhe: null, fichaAberta: null, julgamentoAberto: null, semanaAberta: null, bibliotecaAberta: null,
   };
   let base = padrao;
   try {
@@ -183,6 +194,7 @@ export function irParaAmbiente(amb: string, aba?: string) {
   nav.amb = a.id;
   nav.aba = aba || a.abas[0][0];
   nav.detalhe = null;
+  nav.bibliotecaAberta = null;
   publicar();
   window.scrollTo({ top: 0 });
 }
@@ -190,6 +202,7 @@ export function irParaAmbiente(amb: string, aba?: string) {
 export function irParaAba(aba: string) {
   nav.aba = aba;
   nav.detalhe = null;
+  nav.bibliotecaAberta = null;
   publicar();
 }
 
@@ -278,4 +291,11 @@ export function abrirSemana(segunda: string) {
 export function definirSemanaAberta(segunda: string | null) {
   nav.semanaAberta = segunda;
   publicar();
+}
+
+/** Troca a vista da Biblioteca da Comunicação (ou abre uma referência pelo id); null volta à visão geral. */
+export function definirBibliotecaAberta(vista: string | null) {
+  nav.bibliotecaAberta = vista;
+  publicar();
+  window.scrollTo({ top: 0 });
 }
