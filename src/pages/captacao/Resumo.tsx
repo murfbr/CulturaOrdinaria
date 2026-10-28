@@ -1,6 +1,7 @@
 /* Captação · Resumo: as quatro cifras, o funil por etapa, o andamento por
-   projeto, os próximos passos da semana e a tabela por captadora. Na visão de
-   uma captadora, só as negociações dela entram nas contas. */
+   projeto, os próximos passos da semana e a tabela por captadora. Só os
+   projetos abertos entram (captados e encerrados ficam no Portfólio e em
+   Captadoras). Na visão de uma captadora, só as negociações dela. */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { irParaAba } from "../../store/navegacao";
@@ -8,7 +9,7 @@ import { CabecalhoSecao } from "../../components/CabecalhoSecao";
 import { Grade } from "../../components/ui/Grade";
 import { hojeIso } from "../../lib/prazos";
 import type { Negociacao } from "../../types";
-import { brl, inventario, metaDosAbertos, noEscopo, projetosAbertos, totais } from "./calculo";
+import { brl, dosAbertos, inventario, metaDosAbertos, noEscopo, projetosAbertos, totais } from "./calculo";
 import { ModalNegociacao } from "./negociacoes/ModalNegociacao";
 import { Funil } from "./resumo/Funil";
 import { PorCaptadora } from "./resumo/PorCaptadora";
@@ -33,7 +34,8 @@ export function ResumoCaptacao() {
   const hoje = hojeIso();
   const nomeComo = painel.captadoras.find((c) => c.id === como)?.nome;
 
-  const doEscopo = painel.negociacoes.filter((n) => noEscopo(n, como));
+  const dosProjetosAbertos = dosAbertos(painel.negociacoes, painel.portfolio);
+  const doEscopo = dosProjetosAbertos.filter((n) => noEscopo(n, como));
   const t = totais(doEscopo, painel.portfolio);
   const abertos = projetosAbertos(painel.portfolio);
   const metas = metaDosAbertos(painel.portfolio);
@@ -43,7 +45,7 @@ export function ResumoCaptacao() {
     <>
       <CabecalhoSecao
         titulo={nomeComo ? "Resumo de " + nomeComo : "Resumo da captação"}
-        sub={nomeComo ? "só as negociações que estão com ela" : "todos os projetos abertos e todas as negociações do coletivo"}
+        sub={nomeComo ? "só as negociações que estão com ela, nos projetos abertos" : "os projetos abertos e as negociações deles — captados e encerrados ficam no Portfólio e em Captadoras"}
       />
       <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         <Cifra rotulo="Confirmado" valor={brl(t.confirmado)} detalhe={metas ? Math.round((t.confirmado / metas) * 100) + "% da meta de " + brl(metas) : "meta ainda não definida"} />
@@ -59,11 +61,11 @@ export function ResumoCaptacao() {
       <Funil negociacoes={doEscopo} como={como} aoEscolher={(e) => { pedirEtapa(e); irParaAba("negociacoes"); }} />
 
       <Grade colunas={2}>
-        <PorProjeto abertos={abertos} negociacoes={painel.negociacoes} como={como} />
+        <PorProjeto abertos={abertos} negociacoes={dosProjetosAbertos} como={como} />
         <ProximosPassos negociacoes={doEscopo} hoje={hoje} aoAbrir={setAberta} />
       </Grade>
 
-      {!como && <PorCaptadora captadoras={painel.captadoras} negociacoes={painel.negociacoes} projetos={painel.portfolio} />}
+      {!como && <PorCaptadora captadoras={painel.captadoras} negociacoes={dosProjetosAbertos} projetos={painel.portfolio} />}
 
       {aberta && <ModalNegociacao registro={aberta} aoFechar={() => setAberta(null)} />}
     </>

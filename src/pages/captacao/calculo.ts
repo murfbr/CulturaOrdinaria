@@ -111,6 +111,12 @@ export function totais(negociacoes: Negociacao[], projetos: ProjetoCaptacao[]): 
 
 export const projetosAbertos = (projetos: ProjetoCaptacao[]) => projetos.filter((p) => p.situacao === SITUACAO_ABERTO);
 
+/** Negociações dos projetos abertos: só elas entram no Resumo (como Opções promete). */
+export function dosAbertos(negociacoes: Negociacao[], projetos: ProjetoCaptacao[]): Negociacao[] {
+  const ids = new Set(projetosAbertos(projetos).map((p) => p.id));
+  return negociacoes.filter((n) => ids.has(n.projetoId));
+}
+
 /** Valor × quantidade das cotas com os dois preenchidos. */
 export const inventarioDoProjeto = (cotas: CotaCaptacao[], projetoId: string) =>
   cotas.filter((c) => c.projetoId === projetoId)

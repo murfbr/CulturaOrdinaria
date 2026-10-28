@@ -1,7 +1,8 @@
 /* Captação · Negociações: cada linha junta uma empresa, um projeto e quem
    capta. O funil filtra por etapa; a etapa se troca direto na tabela (perdido
-   sem motivo abre o modal); clicar na linha abre o resto. Na visão de uma
-   captadora, as negociações de outras mostram só "em conversa com X". */
+   sem motivo abre o modal pedindo o motivo, e só grava ao salvar); clicar na
+   linha abre o resto. Na visão de uma captadora, as negociações de outras
+   mostram só "em conversa com X". */
 import { useState } from "react";
 import { usarCentral } from "../../store/central";
 import { salvarRegistro } from "../../store/mutacoes";
@@ -18,6 +19,7 @@ import { ETAPA_PERDIDO, type Negociacao } from "../../types";
 import { comparar } from "../../utils";
 import { dataCurta, indiceEtapa, itensDaLista, nomeCaptadora, nomeCota, nomeEmpresa, nomeItem, nomeProjeto } from "./apoio";
 import { brl, conflitos, normalizar, reservaAtiva, restrita } from "./calculo";
+import { CartaoNegociacao } from "./negociacoes/CartaoNegociacao";
 import { ModalNegociacao } from "./negociacoes/ModalNegociacao";
 import { Funil } from "./resumo/Funil";
 import { consumirEtapaPedida, usarComo } from "./visao";
@@ -28,7 +30,7 @@ export function Negociacoes() {
   const [fProj, setFProj] = useState("");
   const [fEtapa, setFEtapa] = useState(() => consumirEtapaPedida()); // o funil do Resumo chega com a etapa
   const [busca, setBusca] = useState("");
-  const [modal, setModal] = useState<{ registro?: Negociacao } | null>(null);
+  const [modal, setModal] = useState<{ registro?: Negociacao; pedirMotivo?: boolean } | null>(null);
   const hoje = hojeIso();
 
   const q = normalizar(busca);
@@ -40,9 +42,10 @@ export function Negociacoes() {
     || comparar(nomeEmpresa(a.empresaId), nomeEmpresa(b.empresaId)));
 
   function trocarEtapa(n: Negociacao, etapa: string) {
+    // Perdido sem motivo: o modal pede o motivo e a etapa só grava ao salvar (cancelar não muda nada).
+    if (etapa === ETAPA_PERDIDO && !n.motivoPerda) { setModal({ registro: { ...n, etapa }, pedirMotivo: true }); return; }
     if (!salvarRegistro("negociacoes", { ...n, etapa })) return;
     toast("Etapa: " + nomeItem("etapas", etapa));
-    if (etapa === ETAPA_PERDIDO && !n.motivoPerda) setModal({ registro: { ...n, etapa } });
   }
 
   return (
@@ -60,7 +63,18 @@ export function Negociacoes() {
         {fEtapa && <Botao variante="quieto" tamanho="pequeno" onClick={() => setFEtapa("")}>mostrar todas as etapas</Botao>}
       </BarraFiltros>
 
-      <Tabela>
+      {/* Celular: um cartão por negociação; tela larga: a tabela. */}
+      <div className="flex flex-col gap-2 md:hidden">
+        {linhas.map((n) => (
+          <CartaoNegociacao
+            key={n.id} n={n} todas={painel.negociacoes} como={como} hoje={hoje}
+            aoAbrir={() => setModal({ registro: n })} aoTrocarEtapa={(e) => trocarEtapa(n, e)}
+          />
+        ))}
+        {!linhas.length && <Vazio>Nenhuma negociação aqui.</Vazio>}
+      </div>
+
+      <Tabela className="hidden md:block">
         <thead>
           <tr>
             <Th>Empresa</Th><Th>Projeto e cota</Th><Th numerico>Valor</Th><Th>Etapa</Th><Th>Quem capta</Th><Th>Último contato</Th><Th>Próximo passo</Th>
@@ -109,6 +123,7 @@ export function Negociacoes() {
       {modal && (
         <ModalNegociacao
           registro={modal.registro}
+          pedirMotivo={modal.pedirMotivo}
           inicial={{ projetoId: fProj, captadoraId: como }}
           aoFechar={() => setModal(null)}
         />

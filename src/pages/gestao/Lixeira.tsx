@@ -21,11 +21,17 @@ const ROTULO_ORIGEM: Record<string, string> = {
   julgamentos: "Julgamento", formularios: "Formulário", candidaturas: "Candidatura (v2)",
 };
 
-/** Nome de exibição de um item, seja de que coleção for. */
-function nomeDoItem(item: ItemLixeira): string {
+/** Nome de exibição de um item, seja de que coleção for. Negociação não tem nome:
+    mostra empresa · projeto, procurando também na própria lixeira (quando foram juntos). */
+function nomeDoItem(item: ItemLixeira, lixeira: Record<string, ItemLixeira>): string {
   const x = item as Record<string, unknown>;
   if (typeof x.nome === "string" && x.nome) return x.nome;
   if (typeof x.titulo === "string" && x.titulo) return x.titulo;
+  if (item._de === "negociacoes") {
+    const nomeDe = (colecao: "empresas" | "portfolio", id: string) =>
+      porId(colecao, id)?.nome || (Object.values(lixeira).find((i) => i._de === colecao && i.id === id) as { nome?: string } | undefined)?.nome;
+    return (nomeDe("empresas", String(x.empresaId || "")) || "(empresa apagada)") + " · " + (nomeDe("portfolio", String(x.projetoId || "")) || "(projeto apagado)");
+  }
   if (item._de === "candidaturas") {
     const p = porId("projetos", String(x.projetoId || ""));
     const e = porId("editais", String(x.editalId || ""));
@@ -88,7 +94,7 @@ export function Lixeira() {
             {itens.map(([chave, item]) => (
               <tr key={chave}>
                 <Td className="whitespace-nowrap"><Badge mini tom="tipo">{ROTULO_ORIGEM[item._de] || item._de}</Badge></Td>
-                <Td className="font-semibold" title={item.id}>{nomeDoItem(item)}</Td>
+                <Td className="font-semibold" title={item.id}>{nomeDoItem(item, lixeira)}</Td>
                 <Td className="whitespace-nowrap text-muted" title={quando(item._apagadoEm)}>
                   {relativo(item._apagadoEm)}{item._apagadoPor ? " · " + item._apagadoPor : ""}
                 </Td>

@@ -14,6 +14,7 @@ import { Vazio } from "../../components/ui/Vazio";
 import { comparar } from "../../utils";
 import { nomeCaptadora, nomeItem, nomeProjeto, tomEtapa } from "./apoio";
 import { empresaFechada, normalizar, restrita } from "./calculo";
+import { CartaoEmpresa } from "./empresa/CartaoEmpresa";
 import { ModalEmpresa } from "./empresa/ModalEmpresa";
 import { usarComo } from "./visao";
 
@@ -38,7 +39,15 @@ export function Empresas() {
         <CampoBusca valor={busca} aoMudar={setBusca} placeholder="buscar empresa, setor, CNPJ, pessoa…" />
       </BarraFiltros>
 
-      <Tabela>
+      {/* Celular: um cartão por empresa; tela larga: a tabela. */}
+      <div className="flex flex-col gap-2 md:hidden">
+        {empresas.map((e) => (
+          <CartaoEmpresa key={e.id} e={e} negociacoes={painel.negociacoes} como={como} aoAbrir={() => abrirDetalhe("empresa", e.id)} />
+        ))}
+        {!empresas.length && <Vazio>Nenhuma empresa encontrada.</Vazio>}
+      </div>
+
+      <Tabela className="hidden md:block">
         <thead>
           <tr><Th>Empresa</Th><Th>Projetos</Th><Th>Contato</Th></tr>
         </thead>
