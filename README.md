@@ -311,13 +311,17 @@ Mesmo id grava por cima; a referência que já existe guarda o que o arquivo nã
 traz (ex.: `planos`) e o histórico ganha a linha da rodada. A Central não edita
 a Biblioteca: corrigir é corrigir no artefato e espelhar de novo.
 
-**O que a tela mostra.** Visão geral (abertura da rodada, um cartão por
-referência, "Lado a lado", desempenho por editoria, comentários a cada 100
-curtidas, Reels views × curtidas e "Devorar e devolver"), ficha de cada
-referência (`#/comunicacao/biblioteca/rf-…`: números da janela, página e
-destaques, ciclos de evento numa linha do tempo, o que rende ali, linguagem,
-amostra, posts e histórico), todos os posts com filtro e ordem, a amostra
-assistida e a grade com o método. Os gráficos são SVG próprios, sem biblioteca.
+**O que a tela mostra (29/10/2026).** A referência é a unidade; a rodada é a
+coleta. A vista de entrada é o **catálogo**: todas as referências, de qualquer
+rodada, com filtro por plano, grupo e nível de leitura, busca e os números da
+última leitura. A **ficha** (`#/comunicacao/biblioteca/rf-…`) junta todas as
+leituras do perfil: abre na grade v5 mais recente (ciclos numa linha do tempo,
+o que rende por editoria, Reels, amostra, posts, destaques) e mostra a leitura
+mais nova como "números atuais" quando é outra; um seletor troca de leitura e o
+histórico lista todas. Leitura **rápida** (~24 posts da página, sem views nem D)
+mostra só o que sustenta e avisa. As vistas de **rodada** (visão geral com lado
+a lado, posts, amostra, grade e método) ficam ao lado, com seletor de rodada.
+Os gráficos são SVG próprios, sem biblioteca.
 
 **As contas** ficam em `src/pages/comunicacao/biblioteca/calculo.ts` (puras) e
 são as mesmas do artefato: janela do primeiro post não fixado ao mais recente
