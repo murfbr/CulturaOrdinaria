@@ -104,9 +104,13 @@ export interface Referencia {
   logica: string;
   /** Gênero, território, formato. */
   marcacoes: string[];
-  nivelLeitura: "grade v5" | "consulta" | string;
-  /** Planos em que é âncora ou consulta (ids `pc-`), gravado pela frente dos planos. */
+  nivelLeitura: "grade v5" | "rápida" | "consulta" | string;
+  /** Planos em que entra, pelo nome ("Caminhos do Forró"); o gerador grava do cadastro (meta). */
   planos?: string[];
+  /** Grupo, quando o plano divide as referências (festivais · bandas · eventos). */
+  grupo?: string;
+  /** Papel no plano: de dentro · par · vizinho · degrau acima · par de formato · próprio. */
+  papel?: string;
   obs?: string;
   ultimaLeitura?: ResumoLeitura;
   /** Uma linha por rodada, da mais antiga à mais recente. */
