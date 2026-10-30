@@ -3,14 +3,16 @@
    regras do banco não tiverem as coleções novas, só a Biblioteca avisa "sem
    acesso"; o resto da Central abre normalmente.
 
-   `referencias` e `rodadasReferencias` são pequenas e vêm inteiras. As leituras
+   `referencias`, `rodadasReferencias` e `analisesReferencias` são pequenas e vêm
+   inteiras. As análises ficam fora do `pronto` e do "sem acesso" geral: se as
+   regras ainda não tiverem a coleção, só a aba Análises avisa. As leituras
    (`leiturasReferencias`, um documento por perfil por rodada, com todos os
    posts) vêm uma a uma, pelo id, quando a tela mostra a rodada. */
 import { useSyncExternalStore } from "react";
 import { Banco } from "../services/banco";
 import { podeGravar } from "../services/acesso";
 import { toast } from "../components/Toast";
-import type { LeituraReferencia, Referencia, RodadaReferencias } from "../types";
+import type { AnaliseReferencias, LeituraReferencia, Referencia, RodadaReferencias } from "../types";
 
 export interface EstadoComunicacao {
   /** As duas coleções pequenas confirmadas pelo servidor (ou modo local), ou já com dado de visita anterior. */
@@ -19,13 +21,16 @@ export interface EstadoComunicacao {
   semAcesso: boolean;
   referencias: Record<string, Referencia>;
   rodadas: Record<string, RodadaReferencias>;
+  analises: Record<string, AnaliseReferencias>;
+  /** O banco recusou só as análises (regras sem a linha de `analisesReferencias`). */
+  analisesSemAcesso: boolean;
   /** Leituras já abertas, pelo id. */
   leituras: Record<string, LeituraReferencia>;
   /** Ids de leitura pedidos que o banco confirmou não existir. */
   leiturasAusentes: string[];
 }
 
-let estado: EstadoComunicacao = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, leituras: {}, leiturasAusentes: [] };
+let estado: EstadoComunicacao = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, leituras: {}, leiturasAusentes: [] };
 const assinantes = new Set<() => void>();
 function publicar() {
   estado = { ...estado };
@@ -65,10 +70,15 @@ export function iniciarComunicacao() {
     conferirPronto();
     publicar();
   }));
+  escutas.push(Banco.assinar("analisesReferencias", (mapa) => {
+    estado.analises = mapa as unknown as Record<string, AnaliseReferencias>;
+    publicar();
+  }));
   // A escuta recusada pelo banco não chama de volta: o aviso chega pelo status do banco.
   escutas.push(Banco.aoMudarStatus((s) => {
-    const recusado = /^sem acesso a (referencias|rodadasReferencias|leiturasReferencias)/.test(s.texto);
+    const recusado = /^sem acesso a (referencias|rodadasReferencias|leiturasReferencias)\b/.test(s.texto);
     if (recusado && !estado.semAcesso) { estado.semAcesso = true; publicar(); }
+    if (/^sem acesso a analisesReferencias/.test(s.texto) && !estado.analisesSemAcesso) { estado.analisesSemAcesso = true; publicar(); }
   }));
 }
 
@@ -95,7 +105,7 @@ export function pararComunicacao() {
   escutas.forEach((parar) => parar());
   escutas = [];
   confirmadas.clear();
-  estado = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, leituras: {}, leiturasAusentes: [] };
+  estado = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, leituras: {}, leiturasAusentes: [] };
   publicar();
 }
 
@@ -105,9 +115,10 @@ export function pararComunicacao() {
    salvarRegistro (sem ordem de quadro nem lixeira); a guarda de acesso e o log
    de alterações do Banco valem igual. */
 
-/** Grava rodada, referências e leituras de uma vez. Devolve quantos documentos foram para o banco. */
-export function gravarEspelhoBiblioteca(c: { rodada: RodadaReferencias; referencias: Referencia[]; leituras: LeituraReferencia[] }): number {
-  if (!podeGravar("referencias", c.rodada.id)) {
+/** Grava rodada, referências, leituras e análises de uma vez (o arquivo pode trazer só análises).
+    Devolve quantos documentos foram para o banco. */
+export function gravarEspelhoBiblioteca(c: { rodada: RodadaReferencias | null; referencias: Referencia[]; leituras: LeituraReferencia[]; analises: AnaliseReferencias[] }): number {
+  if (!podeGravar("referencias", c.rodada?.id || c.analises[0]?.id || "")) {
     toast("Sem acesso para gravar na Biblioteca: sua conta não tem o módulo Comunicação.");
     return 0;
   }
@@ -118,6 +129,7 @@ export function gravarEspelhoBiblioteca(c: { rodada: RodadaReferencias; referenc
   };
   c.leituras.forEach((l) => gravar("leiturasReferencias", l));
   c.referencias.forEach((r) => gravar("referencias", r));
-  gravar("rodadasReferencias", c.rodada);
+  if (c.rodada) gravar("rodadasReferencias", c.rodada);
+  c.analises.forEach((a) => gravar("analisesReferencias", a));
   return n;
 }

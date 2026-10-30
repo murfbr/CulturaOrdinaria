@@ -326,6 +326,23 @@ mostra só o que sustenta e avisa. As vistas de **rodada** (visão geral com lad
 a lado, posts, amostra, grade e método) ficam ao lado, com seletor de rodada.
 Os gráficos são SVG próprios, sem biblioteca.
 
+**Análises (30/10/2026).** A rodada é a coleta, sem conclusão; o que um plano
+conclui dela (abertura, o que rende, Reels, amostra, devorar e devolver) é
+documento à parte, na coleção `analisesReferencias` (id `an-` pelos planos e
+pela data), com a vista **Análises** (lista com filtro por plano e ficha em
+`#/comunicacao/biblioteca/an-…`). Uma análise pode servir a mais de um plano
+(a de 22/10 serve Samba de Ponta, Ponta de Lança e Caminhos). A visão geral da
+rodada lista as análises que a leem e a ficha da referência, as que a usam. O
+espelho traz a lista `analises`; no formato antigo, a síntese da rodada vira
+uma análise na importação; e um arquivo só com `analises` grava apontando pra
+rodadas que já estão na Central. Rodada antiga com a síntese dentro aparece
+como análise "dentro da rodada" até esse arquivo ser importado. Rodada rápida
+(ou coluna rápida da mista) mostra só cadência, formato, collab e curtidas; os
+gráficos por editoria e de Reels usam só as leituras em grade v5. Com mais de
+6 referências, o "Lado a lado" vira uma linha por referência. A regra de
+`analisesReferencias` precisa ser publicada no console antes do deploy (sem
+ela, só a vista Análises avisa).
+
 **As contas** ficam em `src/pages/comunicacao/biblioteca/calculo.ts` (puras) e
 são as mesmas do artefato: janela do primeiro post não fixado ao mais recente
 da grade; desempenho = curtidas ÷ mediana do mesmo formato no perfil (formato

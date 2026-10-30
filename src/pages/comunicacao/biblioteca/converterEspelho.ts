@@ -13,10 +13,15 @@
      uma rodada rápida não apaga que o perfil já teve a leitura completa;
    - o histórico junta as rodadas (uma linha por leitura) e `ultimaLeitura` é a
      mais recente, mesmo quando se reimporta uma rodada antiga;
+   - a análise (o que os planos leem da rodada) é documento à parte: vem na lista
+     `analises` do arquivo; num arquivo do formato antigo, a síntese da rodada
+     (`rodada.abertura` e `rodada.secoes`) vira uma análise, com os planos das
+     referências; o arquivo pode trazer só `analises`, apontando pra rodadas que
+     já estão na Central (é assim que as rodadas de outubro foram separadas);
    - nada indefinido sai daqui (o banco recusa): vazio é "" ou null. */
 import {
   FORMATOS_POST, FORMATO_ESPELHO_REFERENCIAS,
-  type AmostraReferencia, type DestaqueReferencia, type FormatoPost, type LeituraReferencia, type LinhaGrade,
+  type AmostraReferencia, type AnaliseReferencias, type DestaqueReferencia, type FormatoPost, type LeituraReferencia, type LinhaGrade,
   type PostReferencia, type Referencia, type ResumoLeitura, type RodadaReferencias, type SecaoSintese,
 } from "../../../types";
 import { resumoDaLeitura } from "./calculo";
@@ -24,7 +29,9 @@ import { resumoDaLeitura } from "./calculo";
 type Bruto = Record<string, unknown>;
 
 export interface EspelhoConvertido {
-  rodada: RodadaReferencias;
+  /** null quando o arquivo traz só análises. */
+  rodada: RodadaReferencias | null;
+  analises: AnaliseReferencias[];
   referencias: Referencia[];
   leituras: LeituraReferencia[];
   /** Referências que ainda não existiam na Central. */
@@ -45,6 +52,9 @@ export function hash6(chave: string): string {
 export const idReferencia = (usuario: string) => "rf-" + hash6("ref|" + usuario.toLowerCase());
 export const idLeitura = (usuario: string, data: string) => "lr-" + hash6("leitura|" + usuario.toLowerCase() + "|" + data);
 export const idRodada = (data: string) => "rr-" + hash6("rodada|" + data);
+/** Análise: os planos (em minúsculas, em ordem, juntos por +) e a data. */
+export const idAnalise = (planos: string[], data: string) =>
+  "an-" + hash6("analise|" + (planos.length ? planos : ["sem plano"]).map((p) => p.toLowerCase()).sort().join("+") + "|" + data);
 
 /* ── leitores tolerantes ── */
 const obj = (v: unknown): Bruto => (v && typeof v === "object" && !Array.isArray(v) ? (v as Bruto) : {});
@@ -94,12 +104,53 @@ function juntarHistorico(antigo: ResumoLeitura[] | undefined, novo: ResumoLeitur
   return [...mapa.values()].sort((a, b) => a.data.localeCompare(b.data));
 }
 
-export function converterEspelho(bruto: unknown, existentes: Record<string, Referencia>, agora = new Date().toISOString()): EspelhoConvertido {
+/** Lê as análises do arquivo. `padrao` completa o que a análise não traz (rodada e referências do próprio arquivo). */
+function lerAnalises(
+  brutas: Bruto[], padrao: { data: string; rodadaIds: string[]; refIds: string[]; origem: { artefato: string; geradoEm: string } },
+  rodadasConhecidas: Set<string>, refsConhecidas: Set<string>, agora: string, avisos: string[], erros: string[],
+): AnaliseReferencias[] {
+  const ids = new Set<string>();
+  return brutas.map((a) => {
+    const planos = textos(a.planos).length ? textos(a.planos) : textos([a.plano]);
+    const data = txt(a.data) || padrao.data;
+    const titulo = txt(a.titulo) || "Análise de " + data;
+    if (!ehData(data)) erros.push(`A análise "${titulo}" não tem data no formato AAAA-MM-DD.`);
+    if (!planos.length) erros.push(`A análise "${titulo}" veio sem plano (campo planos).`);
+    const rodadaIds = textos(a.rodadaIds).length ? textos(a.rodadaIds) : padrao.rodadaIds;
+    if (!rodadaIds.length) erros.push(`A análise "${titulo}" não diz que rodada lê (campo rodadaIds).`);
+    for (const id of rodadaIds) if (!rodadasConhecidas.has(id)) erros.push(`A análise "${titulo}" lê a rodada ${id}, que não está na Central nem no arquivo.`);
+    const refIds = textos(a.refIds).length ? textos(a.refIds) : padrao.refIds;
+    const soltas = refIds.filter((id) => !refsConhecidas.has(id));
+    if (soltas.length) avisos.push(`A análise "${titulo}" cita referência(s) que não estão na Central: ${soltas.join(", ")}.`);
+    const origem = obj(a.origem);
+    const analise: AnaliseReferencias = {
+      id: txt(a.id) || idAnalise(planos, data), planos, data, titulo, rodadaIds, refIds,
+      abertura: txt(a.abertura), secoes: lista(a.secoes).map(secao),
+      origem: { artefato: txt(origem.artefato) || padrao.origem.artefato, geradoEm: txt(origem.geradoEm) || padrao.origem.geradoEm || agora },
+      atualizado: agora,
+    };
+    if (ids.has(analise.id)) erros.push(`Duas análises com o mesmo id (${analise.id}): mesmos planos na mesma data.`);
+    ids.add(analise.id);
+    return analise;
+  });
+}
+
+export function converterEspelho(
+  bruto: unknown, existentes: Record<string, Referencia>, agora = new Date().toISOString(),
+  rodadasNaCentral: Record<string, RodadaReferencias> = {},
+): EspelhoConvertido {
   const d = obj(bruto);
   const avisos: string[] = [];
   const erros: string[] = [];
   if (txt(d.formato) !== FORMATO_ESPELHO_REFERENCIAS) {
     erros.push(`O arquivo não é um espelho da Biblioteca (formato "${txt(d.formato) || "sem formato"}"; esperado "${FORMATO_ESPELHO_REFERENCIAS}").`);
+  }
+  // Arquivo só com análises: aponta pra rodadas que já estão na Central.
+  if (!d.rodada && Array.isArray(d.analises)) {
+    const analises = lerAnalises(lista(d.analises), { data: "", rodadaIds: [], refIds: [], origem: { artefato: "", geradoEm: "" } },
+      new Set(Object.keys(rodadasNaCentral)), new Set(Object.keys(existentes)), agora, avisos, erros);
+    if (!analises.length) erros.push("O arquivo não traz nenhuma análise.");
+    return { rodada: null, analises, referencias: [], leituras: [], novas: [], avisos, erros, tamanhos: {} };
   }
   const r = obj(d.rodada);
   const data = txt(r.data);
@@ -186,22 +237,32 @@ export function converterEspelho(bruto: unknown, existentes: Record<string, Refe
     return saida;
   });
 
+  const origem = { artefato: txt(obj(r.origem).artefato), geradoEm: txt(obj(r.origem).geradoEm) || agora };
   const rodada: RodadaReferencias = {
     id: rodadaId, data, titulo: txt(r.titulo) || "Rodada de " + data, grade: txt(r.grade),
     refIds: referencias.map((x) => x.id),
     leituraIds: leituras.map((l) => l.id),
-    abertura: txt(r.abertura),
-    secoes: lista(r.secoes).map(secao),
     gradeCampos: lista(r.gradeCampos).map((g): LinhaGrade => ({ campo: txt(g.campo), situacao: txt(g.situacao), nota: txt(g.nota) })),
     metodo: textos(r.metodo),
-    origem: { artefato: txt(obj(r.origem).artefato), geradoEm: txt(obj(r.origem).geradoEm) || agora },
+    origem,
     atualizado: agora,
   };
+  // Análises: as do arquivo; no formato antigo, a síntese da rodada vira uma, com os planos das referências.
+  const brutas = lista(d.analises);
+  if (!brutas.length && (txt(r.abertura) || lista(r.secoes).length)) {
+    const planos = textos(r.planos).length ? textos(r.planos)
+      : [...new Set(mescladas.flatMap((x) => x.planos || []))];
+    if (!planos.length) avisos.push("A síntese da rodada veio no formato antigo e as referências não dizem o plano: a análise fica sem plano marcado.");
+    else avisos.push(`A síntese da rodada (formato antigo) vira uma análise de ${planos.join(", ")}.`);
+    brutas.push({ planos: planos.length ? planos : ["sem plano"], titulo: txt(r.titulo), abertura: txt(r.abertura), secoes: r.secoes });
+  }
+  const analises = lerAnalises(brutas, { data, rodadaIds: [rodadaId], refIds: rodada.refIds, origem },
+    new Set([...Object.keys(rodadasNaCentral), rodadaId]), new Set([...Object.keys(existentes), ...rodada.refIds]), agora, avisos, erros);
   if (!referencias.length) erros.push("O arquivo não traz nenhuma referência.");
   if (porUsuario && Object.keys(porUsuario).length !== referencias.length) erros.push("Há duas referências com o mesmo usuário do Instagram.");
 
   return {
-    rodada, referencias: mescladas, leituras, avisos, erros, tamanhos,
+    rodada, analises, referencias: mescladas, leituras, avisos, erros, tamanhos,
     novas: mescladas.filter((x) => !existentes[x.id]).map((x) => x.nome),
   };
 }
