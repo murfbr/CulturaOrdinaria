@@ -6,9 +6,10 @@ import { Grade } from "../../../components/ui/Grade";
 import { Painel } from "../../../components/ui/Painel";
 import { Tabela, Td, Th } from "../../../components/ui/Tabela";
 import { Vazio } from "../../../components/ui/Vazio";
+import { usarComunicacao } from "../../../store/comunicacao";
 import type { LeituraReferencia } from "../../../types";
 import { formatar, resumoAmostra } from "./calculo";
-import type { VistaRodada } from "./dados";
+import { analisesEmOrdem, type VistaRodada } from "./dados";
 import { Bolinha, ListaTexto, NomeComCor, Texto } from "./Texto";
 
 export function TabelaAmostra({ leituras, cor, soUma }: { leituras: LeituraReferencia[]; cor: (refId: string) => string; soUma?: boolean }) {
@@ -40,8 +41,12 @@ export function TabelaAmostra({ leituras, cor, soUma }: { leituras: LeituraRefer
 }
 
 export function Amostra({ vista }: { vista: VistaRodada }) {
+  const com = usarComunicacao();
   const { rodada, leituras, cor } = vista;
-  const secao = rodada.secoes.find((s) => s.id === "amostra");
+  // O texto transversal da amostra é da análise que lê esta rodada (ou da síntese antiga, dentro da rodada).
+  const secao = analisesEmOrdem(com.analises, com.rodadas, com.referencias)
+    .filter((a) => a.rodadaIds.includes(rodada.id))
+    .flatMap((a) => a.secoes).find((s) => s.id === "amostra");
   const r = resumoAmostra(leituras.flatMap((l) => l.amostra));
   return (
     <>

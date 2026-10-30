@@ -7,8 +7,13 @@
    - `leiturasReferencias` (id `lr-xxxxxx`): o retrato de um perfil numa rodada:
      os posts da janela, os destaques, a amostra assistida e as notas da leitura.
      Um documento por perfil por rodada; a tela só abre os da rodada escolhida.
-   - `rodadasReferencias` (id `rr-xxxxxx`): a rodada de leitura dos perfis, com a
-     síntese que cruza os perfis, a grade de campos e o método.
+   - `rodadasReferencias` (id `rr-xxxxxx`): a rodada de leitura dos perfis (a
+     coleta): quais perfis, em que grade, a grade de campos e o método.
+   - `analisesReferencias` (id `an-xxxxxx`, 30/10/2026): o que um ou mais planos
+     leem de uma ou mais rodadas: a abertura e as seções (o que rende, Reels,
+     amostra, devorar e devolver). A referência é uma só; a análise é por plano
+     (doc 01 da metodologia, seção 8b). Até 30/10 isso morava dentro da rodada
+     (`secoes`, `abertura`), e as rodadas antigas ainda guardam esses campos.
 
    Quem escreve: só a rotina da Biblioteca, que gera o JSON no artefato vivo do
    Antonio e grava pela tela Importar (mesmo id grava por cima). Dia relativo ao
@@ -156,7 +161,7 @@ export interface SecaoSintese { id: string; titulo: string; nota?: string; bloco
 /** Linha da tabela da grade: o que cada campo virou depois das rodadas. */
 export interface LinhaGrade { campo: string; situacao: string; nota: string }
 
-/** Rodada de leitura (coleção `rodadasReferencias`). */
+/** Rodada de leitura (coleção `rodadasReferencias`): a coleta, sem conclusão. */
 export interface RodadaReferencias {
   id: string;
   data: string;
@@ -167,9 +172,9 @@ export interface RodadaReferencias {
   refIds: string[];
   /** As leituras desta rodada (ids `lr-`), na mesma ordem. */
   leituraIds: string[];
-  /** O parágrafo de abertura. */
-  abertura: string;
-  secoes: SecaoSintese[];
+  /** Até 30/10/2026: a abertura e a síntese moravam aqui. Hoje vão na análise; as rodadas antigas ainda têm. */
+  abertura?: string;
+  secoes?: SecaoSintese[];
   gradeCampos: LinhaGrade[];
   metodo: string[];
   /** De onde veio: o artefato vivo e quando o JSON foi gerado. */
@@ -177,6 +182,26 @@ export interface RodadaReferencias {
   atualizado?: string;
 }
 
-/** As três coleções da Biblioteca. */
-export const COLECOES_COMUNICACAO = ["referencias", "leiturasReferencias", "rodadasReferencias"] as const;
+/** Análise (coleção `analisesReferencias`): o que um plano lê das referências numa rodada. */
+export interface AnaliseReferencias {
+  id: string;
+  /** Planos a que serve, pelo nome ("Caminhos do Forró"). A de 22/10 serve três ao mesmo tempo. */
+  planos: string[];
+  /** Data da análise (a da rodada mais recente que ela lê). */
+  data: string;
+  titulo: string;
+  /** Rodadas que a análise lê (ids `rr-`). */
+  rodadaIds: string[];
+  /** Referências que ela usa (ids `rf-`), na ordem das colunas. */
+  refIds: string[];
+  /** O parágrafo de abertura, que cruza os perfis. */
+  abertura: string;
+  /** As seções: "rende", "reels", "amostra", "devorar" (devorar e devolver), ou outras. */
+  secoes: SecaoSintese[];
+  origem: { artefato: string; geradoEm: string };
+  atualizado?: string;
+}
+
+/** As coleções da Biblioteca. */
+export const COLECOES_COMUNICACAO = ["referencias", "leiturasReferencias", "rodadasReferencias", "analisesReferencias"] as const;
 export type ColecaoComunicacao = (typeof COLECOES_COMUNICACAO)[number];

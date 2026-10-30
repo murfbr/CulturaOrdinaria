@@ -4,11 +4,15 @@
    - por REFERÊNCIA (usarReferencia): todas as leituras que um perfil já teve,
      em qualquer rodada, da mais nova pra mais antiga. É o que a ficha mostra:
      a referência é a unidade da Biblioteca, a rodada é só a coleta.
+   - por ANÁLISE (analisesEmOrdem): o que um plano leu das referências numa
+     rodada (abertura, o que rende, devorar e devolver). A rodada antiga que
+     ainda guarda a síntese dentro dela aparece como análise "de legado" até o
+     arquivo das análises ser importado.
    A cor de uma referência é a posição dela na rodada; na ficha, fora de uma
    rodada, vale a posição no catálogo ordenado por nome. */
 import { useEffect, useMemo } from "react";
 import { abrirLeituras, usarComunicacao } from "../../../store/comunicacao";
-import type { LeituraReferencia, Referencia, ResumoLeitura, RodadaReferencias } from "../../../types";
+import type { AnaliseReferencias, LeituraReferencia, Referencia, ResumoLeitura, RodadaReferencias } from "../../../types";
 import { comparar } from "../../../utils";
 import { corDa } from "./cores";
 import { desempenhos } from "./calculo";
@@ -26,6 +30,10 @@ export interface VistaRodada {
   cor: (refId: string) => string;
   /** Desempenho de cada post, pelo código, de todas as leituras. */
   desempenho: Record<string, number | null>;
+  /** Nível de cada leitura da rodada (a mista tem os dois). */
+  nivel: (refId: string) => "grade v5" | "rápida";
+  /** Só as leituras completas (grade v5): as que sustentam editoria, evento, Reels e amostra. */
+  completas: LeituraReferencia[];
 }
 
 /** Rodadas da mais recente para a mais antiga. */
@@ -58,8 +66,10 @@ export function usarRodada(rodadaId: string): VistaRodada | null {
   if (!rodada) return null;
   const ausentes = ids.filter((id) => com.leiturasAusentes.includes(id));
   const ordem = rodada.refIds || [];
+  const nivel = (refId: string) => nivelDaLeitura({ rodadaId: rodada.id } as ResumoLeitura, com.rodadas, com.referencias[refId]);
   return {
-    rodada, leituras, ausentes, desempenho,
+    rodada, leituras, ausentes, desempenho, nivel,
+    completas: leituras.filter((l) => nivel(l.refId) === "grade v5"),
     carregando: leituras.length + ausentes.length < ids.length,
     referencias: com.referencias,
     cor: (refId: string) => corDa(ordem.indexOf(refId)),
@@ -146,3 +156,26 @@ export function planosDa(ref: Referencia): string[] {
   if (ref.instagram === "forrodepife") { planos.add("Ponta de Lança"); planos.add("Caminhos do Forró"); }
   return [...planos];
 }
+
+/* ══════════ análises ══════════ */
+
+/** Uma análise na tela. `legado`: a síntese que ainda mora dentro de uma rodada antiga. */
+export interface VistaAnalise extends AnaliseReferencias { legado?: boolean }
+
+/** Todas as análises, da mais nova pra mais antiga, mais as de legado das rodadas que nenhuma análise lê. */
+export function analisesEmOrdem(
+  analises: Record<string, AnaliseReferencias>, rodadas: Record<string, RodadaReferencias>, referencias: Record<string, Referencia>,
+): VistaAnalise[] {
+  const lidas = new Set(Object.values(analises).flatMap((a) => a.rodadaIds || []));
+  const legado: VistaAnalise[] = Object.values(rodadas)
+    .filter((r) => !lidas.has(r.id) && ((r.secoes || []).length > 0 || Boolean(r.abertura)))
+    .map((r) => ({
+      id: "an-legado-" + r.id, legado: true, data: r.data, titulo: r.titulo, rodadaIds: [r.id], refIds: r.refIds || [],
+      planos: [...new Set((r.refIds || []).flatMap((id) => (referencias[id] ? planosDa(referencias[id]) : [])))],
+      abertura: r.abertura || "", secoes: r.secoes || [], origem: r.origem,
+    }));
+  return [...Object.values(analises), ...legado].sort((a, b) => b.data.localeCompare(a.data) || comparar(a.titulo, b.titulo));
+}
+
+/** Planos que aparecem nas análises, em ordem de nome. */
+export const planosDasAnalises = (lista: VistaAnalise[]) => [...new Set(lista.flatMap((a) => a.planos))].sort(comparar);

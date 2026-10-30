@@ -13,10 +13,11 @@ import { GradeKpis, Kpi } from "../../../components/ui/Kpi";
 import { Painel } from "../../../components/ui/Painel";
 import { Tabela, Td, Th } from "../../../components/ui/Tabela";
 import { Vazio } from "../../../components/ui/Vazio";
+import { usarComunicacao } from "../../../store/comunicacao";
 import { definirBibliotecaAberta } from "../../../store/navegacao";
 import type { LeituraReferencia } from "../../../types";
 import { chamadas, desempenhos, diaMes, editorias, formatar, janela, mediana, postsDaJanela, resumoReels } from "./calculo";
-import { planosDa, usarReferencia, type LeituraDaReferencia } from "./dados";
+import { analisesEmOrdem, planosDa, usarReferencia, type LeituraDaReferencia } from "./dados";
 import { LinhaCiclos } from "./graficos/LinhaCiclos";
 import { TabelaAmostra } from "./Amostra";
 import { TabelaPosts } from "./TabelaPosts";
@@ -97,6 +98,8 @@ function Leitura({ leitura, sel, atual, cor, rapida, desempenho, vista }: {
   desempenho: Record<string, number | null>; vista: NonNullable<ReturnType<typeof usarReferencia>>;
 }) {
   const { ref } = vista;
+  const com = usarComunicacao();
+  const analises = analisesEmOrdem(com.analises, com.rodadas, com.referencias).filter((x) => x.refIds.includes(ref.id));
   const j = janela(leitura);
   const r = resumoReels(leitura);
   const eds = editorias(leitura).sort((a, b) => (b.desempenhoMed ?? 0) - (a.desempenhoMed ?? 0));
@@ -210,6 +213,20 @@ function Leitura({ leitura, sel, atual, cor, rapida, desempenho, vista }: {
             })}
           </tbody>
         </Tabela>
+      </Painel>
+
+      <Painel titulo={"Nas análises (" + analises.length + ")"} sub="o que os planos concluíram lendo esta referência junto com as outras" className="mt-3.5">
+        {!analises.length ? <p className="m-0 text-base text-muted">Nenhuma análise usa esta referência ainda.</p> : (
+          <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
+            {analises.map((a) => (
+              <li key={a.id} className="text-base">
+                <button type="button" className="cursor-pointer border-0 bg-transparent p-0 font-semibold text-accent hover:underline"
+                  onClick={() => definirBibliotecaAberta(a.id)}>{a.titulo}</button>
+                <span className="text-muted"> · {a.planos.join(", ") || "plano não marcado"} · {diaMes(a.data)}/{a.data.slice(0, 4)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </Painel>
     </>
   );
