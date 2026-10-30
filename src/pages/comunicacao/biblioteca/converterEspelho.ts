@@ -18,10 +18,14 @@
      (`rodada.abertura` e `rodada.secoes`) vira uma análise, com os planos das
      referências; o arquivo pode trazer só `analises`, apontando pra rodadas que
      já estão na Central (é assim que as rodadas de outubro foram separadas);
+   - perfis próprios (`perfisProprios`) e a leitura por dentro deles
+     (`leiturasProprias`) podem vir no mesmo arquivo ou sozinhos; o perfil que já
+     existe guarda as leituras antigas e ganha as novas, em ordem de data;
    - nada indefinido sai daqui (o banco recusa): vazio é "" ou null. */
 import {
   FORMATOS_POST, FORMATO_ESPELHO_REFERENCIAS,
-  type AmostraReferencia, type AnaliseReferencias, type DestaqueReferencia, type FormatoPost, type LeituraReferencia, type LinhaGrade,
+  type AcessoProprio, type AmostraReferencia, type AnaliseReferencias, type DestaqueReferencia, type FatiaPublico,
+  type LeituraPropria, type PerfilProprio, type PostProprio, type FormatoPost, type LeituraReferencia, type LinhaGrade,
   type PostReferencia, type Referencia, type ResumoLeitura, type RodadaReferencias, type SecaoSintese,
 } from "../../../types";
 import { resumoDaLeitura } from "./calculo";
@@ -29,9 +33,11 @@ import { resumoDaLeitura } from "./calculo";
 type Bruto = Record<string, unknown>;
 
 export interface EspelhoConvertido {
-  /** null quando o arquivo traz só análises. */
+  /** null quando o arquivo não traz rodada (só análises ou só perfis próprios). */
   rodada: RodadaReferencias | null;
   analises: AnaliseReferencias[];
+  perfisProprios: PerfilProprio[];
+  leiturasProprias: LeituraPropria[];
   referencias: Referencia[];
   leituras: LeituraReferencia[];
   /** Referências que ainda não existiam na Central. */
@@ -52,6 +58,9 @@ export function hash6(chave: string): string {
 export const idReferencia = (usuario: string) => "rf-" + hash6("ref|" + usuario.toLowerCase());
 export const idLeitura = (usuario: string, data: string) => "lr-" + hash6("leitura|" + usuario.toLowerCase() + "|" + data);
 export const idRodada = (data: string) => "rr-" + hash6("rodada|" + data);
+/** Perfil próprio: o slug, legível (pp-sambadeponta). Leitura por dentro: o slug e a data. */
+export const idPerfilProprio = (slug: string) => "pp-" + slug.toLowerCase().replace(/[^a-z0-9]/g, "");
+export const idLeituraPropria = (slug: string, data: string) => "lp-" + hash6("propria|" + slug.toLowerCase() + "|" + data);
 /** Análise: os planos (em minúsculas, em ordem, juntos por +) e a data. */
 export const idAnalise = (planos: string[], data: string) =>
   "an-" + hash6("analise|" + (planos.length ? planos : ["sem plano"]).map((p) => p.toLowerCase()).sort().join("+") + "|" + data);
@@ -135,9 +144,101 @@ function lerAnalises(
   });
 }
 
+const ACESSOS: AcessoProprio[] = ["total", "pedir", "temporário", "sem perfil"];
+const fatias = (v: unknown): FatiaPublico[] => lista(v).map((f) => ({ rotulo: txt(f.rotulo), parcela: num(f.parcela) })).filter((f) => f.rotulo);
+
+function postProprio(p: Bruto): PostProprio {
+  return {
+    publicadoEm: txt(p.publicadoEm), formato: txt(p.formato), autor: txt(p.autor) || "próprio", editoria: txt(p.editoria),
+    visualizacoes: numOuNulo(p.visualizacoes), visualizacoesPagas: numOuNulo(p.visualizacoesPagas),
+    alcance: numOuNulo(p.alcance), alcancePago: numOuNulo(p.alcancePago), interacoes: numOuNulo(p.interacoes),
+    curtidas: numOuNulo(p.curtidas), comentarios: numOuNulo(p.comentarios), compartilhamentos: numOuNulo(p.compartilhamentos),
+    salvamentos: numOuNulo(p.salvamentos), seguidoresGanhos: numOuNulo(p.seguidoresGanhos), tempoMedio: numOuNulo(p.tempoMedio),
+    impulsionado: bool(p.impulsionado), legenda: txt(p.legenda),
+  };
+}
+
+/** Lê as leituras por dentro. O perfil vem pelo `perfilId` ou pelo `slug`. */
+function lerLeiturasProprias(brutas: Bruto[], slugDe: Record<string, string>, agora: string, avisos: string[], erros: string[]): LeituraPropria[] {
+  return brutas.map((x) => {
+    const perfilId = txt(x.perfilId) || (txt(x.slug) ? idPerfilProprio(txt(x.slug)) : "");
+    const slug = slugDe[perfilId];
+    if (!slug) erros.push(`Uma leitura por dentro aponta para um perfil próprio que não está no arquivo nem na Central (${perfilId || "sem perfilId"}).`);
+    const data = txt(x.data);
+    if (!ehData(data)) erros.push(`A leitura por dentro de ${slug || perfilId} não tem data no formato AAAA-MM-DD.`);
+    const pub = obj(x.publico);
+    const diag = obj(x.diagnostico);
+    const origem = obj(x.origem);
+    const posts = lista(x.posts).map(postProprio);
+    const ruins = posts.filter((p) => !ehData(p.publicadoEm.slice(0, 10))).length;
+    if (ruins) erros.push(`${slug || perfilId}: ${ruins} post(s) sem data de publicação no formato AAAA-MM-DD.`);
+    const leitura: LeituraPropria = {
+      id: txt(x.id) || idLeituraPropria(slug || perfilId, data), perfilId, data,
+      inicio: txt(x.inicio) || (posts.length ? posts.map((p) => p.publicadoEm.slice(0, 10)).sort()[0] : data),
+      fim: txt(x.fim) || data, fonte: txt(x.fonte),
+      publico: {
+        seguidores: numOuNulo(pub.seguidores), novos: numOuNulo(pub.novos), perdidos: numOuNulo(pub.perdidos),
+        periodoMovimento: txt(pub.periodoMovimento), genero: fatias(pub.genero), idade: fatias(pub.idade), cidades: fatias(pub.cidades),
+      },
+      posts,
+      diagnostico: { rende: textos(diag.rende), naoRende: textos(diag.naoRende), comparacao: txt(diag.comparacao) },
+      origem: { artefato: txt(origem.artefato), geradoEm: txt(origem.geradoEm) || agora },
+      atualizado: agora,
+    };
+    if (!posts.length) avisos.push(`${slug || perfilId}: leitura por dentro sem posts.`);
+    const kb = Math.round(JSON.stringify(leitura).length / 1024);
+    if (kb > 900) erros.push(`A leitura por dentro de ${slug || perfilId} passa de 900 KB (${kb} KB): o banco não aceita.`);
+    return leitura;
+  });
+}
+
+/** Lê os perfis próprios e junta as leituras (as que já existem e as do arquivo), em ordem de data. */
+function lerPerfisProprios(
+  brutos: Bruto[], existentes: Record<string, PerfilProprio>, agora: string, erros: string[],
+): PerfilProprio[] {
+  return brutos.map((x) => {
+    const slug = txt(x.slug).toLowerCase();
+    if (!slug) erros.push(`Um perfil próprio veio sem slug (${txt(x.nome) || "sem nome"}).`);
+    const id = txt(x.id) || idPerfilProprio(slug);
+    const acesso = txt(x.acesso) as AcessoProprio;
+    if (!ACESSOS.includes(acesso)) erros.push(`${txt(x.nome) || slug}: acesso "${acesso}" fora de ${ACESSOS.join(", ")}.`);
+    const situacao = txt(x.situacao) === "a criar" ? "a criar" : "no ar";
+    const antigo = existentes[id];
+    return {
+      id, slug, nome: txt(x.nome) || slug, instagram: txt(x.instagram).replace(/^@/, ""), situacao,
+      planos: textos(x.planos), acesso, quemAcessa: txt(x.quemAcessa), alimenta: txt(x.alimenta), obs: textos(x.obs),
+      leituras: antigo?.leituras || [], atualizado: agora,
+    };
+  });
+}
+
+/** Junta as leituras novas nos perfis (do arquivo ou da Central), sem repetir, em ordem de data. */
+function juntarLeiturasProprias(perfis: PerfilProprio[], existentes: Record<string, PerfilProprio>, leituras: LeituraPropria[], agora: string): PerfilProprio[] {
+  const saida = new Map(perfis.map((p) => [p.id, p]));
+  for (const l of leituras) {
+    const perfil = saida.get(l.perfilId) || (existentes[l.perfilId] ? { ...existentes[l.perfilId], atualizado: agora } : undefined);
+    if (!perfil) continue;
+    const mapa = new Map((perfil.leituras || []).map((x) => [x.id, x]));
+    mapa.set(l.id, { id: l.id, data: l.data });
+    saida.set(perfil.id, { ...perfil, leituras: [...mapa.values()].sort((a, b) => a.data.localeCompare(b.data)) });
+  }
+  return [...saida.values()];
+}
+
+/** Perfis e leituras próprias do arquivo, prontos pra gravar. */
+function lerProprios(d: Bruto, perfisNaCentral: Record<string, PerfilProprio>, agora: string, avisos: string[], erros: string[]) {
+  const perfis = lerPerfisProprios(lista(d.perfisProprios), perfisNaCentral, agora, erros);
+  const slugDe: Record<string, string> = {};
+  for (const p of Object.values(perfisNaCentral)) slugDe[p.id] = p.slug;
+  for (const p of perfis) slugDe[p.id] = p.slug;
+  const leituras = lerLeiturasProprias(lista(d.leiturasProprias), slugDe, agora, avisos, erros);
+  return { perfisProprios: juntarLeiturasProprias(perfis, perfisNaCentral, leituras, agora), leiturasProprias: leituras };
+}
+
 export function converterEspelho(
   bruto: unknown, existentes: Record<string, Referencia>, agora = new Date().toISOString(),
   rodadasNaCentral: Record<string, RodadaReferencias> = {},
+  perfisNaCentral: Record<string, PerfilProprio> = {},
 ): EspelhoConvertido {
   const d = obj(bruto);
   const avisos: string[] = [];
@@ -145,12 +246,15 @@ export function converterEspelho(
   if (txt(d.formato) !== FORMATO_ESPELHO_REFERENCIAS) {
     erros.push(`O arquivo não é um espelho da Biblioteca (formato "${txt(d.formato) || "sem formato"}"; esperado "${FORMATO_ESPELHO_REFERENCIAS}").`);
   }
-  // Arquivo só com análises: aponta pra rodadas que já estão na Central.
-  if (!d.rodada && Array.isArray(d.analises)) {
+  // Arquivo sem rodada: só análises (apontando pra rodadas que já estão na Central) e/ou perfis próprios.
+  if (!d.rodada) {
     const analises = lerAnalises(lista(d.analises), { data: "", rodadaIds: [], refIds: [], origem: { artefato: "", geradoEm: "" } },
       new Set(Object.keys(rodadasNaCentral)), new Set(Object.keys(existentes)), agora, avisos, erros);
-    if (!analises.length) erros.push("O arquivo não traz nenhuma análise.");
-    return { rodada: null, analises, referencias: [], leituras: [], novas: [], avisos, erros, tamanhos: {} };
+    const proprios = lerProprios(d, perfisNaCentral, agora, avisos, erros);
+    if (!analises.length && !proprios.perfisProprios.length && !proprios.leiturasProprias.length) {
+      erros.push("O arquivo não traz rodada, análise nem perfil próprio.");
+    }
+    return { rodada: null, analises, ...proprios, referencias: [], leituras: [], novas: [], avisos, erros, tamanhos: {} };
   }
   const r = obj(d.rodada);
   const data = txt(r.data);
@@ -262,7 +366,7 @@ export function converterEspelho(
   if (porUsuario && Object.keys(porUsuario).length !== referencias.length) erros.push("Há duas referências com o mesmo usuário do Instagram.");
 
   return {
-    rodada, analises, referencias: mescladas, leituras, avisos, erros, tamanhos,
+    rodada, analises, ...lerProprios(d, perfisNaCentral, agora, avisos, erros), referencias: mescladas, leituras, avisos, erros, tamanhos,
     novas: mescladas.filter((x) => !existentes[x.id]).map((x) => x.nome),
   };
 }

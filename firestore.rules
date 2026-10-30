@@ -97,6 +97,9 @@ service cloud.firestore {
     match /rodadasReferencias/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
     // Análises (30/10/2026): o que cada plano lê das rodadas. Sem esta linha, só a aba Análises avisa.
     match /analisesReferencias/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
+    // Perfis próprios (30/10/2026): os perfis dos planos e a leitura por dentro (Business Suite).
+    match /perfisProprios/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
+    match /leiturasProprias/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
 
     // Controle: lixeira (mover, restaurar, esvaziar), log de alterações e o backup da migração v2.
     match /lixeira/{id} { allow read: if central(); allow write: if qualquer(); }

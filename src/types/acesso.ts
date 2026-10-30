@@ -72,5 +72,6 @@ export const MODULOS_DA_COLECAO: Record<string, string[]> = {
   fichas: ["contexto"], regras: ["contexto"], julgamentos: ["contexto"],
   empresas: ["captacao"], captadoras: ["captacao"], portfolio: ["captacao"], cotas: ["captacao"], negociacoes: ["captacao"],
   referencias: ["comunicacao"], leiturasReferencias: ["comunicacao"], rodadasReferencias: ["comunicacao"], analisesReferencias: ["comunicacao"],
+  perfisProprios: ["comunicacao"], leiturasProprias: ["comunicacao"],
   nucleo: ["nucleo"], usuarios: ["nucleo"],
 };
