@@ -28,7 +28,7 @@ const SEM_ESPELHO_NA_NUVEM = new Set(["formularios", "lixeira", "backup_v2",
   // Acessos e Núcleo: nada deles fica na cópia local do navegador.
   "usuarios", "nucleo",
   // Leituras da Biblioteca (Comunicação): dezenas de KB cada, com todos os posts de um perfil.
-  "leiturasReferencias"]);
+  "leiturasReferencias", "leiturasProprias"]);
 
 /** Texto e cor do indicador "salvo às..." no topo do site. */
 export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" };

@@ -18,7 +18,7 @@ import { diaMes, formatar, janela } from "./calculo";
 import { converterEspelho, type EspelhoConvertido } from "./converterEspelho";
 
 export function ImportarBiblioteca({ aoGravar }: { aoGravar: (rodadaId: string) => void }) {
-  const { referencias, rodadas, analises } = usarComunicacao();
+  const { referencias, rodadas, analises, perfisProprios } = usarComunicacao();
   const [texto, setTexto] = useState("");
   const [conferencia, setConferencia] = useState<EspelhoConvertido | null>(null);
   const [erro, setErro] = useState("");
@@ -30,7 +30,7 @@ export function ImportarBiblioteca({ aoGravar }: { aoGravar: (rodadaId: string) 
 
   function conferir(t = texto) {
     try {
-      setConferencia(converterEspelho(JSON.parse(t), referencias, undefined, rodadas));
+      setConferencia(converterEspelho(JSON.parse(t), referencias, undefined, rodadas, perfisProprios));
       setErro("");
     } catch {
       setConferencia(null);
@@ -46,7 +46,7 @@ export function ImportarBiblioteca({ aoGravar }: { aoGravar: (rodadaId: string) 
     const { rodada } = conferencia;
     setTexto(""); setConferencia(null);
     if (rodada) { aoGravar(rodada.id); definirBibliotecaAberta(null); }
-    else definirBibliotecaAberta("analises");
+    else definirBibliotecaAberta(conferencia.analises.length ? "analises" : "proprios");
   }
 
   const c = conferencia;
@@ -69,7 +69,18 @@ export function ImportarBiblioteca({ aoGravar }: { aoGravar: (rodadaId: string) 
                 {c.leituras.reduce((n, l) => n + l.posts.length, 0)} posts · {c.leituras.reduce((n, l) => n + l.amostra.length, 0)} na amostra ·{" "}
                 {c.analises.length} análise(s).
               </>
-            ) : <b>Só análises: {c.analises.length}.</b>}
+            ) : <b>Sem rodada: {c.analises.length} análise(s), {c.perfisProprios.length} perfil(is) próprio(s), {c.leiturasProprias.length} leitura(s) por dentro.</b>}
+            {c.perfisProprios.length > 0 && (
+              <div className="mt-1">
+                Perfis próprios: {c.perfisProprios.map((p) => p.nome + (perfisProprios[p.id] ? " (já na Central)" : " (novo)")).join(", ")}.
+              </div>
+            )}
+            {c.leiturasProprias.map((l) => (
+              <div key={l.id} className="mt-1">
+                Por dentro de {c.perfisProprios.find((p) => p.id === l.perfilId)?.nome || perfisProprios[l.perfilId]?.nome || l.perfilId}, {diaMes(l.data)}/{l.data.slice(0, 4)}:{" "}
+                {l.posts.length} posts de {diaMes(l.inicio)} a {diaMes(l.fim)}, {formatar(l.publico.seguidores, "int")} seguidores.
+              </div>
+            ))}
             {jaExiste && <div className="mt-1 text-warn">Esta rodada já está na Central: gravar substitui a versão de lá.</div>}
             {analisesQueJaExistem > 0 && <div className="mt-1 text-warn">{analisesQueJaExistem} análise(s) já estão na Central: gravar substitui.</div>}
             {c.analises.length > 0 && (

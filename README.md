@@ -343,6 +343,24 @@ gráficos por editoria e de Reels usam só as leituras em grade v5. Com mais de
 `analisesReferencias` precisa ser publicada no console antes do deploy (sem
 ela, só a vista Análises avisa).
 
+**Perfis próprios (30/10/2026).** Os perfis de Instagram dos planos do coletivo
+(Samba de Ponta, que também carrega o Ponta de Lança; Caminhos do Forró, a
+criar; Sambotica; Psicodelícia; Bloco Brasil; Camisa 7; Thales Browne) ficam
+em `perfisProprios` (id `pp-<slug>`), com os planos que publicam ali, quem tem
+acesso aos dados de dentro (total, a pedir, temporário, sem perfil) e quem
+alimenta. A camada "por dentro" (Meta Business Suite: público e cada post com
+visualizações e alcance pagos e orgânicos, compartilhamentos, salvamentos,
+seguidores ganhos) fica em `leiturasProprias` (id `lp-`, um documento por
+perfil por leitura, aberto só quando a ficha pede). A vista **Perfis próprios**
+lista os perfis com filtro por plano; a ficha (`#/comunicacao/biblioteca/pp-…`)
+mostra o diagnóstico, o público, quem publica (próprio ou collab), formato,
+editoria, dia, horário, os dez melhores e os impulsionados, com as mesmas contas
+da aba Instagram do Painel Ponta de Lança (`calculoProprio.ts`), que ela
+substitui. Os perfis e as leituras por dentro entram pelo mesmo Importar, no
+mesmo arquivo de uma rodada ou sozinhos. As regras de `perfisProprios` e
+`leiturasProprias` precisam ser publicadas antes do deploy (sem elas, só a vista
+Perfis próprios avisa).
+
 **As contas** ficam em `src/pages/comunicacao/biblioteca/calculo.ts` (puras) e
 são as mesmas do artefato: janela do primeiro post não fixado ao mais recente
 da grade; desempenho = curtidas ÷ mediana do mesmo formato no perfil (formato

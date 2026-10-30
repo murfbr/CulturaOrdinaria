@@ -14,6 +14,13 @@
      amostra, devorar e devolver). A referência é uma só; a análise é por plano
      (doc 01 da metodologia, seção 8b). Até 30/10 isso morava dentro da rodada
      (`secoes`, `abertura`), e as rodadas antigas ainda guardam esses campos.
+   - `perfisProprios` (id `pp-<slug>`, 30/10/2026): os perfis de Instagram dos
+     planos do coletivo (Samba de Ponta, Caminhos do Forró, Sambotica...): quem
+     publica neles, quem tem acesso e quem alimenta os dados de dentro.
+   - `leiturasProprias` (id `lp-xxxxxx`): a camada "por dentro" de um perfil
+     próprio numa data, tirada do Meta Business Suite: público e cada post com
+     visualizações, alcance (pago e orgânico), compartilhamentos, salvamentos e
+     seguidores ganhos, mais o diagnóstico. Um documento por perfil por leitura.
 
    Quem escreve: só a rotina da Biblioteca, que gera o JSON no artefato vivo do
    Antonio e grava pela tela Importar (mesmo id grava por cima). Dia relativo ao
@@ -202,6 +209,87 @@ export interface AnaliseReferencias {
   atualizado?: string;
 }
 
+/** Nível de acesso aos dados de dentro de um perfil próprio. */
+export type AcessoProprio = "total" | "pedir" | "temporário" | "sem perfil";
+
+/** Perfil próprio (coleção `perfisProprios`). */
+export interface PerfilProprio {
+  id: string;
+  slug: string;
+  nome: string;
+  /** Usuário no Instagram, sem o @; vazio enquanto o perfil não existe ou o @ não foi confirmado. */
+  instagram: string;
+  situacao: "no ar" | "a criar";
+  /** Planos que publicam neste perfil, pelo nome ("Samba de Ponta", "Ponta de Lança"). */
+  planos: string[];
+  /** Quem tem acesso aos dados de dentro (Business Suite), e de que jeito. */
+  acesso: AcessoProprio;
+  quemAcessa: string;
+  /** Quem alimenta a camada "por dentro" na rotina. */
+  alimenta: string;
+  obs: string[];
+  /** As leituras de dentro (ids `lp-`), da mais antiga à mais nova; o importador mantém. */
+  leituras: { id: string; data: string }[];
+  atualizado?: string;
+}
+
+/** Uma fatia do público (gênero, faixa de idade, cidade) e a parcela dos seguidores (0 a 1). */
+export interface FatiaPublico { rotulo: string; parcela: number }
+
+/** Um post visto por dentro (Business Suite > Insights > Conteúdo). Vazio fica null. */
+export interface PostProprio {
+  /** AAAA-MM-DDTHH:MM, hora do Rio. */
+  publicadoEm: string;
+  formato: "Reel" | "Carrossel" | "Foto" | string;
+  /** "próprio" ou "collab: <usuário>" (o parceiro do post). */
+  autor: string;
+  editoria: string;
+  visualizacoes: number | null;
+  visualizacoesPagas: number | null;
+  alcance: number | null;
+  alcancePago: number | null;
+  interacoes: number | null;
+  curtidas: number | null;
+  comentarios: number | null;
+  compartilhamentos: number | null;
+  salvamentos: number | null;
+  seguidoresGanhos: number | null;
+  /** Tempo médio assistido (s), só Reels. */
+  tempoMedio: number | null;
+  impulsionado: boolean;
+  /** Começo da legenda. */
+  legenda: string;
+}
+
+/** Leitura por dentro de um perfil próprio (coleção `leiturasProprias`). */
+export interface LeituraPropria {
+  id: string;
+  perfilId: string;
+  /** Dia em que o público foi lido. */
+  data: string;
+  /** Janela dos posts. */
+  inicio: string;
+  fim: string;
+  fonte: string;
+  publico: {
+    seguidores: number | null;
+    novos: number | null;
+    perdidos: number | null;
+    /** Período de novos e perdidos ("24/09 a 21/10/2026"). */
+    periodoMovimento: string;
+    genero: FatiaPublico[];
+    idade: FatiaPublico[];
+    cidades: FatiaPublico[];
+  };
+  posts: PostProprio[];
+  /** O que a leitura concluiu (texto com **negrito**). */
+  diagnostico: { rende: string[]; naoRende: string[]; comparacao: string };
+  origem: { artefato: string; geradoEm: string };
+  atualizado?: string;
+}
+
 /** As coleções da Biblioteca. */
-export const COLECOES_COMUNICACAO = ["referencias", "leiturasReferencias", "rodadasReferencias", "analisesReferencias"] as const;
+export const COLECOES_COMUNICACAO = [
+  "referencias", "leiturasReferencias", "rodadasReferencias", "analisesReferencias", "perfisProprios", "leiturasProprias",
+] as const;
 export type ColecaoComunicacao = (typeof COLECOES_COMUNICACAO)[number];

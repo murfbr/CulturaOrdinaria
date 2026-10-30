@@ -12,7 +12,7 @@ import { useSyncExternalStore } from "react";
 import { Banco } from "../services/banco";
 import { podeGravar } from "../services/acesso";
 import { toast } from "../components/Toast";
-import type { AnaliseReferencias, LeituraReferencia, Referencia, RodadaReferencias } from "../types";
+import type { AnaliseReferencias, LeituraPropria, LeituraReferencia, PerfilProprio, Referencia, RodadaReferencias } from "../types";
 
 export interface EstadoComunicacao {
   /** As duas coleções pequenas confirmadas pelo servidor (ou modo local), ou já com dado de visita anterior. */
@@ -24,13 +24,20 @@ export interface EstadoComunicacao {
   analises: Record<string, AnaliseReferencias>;
   /** O banco recusou só as análises (regras sem a linha de `analisesReferencias`). */
   analisesSemAcesso: boolean;
+  perfisProprios: Record<string, PerfilProprio>;
+  /** O banco já confirmou a coleção dos perfis próprios (antes disso, "não encontrado" seria cedo demais). */
+  propriosProntos: boolean;
+  /** Leituras por dentro já abertas, pelo id (vêm uma a uma, como as das referências). */
+  leiturasProprias: Record<string, LeituraPropria>;
+  /** O banco recusou os perfis próprios (regras sem as linhas de `perfisProprios` e `leiturasProprias`). */
+  propriosSemAcesso: boolean;
   /** Leituras já abertas, pelo id. */
   leituras: Record<string, LeituraReferencia>;
   /** Ids de leitura pedidos que o banco confirmou não existir. */
   leiturasAusentes: string[];
 }
 
-let estado: EstadoComunicacao = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, leituras: {}, leiturasAusentes: [] };
+let estado: EstadoComunicacao = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, perfisProprios: {}, propriosProntos: false, leiturasProprias: {}, propriosSemAcesso: false, leituras: {}, leiturasAusentes: [] };
 const assinantes = new Set<() => void>();
 function publicar() {
   estado = { ...estado };
@@ -74,11 +81,17 @@ export function iniciarComunicacao() {
     estado.analises = mapa as unknown as Record<string, AnaliseReferencias>;
     publicar();
   }));
+  escutas.push(Banco.assinar("perfisProprios", (mapa, confirmado) => {
+    estado.perfisProprios = mapa as unknown as Record<string, PerfilProprio>;
+    if (confirmado || Object.keys(mapa).length) estado.propriosProntos = true;
+    publicar();
+  }));
   // A escuta recusada pelo banco não chama de volta: o aviso chega pelo status do banco.
   escutas.push(Banco.aoMudarStatus((s) => {
     const recusado = /^sem acesso a (referencias|rodadasReferencias|leiturasReferencias)\b/.test(s.texto);
     if (recusado && !estado.semAcesso) { estado.semAcesso = true; publicar(); }
     if (/^sem acesso a analisesReferencias/.test(s.texto) && !estado.analisesSemAcesso) { estado.analisesSemAcesso = true; publicar(); }
+    if (/^sem acesso a (perfisProprios|leiturasProprias)/.test(s.texto) && !estado.propriosSemAcesso) { estado.propriosSemAcesso = true; publicar(); }
   }));
 }
 
@@ -98,14 +111,29 @@ export function abrirLeituras(ids: string[]) {
   }
 }
 
+/** Garante a escuta das leituras por dentro pedidas (a ficha de um perfil próprio). */
+const escutasPropria: Record<string, () => void> = {};
+export function abrirLeiturasProprias(ids: string[]) {
+  for (const id of ids) {
+    if (!id || escutasPropria[id]) continue;
+    escutasPropria[id] = Banco.assinarDocumento("leiturasProprias", id, (documento) => {
+      if (!documento) return;
+      estado.leiturasProprias = { ...estado.leiturasProprias, [id]: documento as unknown as LeituraPropria };
+      publicar();
+    });
+  }
+}
+
 /** Desliga tudo (logout). */
 export function pararComunicacao() {
   Object.values(escutasLeitura).forEach((parar) => parar());
   for (const id of Object.keys(escutasLeitura)) delete escutasLeitura[id];
+  Object.values(escutasPropria).forEach((parar) => parar());
+  for (const id of Object.keys(escutasPropria)) delete escutasPropria[id];
   escutas.forEach((parar) => parar());
   escutas = [];
   confirmadas.clear();
-  estado = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, leituras: {}, leiturasAusentes: [] };
+  estado = { pronto: false, semAcesso: false, referencias: {}, rodadas: {}, analises: {}, analisesSemAcesso: false, perfisProprios: {}, propriosProntos: false, leiturasProprias: {}, propriosSemAcesso: false, leituras: {}, leiturasAusentes: [] };
   publicar();
 }
 
@@ -117,8 +145,11 @@ export function pararComunicacao() {
 
 /** Grava rodada, referências, leituras e análises de uma vez (o arquivo pode trazer só análises).
     Devolve quantos documentos foram para o banco. */
-export function gravarEspelhoBiblioteca(c: { rodada: RodadaReferencias | null; referencias: Referencia[]; leituras: LeituraReferencia[]; analises: AnaliseReferencias[] }): number {
-  if (!podeGravar("referencias", c.rodada?.id || c.analises[0]?.id || "")) {
+export function gravarEspelhoBiblioteca(c: {
+  rodada: RodadaReferencias | null; referencias: Referencia[]; leituras: LeituraReferencia[]; analises: AnaliseReferencias[];
+  perfisProprios: PerfilProprio[]; leiturasProprias: LeituraPropria[];
+}): number {
+  if (!podeGravar("referencias", c.rodada?.id || c.analises[0]?.id || c.perfisProprios[0]?.id || "")) {
     toast("Sem acesso para gravar na Biblioteca: sua conta não tem o módulo Comunicação.");
     return 0;
   }
@@ -131,5 +162,7 @@ export function gravarEspelhoBiblioteca(c: { rodada: RodadaReferencias | null; r
   c.referencias.forEach((r) => gravar("referencias", r));
   if (c.rodada) gravar("rodadasReferencias", c.rodada);
   c.analises.forEach((a) => gravar("analisesReferencias", a));
+  c.leiturasProprias.forEach((l) => gravar("leiturasProprias", l));
+  c.perfisProprios.forEach((p) => gravar("perfisProprios", p));
   return n;
 }
