@@ -308,7 +308,10 @@ formato `biblioteca-referencias/1`) e grava pela vista **Importar** da
 Biblioteca (só master), com conferência: rodada, referências novas, posts por
 perfil, janela, tamanho de cada leitura, avisos e erros (com erro não grava).
 Mesmo id grava por cima; a referência que já existe guarda o que o arquivo não
-traz (ex.: `planos`) e o histórico ganha a linha da rodada. A Central não edita
+traz e o histórico ganha a linha da rodada. `grupo`, `papel` e `planos` entram
+quando o arquivo traz (o gerador grava do cadastro) e `nivelLeitura` nunca
+rebaixa (grade v5 > rápida > consulta): uma rodada rápida não apaga que o perfil
+já teve a leitura completa. A Central não edita
 a Biblioteca: corrigir é corrigir no artefato e espelhar de novo.
 
 **O que a tela mostra (29/10/2026).** A referência é a unidade; a rodada é a

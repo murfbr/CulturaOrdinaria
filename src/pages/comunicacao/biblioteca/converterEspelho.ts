@@ -8,6 +8,9 @@
      sai o mesmo que o gerador faria (FNV-1a do usuário e da data);
    - a referência que já existe é mesclada: os campos do arquivo vencem, os que
      o arquivo não traz ficam (ex.: `planos`, gravado pela frente dos planos);
+   - `grupo`, `papel` e `planos` entram quando o arquivo traz (o gerador grava do
+     cadastro); `nivelLeitura` nunca rebaixa: grade v5 > rápida > consulta, então
+     uma rodada rápida não apaga que o perfil já teve a leitura completa;
    - o histórico junta as rodadas (uma linha por leitura) e `ultimaLeitura` é a
      mais recente, mesmo quando se reimporta uma rodada antiga;
    - nada indefinido sai daqui (o banco recusa): vazio é "" ou null. */
@@ -80,6 +83,11 @@ const secao = (s: Bruto): SecaoSintese => {
 };
 
 /** Junta as linhas de histórico pela leitura; a do arquivo vence. Mais antiga primeiro. */
+/** Do mais completo ao mais leve; nível fora da lista fica abaixo de todos. */
+const ORDEM_NIVEL = ["grade v5", "rápida", "consulta"];
+const pesoNivel = (n: string | undefined) => { const i = ORDEM_NIVEL.indexOf(n || ""); return i < 0 ? ORDEM_NIVEL.length : i; };
+export const melhorNivel = (a: string | undefined, b: string | undefined) => (pesoNivel(a) <= pesoNivel(b) ? a : b) || "consulta";
+
 function juntarHistorico(antigo: ResumoLeitura[] | undefined, novo: ResumoLeitura): ResumoLeitura[] {
   const mapa = new Map((antigo || []).map((h) => [h.leituraId, h]));
   mapa.set(novo.leituraId, novo);
@@ -111,6 +119,9 @@ export function converterEspelho(bruto: unknown, existentes: Record<string, Refe
       nivelLeitura: txt(x.nivelLeitura) || "consulta",
     };
     if (txt(x.obs)) nova.obs = txt(x.obs);
+    if (txt(x.grupo)) nova.grupo = txt(x.grupo);
+    if (txt(x.papel)) nova.papel = txt(x.papel);
+    if (textos(x.planos).length) nova.planos = textos(x.planos);
     const antiga = existentes[id];
     if (antiga && antiga.instagram && antiga.instagram.toLowerCase() !== instagram.toLowerCase()) {
       avisos.push(`${nova.nome}: o id ${id} era de @${antiga.instagram} e agora vem como @${instagram}.`);
@@ -166,6 +177,7 @@ export function converterEspelho(bruto: unknown, existentes: Record<string, Refe
     const antiga = existentes[ref.id];
     const leitura = leituras.find((l) => l.refId === ref.id);
     const saida: Referencia = { ...(antiga || {}), ...ref, atualizado: agora };
+    if (antiga) saida.nivelLeitura = melhorNivel(antiga.nivelLeitura, ref.nivelLeitura);
     if (leitura) {
       const historico = juntarHistorico(antiga?.historico, resumoDaLeitura(leitura));
       saida.historico = historico;
