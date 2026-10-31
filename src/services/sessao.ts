@@ -11,6 +11,7 @@ import { Banco } from "./banco";
 import { ligarAcesso } from "./acesso";
 import { pararDados } from "../store/central";
 import { pararComunicacao } from "../store/comunicacao";
+import { pararDivulgacao } from "../store/divulgacao";
 
 export interface Sessao {
   /** Ainda esperando o Firebase dizer se há sessão salva. */
@@ -85,6 +86,7 @@ export async function sair() {
   if (!auth) return;
   pararDados();
   pararComunicacao();
+  pararDivulgacao();
   ligarAcesso(null);
   await Promise.race([Banco.despejar(), new Promise((r) => setTimeout(r, 4000))]);
   await signOut(auth);

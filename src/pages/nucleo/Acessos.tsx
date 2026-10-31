@@ -20,7 +20,7 @@ import { Dica } from "../../components/ui/Dica";
 import { Painel } from "../../components/ui/Painel";
 import { Tabela, Td, Th } from "../../components/ui/Tabela";
 import { Vazio } from "../../components/ui/Vazio";
-import { MODULOS_CENTRAL, MODULOS_DA_COLECAO, MODULO_NUCLEO, PERFIS, ROTULO_COLECAO, ROTULO_MODULO, ehModuloDePagina, moduloDaPagina, slugDoModulo, type ContaUsuario } from "../../types";
+import { MODULOS_CENTRAL, MODULOS_DA_COLECAO, MODULOS_RESTRITOS, MODULO_NUCLEO, PERFIS, ROTULO_COLECAO, ROTULO_MODULO, ehModuloDePagina, moduloDaPagina, slugDoModulo, type ContaUsuario } from "../../types";
 import { relativo } from "../../utils";
 import { PAGINAS_PROPRIAS } from "../paginasProprias";
 
@@ -28,6 +28,7 @@ import { PAGINAS_PROPRIAS } from "../paginasProprias";
 function colunasDeModulo(titulos: Record<string, string>): [id: string, rotulo: string][] {
   return [
     ...MODULOS_CENTRAL.map((id) => [id, ROTULO_MODULO[id]] as [string, string]),
+    ...MODULOS_RESTRITOS.map((id) => [id, ROTULO_MODULO[id]] as [string, string]),
     [MODULO_NUCLEO, "Núcleo"],
     ...Object.entries(PAGINAS_PROPRIAS).map(([slug, p]) => [moduloDaPagina(slug), titulos[slug] || p.titulo] as [string, string]),
   ];
@@ -38,6 +39,8 @@ const ROTULO_EXTRA: Record<string, string> = {
   fichas: "Fichas de contexto", regras: "Regras", julgamentos: "Julgamentos",
   semanas: "Programação da semana", nucleo: "Anotações do Núcleo", usuarios: "Contas",
   referencias: "Referências (Biblioteca)", leiturasReferencias: "Leituras das referências", rodadasReferencias: "Rodadas de leitura",
+  analisesReferencias: "Análises", perfisProprios: "Perfis próprios", leiturasProprias: "Leituras por dentro",
+  divulgadores: "Divulgadores", mailingEventos: "listas do Sympla", mailingDescadastros: "descadastros", mailingRegistro: "registro de acesso",
 };
 const rotuloDaColecao = (c: string) => (ROTULO_COLECAO as Record<string, string>)[c] || ROTULO_EXTRA[c] || c;
 /** "a, b e c" */
@@ -69,7 +72,10 @@ function explicacaoDoModulo(id: string, titulos: Record<string, string>): ReactN
       : "Página independente: abre mesmo para conta sem módulo da Central, em Suas páginas.";
   } else if (id === MODULO_NUCLEO) {
     abre = lista(abasDe(id));
-    nota = "Único módulo de leitura restrita: quem não o tem não lê contas nem anotações.";
+    nota = "Leitura restrita: quem não o tem não lê contas nem anotações.";
+  } else if (id === "mailing") {
+    abre = "a aba Mailing da Comunicação (pede também o módulo Comunicação, que abre o ambiente)";
+    nota = "Leitura restrita: a lista nominal do Sympla (nome, e-mail e participação). Só a gestão; cada abertura, importação e exportação fica no registro.";
   } else {
     abre = lista(abasDe(id));
     nota = "Lê o banco inteiro do coletivo, como todo módulo da Central; o que muda é onde grava.";
