@@ -15,7 +15,7 @@ export interface Acesso {
   ativo: boolean;
   /** Passa por cima da lista: tudo, inclusive o Núcleo e os módulos que vierem. */
   master: boolean;
-  /** Ids de módulo: "painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao", "contexto", "nucleo", "pagina:<slug>". */
+  /** Ids de módulo: "painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao", "contexto", "nucleo", "mailing", "pagina:<slug>". */
   modulos: string[];
   /** Perfil que preencheu a lista (só rótulo). */
   perfil?: string;
@@ -48,9 +48,13 @@ export const moduloDaPagina = (slug: string) => "pagina:" + slug;
 export const ehModuloDePagina = (m: string) => m.startsWith("pagina:");
 export const slugDoModulo = (m: string) => (ehModuloDePagina(m) ? m.slice("pagina:".length) : "");
 
+/** Módulos de leitura restrita que não são ambiente: abrem uma aba dentro de um ambiente. O Mailing (31/10/2026) é a
+    aba Mailing da Comunicação: a lista nominal do Sympla, que só a gestão lê (pede também o módulo Comunicação, que abre o ambiente). */
+export const MODULOS_RESTRITOS = ["mailing"] as const;
+
 export const ROTULO_MODULO: Record<string, string> = {
   painel: "Painel", cadastros: "Cadastros", projetos: "Projetos", agenda: "Agenda", gestao: "Gestão", captacao: "Captação",
-  comunicacao: "Comunicação", contexto: "Contexto", nucleo: "Núcleo do Coletivo",
+  comunicacao: "Comunicação", contexto: "Contexto", nucleo: "Núcleo do Coletivo", mailing: "Mailing",
 };
 
 /** Perfis: preenchem a lista no "+ Conta"; depois se ajusta caixa a caixa. */
@@ -72,6 +76,7 @@ export const MODULOS_DA_COLECAO: Record<string, string[]> = {
   fichas: ["contexto"], regras: ["contexto"], julgamentos: ["contexto"],
   empresas: ["captacao"], captadoras: ["captacao"], portfolio: ["captacao"], cotas: ["captacao"], negociacoes: ["captacao"],
   referencias: ["comunicacao"], leiturasReferencias: ["comunicacao"], rodadasReferencias: ["comunicacao"], analisesReferencias: ["comunicacao"],
-  perfisProprios: ["comunicacao"], leiturasProprias: ["comunicacao"],
+  perfisProprios: ["comunicacao"], leiturasProprias: ["comunicacao"], divulgadores: ["comunicacao"],
+  mailingEventos: ["mailing"], mailingDescadastros: ["mailing"], mailingRegistro: ["mailing"],
   nucleo: ["nucleo"], usuarios: ["nucleo"],
 };

@@ -7,10 +7,11 @@ rules_version = '2';
 // Modelo de acesso (22/10/2026, ver src/types/acesso.ts): cada conta tem um documento
 // em usuarios/<e-mail em minúsculas> com a marca `master` e a lista `modulos`
 // ("painel", "cadastros", "projetos", "agenda", "gestao", "captacao", "comunicacao", "contexto", "nucleo",
-// "pagina:<slug>"). Master passa por cima de tudo. Quem tem qualquer módulo da Central
+// "mailing", "pagina:<slug>"). Master passa por cima de tudo. Quem tem qualquer módulo da Central
 // lê o banco do coletivo inteiro (as telas cruzam os nomes); gravar numa coleção pede o
 // módulo dono dela (a mesma tabela de MODULOS_DA_COLECAO). O Núcleo (`nucleo`,
-// `usuarios`) é a única parte de leitura restrita. Quem não tem módulo da Central
+// `usuarios`) e o Mailing (`mailingEventos`, `mailingDescadastros`, `mailingRegistro`)
+// são as partes de leitura restrita. Quem não tem módulo da Central
 // (cliente, captador) só abre as páginas anexo marcadas: paginas/<slug> e as
 // subcoleções, mais a leitura de presets. Conta sem documento ou desativada não lê
 // nem grava nada.
@@ -100,6 +101,18 @@ service cloud.firestore {
     // Perfis próprios (30/10/2026): os perfis dos planos e a leitura por dentro (Business Suite).
     match /perfisProprios/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
     match /leiturasProprias/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
+    // Divulgadores (31/10/2026): perfis de agenda que replicam nossos eventos, com o histórico de envios.
+    match /divulgadores/{id} { allow read: if central(); allow write: if modulo("comunicacao"); }
+    // Mailing (31/10/2026): a lista nominal do Sympla (nome, e-mail e participação). Leitura RESTRITA, como o
+    // Núcleo: só o módulo "mailing" (ou master) lê e grava. O registro de acesso só recebe linhas novas, com o
+    // e-mail de quem está logado; ninguém muda nem apaga pelo site.
+    match /mailingEventos/{id} { allow read, write: if modulo("mailing"); }
+    match /mailingDescadastros/{id} { allow read, write: if modulo("mailing"); }
+    match /mailingRegistro/{id} {
+      allow read: if modulo("mailing");
+      allow create: if modulo("mailing") && request.resource.data.quem == chave();
+      allow update, delete: if false;
+    }
 
     // Controle: lixeira (mover, restaurar, esvaziar), log de alterações e o backup da migração v2.
     match /lixeira/{id} { allow read: if central(); allow write: if qualquer(); }

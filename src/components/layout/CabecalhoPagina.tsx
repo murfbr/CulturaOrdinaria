@@ -4,7 +4,8 @@
    só aparece enquanto houver dado no formato antigo (ou quando já está
    aberta). Em Páginas anexo, depois das abas vem uma aba por página do
    registro em código: é um link que sai da Central para /<slug>/ (as páginas
-   têm "← Central" de volta). No celular as abas descem e rolam de lado. */
+   têm "← Central" de volta). Na Comunicação, a aba Mailing só aparece para
+   quem tem o módulo "mailing". No celular as abas descem e rolam de lado. */
 import { temModulo, usarAcesso } from "../../services/acesso";
 import { usarCentral } from "../../store/central";
 import { ambienteDe, irParaAba, usarNavegacao } from "../../store/navegacao";
@@ -23,7 +24,10 @@ export function CabecalhoPagina() {
   usarAcesso(); // redesenha quando o acesso muda
   const ambiente = ambienteDe(nav.amb);
   const pendente = legado.candidaturas.length > 0 || legado.projetosV2 > 0;
-  const abas = ambiente.abas.filter(([id]) => id !== "migracao" || pendente || nav.aba === "migracao");
+  const abas = ambiente.abas
+    .filter(([id]) => id !== "migracao" || pendente || nav.aba === "migracao")
+    // A aba Mailing (Comunicação) só aparece para quem tem o módulo de leitura restrita.
+    .filter(([id]) => ambiente.id !== "comunicacao" || id !== "mailing" || temModulo("mailing"));
   // As páginas anexo que a conta abre: título do banco (presets/paginas) quando existe, senão o de reserva.
   const paginas = ambiente.id === "anexos"
     ? Object.entries(PAGINAS_PROPRIAS)

@@ -16,14 +16,15 @@ export interface Ambiente {
 
 /** Os dez ambientes do site, com suas abas (o Núcleo só aparece para quem tem o módulo). Páginas anexo ganha, no cabeçalho,
     uma aba por página do registro em código (link para /<slug>/). Captação (21/10/2026) e Comunicação (23/10/2026) são
-    roteadas pelo ambiente, não pela aba. A Comunicação começa pela Biblioteca; Planos e Como funciona entram depois. */
+    roteadas pelo ambiente, não pela aba. A Comunicação tem Biblioteca, Divulgadores e Mailing (este só para quem tem o módulo
+    "mailing"); Planos e Como funciona entram depois. */
 export const AMBIENTES: Ambiente[] = [
   { id: "painel", rotulo: "Painel", abas: [["resumo", "Resumo"], ["pendencias", "Pendências"], ["revisao", "Revisão dos artistas"]] },
   { id: "cadastros", rotulo: "Cadastros", abas: [["artistas", "Artistas"], ["proponentes", "Proponentes"], ["editais", "Editais"], ["formularios", "Formulários"], ["pessoas", "Pessoas"]] },
   { id: "agenda", rotulo: "Agenda", abas: [["semana", "Semana"], ["calendario", "Calendário"], ["cronograma", "Cronograma"]] },
   { id: "gestao", rotulo: "Gestão", abas: [["reunioes", "Reuniões"], ["quadro", "Tarefas"], ["lixeira", "Lixeira"], ["migracao", "Migração v3"]] },
   { id: "captacao", rotulo: "Captação", abas: [["resumo", "Resumo"], ["portfolio", "Portfólio"], ["empresas", "Empresas"], ["negociacoes", "Negociações"], ["captadoras", "Captadoras"], ["opcoes", "Opções"]] },
-  { id: "comunicacao", rotulo: "Comunicação", abas: [["biblioteca", "Biblioteca"]] },
+  { id: "comunicacao", rotulo: "Comunicação", abas: [["biblioteca", "Biblioteca"], ["divulgadores", "Divulgadores"], ["mailing", "Mailing"]] },
   { id: "projetos", rotulo: "Projetos", abas: [["visao", "Visão geral"], ["pipeline", "Pipeline"], ["textos", "Banco de textos"]] },
   { id: "contexto", rotulo: "Contexto", abas: [["geral", "Geral"], ["fichas", "Fichas"], ["regras", "Regras"], ["julgamentos", "Julgamentos"], ["trocar", "Trocar com o Claude"]] },
   { id: "anexos", rotulo: "Páginas anexo", abas: [["geral", "Geral"], ["modelo", "Modelo"], ["backup", "Backup"]] },
@@ -61,7 +62,8 @@ interface EstadoNavegacao {
   julgamentoAberto: string | null;
   /** Semana aberta na aba Semana da Agenda (segunda-feira ISO); null = a semana atual. */
   semanaAberta: string | null;
-  /** Vista da Biblioteca da Comunicação ("geral", "posts", "amostra", "metodo", "importar") ou o id de uma referência (rf-). */
+  /** Vista aberta numa aba da Comunicação: na Biblioteca, "posts", "amostra", "importar" ou o id de uma referência (rf-);
+      em Divulgadores, "kit" ou um dv-; no Mailing, "pessoas", "importar" ou um evento (me-). */
   bibliotecaAberta: string | null;
 }
 
@@ -83,7 +85,7 @@ function paraHash(n: EstadoNavegacao): string {
     partes.push(n.julgamentoAberto);
   } else if (n.amb === "agenda" && n.aba === "semana" && n.semanaAberta) {
     partes.push(n.semanaAberta);
-  } else if (n.amb === "comunicacao" && n.aba === "biblioteca" && n.bibliotecaAberta) {
+  } else if (n.amb === "comunicacao" && n.bibliotecaAberta) {
     partes.push(n.bibliotecaAberta);
   }
   return "#/" + partes.map(encodeURIComponent).join("/");
@@ -109,8 +111,8 @@ function deHash(hash: string): Partial<EstadoNavegacao> | null {
     lido.semanaAberta = alvo && /^\d{4}-\d{2}-\d{2}$/.test(alvo) ? alvo : null;
     return lido;
   }
-  // A vista da Biblioteca vai na URL ("#/comunicacao/biblioteca/rf-ab12cd"); sem ela, a visão geral.
-  if (amb.id === "comunicacao" && aba === "biblioteca") {
+  // A vista de cada aba da Comunicação vai na URL ("#/comunicacao/biblioteca/rf-ab12cd", "#/comunicacao/mailing/me-3515521").
+  if (amb.id === "comunicacao") {
     lido.bibliotecaAberta = alvo || null;
     return lido;
   }
@@ -293,8 +295,18 @@ export function definirSemanaAberta(segunda: string | null) {
   publicar();
 }
 
-/** Troca a vista da Biblioteca da Comunicação (ou abre uma referência pelo id); null volta à visão geral. */
+/** Troca a vista da aba aberta da Comunicação (ou abre uma ficha pelo id); null volta à vista inicial da aba. */
 export function definirBibliotecaAberta(vista: string | null) {
+  nav.bibliotecaAberta = vista;
+  publicar();
+  window.scrollTo({ top: 0 });
+}
+
+/** Abre uma aba da Comunicação já numa vista (ex.: do divulgador para o evento no Mailing). */
+export function abrirNaComunicacao(aba: "biblioteca" | "divulgadores" | "mailing", vista: string | null) {
+  nav.amb = "comunicacao";
+  nav.aba = aba;
+  nav.detalhe = null;
   nav.bibliotecaAberta = vista;
   publicar();
   window.scrollTo({ top: 0 });

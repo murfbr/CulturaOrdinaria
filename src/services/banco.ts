@@ -28,7 +28,9 @@ const SEM_ESPELHO_NA_NUVEM = new Set(["formularios", "lixeira", "backup_v2",
   // Acessos e Núcleo: nada deles fica na cópia local do navegador.
   "usuarios", "nucleo",
   // Leituras da Biblioteca (Comunicação): dezenas de KB cada, com todos os posts de um perfil.
-  "leiturasReferencias", "leiturasProprias"]);
+  "leiturasReferencias", "leiturasProprias",
+  // Mailing: a lista nominal do Sympla não fica na cópia local do navegador.
+  "mailingEventos", "mailingDescadastros", "mailingRegistro"]);
 
 /** Texto e cor do indicador "salvo às..." no topo do site. */
 export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" };
@@ -45,7 +47,9 @@ export type StatusSalvamento = { texto: string; classe: "" | "ok" | "sv" | "er" 
    sozinha, mas exige faturamento ativo no projeto; enquanto isso, o próprio
    site apaga as vencidas uma vez por dia (`Banco.limparLogVencido`). */
 const COLECAO_LOG = "log_alteracoes";
-const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2", "usuarios", "nucleo"]);
+/** Fora do log (e sem `atualizadoPor`): as de controle, as contas e o Mailing, que tem registro próprio
+    (o log é lido por todo módulo da Central e levaria o rótulo do documento). */
+const SEM_LOG = new Set([COLECAO_LOG, "lixeira", "backup_v2", "usuarios", "nucleo", "mailingEventos", "mailingDescadastros", "mailingRegistro"]);
 const CAMPOS_IGNORADOS_NO_DIFF = new Set(["_novo", "atualizado", "atualizadoPor"]);
 const DIAS_DE_LOG = 90;
 let autorAtual = "";
@@ -405,6 +409,28 @@ export const Banco = {
       espelho[colecao] = { ...(espelho[colecao] || {}), ...mapa };
     }
     return espelho[colecao] || {};
+  },
+
+  /**
+   * Grava um documento novo de uma vez, sem debounce nem reenvio: é o caminho dos
+   * registros que só se acrescentam (registro de acesso do Mailing), em que as
+   * regras recusam regravar o mesmo documento. Devolve se o banco aceitou. Nunca lança.
+   */
+  async acrescentar(colecao: string, id: string, documento: Documento): Promise<boolean> {
+    const impedimento = guarda ? guarda(colecao, id) : "";
+    if (impedimento) return false;
+    (espelho[colecao] = espelho[colecao] || {})[id] = clonar(documento);
+    if (!firebaseAtivo || !db) { salvarEspelho(); avisar(colecao); return true; }
+    avisar(colecao);
+    try { await setDoc(doc(db, colecao, id), clonar(documento)); return true; }
+    catch (e) { console.error("[Central] registro não gravado em " + colecao + ":", e); return false; }
+  },
+
+  /** Tira uma coleção da memória do site, depois de parar a escuta (o Mailing, ao fechar a aba).
+      Só no modo nuvem: no modo local o espelho é o próprio banco. */
+  esquecer(colecao: string) {
+    if (!firebaseAtivo) return;
+    delete espelho[colecao];
   },
 
   /** Estado atual de uma coleção (mapa id → documento). */

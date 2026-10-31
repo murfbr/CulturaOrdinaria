@@ -86,6 +86,10 @@ usam **os mesmos nomes do artefato**:
 | `referencias`  | Comunicação, Biblioteca: perfil de referência (`rf-`), com o catálogo (Instagram, lógica, marcações), `ultimaLeitura` e `historico[]` (uma linha por rodada) |
 | `leiturasReferencias` | Comunicação, Biblioteca: o retrato de um perfil numa rodada (`lr-`): posts da janela, destaques, amostra assistida e notas. Lida um documento por vez; fora do espelho local no modo nuvem |
 | `rodadasReferencias` | Comunicação, Biblioteca: a rodada de leitura (`rr-`): síntese que cruza os perfis, grade de campos, método e de onde veio |
+| `divulgadores` | Comunicação: perfil de agenda ou página que replica nossos eventos (`dv-`), com como pedir, o que aceita, custo, quem fala com eles e `historico[]` de envios por evento (com as retiradas pela UTM, só o número) |
+| `mailingEventos` | Comunicação, Mailing: a lista de participantes de um evento do Sympla (`me-<id do Sympla>`, e `me-<id>-2`… quando passa de 1.500 linhas): nome, e-mail e participação. **Leitura restrita** (módulo `mailing`); fora do espelho local, do log, do Exportar e do vault |
+| `mailingDescadastros` | Comunicação, Mailing: quem pediu pra não receber (`md-`); sai de toda exportação. Leitura restrita |
+| `mailingRegistro` | Comunicação, Mailing: registro de acesso (quem abriu, importou, exportou, apagou, descadastrou). As regras só deixam acrescentar |
 | `negociacoes`  | Captação: empresa × projeto × quem capta (→ `empresaId`, `projetoId`, `cotaId`, `captadoraId`; vazio = a equipe), etapa, valor, datas, próximo passo, reserva, motivo, comissão, recebido, paga |
 | `rascunhos`    | respostas de cada projeto no formulário dele (`valores`, `status`, `notas`; `ref` = id do projeto) |
 | `formularios`  | definições dos formulários, com `origem` ("chrome" = extraído da plataforma; "documento" = reconstruído do espelho/regulamento), importáveis em Cadastros → Formulários sem deploy |
@@ -206,7 +210,7 @@ O login continua sendo criado no console do Firebase (Authentication → Users),
 o que cada login abre está no banco: a coleção `usuarios`, um documento por conta
 com o id igual ao e-mail em minúsculas, a marca `master` e a lista `modulos`.
 Módulo é um item do menu: `painel`, `cadastros`, `projetos`, `agenda`, `gestao`,
-`captacao`, `contexto`, `nucleo` e `pagina:<slug>` para cada página anexo. Tem o módulo, abre e
+`captacao`, `comunicacao`, `contexto`, `nucleo`, `mailing` e `pagina:<slug>` para cada página anexo. Tem o módulo, abre e
 edita; não tem, não aparece. Master passa por cima da lista: abre e grava em tudo,
 inclusive nos módulos criados depois. A tela **Acessos** (ambiente Núcleo do
 Coletivo, módulo `nucleo`) é uma linha por conta com uma caixa por módulo; o
@@ -230,9 +234,12 @@ Como o site e o banco aplicam a lista (`src/types/acesso.ts`, `src/services/aces
   `Banco` recusa na hora, com aviso, o que a lista não permite; as regras recusam
   também. Exportar pede o módulo Gestão; Importar é só de master.
 - Quem tem qualquer módulo da Central lê o banco do coletivo inteiro, porque as
-  telas cruzam os nomes o tempo todo. `nucleo` e `usuarios` são as únicas coleções
-  de leitura restrita (módulo Núcleo); ficam fora da lixeira comum, do log, do
-  Exportar, da busca e da cópia local do navegador.
+  telas cruzam os nomes o tempo todo. As exceções são de leitura restrita: `nucleo`
+  e `usuarios` (módulo Núcleo) e as três coleções do Mailing (módulo `mailing`, que
+  não é ambiente: abre a aba Mailing da Comunicação e pede também o módulo
+  Comunicação). Ficam fora da lixeira comum, do log, do Exportar, da busca e da
+  cópia local do navegador. Nenhum perfil marca `mailing` sozinho: só master ou
+  a caixa marcada à mão.
 - Quem não tem módulo da Central não lê nada do coletivo: só `presets` e as páginas
   marcadas. Página que lê a Central (hoje o Ponta de Lança, registro `leACentral`)
   não abre para essas contas; a tela Acessos avisa.
@@ -376,6 +383,54 @@ regras (`firestore.rules`: `central()` com `comunicacao` e os três blocos novos
 antes do deploy. Contas master abrem o ambiente na hora; para as outras, marcar
 o módulo Comunicação em Núcleo › Acessos.
 
+### Comunicação: Divulgadores e Mailing (31/10/2026)
+
+O ambiente Comunicação tem três abas: Biblioteca, **Divulgadores** e **Mailing**
+(doc 02 da metodologia, seções 7a2 e 7b; referência 12).
+
+**Divulgadores** (`#/comunicacao/divulgadores`): perfis de agenda e páginas que
+replicam nossos eventos quando a gente pede. É canal, não referência: a ficha
+(`dv-…`, id pelo @, então o mesmo perfil não entra duas vezes) guarda tipo,
+nichos, território, como pedir, o que aceita, custo, quem fala com eles (Equipe
+ou Contatos da Central) e o histórico de envios por evento (publicou? link,
+formato, retiradas). Quando o perfil também é referência, a ficha aponta pra
+ficha de referência. **Colar lista** cria vários de uma vez (uma linha por @,
+colunas de planilha ou ";"). O **Kit do evento** monta, pra cada divulgador
+marcado, o link do Sympla com `utm_source=instagram&utm_medium=agenda&utm_campaign=<plano>-<mês><ano>&utm_content=<@>`
+e a mensagem pronta, e registra o envio no histórico. O link do evento e a
+campanha do último kit ficam no navegador de quem montou (conveniência). **Contar
+retiradas** (só com o módulo Mailing) lê a lista do Sympla e grava em cada envio
+quantos ingressos vieram pelo `utm_content` do perfil: só o número.
+
+**Mailing** (`#/comunicacao/mailing`, só master ou módulo `mailing`): a lista
+de participantes exportada do Sympla, um evento por vez. A vista **Importar**
+lê o .xlsx ou .csv no navegador (o arquivo vai do computador direto pro banco,
+sem passar por mais nada; .xls antigo pede pra salvar como .xlsx), acha o
+cabeçalho, dá um palpite de coluna por campo (e-mail, nome, pedido, ingresso,
+tipo, retirada, check-in, utm_*) e mostra a conferência, inclusive contra as
+retiradas que o Sympla mostrava. Só esses campos entram; CPF, telefone e
+respostas do formulário ficam de fora. Importar de novo o mesmo evento
+substitui. Os 19 eventos da conta do Samba de Ponta estão em
+`EVENTOS_SYMPLA` (`src/types/divulgacao.ts`), com o link da página de
+participantes de cada um. As vistas: **Eventos** (o que falta importar, e por
+evento: e-mails, quem já tinha vindo, quem voltou depois, check-in, origem pela
+UTM, tipo de ingresso, e as listas "todos", "retirou e não fez check-in" e
+"primeira vez" em CSV), **Pessoas** (uma linha por e-mail, com filtros de
+evento, plano, número de eventos e check-in; exporta CSV ou copia os e-mails),
+**Descadastros** e **Registro**.
+
+Um documento por evento, e não um por e-mail como o doc 02 desenhava: abrir o
+Mailing lê ~20 documentos em vez de milhares, e as contas por pessoa saem no
+navegador (`src/pages/comunicacao/mailing/calculoMailing.ts`, puras). A lista só
+fica na memória enquanto a aba está aberta; o cache do Firestore no navegador se
+apaga no logout. Toda abertura, importação, exportação, exclusão e descadastro
+deixa linha em `mailingRegistro`, que as regras só deixam acrescentar com o
+e-mail de quem está logado. Exportação nunca leva quem pediu descadastro.
+
+**Regras.** `divulgadores` (lê `central()`, grava `comunicacao`) e as três do
+Mailing (lê e grava só `modulo("mailing")`) precisam ser publicadas no console
+antes do deploy; sem elas, só a aba avisa.
+
 ### Núcleo do Coletivo: Anotações e ideias, Melhorias, Acessos
 
 O ambiente Núcleo do Coletivo abre só para quem tem o módulo `nucleo` (ou é
@@ -470,7 +525,10 @@ src/
     gestao/                ← Reunioes, FichaReuniao, QuadroTarefas, Lixeira, Migracao
     comunicacao/           ← Comunicacao (roteador); biblioteca/: Biblioteca, VisaoGeral, FichaReferencia,
                              TabelaPosts, Amostra, Metodo, ImportarBiblioteca, converterEspelho, calculo.ts,
-                             dados.ts, graficos/ (PontosEditoria, DispersaoReels, LinhaCiclos)
+                             dados.ts, graficos/ (PontosEditoria, DispersaoReels, LinhaCiclos);
+                             divulgadores/: Divulgadores (lista, ficha, kit, contagem), EditorDivulgador, utm.ts;
+                             mailing/: Mailing, EventosMailing, PessoasMailing, ImportarMailing,
+                             DescadastrosRegistro, listaSympla.ts (leitura do arquivo), calculoMailing.ts, exportar.ts
     captacao/              ← RoteadorCaptacao, FaixaVerComo, Resumo (+ resumo/), Portfolio (+ portfolio/),
                              Empresas, FichaEmpresa (+ empresa/), Negociacoes (+ negociacoes/), Captadoras,
                              Opcoes (+ opcoes/: Listas, ImportarArtefato), calculo.ts (contas puras), visao.ts, apoio.ts
@@ -494,6 +552,7 @@ src/
     central.ts             ← estado global (usarCentral) + semeadura
     mutacoes.ts            ← salvar/excluir registros, rascunhos e docs do Contexto
     comunicacao.ts         ← coleções da Biblioteca (ligadas ao abrir o ambiente) e a gravação do espelho
+    divulgacao.ts          ← Divulgadores e Mailing (o Mailing só liga com o módulo, e sai da memória ao fechar)
     importarExportar.ts    ← pacote .json (v3; v2 e o do artefato são convertidos na hora)
     modelosImportacao.ts   ← campos e modelo por coleção (guia de importação, JSON sem envelope)
     planilha.ts            ← exportação em CSV
@@ -513,7 +572,7 @@ src/
     proponentes.ts         ← ler o proponente escrito nos projetos e propor cadastros
     cnpj.ts                ← consulta de CNPJ na Receita
     textos.ts              ← índice do banco de textos
-    nomes.ts, agenda.ts, documentos.ts, csv.ts, arrastar.ts
+    nomes.ts, agenda.ts, documentos.ts, csv.ts, xlsx.ts (leitor de .xlsx sem biblioteca), arrastar.ts
   types/                   ← entidades documentadas (painel, presets, paginas, simulador, contexto, acesso, caderno, captacao, comunicacao)
   data/                    ← catálogos estáticos (Salic, plataformas) + sementes de migração;
                              as definições de formulário vivem no banco (coleção formularios)
@@ -531,3 +590,10 @@ exportação `.json` e na planilha CSV, e as regras do Firestore liberam a leitu
 para qualquer conta logada. A redação nova da r24 ainda está pendente. A semente
 do repositório não traz esses dados. Se o repositório for público, lembre que o
 histórico do Git guarda as versões antigas da semente.
+
+O **Mailing** (desde 31/10/2026) guarda nome, e-mail e participação de quem
+retirou ingresso no Sympla. Regras do coletivo (doc 02, 7b): só a gestão
+consulta, com login, senha e registro de acesso; descadastro em todo e-mail
+enviado; sem CPF e sem telefone (a importação nem lê essas colunas); fora do
+espelho do vault, que recebe só totais por evento; a lista nominal nunca sai da
+Central a não ser pelas exportações registradas. Retenção: em aberto.
