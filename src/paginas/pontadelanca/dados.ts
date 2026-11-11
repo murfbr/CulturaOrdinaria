@@ -166,17 +166,33 @@ function montarPainel(p: PaginaFesta | null, mapa: Record<string, Edicao>, centr
   };
 }
 
+/** O mesmo valor com as chaves em ordem alfabética, para comparar pelo conteúdo. */
+function emOrdem(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(emOrdem);
+  if (!v || typeof v !== "object") return v;
+  const o = v as Record<string, unknown>;
+  return Object.fromEntries(Object.keys(o).sort().map((k) => [k, emOrdem(o[k])]));
+}
+
+/** Dois valores iguais no conteúdo, qualquer que seja a ordem das chaves. */
+const mesmoConteudo = (a: unknown, b: unknown) => JSON.stringify(emOrdem(a)) === JSON.stringify(emOrdem(b));
+
 /**
  * Os totais por edição ficam no documento da página (`resumo`), para quem precisar
  * deles sem carregar as edições. Chamado a cada mudança das edições e do store;
- * só grava quando o resumo mudou de fato, então chamar à toa não custa nada e não
- * entra em laço (o espelho atualiza na hora, e a comparação seguinte bate).
+ * só grava quando o resumo mudou de fato, então chamar à toa não custa nada.
+ *
+ * A comparação é pelo conteúdo, não pelo texto: o Firestore devolve os campos de
+ * um mapa na ordem dele, que muda de uma resposta para outra. Comparando o JSON
+ * cru, o resumo que voltava do banco nunca batia com o recém-calculado e a página
+ * regravava o documento (e uma linha no log) a cada resposta, cerca de uma vez
+ * por segundo, enquanto ficasse aberta.
  */
 function sincronizarResumo() {
   const painel = montarPainel(pagina, edicoes, obterEstado());
   if (!painel || !edicoesConfirmadas) return;
   const novo = painel.edicoes.map((e) => resumoDaEdicao(painel, e));
-  if (JSON.stringify(painel.pagina.resumo || []) === JSON.stringify(novo)) return;
+  if (mesmoConteudo(painel.pagina.resumo || [], novo)) return;
   alterarPagina((p) => { p.resumo = novo; }, false);
 }
 
